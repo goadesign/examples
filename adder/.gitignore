@@ -1,0 +1,4 @@
+app/
+client/
+main.go
+swagger/
