@@ -2,20 +2,29 @@
 
 This is the example used in the README. Note that apart from [design/design.go](design/design.go)
 the only line of code that is *not* generated is the line that does the addition and writes the
-response in [operands.go](operands.go). Everything else is generated with:
+response in [operands.go](operands.go).
+
+## Setup and Code Generation
+
+The file [operands.go](operands.go) contains a `go:generate` comment which invokes `goagen` to
+generate the source of the example from the `design` package. `go get` the example and run
+`go generate` to produce the entire source:
 ```
-goagen bootstrap -d github.com/goadesign/examples/adder/design
+go get github.com/goadesign/examples/adder
+cd $GOPATH/github.com/goadesign/examples/adder
+go generate
 ```
 
-## Running
+## Running the Example
 
-To run the example simply compile and run the binary:
+The example can then be built and run, nothing special:
 ```
-git clone https://github.com/goadesign/examples
-cd examples/adder
 go build
 ./adder
 ```
+
+## Compile and Run the Client
+
 Compile and run the client in a different terminal:
 ```
 cd client/adder-cli

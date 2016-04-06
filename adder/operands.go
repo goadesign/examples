@@ -1,3 +1,4 @@
+//go:generate goagen bootstrap -d github.com/goadesign/examples/adder/design
 package main
 
 import (
