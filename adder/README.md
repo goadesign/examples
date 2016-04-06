@@ -4,6 +4,11 @@ This is the example used in the README. Note that apart from [design/design.go](
 the only line of code that is *not* generated is the line that does the addition and writes the
 response in [operands.go](operands.go).
 
+The instructions below assume that goagen has been installed:
+```
+go get github.com/goadesign/goa/goagen
+```
+
 ## Setup and Code Generation
 
 The file [operands.go](operands.go) contains a `go:generate` comment which invokes `goagen` to
@@ -11,9 +16,11 @@ generate the source of the example from the `design` package. `go get` the examp
 `go generate` to produce the entire source:
 ```
 go get github.com/goadesign/examples/adder
-cd $GOPATH/github.com/goadesign/examples/adder
+cd $GOPATH/src/github.com/goadesign/examples/adder
 go generate
 ```
+
+> *Note*: `go get` displays an error because it cannot find the pagkage `github.com/goadesign/examples/adder/app` - this is expected as this package is generated and not committed. The error can be safely ignored.
 
 ## Running the Example
 
