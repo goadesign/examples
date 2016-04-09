@@ -1,10 +1,11 @@
+//go:generate goagen bootstrap -d github.com/goadesign/examples/websocket/design
 package main
 
 import (
 	"github.com/goadesign/examples/websocket/app"
 	"github.com/goadesign/examples/websocket/swagger"
 	"github.com/goadesign/goa"
-	"github.com/goadesign/middleware"
+	"github.com/goadesign/goa/middleware"
 )
 
 func main() {
