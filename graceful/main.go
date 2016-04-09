@@ -1,3 +1,4 @@
+//go:generate goagen bootstrap -d github.com/goadesign/examples/graceful/design
 package main
 
 import (

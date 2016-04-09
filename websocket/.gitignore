@@ -2,3 +2,4 @@ swagger/
 client/
 app/
 ./websocket
+websocket
