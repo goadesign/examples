@@ -1,5 +1,10 @@
 package design
 
+import (
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
+)
+
 var _ = Resource("array_prism", func() {
 	BasePath("/array")
 	Description("Resource array_prism contains artifical actions that showcase the use of the array type in the DSL.")

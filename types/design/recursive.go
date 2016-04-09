@@ -1,5 +1,10 @@
 package design
 
+import (
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
+)
+
 var _ = Resource("recursive_prism", func() {
 	BasePath("/recursive")
 	Description("Resource recursive_prism contains artifical actions that showcase the use of recursive data types")

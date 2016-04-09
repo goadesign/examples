@@ -1,5 +1,10 @@
 package design
 
+import (
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
+)
+
 var _ = Resource("prism", func() {
 	Description("Resource prism contains artifical actions that showcase the use of primitive types in the DSL.")
 	Action("show", func() {
