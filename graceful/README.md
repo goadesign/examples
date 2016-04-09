@@ -19,15 +19,15 @@ The add action in the example sleeps 10s prior to returning the result and the g
 timeout is set to 15s. Interrupting the server during a request triggers graceful shutdown: the
 server quits after the request response is sent.
 
-To run the example, make sure you have the [https://godoc.org/github.com/tylerb/graceful](graceful)
+To run the example, make sure you have the [graceful](https://godoc.org/github.com/tylerb/graceful)
 package installed:
 ```
-go get-u github.com/tylerb/graceful
+go get -u github.com/tylerb/graceful
 ```
-The genreate and compile the source:
+Then generate and compile the source:
 ```
-git clone https://github.com/goadesign/examples/graceful
-cd graceful
+go get github.com/goadesign/examples
+cd $GOPATH/src/github.com/goadesign/examples/graceful
 go generate
 go build
 ```
