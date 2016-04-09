@@ -2,6 +2,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/goadesign/examples/websocket/app"
 	"github.com/goadesign/examples/websocket/swagger"
 	"github.com/goadesign/goa"
@@ -23,5 +25,5 @@ func main() {
 	// Mount Swagger spec provider controller
 	swagger.MountController(service)
 
-	service.ListenAndServe(":8080")
+	log.Fatal(service.ListenAndServe(":8080"))
 }
