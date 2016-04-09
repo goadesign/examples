@@ -24,24 +24,30 @@ the goa built-in `SwitchingProtocols` response. This response will not cause `go
 a response method on the context but will still allow other generators such as Swagger to produce
 the right output.
 
+## Building
+
+The [main.go](main.go) file contains a `go:generate` directive that uses `goagen` to generate the
+code from the design. Clone, generate and build the code:
+```
+git clone https://github.com/goadesign/examples/websocket
+cd $GOPATH/src/github.com/goadesign/examples/websocket
+go generate
+go build
+```
+
 ## Running
 
-### Prerequesite
+Once the code is compiled and run the service:
+```
+./websocket
+```
+
+### Websocket Client
 
 The instructions below use the `wsc` websocket command line client. Any other websocket client
 would work as well. To use the `wsc` client install it with:
 ```
 go install https://github.com/raphael/wsc
-```
-
-### Setup
-
-To run the example, compile and run the service:
-```
-git clone https://github.com/goadesign/examples
-cd examples/websocket
-go build
-./websocket
 ```
 
 ### Sending Websocket Messages
