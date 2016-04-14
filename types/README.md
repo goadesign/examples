@@ -10,7 +10,7 @@ The example uses multiple design files, one per type being showcased:
 * [primitives.go](design/primitives.go) uses all the primitive type defined by the goa design language.
 * [array.go](design/array.go) shows how to define arrays (used for types) and collections (used for media types).
 * [hash.go](design/hash.go) shows how to define hashes (a.k.a. maps in Go, objects in JSON).
-* [recursive.go](design/complex.go) shows how to combine arrays and hashes in recursive data structures.
+* [recursive.go](design/recursive.go) shows how to combine arrays and hashes in recursive data structures.
 
 The file [generate.go](generate.go) contains `go generate` directives that uses `goagen` to generate
 all the built-in outputs. Run it with:
