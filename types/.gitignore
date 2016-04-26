@@ -8,4 +8,6 @@ hash_prism.go
 prism.go
 js/
 schema/
+test/
 types
+types.exe
