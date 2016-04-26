@@ -1,5 +1,6 @@
 swagger/
 client/
 app/
-./websocket
+test/
 websocket
+websocket.exe
