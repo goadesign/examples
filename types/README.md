@@ -18,3 +18,6 @@ all the built-in outputs. Run it with:
 go generate
 ```
 Inspect the generated files to see how each type maps to each generation output.
+
+Additional information on designing types can be found on
+[goa.design](https://goa.design/design/types/).
