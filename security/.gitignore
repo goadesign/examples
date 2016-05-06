@@ -1,0 +1,10 @@
+app/
+test/
+client/
+main.go
+swagger/
+security
+api_key_endpoints.go
+basic_auth_endpoints.go
+jwt_endpoints.go
+oauth2_endpoints.go
