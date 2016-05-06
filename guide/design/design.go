@@ -1,5 +1,5 @@
 package design // The convention consists of naming the design
-// package "design"
+
 import (
 	. "github.com/goadesign/goa/design" // Use . imports to enable the DSL
 	. "github.com/goadesign/goa/design/apidsl"
@@ -12,6 +12,10 @@ var _ = API("cellar", func() { // API defines the microservice endpoint and
 	Host("localhost:8080")
 })
 
+var BottlePayload = Type("BottlePayload", func() {
+	Attribute("status", Integer, "status of bottle")
+	Required("status")
+})
 var _ = Resource("bottle", func() { // Resources group related API endpoints
 	BasePath("/bottles")      // together. They map to REST resources for REST
 	DefaultMedia(BottleMedia) // services.
@@ -22,6 +26,7 @@ var _ = Resource("bottle", func() { // Resources group related API endpoints
 		Params(func() {                 // (shape of the request body).
 			Param("bottleID", Integer, "Bottle ID")
 		})
+		Payload(BottlePayload)
 		Response(OK)       // Responses define the shape and status code
 		Response(NotFound) // of HTTP responses.
 	})

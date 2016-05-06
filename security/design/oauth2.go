@@ -10,12 +10,13 @@ import (
 // access tokens.
 //
 var OAuth2 = OAuth2Security("oauth2", func() {
-	// /oauth2/code is the path to the action that produces access codes
-	// /oauth2/token is the path to the action that produces refresh and access tokens from
-	// access codes and existing refresh tokens.
+	// /oauth2/code is the path to the action that produces access codes.
+	// /oauth2/token is the path to the action that refreshes access tokens.
 	AccessCodeFlow("/oauth2/code", "/oauth2/token")
 	// All secured API requests must carry the "api" scope.
-	Scope("api")
+	Scope("api", "API access")
+	// Some also require scope "extra"
+	Scope("extra", "extra privileges")
 })
 
 var _ = Resource("OAuth2Endpoints", func() {
@@ -23,6 +24,7 @@ var _ = Resource("OAuth2Endpoints", func() {
 	DefaultMedia(SuccessMedia)
 
 	Security(OAuth2)
+	Scope("api")
 
 	Action("secured", func() {
 		Description("This action is secured with the oauth2 scheme")
@@ -35,7 +37,7 @@ var _ = Resource("OAuth2Endpoints", func() {
 		Description(`This action requires an additional scope on top of "api"`)
 		Routing(GET("/oauth2/extra_scope"))
 		Security(OAuth2, func() {
-			Scope("extra")
+			Scope("extra") // Require extra scope
 		})
 		Response(OK)
 		Response(Unauthorized)
@@ -44,7 +46,7 @@ var _ = Resource("OAuth2Endpoints", func() {
 	Action("unsecured", func() {
 		Description("This action does not require auth")
 		Routing(GET("/oauth2/unsecured"))
-		NoSecurity()
+		NoSecurity() // Override the need to auth
 		Response(OK)
 	})
 })
