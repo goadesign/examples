@@ -23,8 +23,9 @@ var _ = Resource("OAuth2Endpoints", func() {
 	Description("This resource uses OAuth2 to secure its endpoints")
 	DefaultMedia(SuccessMedia)
 
-	Security(OAuth2)
-	Scope("api")
+	Security(OAuth2, func() {
+		Scope("api") // Require "api" scope in all OAuth2Endpoints actions by default
+	})
 
 	Action("secured", func() {
 		Description("This action is secured with the oauth2 scheme")
