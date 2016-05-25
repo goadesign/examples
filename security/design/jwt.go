@@ -17,8 +17,9 @@ var _ = Resource("JWTEndpoints", func() {
 	Description("This resource uses JWT to secure its endpoints")
 	DefaultMedia(SuccessMedia)
 
-	Security(JWT) // Use JWT to auth requests to this endpoint
-	Scope("api")  // Enforce presence of "api" scope in JWT claims.
+	Security(JWT, func() { // Use JWT to auth requests to this endpoint
+		Scope("api") // Enforce presence of "api" scope in JWT claims.
+	})
 
 	Action("secured", func() {
 		Description("This action is secured with the jwt scheme")
