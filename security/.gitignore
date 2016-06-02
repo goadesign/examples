@@ -1,6 +1,5 @@
 app/
 test/
 client/
-main.go
 swagger/
 security
