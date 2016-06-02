@@ -19,7 +19,7 @@ func NewJWTMiddleware() (goa.Middleware, error) {
 	if err != nil {
 		return nil, err
 	}
-	middleware := jwt.New(keys, JWTValidationFunc, app.NewJWTSecurity())
+	middleware := jwt.New(keys, nil, app.NewJWTSecurity())
 	return middleware, nil
 }
 
@@ -47,8 +47,7 @@ func (c *JWTEndpointsController) Unsecured(ctx *app.UnsecuredJWTEndpointsContext
 	return ctx.OK(res)
 }
 
-// LoadJWTPublicKeys load PREFIX_JWT_PUBKEY[1-3] from the environment, and returns
-// keys for use in goa's `jwt` middleware.
+// LoadJWTPublicKeys loads PEM encoded RSA public keys used to validata and decrypt the JWT.
 func LoadJWTPublicKeys() ([]*rsa.PublicKey, error) {
 	keyFiles, err := filepath.Glob("./pubkeys/*.pub")
 	if err != nil {

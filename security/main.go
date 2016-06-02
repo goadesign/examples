@@ -1,13 +1,9 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
-	"github.com/goadesign/goa/middleware/security/jwt"
-	"golang.org/x/net/context"
 )
 
 var (
@@ -48,28 +44,4 @@ func main() {
 	if err := service.ListenAndServe(":8080"); err != nil {
 		service.LogError("startup", "err", err)
 	}
-}
-
-// NewOAuth2Middleware creates a middleware that checks for the presence of a JWT Authorization header
-// and validates its content. A real app would probably use goa's JWT security middleware instead.
-func NewJWTMiddleware() goa.Middleware {
-	// Instantiate JWT security scheme details generated from design
-	scheme := app.NewJWTSecurity()
-
-	// Middleware
-	return func(h goa.Handler) goa.Handler {
-		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-			// Retrieve and log header specified by scheme
-			key := req.Header.Get(scheme.Name)
-			authorized(ctx, "auth", "JWT", "key", key) {
-			// Proceed.
-			return h(ctx, rw, req)
-		}
-	}
-}
-
-// Custom authorization logic, log and always return true for the purpose of the example.
-func authorized(ctx context.Context, keyvals ...interface{}) bool {
-	goa.LogInfo(ctx, "Authorizing", keyvals...)
-	return true
 }
