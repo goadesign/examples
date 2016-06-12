@@ -1,8 +1,8 @@
-//go:generate goagen bootstrap -d github.com/goadesign/examples/form_encoding
+//go:generate goagen bootstrap -d github.com/goadesign/examples/form_encoding/design
 package main
 
 import (
-	"github.com/goadesign/examples2/form_encoding/app"
+	"github.com/goadesign/examples/form_encoding/app"
 	"github.com/goadesign/goa"
 )
 
