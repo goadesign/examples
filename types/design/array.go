@@ -41,7 +41,7 @@ Array parameters are constructed using all the values given to the same querystr
 	})
 })
 
-var ArrayPrismMedia = MediaType("vnd.goadesign.examples.arrayprism", func() {
+var ArrayPrismMedia = MediaType("application/vnd.goadesign.examples.arrayprism", func() {
 	Description("ArrayPrismMedia is a media type with one attribute per primitive type.")
 	Attributes(func() {
 		Attribute("bool_att", Boolean, "Boolean attribute")

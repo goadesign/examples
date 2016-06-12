@@ -36,7 +36,7 @@ var _ = Resource("prism", func() {
 	})
 })
 
-var PrismMedia = MediaType("vnd.goadesign.examples.prism", func() {
+var PrismMedia = MediaType("application/vnd.goadesign.examples.prism", func() {
 	Description("PrismMedia is a media type with one attribute per primitive type.")
 	Attributes(func() {
 		Attribute("bool_att", Boolean, "Boolean attribute")
