@@ -4,3 +4,4 @@ client/
 main.go
 swagger/
 adder
+tool/
