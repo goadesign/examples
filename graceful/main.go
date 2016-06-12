@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/goadesign/examples/graceful/app"
-	"github.com/goadesign/examples/graceful/swagger"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/tylerb/graceful"
@@ -25,8 +24,6 @@ func main() {
 	// Mount "operands" controller
 	c := NewOperandsController(service)
 	app.MountOperandsController(service, c)
-	// Mount Swagger spec provider controller
-	swagger.MountController(service)
 
 	// Setup graceful server
 	server := &graceful.Server{
