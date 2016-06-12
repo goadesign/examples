@@ -24,6 +24,9 @@ var _ = Resource("JWTEndpoints", func() {
 	Action("secured", func() {
 		Description("This action is secured with the jwt scheme")
 		Routing(GET("/jwt"))
+		Params(func() {
+			Param("fail", Boolean, "Force auth failure via JWT validation middleware")
+		})
 		Response(OK)
 		Response(Unauthorized)
 	})
