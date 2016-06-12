@@ -1,13 +1,16 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
+	"golang.org/x/net/context"
 )
 
-// NewApiKeyMiddleware creates a middleware that checks for the presence of an authorization header
+// NewAPIKeyMiddleware creates a middleware that checks for the presence of an authorization header
 // and validates its content.
-func NewApiKeyMiddleware() goa.Middleware {
+func NewAPIKeyMiddleware() goa.Middleware {
 	// Instantiate API Key security scheme details generated from design
 	scheme := app.NewAPIKeySecurity()
 
@@ -22,7 +25,7 @@ func NewApiKeyMiddleware() goa.Middleware {
 				return ErrUnauthorized("missing auth")
 			}
 			// Proceed.
-			goa.LogInfo(ctx, "auth", "apikey", "key", key) {
+			goa.LogInfo(ctx, "auth", "apikey", "key", key)
 			return h(ctx, rw, req)
 		}
 	}

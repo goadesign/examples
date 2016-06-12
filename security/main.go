@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 )
 
 var (
-	// Unauthorized is the error returned for unauthorized requests.
-	Unauthorized = goa.NewErrorClass("unauthorized", 401)
+	// ErrUnauthorized is the error returned for unauthorized requests.
+	ErrUnauthorized = goa.NewErrorClass("unauthorized", 401)
 )
 
 func main() {
@@ -36,12 +39,23 @@ func main() {
 
 	// Mount security middlewares
 	app.UseBasicAuthMiddleware(service, NewBasicAuthMiddleware())
-	app.UseApiKeyMiddleware(service, NewApiKeyMiddleware())
-	app.UseJWTMiddleware(service, NewJWTMiddleware())
+	app.UseAPIKeyMiddleware(service, NewAPIKeyMiddleware())
+	jwtMiddleware, err := NewJWTMiddleware()
+	exitOnFailure(err)
+	app.UseJWTMiddleware(service, jwtMiddleware)
 	app.UseOauth2Middleware(service, NewOAuth2Middleware())
 
 	// Start service
 	if err := service.ListenAndServe(":8080"); err != nil {
 		service.LogError("startup", "err", err)
 	}
+}
+
+// exitOnFailure prints a fatal error message and exits the process with status 1.
+func exitOnFailure(err error) {
+	if err == nil {
+		return
+	}
+	fmt.Fprintf(os.Stderr, "[CRIT] %s", err.Error())
+	os.Exit(1)
 }

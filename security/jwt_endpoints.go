@@ -4,9 +4,12 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"path/filepath"
 
-	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/net/context"
+
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware/security/jwt"
@@ -19,7 +22,25 @@ func NewJWTMiddleware() (goa.Middleware, error) {
 	if err != nil {
 		return nil, err
 	}
-	middleware := jwt.New(keys, nil, app.NewJWTSecurity())
+	errValidationFailed := goa.NewErrorClass("validation_failed", 401)
+	forceFail := func(h goa.Handler) goa.Handler {
+		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+			if f, ok := req.URL.Query()["fail"]; ok {
+				if f[0] == "true" {
+					return errValidationFailed("forcing failure to illustrate Validation middleware")
+				}
+			}
+			return h(ctx, rw, req)
+		}
+	}
+	fm, err := goa.NewMiddleware(forceFail)
+	if err != nil {
+		panic(err) // bug
+	}
+	middleware := jwt.New(keys, fm, app.NewJWTSecurity())
+	if err != nil {
+		return nil, err
+	}
 	return middleware, nil
 }
 
@@ -35,15 +56,13 @@ func NewJWTEndpointsController(service *goa.Service) *JWTEndpointsController {
 
 // Secured runs the secured action.
 func (c *JWTEndpointsController) Secured(ctx *app.SecuredJWTEndpointsContext) error {
-	// TBD: implement
-	res := &app.Success{}
+	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
 // Unsecured runs the unsecured action.
 func (c *JWTEndpointsController) Unsecured(ctx *app.UnsecuredJWTEndpointsContext) error {
-	// TBD: implement
-	res := &app.Success{}
+	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
@@ -51,17 +70,17 @@ func (c *JWTEndpointsController) Unsecured(ctx *app.UnsecuredJWTEndpointsContext
 func LoadJWTPublicKeys() ([]*rsa.PublicKey, error) {
 	keyFiles, err := filepath.Glob("./pubkeys/*.pub")
 	if err != nil {
-		return err
+		return nil, err
 	}
-	keys := make([]*rsa.PublicKey, len(keyfiles))
+	keys := make([]*rsa.PublicKey, len(keyFiles))
 	for i, keyFile := range keyFiles {
 		pem, err := ioutil.ReadFile(keyFile)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		key, err := jwt.ParseRSAPublicKeyFromPEM([]byte(pem))
+		key, err := jwtgo.ParseRSAPublicKeyFromPEM([]byte(pem))
 		if err != nil {
-			return fmt.Errorf("failed to load key %s: %s", keyFile, err)
+			return nil, fmt.Errorf("failed to load key %s: %s", keyFile, err)
 		}
 		keys[i] = key
 	}
