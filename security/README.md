@@ -6,24 +6,30 @@ There are examples covering [basic authentication](https://tools.ietf.org/html/r
 , the use of API keys, [JWT authentication](https://jwt.io) and
 [OAuth2](https://tools.ietf.org/html/rfc6749).
 
-Each example contains a `secured` and an `unsecured` endpoint. The `secured` endpoint requires the
+Each example contains a `secure` and an `unsecure` endpoint. The `secure` endpoint requires the
 client to authenticate using the scheme defined by the example.
 
 Generate, compile and start the API with:
 
 ```
 go generate
-go build -o secured
-./secured
+go build -o secure
+./secure
 ```
 
 The rest of this document uses the generated client to illustrate the various endpoints. Compile it
 with:
 
 ```
-cd tool/secured-cli
+cd tool/secure-cli
 go build
 ```
+
+This illustrates how the security schemes defined in the design affect both the generated
+controllers and client. With minimal code you get a secure API and a client package and tool that
+can properly sign requests for the specific scheme.
+
+Use the `--dump` flag with the client to see the details for each request and response.
 
 ## Basic Auth
 
@@ -33,10 +39,114 @@ Clients of the API authenticate using basic auth as described in [section 2 of R
 The controller authorizes all requests with a non empty password. Real applications may want to
 implement a better algorithm :)
 
-Sending requests to the secured endpoint using an unauthenticated request:
+Sending requests to the secure endpoint using an unauthenticated request:
 
 ```
-./secured-cli 
+❯ ./secure-cli secure basic
+2016/06/14 01:14:31 [INFO] started id=VywOGRJD GET=http://localhost:8080/basic
+2016/06/14 01:14:31 [INFO] completed id=VywOGRJD status=401 time=1.308411ms
+error: 401: {"code":"unauthorized","status":401,"detail":"missing auth"}
+```
 
+Sending requests to the secure endpoint using an authenticated request:
 
+```
+❯ ./secure-cli --user foo --pass bar secure basic
+2016/06/14 01:14:44 [INFO] started id=8sdzObwy GET=http://localhost:8080/basic
+2016/06/14 01:14:44 [INFO] completed id=8sdzObwy status=200 time=1.824404ms
+{"ok":true}
+```
 
+Sending requests to the unsecure endpoint using an unauthenticated request:
+
+```
+❯ ./secure-cli unsecure basic
+2016/06/14 01:24:37 [INFO] started id=uUL8u8Vo GET=http://localhost:8080/basic/unsecure
+2016/06/14 01:24:37 [INFO] completed id=uUL8u8Vo status=200 time=902.653µs
+{"ok":true}
+```
+
+## API Key
+
+The file [design/api_key.go](design/api_key.go) defines an API key security scheme using the
+`X-Shared-Secret` header to pass in a static API key value.
+
+The controller authorizes all requests with a non empty `X-Shared-Secret` header. As with the
+basic auth examples real applications may want to do something more interesting...
+
+Sending requests to the secure endpoint using an unauthenticated request:
+
+```
+❯ ./secure-cli secure api_key
+2016/06/14 01:29:43 [INFO] started id=Mk3HKcfs GET=http://localhost:8080/api_key
+2016/06/14 01:29:43 [INFO] completed id=Mk3HKcfs status=401 time=1.159544ms
+error: 401: {"code":"unauthorized","status":401,"detail":"missing auth"}
+```
+
+Sending requests to the secure endpoint using an authenticated request:
+
+```
+❯ ./secure-cli --key foo secure api_key
+2016/06/14 01:37:49 [INFO] started id=FCsDiXxb GET=http://localhost:8080/api_key
+2016/06/14 01:37:49 [INFO] completed id=FCsDiXxb status=200 time=945.243µs
+{"ok":true}
+```
+
+Sending requests to the unsecure endpoint using an unauthenticated request:
+
+```
+❯ ./secure-cli unsecure api_key 
+2016/06/14 01:35:41 [INFO] started id=CbCgqGmi GET=http://localhost:8080/api_key/unsecure
+2016/06/14 01:35:41 [INFO] completed id=CbCgqGmi status=200 time=859.733µs
+{"ok":true}
+```
+
+## JWT
+
+The file [design/jwt.go](design/jwt.go) defines a JWT security scheme using the key in the `jwtkey`
+directory for validating the incoming requests.
+
+The controller validates the incoming requests `Authorization` header using the private key to
+decode its content.
+
+Sending requests to the secure endpoint using an unauthenticated request:
+
+```
+❯ ./secure-cli secure jwt
+2016/06/14 01:43:02 [INFO] started id=iTBZsjo6 GET=http://localhost:8080/jwt?fail=false
+2016/06/14 01:43:02 [INFO] completed id=iTBZsjo6 status=401 time=1.389178ms
+error: 401: {"code":"jwt_security_error","status":401,"detail":"invalid or malformed \"Bearer\" header, expected 'Authorization: Bearer JWT-token...'"}
+```
+
+Retrieving a valid JWT token:
+
+```
+❯ ./secure-cli --user foo --pass bar signin jwt --dump
+2016/06/14 02:06:18 [INFO] started id=uRpfVTBx POST=http://localhost:8080/jwt/signin
+2016/06/14 02:06:18 [INFO] request headers Authorization=Basic Zm9vOmJhcg== User-Agent=Secure-cli/0
+2016/06/14 02:06:18 [INFO] completed id=uRpfVTBx status=204 time=5.419953ms
+2016/06/14 02:06:18 [INFO] response headers Authorization=Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJBdWRpZW5jZSIsImV4cCI6MTQ2NTg5NTc3OCwiaWF0IjoiMjAxNi0wNi0xNFQwMjowNjoxOC45NzM0MzgzMDItMDc6MDAiLCJpc3MiOiJJc3N1ZXIiLCJqdGkiOiJmNGI2ZTVhZC02OTdiLTRlYjQtYTczNi04NzFmYzM3MmQzNDUiLCJuYmYiOjIsInNjb3BlcyI6ImFwaTphY2Nlc3MiLCJzdWIiOiJzdWJqZWN0In0.SbzvKFSzzV-1Dt24C6Cpon7X7z5l8_jvkuY3FHtuQWtO5JSlrGBbe1iYxxA2Wb71qQ7FqSrW6s8l2ir4377S-V9ZyuUPEfJPPUmxmDeKy64a1VB4Gu9VxuwfcBa8DQLi7yKwnuYbzSKW4Y4ETz8myF5ywi7CKP4rEwHvl8VVoAXVsiVoukXcN8XCqNb9Slnf2yl8OdWTr8FiXm7dPDM5m5RcHIbXOZWpHJK_q1lcFJqlLlBKTDFmKUP2-Uh1x80xfVYVV3BV6fsXGOvODM9qgSUagL4CTZ8i_IU_puRcWp9y4MhikwqlkjHGC7uz3tsM2INY757rLGDpEDq6ey2xlg Date=Tue, 14 Jun 2016 09:06:18 GMT
+2016/06/14 02:06:18 [INFO] response body=
+```
+
+Sending requests to the secure endpoint using an authenticated request:
+
+```
+❯ ./secure-cli --key eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJBdWRpZW5jZSIsImV4cCI6MTQ2NTg5NTc3OCwiaWF0IjoiMjAxNi0wNi0xNFQwMjowNjoxOC45NzM0MzgzMDItMDc6MDAiLCJpc3MiOiJJc3N1ZXIiLCJqdGkiOiJmNGI2ZTVhZC02OTdiLTRlYjQtYTczNi04NzFmYzM3MmQzNDUiLCJuYmYiOjIsInNjb3BlcyI6ImFwaTphY2Nlc3MiLCJzdWIiOiJzdWJqZWN0In0.SbzvKFSzzV-1Dt24C6Cpon7X7z5l8_jvkuY3FHtuQWtO5JSlrGBbe1iYxxA2Wb71qQ7FqSrW6s8l2ir4377S-V9ZyuUPEfJPPUmxmDeKy64a1VB4Gu9VxuwfcBa8DQLi7yKwnuYbzSKW4Y4ETz8myF5ywi7CKP4rEwHvl8VVoAXVsiVoukXcN8XCqNb9Slnf2yl8OdWTr8FiXm7dPDM5m5RcHIbXOZWpHJK_q1lcFJqlLlBKTDFmKUP2-Uh1x80xfVYVV3BV6fsXGOvODM9qgSUagL4CTZ8i_IU_puRcWp9y4MhikwqlkjHGC7uz3tsM2INY757rLGDpEDq6ey2xlg secure jwt
+2016/06/14 02:06:44 [INFO] started id=f1gRUZe0 GET=http://localhost:8080/jwt?fail=false
+2016/06/14 02:06:44 [INFO] completed id=f1gRUZe0 status=200 time=1.132171ms
+{"ok":true}
+```
+
+Sending requests to the unsecure endpoint using an unauthenticated request:
+
+```
+❯ ./secure-cli unsecure jwt
+2016/06/14 02:07:43 [INFO] started id=FWyDR/Ta GET=http://localhost:8080/jwt/unsecure
+2016/06/14 02:07:43 [INFO] completed id=FWyDR/Ta status=200 time=878.099µs
+{"ok":true}
+```
+
+## OAuth2
+
+TBD

@@ -14,16 +14,16 @@ var _ = Resource("basic", func() {
 
 	Security(BasicAuth)
 
-	Action("secured", func() {
-		Description("This action is secured with the basic_auth scheme")
+	Action("secure", func() {
+		Description("This action is secure with the basic_auth scheme")
 		Routing(GET("/basic"))
 		Response(OK)
 		Response(Unauthorized)
 	})
 
-	Action("unsecured", func() {
+	Action("unsecure", func() {
 		Description("This action does not require auth")
-		Routing(GET("/basic/unsecured"))
+		Routing(GET("/basic/unsecure"))
 		NoSecurity()
 		Response(OK)
 	})

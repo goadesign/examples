@@ -37,7 +37,7 @@ var _ = Resource("jwt", func() {
 		Response(Unauthorized)
 	})
 
-	Action("secured", func() {
+	Action("secure", func() {
 		Description("This action is secured with the jwt scheme")
 		Routing(GET("/jwt"))
 		Params(func() {
@@ -47,9 +47,9 @@ var _ = Resource("jwt", func() {
 		Response(Unauthorized)
 	})
 
-	Action("unsecured", func() {
+	Action("unsecure", func() {
 		Description("This action does not require auth")
-		Routing(GET("/jwt/unsecured"))
+		Routing(GET("/jwt/unsecure"))
 		NoSecurity() // Override the need for auth
 		Response(OK)
 	})

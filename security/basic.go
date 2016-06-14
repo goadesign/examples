@@ -22,7 +22,7 @@ func NewBasicAuthMiddleware() goa.Middleware {
 			}
 
 			// Proceed
-			goa.LogInfo(ctx, "auth", "basic", "user", user, "pass", pass)
+			goa.LogInfo(ctx, "basic", "user", user, "pass", pass)
 			return h(ctx, rw, req)
 		}
 	}
@@ -38,14 +38,14 @@ func NewBasicController(service *goa.Service) *BasicController {
 	return &BasicController{Controller: service.NewController("BasicController")}
 }
 
-// Secured runs the secured action.
-func (c *BasicController) Secured(ctx *app.SecuredBasicContext) error {
+// Secure runs the secure action.
+func (c *BasicController) Secure(ctx *app.SecureBasicContext) error {
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
-// Unsecured runs the unsecured action.
-func (c *BasicController) Unsecured(ctx *app.UnsecuredBasicContext) error {
+// Unsecure runs the unsecure action.
+func (c *BasicController) Unsecure(ctx *app.UnsecureBasicContext) error {
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }

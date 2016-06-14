@@ -20,7 +20,7 @@ func NewAPIKeyMiddleware() goa.Middleware {
 			// Retrieve and log header specified by scheme
 			key := req.Header.Get(scheme.Name)
 			// A real app would do something more interesting here
-			if key == "" {
+			if len(key) == 0 || key == "Bearer" {
 				goa.LogInfo(ctx, "failed api key auth")
 				return ErrUnauthorized("missing auth")
 			}
@@ -41,14 +41,14 @@ func NewAPIKeyController(service *goa.Service) *APIKeyController {
 	return &APIKeyController{Controller: service.NewController("APIKeyController")}
 }
 
-// Secured runs the secured action.
-func (c *APIKeyController) Secured(ctx *app.SecuredAPIKeyContext) error {
+// Secure runs the secure action.
+func (c *APIKeyController) Secure(ctx *app.SecureAPIKeyContext) error {
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
-// Unsecured runs the unsecured action.
-func (c *APIKeyController) Unsecured(ctx *app.UnsecuredAPIKeyContext) error {
+// Unsecure runs the unsecure action.
+func (c *APIKeyController) Unsecure(ctx *app.UnsecureAPIKeyContext) error {
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
