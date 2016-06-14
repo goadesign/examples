@@ -8,7 +8,7 @@ import (
 // BasicAuth defines a security scheme using basic authentication.
 var BasicAuth = BasicAuthSecurity("basic_auth")
 
-var _ = Resource("BasicAuthEndpoints", func() {
+var _ = Resource("basic", func() {
 	Description("This resource uses basic auth to secure its endpoints")
 	DefaultMedia(SuccessMedia)
 

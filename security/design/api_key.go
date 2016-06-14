@@ -11,7 +11,7 @@ var APIKey = APIKeySecurity("api_key", func() {
 	Header("X-Shared-Secret")
 })
 
-var _ = Resource("APIKeyEndpoints", func() {
+var _ = Resource("api_key", func() {
 	Description("This resource uses an API key to secure its endpoints")
 	DefaultMedia(SuccessMedia)
 
