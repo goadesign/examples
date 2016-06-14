@@ -107,7 +107,8 @@ The file [design/jwt.go](design/jwt.go) defines a JWT security scheme using the 
 directory for validating the incoming requests.
 
 The controller validates the incoming requests `Authorization` header using the private key to
-decode its content.
+decode its content. The `signin` action uses basic auth to authenticate incoming requests and
+creates valid JWT tokens that can be used to send requests to the secure endpoint.
 
 Sending requests to the secure endpoint using an unauthenticated request:
 
