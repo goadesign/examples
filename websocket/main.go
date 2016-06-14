@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/goadesign/examples/websocket/app"
-	"github.com/goadesign/examples/websocket/swagger"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 )
@@ -22,8 +21,6 @@ func main() {
 	// Mount "echo" controller
 	c := NewEchoController(service)
 	app.MountEchoController(service, c)
-	// Mount Swagger spec provider controller
-	swagger.MountController(service)
 
 	log.Fatal(service.ListenAndServe(":8080"))
 }

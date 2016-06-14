@@ -32,7 +32,7 @@ var _ = Resource("hash_prism", func() {
 	})
 })
 
-var HashPrismMedia = MediaType("vnd.goadesign.examples.hashprism", func() {
+var HashPrismMedia = MediaType("application/vnd.goadesign.examples.hashprism", func() {
 	Description("HashPrismMedia is a media type with one hash member per primitive type, each using the type as value and String as key")
 	Attributes(func() {
 		Attribute("bool_val_hash", HashOf(String, Boolean), "Hash with Boolean value member")

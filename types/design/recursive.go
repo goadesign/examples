@@ -30,7 +30,7 @@ var _ = Resource("recursive_prism", func() {
 	})
 })
 
-var ArrayArrayPrismMedia = MediaType("vnd.goadesign.examples.arrayarrayprism", func() {
+var ArrayArrayPrismMedia = MediaType("application/vnd.goadesign.examples.arrayarrayprism", func() {
 	Description("ArrayArrayPrismMedia is a media type with a array member that contains another array")
 	Attributes(func() {
 		Attribute("array_array", ArrayOf(ArrayOf(String)), "Array of array member")
@@ -40,7 +40,7 @@ var ArrayArrayPrismMedia = MediaType("vnd.goadesign.examples.arrayarrayprism", f
 	})
 })
 
-var ArrayHashPrismMedia = MediaType("vnd.goadesign.examples.arrayhashprism", func() {
+var ArrayHashPrismMedia = MediaType("application/vnd.goadesign.examples.arrayhashprism", func() {
 	Description("ArrayHashPrismMedia is a media type with a array member that contains a hash")
 	Attributes(func() {
 		Attribute("array_hash", ArrayOf(HashOf(String, String)), "Array of hashes")
@@ -50,7 +50,7 @@ var ArrayHashPrismMedia = MediaType("vnd.goadesign.examples.arrayhashprism", fun
 	})
 })
 
-var HashArrayPrismMedia = MediaType("vnd.goadesign.examples.hasharrayprism", func() {
+var HashArrayPrismMedia = MediaType("application/vnd.goadesign.examples.hasharrayprism", func() {
 	Description("HashArrayPrismMedia is a media type with a hash member that contains an array")
 	Attributes(func() {
 		Attribute("hash_array", HashOf(String, ArrayOf(String)), "Hash of array member")
@@ -60,7 +60,7 @@ var HashArrayPrismMedia = MediaType("vnd.goadesign.examples.hasharrayprism", fun
 	})
 })
 
-var HashHashPrismMedia = MediaType("vnd.goadesign.examples.hashhashprism", func() {
+var HashHashPrismMedia = MediaType("application/vnd.goadesign.examples.hashhashprism", func() {
 	Description("HashHashPrismMedia is a media type with a hash member that contains another hash")
 	Attributes(func() {
 		Attribute("hash_hash", HashOf(String, HashOf(String, String)), "Hash of hash member")
