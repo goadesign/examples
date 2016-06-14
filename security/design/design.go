@@ -5,19 +5,21 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("Secured API", func() {
+var _ = API("Secured", func() {
 	Description("This artifical API shows 4 different ways to secure API endpoints: using " +
 		"basic auth, shared secret header, JWT or OAuth2")
+	Scheme("http")
+	Host("localhost:8080")
 
 	Consumes("application/json")
 	Produces("application/json")
 
 	// OAuth2 requires form encoding
 	Consumes("application/x-www-form-urlencoded", func() {
-		Package("github.com/goadesign/encoding/form")
+		Package("github.com/goadesign/goa/encoding/form")
 	})
 	Produces("application/x-www-form-urlencoded", func() {
-		Package("github.com/goadesign/encoding/form")
+		Package("github.com/goadesign/goa/encoding/form")
 	})
 })
 

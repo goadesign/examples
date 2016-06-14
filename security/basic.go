@@ -28,26 +28,24 @@ func NewBasicAuthMiddleware() goa.Middleware {
 	}
 }
 
-// BasicAuthEndpointsController implements the BasicAuthEndpoints resource.
-type BasicAuthEndpointsController struct {
+// BasicController implements the BasicAuth resource.
+type BasicController struct {
 	*goa.Controller
 }
 
-// NewBasicAuthEndpointsController creates a BasicAuthEndpoints controller.
-func NewBasicAuthEndpointsController(service *goa.Service) *BasicAuthEndpointsController {
-	return &BasicAuthEndpointsController{Controller: service.NewController("BasicAuthEndpointsController")}
+// NewBasicController creates a BasicAuth controller.
+func NewBasicController(service *goa.Service) *BasicController {
+	return &BasicController{Controller: service.NewController("BasicController")}
 }
 
 // Secured runs the secured action.
-func (c *BasicAuthEndpointsController) Secured(ctx *app.SecuredBasicAuthEndpointsContext) error {
-	// TBD: implement
-	res := &app.Success{}
+func (c *BasicController) Secured(ctx *app.SecuredBasicContext) error {
+	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
 // Unsecured runs the unsecured action.
-func (c *BasicAuthEndpointsController) Unsecured(ctx *app.UnsecuredBasicAuthEndpointsContext) error {
-	// TBD: implement
-	res := &app.Success{}
+func (c *BasicController) Unsecured(ctx *app.UnsecuredBasicContext) error {
+	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }

@@ -31,26 +31,24 @@ func NewAPIKeyMiddleware() goa.Middleware {
 	}
 }
 
-// APIKeyEndpointsController implements the APIKeyEndpoints resource.
-type APIKeyEndpointsController struct {
+// APIKeyController implements the APIKey resource.
+type APIKeyController struct {
 	*goa.Controller
 }
 
-// NewAPIKeyEndpointsController creates a APIKeyEndpoints controller.
-func NewAPIKeyEndpointsController(service *goa.Service) *APIKeyEndpointsController {
-	return &APIKeyEndpointsController{Controller: service.NewController("APIKeyEndpointsController")}
+// NewAPIKeyController creates a APIKey controller.
+func NewAPIKeyController(service *goa.Service) *APIKeyController {
+	return &APIKeyController{Controller: service.NewController("APIKeyController")}
 }
 
 // Secured runs the secured action.
-func (c *APIKeyEndpointsController) Secured(ctx *app.SecuredAPIKeyEndpointsContext) error {
-	// TBD: implement
-	res := &app.Success{}
+func (c *APIKeyController) Secured(ctx *app.SecuredAPIKeyContext) error {
+	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
 // Unsecured runs the unsecured action.
-func (c *APIKeyEndpointsController) Unsecured(ctx *app.UnsecuredAPIKeyEndpointsContext) error {
-	// TBD: implement
-	res := &app.Success{}
+func (c *APIKeyController) Unsecured(ctx *app.UnsecuredAPIKeyContext) error {
+	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
