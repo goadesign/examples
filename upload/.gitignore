@@ -1,7 +1,7 @@
 app/
-test/
 client/
-main.go
 swagger/
-adder
+main.go
+upload
+upload.exe
 tool/
