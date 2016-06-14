@@ -51,15 +51,15 @@ func NewOAuth2Controller(service *goa.Service) *OAuth2Controller {
 	return &OAuth2Controller{Controller: service.NewController("OAuth2Controller")}
 }
 
-// Secured runs the secured action.
-func (c *OAuth2Controller) Secured(ctx *app.SecuredOauth2Context) error {
+// Secure runs the secure action.
+func (c *OAuth2Controller) Secure(ctx *app.SecureOauth2Context) error {
 	// TBD: implement
 	res := &app.Success{}
 	return ctx.OK(res)
 }
 
-// Unsecured runs the unsecured action.
-func (c *OAuth2Controller) Unsecured(ctx *app.UnsecuredOauth2Context) error {
+// Unsecure runs the unsecure action.
+func (c *OAuth2Controller) Unsecure(ctx *app.UnsecureOauth2Context) error {
 	// TBD: implement
 	res := &app.Success{}
 	return ctx.OK(res)

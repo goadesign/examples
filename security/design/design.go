@@ -5,7 +5,7 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("Secured", func() {
+var _ = API("Secure", func() {
 	Description("This artifical API shows 4 different ways to secure API endpoints: using " +
 		"basic auth, shared secret header, JWT or OAuth2")
 	Scheme("http")

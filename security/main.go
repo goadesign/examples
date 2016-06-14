@@ -16,13 +16,22 @@ var (
 
 func main() {
 	// Create service
-	service := goa.New("Secured API")
+	service := goa.New("Secure API")
 
 	// Mount middleware
 	service.Use(middleware.RequestID())
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
+
+	// Mount security middlewares
+	jwtMiddleware, err := NewJWTMiddleware()
+	exitOnFailure(err)
+	app.UseBasicAuthMiddleware(service, NewBasicAuthMiddleware())
+	app.UseSigninBasicAuthMiddleware(service, NewBasicAuthMiddleware())
+	app.UseAPIKeyMiddleware(service, NewAPIKeyMiddleware())
+	app.UseJWTMiddleware(service, jwtMiddleware)
+	app.UseOAuth2Middleware(service, NewOAuth2Middleware())
 
 	// Mount "APIKey" controller
 	c := NewAPIKeyController(service)
@@ -40,14 +49,6 @@ func main() {
 	// Mount "OAuth2Provider" controller
 	c5 := NewOAuth2ProviderController(service)
 	app.MountOAuth2ProviderController(service, c5)
-
-	// Mount security middlewares
-	jwtMiddleware, err := NewJWTMiddleware()
-	exitOnFailure(err)
-	app.UseBasicAuthMiddleware(service, NewBasicAuthMiddleware())
-	app.UseAPIKeyMiddleware(service, NewAPIKeyMiddleware())
-	app.UseJWTMiddleware(service, jwtMiddleware)
-	app.UseOAuth2Middleware(service, NewOAuth2Middleware())
 
 	// Start service
 	if err := service.ListenAndServe(":8080"); err != nil {

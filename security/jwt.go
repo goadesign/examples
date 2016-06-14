@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"time"
 
 	"golang.org/x/net/context"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware/security/jwt"
+	"github.com/satori/go.uuid"
 )
 
 // NewJWTMiddleware creates a middleware that checks for the presence of a JWT Authorization header
@@ -48,14 +50,24 @@ func NewJWTController(service *goa.Service) (*JWTController, error) {
 	}, nil
 }
 
-// Signin creates JWTs for use by clients to access the secured endpoints.
+// Signin creates JWTs for use by clients to access the secure endpoints.
 func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 	// Generate JWT
-	token := jwtgo.New(jwtgo.SigningMethodRS256)
-	token.Claims = map[string]interface{}{"claim1": true}
+	token := jwtgo.New(jwtgo.SigningMethodRS512)
+	in10m := time.Now().Add(time.Duration(10) * time.Minute).Unix()
+	token.Claims = map[string]interface{}{
+		"iss":    "Issuer",              // who creates the token and signs it
+		"aud":    "Audience",            // to whom the token is intended to be sent
+		"exp":    in10m,                 // time when the token will expire (10 minutes from now)
+		"jti":    uuid.NewV4().String(), // a unique identifier for the token
+		"iat":    time.Now(),            // when the token was issued/created (now)
+		"nbf":    2,                     // time before which the token is not yet valid (2 minutes ago)
+		"sub":    "subject",             // the subject/principal is whom the token is about
+		"scopes": "api:access",          // token scope - not a standard claim
+	}
 	signedToken, err := token.SignedString(c.privateKey)
 	if err != nil {
-		return err // internal error
+		return fmt.Errorf("failed to sign token: %s", err) // internal error
 	}
 
 	// Set auth header for client retrieval
@@ -65,21 +77,21 @@ func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 	return ctx.NoContent()
 }
 
-// Secured runs the secured action.
-func (c *JWTController) Secured(ctx *app.SecuredJWTContext) error {
+// Secure runs the secure action.
+func (c *JWTController) Secure(ctx *app.SecureJWTContext) error {
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
-// Unsecured runs the unsecured action.
-func (c *JWTController) Unsecured(ctx *app.UnsecuredJWTContext) error {
+// Unsecure runs the unsecure action.
+func (c *JWTController) Unsecure(ctx *app.UnsecureJWTContext) error {
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
 
 // LoadJWTPublicKeys loads PEM encoded RSA public keys used to validata and decrypt the JWT.
 func LoadJWTPublicKeys() ([]*rsa.PublicKey, error) {
-	keyFiles, err := filepath.Glob("./jwtkeys/*.pub")
+	keyFiles, err := filepath.Glob("./jwtkey/*.pub")
 	if err != nil {
 		return nil, err
 	}
@@ -116,9 +128,6 @@ func ForceFail() goa.Middleware {
 			return h(ctx, rw, req)
 		}
 	}
-	fm, err := goa.NewMiddleware(forceFail)
-	if err != nil {
-		panic(err) // bug
-	}
+	fm, _ := goa.NewMiddleware(forceFail)
 	return fm
 }

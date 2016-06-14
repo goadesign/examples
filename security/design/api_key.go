@@ -17,16 +17,16 @@ var _ = Resource("api_key", func() {
 
 	Security(APIKey)
 
-	Action("secured", func() {
-		Description("This action is secured with the api_key scheme")
+	Action("secure", func() {
+		Description("This action is secure with the api_key scheme")
 		Routing(GET("/api_key"))
 		Response(OK)
 		Response(Unauthorized)
 	})
 
-	Action("unsecured", func() {
+	Action("unsecure", func() {
 		Description("This action does not require auth")
-		Routing(GET("/api_key/unsecured"))
+		Routing(GET("/api_key/unsecure"))
 		NoSecurity()
 		Response(OK)
 	})

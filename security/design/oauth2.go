@@ -24,8 +24,8 @@ var _ = Resource("oauth2", func() {
 		Scope("api:read") // Require "api:read" scope in all actions by default
 	})
 
-	Action("secured", func() {
-		Description("This action is secured with the oauth2 scheme")
+	Action("secure", func() {
+		Description("This action is secure with the oauth2 scheme")
 		Routing(GET("/oauth2/read"))
 		Response(OK)
 		Response(Unauthorized)
@@ -41,9 +41,9 @@ var _ = Resource("oauth2", func() {
 		Response(Unauthorized)
 	})
 
-	Action("unsecured", func() {
+	Action("unsecure", func() {
 		Description("This action does not require auth")
-		Routing(GET("/oauth2/unsecured"))
+		Routing(GET("/oauth2/unsecure"))
 		NoSecurity() // Override the need to auth
 		Response(OK)
 	})
