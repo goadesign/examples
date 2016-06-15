@@ -6,11 +6,13 @@
 #
 DIRS=$(wildcard */.)
 DEPEND=\
+	github.com/ajg/form             \
+	github.com/dgrijalva/jwt-go     \
 	github.com/goadesign/goa        \
 	github.com/goadesign/goa/goagen \
+	github.com/goadesign/oauth2     \
 	github.com/tylerb/graceful      \
-	gopkg.in/yaml.v2                \
-	github.com/ajg/form
+	gopkg.in/yaml.v2
 
 .PHONY : all
 all: depend build
