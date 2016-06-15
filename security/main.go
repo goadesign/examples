@@ -7,6 +7,7 @@ import (
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
+	"github.com/goadesign/oauth2"
 )
 
 var (
@@ -28,10 +29,18 @@ func main() {
 	jwtMiddleware, err := NewJWTMiddleware()
 	exitOnFailure(err)
 	app.UseBasicAuthMiddleware(service, NewBasicAuthMiddleware())
-	app.UseSigninBasicAuthMiddleware(service, NewBasicAuthMiddleware())
 	app.UseAPIKeyMiddleware(service, NewAPIKeyMiddleware())
 	app.UseJWTMiddleware(service, jwtMiddleware)
 	app.UseOAuth2Middleware(service, NewOAuth2Middleware())
+
+	// Security middleware used to secure the creation of JWT tokens.
+	app.UseSigninBasicAuthMiddleware(service, NewBasicAuthMiddleware())
+
+	// Security middleware used by the OAuth2 provider to authorize the client to obtain access
+	// tokens.
+	provider := NewOAuth2Provider()
+	oauth2ClientAuth := oauth2.NewOAuth2ClientBasicAuthMiddleware(provider)
+	app.UseOauth2ClientBasicAuthMiddleware(service, oauth2ClientAuth)
 
 	// Mount "APIKey" controller
 	c := NewAPIKeyController(service)
@@ -47,8 +56,8 @@ func main() {
 	c4 := NewOAuth2Controller(service)
 	app.MountOauth2Controller(service, c4)
 	// Mount "OAuth2Provider" controller
-	c5 := NewOAuth2ProviderController(service)
-	app.MountOAuth2ProviderController(service, c5)
+	c5 := NewOAuth2ProviderController(service, provider)
+	app.MountOauth2ProviderController(service, c5)
 
 	// Start service
 	if err := service.ListenAndServe(":8080"); err != nil {

@@ -47,4 +47,14 @@ var _ = Resource("oauth2", func() {
 		NoSecurity() // Override the need to auth
 		Response(OK)
 	})
+
+	Action("handle_redirect", func() {
+		Description("Handles the OAuth2 authorization code redirect by logging the retrieved code. This action would be implemented by a 3rd party service in a real application")
+		Routing(GET("/oauth2/handle_redirect"))
+		NoSecurity() // Override the need to auth
+		Params(func() {
+			Param("code", String, "The OAuth2 authorization code returned by the OAuth2 provider")
+		})
+		Response(NoContent)
+	})
 })

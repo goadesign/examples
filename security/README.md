@@ -150,4 +150,74 @@ Sending requests to the unsecure endpoint using an unauthenticated request:
 
 ## OAuth2
 
-TBD
+OAuth2 is not solely an authentication mechanism, it's also a way to have 3rd party services send
+requests to the service on behalf of end users. In OAuth2 RFC speak OAuth2 makes it possible for
+Clients (3rd party services) to send requests to the Resource Server (your service) after being
+granted access by the Resource Owner (end user). The Authorization Server is in charge of
+implementing the corresponding request handlers.
+
+For a more detailed description of OAuth2 and the "Authorization Code" flow being implemented in
+this example refer to the [github.com/goadesign/oauth2](https://github.com/goadesign/oauth2) package
+README and documentation.
+
+The goa oauth2 package takes care of implementing the Authorization Server. All you have to do is to
+provide it with the business logic that validates authorization codes and refresh tokens and creates
+access tokens. This is done by implementing the oauth2.Provider interface as done by the
+`DummyProvider` included in this example.
+
+Once the provider is implemented the OAuth2 security middleware validates the access tokens included
+in requests targetting secure endpoints. There are thus a few steps involved in exercising the
+OAuth2 authorization:
+
+1. The client needs to retrieve an authorization code by making a request to the "authorization
+   code" endpoint
+2. The client should then exchange the authorization code for a pair of refresh an access tokens by
+   making a request to the "token" endpoint.
+3. Finally the client can make requests to secure endpoints by using the access token in the
+   "Authorization" header.
+
+Sending requests to retrieve authorization codes:
+
+```
+❯ ./secure-cli authorize oauth2_provider --response_type=code --client_id=foo --redirect_uri=http://localhost:8080/oauth2/handle_redirect
+2016/06/14 18:00:47 [INFO] started id=WcC6KWC6 GET=http://localhost:8080/oauth2/authorize?client_id=foo&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foauth2%2Fhandle_redirect&response_type=code&scope=&state=
+2016/06/14 18:00:47 [INFO] completed id=WcC6KWC6 status=204 time=1.213178ms
+```
+
+Looking at the service logs we can see it received the authorization redirect with the code:
+
+```
+2016/06/14 18:00:47 [INFO] started req_id=1bd2n3cfyC-2 GET=/oauth2/handle_redirect?code=authcode from=::1 ctrl=OAuth2Controller action=HandleRedirect
+2016/06/14 18:00:47 [INFO] params req_id=1bd2n3cfyC-2 code=authcode
+2016/06/14 18:00:47 [INFO] got redirect request req_id=1bd2n3cfyC-2 code=authcode
+2016/06/14 18:00:47 [INFO] completed req_id=1bd2n3cfyC-2 status=204 bytes=0 time=54.136µs
+```
+
+Using the code to retrieve refresh and access tokens:
+
+```
+❯ ./secure-cli --user client --pass secret get_token oauth2_provider --payload='{"grant_type":"authorization_code","code":"authcode","redirect_uri":"http://localhost:8080/handle_redirect"}' --content="application/x-www-form-urlencoded"
+2016/06/14 22:36:23 [INFO] started id=iwE21eIG POST=http://localhost:8080/oauth2/token
+2016/06/14 22:36:23 [INFO] completed id=iwE21eIG status=200 time=1.126004ms
+{"access_token":"accesstoken","expires_in":3600,"refresh_token":"refreshtoken","token_type":"Bearer"}
+```
+
+Using the access token to send requests to the secure endpoint:
+
+```
+❯ ./secure-cli --token accesstoken secure oauth2
+2016/06/14 23:05:52 [INFO] started id=rW3rVFc2 GET=http://localhost:8080/oauth2/read
+2016/06/14 23:05:52 [INFO] completed id=rW3rVFc2 status=200 time=1.821886ms
+{"ok":true}
+```
+
+Refreshing the access token:
+
+```
+❯ ./secure-cli --user client --pass secret get_token oauth2_provider --payload='{"grant_type":"refresh_token","refresh_token":"refreshtoken"}' --content="application/x-www-form-urlencoded"
+2016/06/14 23:07:42 [INFO] started id=km2N7Udg POST=http://localhost:8080/oauth2/token
+2016/06/14 23:07:42 [INFO] completed id=km2N7Udg status=200 time=1.001427ms
+{"access_token":"accesstoken","expires_in":3600,"refresh_token":"refreshtoken","token_type":"Bearer"}
+```
+
+That's it! Now go forth and secure your APIs.
