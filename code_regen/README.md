@@ -1,8 +1,15 @@
 Goa Code Regeneration
 =====================
 
+Note: This depends on a
+[PR in progress](https://github.com/goadesign/goa/pull/593) for changing TDB to the tag pairs.
+
+---
+
 This example shows how to regenerate your apps code
 without disrupting the modifications you have made.
+This allows you to modify your design, after the initial generation,
+and keep the logic you have already implemented.
 
 __All you have to do is drop the `Makefile` and `restore.py` into your app dirrectory__
 
@@ -15,8 +22,12 @@ The process that happens is:
 1. Restore the modifications from the backups
 
 This process is enabled by having [start/end] tags.
-[PR in progress](https://github.com/goadesign/goa/pull/593) for adding the tags automatically.
-
+These are genreated automatically for the controller stubs.
+You may also use two special tags `import` and `extra`.
+`import` will appear as the first block in the import clause
+and enables the maintenance of additional imports.
+`extra` will be appended to the end of the file
+and allows extra functions to be added to the file.
 
 
 ```Go
@@ -46,6 +57,12 @@ func (c *CheckinController) Create(ctx *app.CreateCheckinContext) error {
 }
 
 ...
+
+// extra start_implement
+func hello() {
+  fmt.Println("hello")
+}
+// extra end_implement
 
 ```
 
