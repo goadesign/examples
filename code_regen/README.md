@@ -68,13 +68,17 @@ func hello() {
 
 The Makefile also wraps the goagen workflow.
 
-- `make gen`
-- `make regen`
-- `make backup`
-- `make restore`
-- `make clean`
-- `make clean_backups`
-- `make clean_all`
+- `make gen` : goagen
+- `make`     : go build .
+- `make run` : ./<app>
+- `make build` : go build .
+- `make install` : go install .
+- `make regen` : backup, gen, restore
+- `make backup` : cp *.go -> *.go.backup
+- `make restore` : restore.py
+- `make clean`: rm *.go
+- `make clean_backups` : rm *.backup
+- `make clean_all` : clean, clean_backups
 
 
 

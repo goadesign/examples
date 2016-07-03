@@ -32,7 +32,6 @@ def extract_from_backup(filename):
             blocks.append(block)
             block = []
     pairs = zip(starts,ends,blocks)
-    print(pairs)
     return pairs
 
 def restore_to_original(filename, blocks):
@@ -41,13 +40,19 @@ def restore_to_original(filename, blocks):
     output = []
 
     in_block = False
+    return_override = False
     for line in file:
+        # start of block, see if we have anything to inject
         if not in_block and "start_implement" in line:
-            in_block = True
             for b in blocks:
                 if b[0] == line:
+                    in_block = True
                     block = b
+        # regular lines
         if not in_block:
+            if return_override:
+                if "res :=" in line or "return" in line:
+                    continue
             output.append(line)
         # special case to inject imports as first section of imports
         if "import" in line:
@@ -55,9 +60,15 @@ def restore_to_original(filename, blocks):
                 if "import" in b[0]:
                     for line in b[2]:
                         output.append(line)
+        # end of block, write out
         if in_block and "end_implement" in line:
+            if len(block) == 0:
+                continue
             lines = block[2]
             for b in lines:
+                # extra special case for overriding returning from controller
+                if "return" in b:
+                    return_override = True
                 output.append(b)
             in_block = False
             block = []
