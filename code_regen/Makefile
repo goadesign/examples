@@ -1,10 +1,29 @@
+.PHONY: all
+all: build
+
+.PHONY: run
+run: build
+	@$(shell basename `pwd`)
+
+.PHONY: build
+build:
+	@go build .
+
+.PHONY: build_linux
+build_linux:
+	@GOOS=linux GOARCH=amd64 go build .
+
+.PHONY: install
+install:
+	@go install .
+
+.PHONY: regen
+regen: backup clean gen restore
+
 .PHONY: help
 help:
 	@echo "help! you know I need some... help!"
 	@echo "Helpers to simplify Goa workflow"
-
-.PHONY: regen
-regen: backup clean gen restore
 
 .PHONY: backup
 backup:
