@@ -5,12 +5,16 @@ all: build
 run: build
 	@$(shell basename `pwd`)
 
+.PHONY: exec
+exec:
+	@$(shell basename `pwd`)
+
 .PHONY: build
 build:
 	@go build .
 
-.PHONY: build_linux
-build_linux:
+.PHONY: linux
+linux:
 	@GOOS=linux GOARCH=amd64 go build .
 
 .PHONY: install
@@ -53,4 +57,6 @@ clean_backups:
 .PHONY: clean_all
 clean_all: clean clean_backups
 
-
+.PHONY: cli
+cli:
+	cd tool/$(shell basename `pwd`)-cli && go install .
