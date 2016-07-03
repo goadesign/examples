@@ -15,6 +15,8 @@ def restore(filename):
     restore_to_original(filename, blocks)
 
 def extract_from_backup(filename):
+    if not os.path.isfile(filename+".backup"):
+        return []
     file = open(filename+".backup", 'r')
     starts, ends = [], []
     block, blocks = [], []
@@ -35,6 +37,8 @@ def extract_from_backup(filename):
     return pairs
 
 def restore_to_original(filename, blocks):
+    if not os.path.isfile(filename+".backup"):
+        return []
     file = open(filename, 'r')
     block = []
     output = []
