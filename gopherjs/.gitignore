@@ -1,0 +1,6 @@
+app/
+client/
+swagger/
+./main.go
+upload
+upload.exe
