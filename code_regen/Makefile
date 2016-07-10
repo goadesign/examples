@@ -1,3 +1,7 @@
+.PHONY: help
+help:
+	@echo "help! you know I need some... help!"
+
 .PHONY: all
 all: build
 
@@ -13,6 +17,10 @@ exec:
 build:
 	@go build .
 
+.PHONY: osx
+osx:
+	@GOOS=darwin GOARCH=amd64 go build .
+
 .PHONY: linux
 linux:
 	@GOOS=linux GOARCH=amd64 go build .
@@ -22,12 +30,7 @@ install:
 	@go install .
 
 .PHONY: regen
-regen: backup clean gen restore
-
-.PHONY: help
-help:
-	@echo "help! you know I need some... help!"
-	@echo "Helpers to simplify Goa workflow"
+regen: backup clean gen redux restore
 
 .PHONY: backup
 backup:
@@ -45,6 +48,11 @@ gen:
 	@echo "generating"
 	@goagen bootstrap -d $(shell basename `pwd`)/design
 
+.PHONY: redux
+redux:
+	@echo "gen'n redux"
+	@goagen -d $(shell basename `pwd`)/design gen --pkg-path=github.com/verdverm/goa-redux
+
 .PHONY: restore
 restore:
 	@echo "restoring"
@@ -56,6 +64,10 @@ clean_backups:
 
 .PHONY: clean_all
 clean_all: clean clean_backups
+
+.PHONY: swagger
+swagger:
+	@goagen swagger -d $(shell basename `pwd`)/design
 
 .PHONY: cli
 cli:
