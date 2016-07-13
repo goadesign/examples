@@ -1,3 +1,5 @@
+design_path="$(shell pwd | sed "s|^${GOPATH}/src/||")/design"
+
 .PHONY: help
 help:
 	@echo "help! you know I need some... help!"
@@ -45,13 +47,13 @@ clean:
 
 .PHONY: gen
 gen:
-	@echo "generating"
-	@goagen bootstrap -d $(shell basename `pwd`)/design
+	@echo "generating $(design_path)"
+	@goagen bootstrap -d $(design_path)
 
 .PHONY: redux
 redux:
 	@echo "gen'n redux"
-	@goagen -d $(shell basename `pwd`)/design gen --pkg-path=github.com/verdverm/goa-redux
+	@goagen -d $(design_path) gen --pkg-path=github.com/verdverm/goa-redux
 
 .PHONY: restore
 restore:
@@ -67,8 +69,8 @@ clean_all: clean clean_backups
 
 .PHONY: swagger
 swagger:
-	@goagen swagger -d $(shell basename `pwd`)/design
+	@goagen swagger -d $(design_path)
 
 .PHONY: cli
 cli:
-	cd tool/$(shell basename `pwd`)-cli && go install .
+	cd tool/$(shell `pwd`)-cli && go install .
