@@ -1,36 +1,5 @@
 design_path="$(shell pwd | sed "s|^${GOPATH}/src/||")/design"
 
-.PHONY: help
-help:
-	@echo "help! you know I need some... help!"
-
-.PHONY: all
-all: build
-
-.PHONY: run
-run: build
-	@$(shell basename `pwd`)
-
-.PHONY: exec
-exec:
-	@$(shell basename `pwd`)
-
-.PHONY: build
-build:
-	@go build .
-
-.PHONY: osx
-osx:
-	@GOOS=darwin GOARCH=amd64 go build .
-
-.PHONY: linux
-linux:
-	@GOOS=linux GOARCH=amd64 go build .
-
-.PHONY: install
-install:
-	@go install .
-
 .PHONY: regen
 regen: backup clean gen redux restore
 
@@ -67,10 +36,3 @@ clean_backups:
 .PHONY: clean_all
 clean_all: clean clean_backups
 
-.PHONY: swagger
-swagger:
-	@goagen swagger -d $(design_path)
-
-.PHONY: cli
-cli:
-	cd tool/$(shell `pwd`)-cli && go install .
