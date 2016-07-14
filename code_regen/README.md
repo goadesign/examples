@@ -1,28 +1,52 @@
 goa Code Regeneration
 =====================
 
-Note: This depends on a
-[PR in progress](https://github.com/goadesign/goa/pull/593) for changing TDB to the tag pairs.
 
----
-
-This example shows how to regenerate your apps code
+This example shows how to use a helper script
+and Makefile to regenerate your code
 without disrupting the modifications you have made.
-This allows you to modify your design, after the initial generation,
-and keep the logic you have already implemented.
 
-__All you have to do is drop the `Makefile` and `restore.py` into your app dirrectory__
+Using the methods below,
+you can modify your design,
+regenerate your application,
+and find your code existing within the freshly generated goa code.
+This helper pack is by no means necessary
+for goa app regeneration.
+Under normal circumstances goa will not touch or update
+the files in the root application directory and
+considers these files completely under your control.
+However, if you delete one of the controller files,
+then goa will generate it because it does not exist.
+This helper pack uses that behavior
+to backup, regenerate, and restore your files.
 
-and type `make regen`
 
-The process that happens is:
+__Note__: This API development process encouraged by this helper pack
+does not necessarily follow best practices.
+It is best used during early iteration,
+as a learning tool,
+or to a gain deeper understanding into
+goa and the translations between design and code.
 
-1. Backup the current go files
-1. Remove and regenerate the app
-1. Restore the modifications from the backups
+
+#### Installation
+
+All you have to do is drop the `Makefile` and `restore.py` into your app dirrectory
+
+
+#### Usage
+
+Type `make regen`
+
+This is what happens:
+
+1. Backup the current go files in the root directory.
+1. `rm *.go`
+1. `goagen` the app like new.
+1. Restore your code from the backups
 
 This process is enabled by having [start/end] tags.
-These are genreated automatically for the controller stubs.
+These are generated automatically for the controller stubs.
 You may also use two special tags `import` and `extra`.
 `import` will appear as the first block in the import clause
 and enables the maintenance of additional imports.
@@ -34,9 +58,6 @@ and allows extra functions to be added to the file.
 package main
 
 import (
-  // import start_implement
-  "fmt"
-  // import end_implement
   "github.com/goadesign/goa"
   "nginx-checkin/app"
 )
@@ -66,19 +87,16 @@ func hello() {
 
 ```
 
-The Makefile also wraps the goagen workflow.
+The Makefile has the following commands:
 
-- `make gen` : goagen
-- `make`     : go build .
-- `make run` : ./<app>
-- `make build` : go build .
-- `make install` : go install .
-- `make regen` : backup, gen, restore
+- `make`     : regen
+- `make regen` : backup clean gen restore
 - `make backup` : cp *.go -> *.go.backup
-- `make restore` : restore.py
 - `make clean`: rm *.go
+- `make gen` : goagen
+- `make restore` : restore.py
 - `make clean_backups` : rm *.backup
-- `make clean_all` : clean, clean_backups
+- `make clean_all` : clean clean_backups
 
 
 
