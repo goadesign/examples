@@ -58,12 +58,6 @@ def restore_to_original(filename, blocks):
                 if "res :=" in line or "return" in line:
                     continue
             output.append(line)
-        # special case to inject imports as first section of imports
-        if "import" in line:
-            for b in blocks:
-                if "import" in b[0]:
-                    for line in b[2]:
-                        output.append(line)
         # end of block, write out
         if in_block and "end_implement" in line:
             if len(block) == 0:

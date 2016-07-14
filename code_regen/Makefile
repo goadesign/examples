@@ -1,7 +1,7 @@
 design_path="$(shell pwd | sed "s|^${GOPATH}/src/||")/design"
 
 .PHONY: regen
-regen: backup clean gen redux restore
+regen: backup clean gen restore
 
 .PHONY: backup
 backup:
@@ -18,11 +18,6 @@ clean:
 gen:
 	@echo "generating $(design_path)"
 	@goagen bootstrap -d $(design_path)
-
-.PHONY: redux
-redux:
-	@echo "gen'n redux"
-	@goagen -d $(design_path) gen --pkg-path=github.com/verdverm/goa-redux
 
 .PHONY: restore
 restore:
