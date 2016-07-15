@@ -73,6 +73,6 @@ func hello() {
 // extra end_implement
 ```
 
-Running `make` causes the file to get replaces with a newly generated scaffold 
+Running `make` causes the file to get replaced with a newly generated scaffold 
 where both the content of the controller methods and the code in between the
 `extra start_implement` and `extra end_implement` tags is copied over.
