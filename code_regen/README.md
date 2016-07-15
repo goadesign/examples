@@ -1,58 +1,45 @@
-goa Code Regeneration
-=====================
+goa Controller Code Regeneration
+================================
 
+This example contains a Makefile and associated script which makes it possible to easily
+apply the latest scaffold to an existing controller file.
 
-This example shows how to use a helper script
-and Makefile to regenerate your code
-without disrupting the modifications you have made.
+#### Context
 
-Using the methods below,
-you can modify your design,
-regenerate your application,
-and find your code existing within the freshly generated goa code.
-This helper pack is by no means necessary
-for goa app regeneration.
-Under normal circumstances goa will not touch or update
-the files in the root application directory and
-considers these files completely under your control.
-However, if you delete one of the controller files,
-then goa will generate it because it does not exist.
-This helper pack uses that behavior
-to backup, regenerate, and restore your files.
+goa generates two types of code:
 
+* The goagen owned code which cannot be edited and is completely regenerated each time. Non
+  generated code use the goagen owned code by importing the generated package.
+  The goagen owned code includes: the `app` package, the `client` package and the `tool/cli`
+  package.
 
-__Note__: This API development process encouraged by this helper pack
-does not necessarily follow best practices.
-It is best used during early iteration,
-as a learning tool,
-or to a gain deeper understanding into
-goa and the translations between design and code.
+* The scaffold code that is generated once as a convenience. This code should be treated
+  identically to non generated code. goagen won't override such files if they already exist.
+  The scaffold code includes: the `main` package files: `main.go`,  all the
+  `<controller name>.go` files as well as the `tool/<name of api>-cli/main.go` file.
 
+#### Strategy
 
-#### Installation
+Sometimes it may be convenient to retrieve the scaffold that would be generated if a given
+controller file did not already exist - for example after having updated the design to
+include new actions.
 
-All you have to do is drop the `Makefile` and `restore.py` into your app dirrectory
+The makefile included in this example moves the existing controller files so that goagen
+re-generates the scaffold. It then applies the existing changes back to the newly generated
+files.
 
+The code for the existing controller methods is automatically copied over. Any code that
+appears between two `extra` tags is also copied over, see the example below.
 
 #### Usage
 
-Type `make regen`
+1. Copy the files `Makefile` and `restore.py` from this example into the service root directory (the directory containing the generated controller files).
+2. `cd` into the service root directory.
+3. Run `make`
 
-This is what happens:
+### Example
 
-1. Backup the current go files in the root directory.
-1. `rm *.go`
-1. `goagen` the app like new.
-1. Restore your code from the backups
-
-This process is enabled by having [start/end] tags.
-These are generated automatically for the controller stubs.
-You may also use two special tags `import` and `extra`.
-`import` will appear as the first block in the import clause
-and enables the maintenance of additional imports.
-`extra` will be appended to the end of the file
-and allows extra functions to be added to the file.
-
+Given the file below containing the user written `Checkin` controller implementation:
 
 ```Go
 package main
@@ -84,19 +71,8 @@ func hello() {
   fmt.Println("hello")
 }
 // extra end_implement
-
 ```
 
-The Makefile has the following commands:
-
-- `make`     : regen
-- `make regen` : backup clean gen restore
-- `make backup` : cp *.go -> *.go.backup
-- `make clean`: rm *.go
-- `make gen` : goagen
-- `make restore` : restore.py
-- `make clean_backups` : rm *.backup
-- `make clean_all` : clean clean_backups
-
-
-
+Running `make` causes the file to get replaces with a newly generated scaffold 
+where both the content of the controller methods and the code in between the
+`extra start_implement` and `extra end_implement` tags is copied over.
