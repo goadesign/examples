@@ -4,7 +4,7 @@ goa Controller Code Regeneration
 This example contains a Makefile and associated script which makes it possible to easily
 apply the latest scaffold to an existing controller file.
 
-#### Context
+### Context
 
 goa generates two types of code:
 
@@ -18,7 +18,7 @@ goa generates two types of code:
   The scaffold code includes: the `main` package files: `main.go`,  all the
   `<controller name>.go` files as well as the `tool/<name of api>-cli/main.go` file.
 
-#### Strategy
+### Strategy
 
 Sometimes it may be convenient to retrieve the scaffold that would be generated if a given
 controller file did not already exist - for example after having updated the design to
@@ -31,7 +31,7 @@ files.
 The code for the existing controller methods is automatically copied over. Any code that
 appears between two `extra` tags is also copied over, see the example below.
 
-#### Usage
+### Usage
 
 1. Copy the files `Makefile` and `restore.py` from this example into the service root directory (the directory containing the generated controller files).
 2. `cd` into the service root directory.
