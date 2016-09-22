@@ -1,0 +1,10 @@
+runtime: go
+vm: true
+manual_scaling:
+  # Limit to one instance
+  instances: 1
+beta_settings:
+  # Enable Google Cloud Endpoints API management.
+  use_endpoints_api_management: true
+  # Specify the Swagger API specification.
+  endpoints_swagger_spec_file: swagger/swagger.yaml

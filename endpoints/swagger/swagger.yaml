@@ -1,0 +1,117 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  Auth:
+    description: User info extracted from security token (default view)
+    example:
+      email: antwon@cartwright.org
+      id: Repellat repudiandae sequi placeat perspiciatis porro.
+      issuer: Error et quas modi.
+    properties:
+      email:
+        description: User email
+        example: antwon@cartwright.org
+        format: email
+        type: string
+      id:
+        description: User ID
+        example: Repellat repudiandae sequi placeat perspiciatis porro.
+        type: string
+      issuer:
+        description: Token issuer
+        example: Error et quas modi.
+        type: string
+    required:
+    - id
+    title: 'Mediatype identifier: application/vnd.goa-cellar.auth+json'
+    type: object
+host: goa-endpoints.appspot.com
+info:
+  description: An example of a goa service deployed behind Google Cloud Endpoints
+    - https://cloud.google.com/endpoints
+  title: The adder API
+  version: ""
+paths:
+  /add/{left}/{right}:
+    get:
+      description: add returns the sum of the left and right parameters in the response
+        body
+      operationId: operands#add
+      parameters:
+      - description: Left operand
+        in: path
+        name: left
+        required: true
+        type: integer
+      - description: Right operand
+        in: path
+        name: right
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
+      security:
+      - api_key: []
+      summary: add operands
+      tags:
+      - operands
+  /auth/info/basic:
+    get:
+      operationId: auth#basic
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Auth'
+      schemes:
+      - http
+      security:
+      - api_key: []
+      summary: basic auth
+      tags:
+      - auth
+  /auth/info/jwt:
+    get:
+      operationId: auth#jwt
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Auth'
+      schemes:
+      - http
+      security:
+      - jwt: []
+      summary: jwt auth
+      tags:
+      - auth
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  OK:
+    description: OK
+    schema:
+      $ref: '#/definitions/Auth'
+schemes:
+- http
+securityDefinitions:
+  api_key:
+    in: query
+    name: key
+    type: apiKey
+  jwt:
+    authorizationUrl: http://goa-endpoints.appspot.com/auth
+    flow: implicit
+    type: oauth2
+    x-issuer: jwt-client.endpoints.sample.google.com
+    x-jwks_uri: https://www.googleapis.com/service_accounts/v1/jwk/account-1@goa-swagger.iam.gserviceaccount.com
+swagger: "2.0"
