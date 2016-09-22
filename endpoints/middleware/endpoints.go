@@ -32,16 +32,21 @@ type User struct {
 func Endpoints() goa.Middleware {
 	return func(h goa.Handler) goa.Handler {
 		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+			logger := goa.ContextLogger(ctx)
 			info := req.Header.Get("X-Endpoint-API-UserInfo")
+			logger.Info("endpoints middleware", "header", info)
 			u := User{ID: "anonymous"}
 			if info != "" {
 				js, err := base64.StdEncoding.DecodeString(info)
-				if err == nil {
-					if err = json.Unmarshal(js, &u); err == nil {
-						ctx = context.WithValue(ctx, userKey, &u)
+				if err != nil {
+					logger.Error("invalid header Base64 encoding", "err", err)
+				} else {
+					if err = json.Unmarshal(js, &u); err != nil {
+						logger.Error("invalid header JSON", "err", err)
 					}
 				}
 			}
+			ctx = context.WithValue(ctx, userKey, &u)
 			return h(ctx, rw, req)
 		}
 	}
