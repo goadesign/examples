@@ -21,13 +21,12 @@ type (
 	// Developers service account JSON key file.
 	SASource struct {
 		RSA *rsa.PrivateKey
-		Key string
 	}
 )
 
 // NewSASource creates a service account JWT token source from the credentials stored in the given
 // Google Developers service account JSON key file.
-func NewSASource(safile, key string) (goaclient.TokenSource, error) {
+func NewSASource(safile string) (goaclient.TokenSource, error) {
 	sa, err := ioutil.ReadFile(safile)
 	if err != nil {
 		return nil, err
@@ -52,7 +51,7 @@ func NewSASource(safile, key string) (goaclient.TokenSource, error) {
 	if !ok {
 		return nil, errors.New("private key is invalid")
 	}
-	return &SASource{rsa, key}, nil
+	return &SASource{rsa}, nil
 }
 
 // Token returns a JWT token factory.
@@ -82,13 +81,6 @@ func (s *SASource) SetAuthHeader(r *http.Request) {
 		return
 	}
 	r.Header.Set("Authorization", "Bearer "+auth)
-
-	// Add key param if present
-	if s.Key != "" {
-		query := r.URL.Query()
-		query.Set("key", s.Key)
-		r.URL.RawQuery = query.Encode()
-	}
 }
 
 // Valid returns true.
