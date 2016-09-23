@@ -8,10 +8,10 @@ import (
 // Client is the adder service client.
 type Client struct {
 	*goaclient.Client
-	APIKeySigner goaclient.Signer
-	JWTSigner    goaclient.Signer
-	Encoder      *goa.HTTPEncoder
-	Decoder      *goa.HTTPDecoder
+	APIKeySigner    goaclient.Signer
+	GoogleJWTSigner goaclient.Signer
+	Encoder         *goa.HTTPEncoder
+	Decoder         *goa.HTTPDecoder
 }
 
 // New instantiates the client.
@@ -42,7 +42,7 @@ func (c *Client) SetAPIKeySigner(signer goaclient.Signer) {
 	c.APIKeySigner = signer
 }
 
-// SetJWTSigner sets the request signer for the jwt security scheme.
-func (c *Client) SetJWTSigner(signer goaclient.Signer) {
-	c.JWTSigner = signer
+// SetGoogleJWTSigner sets the request signer for the google_jwt security scheme.
+func (c *Client) SetGoogleJWTSigner(signer goaclient.Signer) {
+	c.GoogleJWTSigner = signer
 }

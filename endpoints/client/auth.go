@@ -9,7 +9,7 @@ import (
 
 // BasicAuthPath computes a request path to the basic action of auth.
 func BasicAuthPath() string {
-	return fmt.Sprintf("/auth/info/basic")
+	return fmt.Sprintf("/auth/basic")
 }
 
 // BasicAuth makes a request to the basic action endpoint of the auth resource
@@ -40,7 +40,7 @@ func (c *Client) NewBasicAuthRequest(ctx context.Context, path string) (*http.Re
 
 // JWTAuthPath computes a request path to the jwt action of auth.
 func JWTAuthPath() string {
-	return fmt.Sprintf("/auth/info/jwt")
+	return fmt.Sprintf("/auth/jwt")
 }
 
 // JWTAuth makes a request to the jwt action endpoint of the auth resource
@@ -63,8 +63,8 @@ func (c *Client) NewJWTAuthRequest(ctx context.Context, path string) (*http.Requ
 	if err != nil {
 		return nil, err
 	}
-	if c.JWTSigner != nil {
-		c.JWTSigner.Sign(req)
+	if c.GoogleJWTSigner != nil {
+		c.GoogleJWTSigner.Sign(req)
 	}
 	return req, nil
 }

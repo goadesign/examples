@@ -18,7 +18,7 @@ var APIKey = APIKeySecurity("api_key", func() {
 })
 
 // JWT defines a security scheme using Google Endpoints JWT.
-var JWT = OAuth2Security("jwt", func() {
+var JWT = OAuth2Security("google_jwt", func() {
 	// Dummy value to make OpenAPI spec valid, Endpoints take care of implementation.
 	ImplicitFlow("/auth")
 })
@@ -42,18 +42,18 @@ var _ = Resource("auth", func() {
 
 	Action("basic", func() {
 		Security("api_key")
-		Routing(GET("info/basic"))
+		Routing(GET("/basic"))
 		Response(OK)
 	})
 
 	Action("jwt", func() {
-		Security("jwt", func() {
+		Security(JWT, func() {
 			// Swagger extensions as per https://cloud.google.com/endpoints/docs/authenticating-users
-			Metadata("swagger:extension:x-issuer", "jwt-client.endpoints.sample.google.com")
+			Metadata("swagger:extension:x-issuer", "client.goa-endpoints.appspot.com")
 			Metadata("swagger:extension:x-jwks_uri", "https://www.googleapis.com/service_accounts/v1/jwk/account-1@goa-swagger.iam.gserviceaccount.com")
 		})
-		Routing(GET("info/jwt", func() {
-			Metadata("swagger:extension:x-security", `json:[{"jwt":{"audiences":["goa-endpoints.appspot.com"]}}]`)
+		Routing(GET("/jwt", func() {
+			Metadata("swagger:extension:x-security", `json:[{"google_jwt":{"audiences":["goa-endpoints.appspot.com"]}}]`)
 		}))
 		Response(OK)
 	})

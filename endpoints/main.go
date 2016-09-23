@@ -24,7 +24,7 @@ func main() {
 
 	// Setup security middleware which loads user info
 	app.UseAPIKeyMiddleware(service, middleware.Endpoints())
-	app.UseJWTMiddleware(service, middleware.Endpoints())
+	app.UseGoogleJWTMiddleware(service, middleware.Endpoints())
 
 	// Mount "operands" controller
 	c := NewOperandsController(service)

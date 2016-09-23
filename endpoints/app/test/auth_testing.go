@@ -51,7 +51,7 @@ func BasicAuthOK(t goatest.TInterface, ctx context.Context, service *goa.Service
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/auth/info/basic"),
+		Path: fmt.Sprintf("/auth/basic"),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -119,7 +119,7 @@ func JWTAuthOK(t goatest.TInterface, ctx context.Context, service *goa.Service, 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/auth/info/jwt"),
+		Path: fmt.Sprintf("/auth/jwt"),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
