@@ -55,7 +55,7 @@ paths:
         "200":
           description: OK
       schemes:
-      - http
+      - https
       security:
       - api_key: []
       summary: add operands
@@ -70,7 +70,7 @@ paths:
           schema:
             $ref: '#/definitions/Auth'
       schemes:
-      - http
+      - https
       security:
       - api_key: []
       summary: basic auth
@@ -85,7 +85,7 @@ paths:
           schema:
             $ref: '#/definitions/Auth'
       schemes:
-      - http
+      - https
       security:
       - google_jwt: []
       summary: jwt auth
@@ -106,14 +106,14 @@ responses:
     schema:
       $ref: '#/definitions/Auth'
 schemes:
-- http
+- https
 securityDefinitions:
   api_key:
     in: query
     name: key
     type: apiKey
   google_jwt:
-    authorizationUrl: http://goa-endpoints.appspot.com/auth
+    authorizationUrl: https://goa-endpoints.appspot.com/auth
     flow: implicit
     type: oauth2
     x-issuer: client.goa-endpoints.appspot.com
