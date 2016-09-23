@@ -50,7 +50,7 @@ var _ = Resource("auth", func() {
 		Security(JWT, func() {
 			// Swagger extensions as per https://cloud.google.com/endpoints/docs/authenticating-users
 			Metadata("swagger:extension:x-issuer", "client.goa-endpoints.appspot.com")
-			Metadata("swagger:extension:x-jwks_uri", "https://www.googleapis.com/service_accounts/v1/jwk/account-1@goa-swagger.iam.gserviceaccount.com")
+			Metadata("swagger:extension:x-jwks_uri", "https://www.googleapis.com/service_accounts/v1/jwk/endpoints-demo@goa-endpoints.iam.gserviceaccount.com")
 		})
 		Routing(GET("/jwt", func() {
 			Metadata("swagger:extension:x-security", `json:[{"google_jwt":{"audiences":["goa-endpoints.appspot.com"]}}]`)

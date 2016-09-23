@@ -10,20 +10,24 @@ import (
 	"net/http"
 	"time"
 
-	goaclient "github.com/goadesign/goa/client"
 	"golang.org/x/oauth2/google"
 	"golang.org/x/oauth2/jws"
+
+	goaclient "github.com/goadesign/goa/client"
 )
 
 type (
 	// SASource is a token source that creates JWT token from the credentials stored in a Google
 	// Developers service account JSON key file.
-	SASource rsa.PrivateKey
+	SASource struct {
+		RSA *rsa.PrivateKey
+		Key string
+	}
 )
 
 // NewSASource creates a service account JWT token source from the credentials stored in the given
 // Google Developers service account JSON key file.
-func NewSASource(safile string) (goaclient.TokenSource, error) {
+func NewSASource(safile, key string) (goaclient.TokenSource, error) {
 	sa, err := ioutil.ReadFile(safile)
 	if err != nil {
 		return nil, err
@@ -48,8 +52,7 @@ func NewSASource(safile string) (goaclient.TokenSource, error) {
 	if !ok {
 		return nil, errors.New("private key is invalid")
 	}
-	sas := SASource(*rsa)
-	return &sas, nil
+	return &SASource{rsa, key}, nil
 }
 
 // Token returns a JWT token factory.
@@ -61,10 +64,9 @@ func (s *SASource) Token() (goaclient.Token, error) {
 func (s *SASource) SetAuthHeader(r *http.Request) {
 	iat := time.Now()
 	exp := iat.Add(time.Hour)
-
 	jwt := &jws.ClaimSet{
 		Iss:   "client.goa-endpoints.appspot.com",
-		Sub:   "goa JWT client",
+		Sub:   "client@goa.design",
 		Aud:   "goa-endpoints.appspot.com",
 		Scope: "email",
 		Iat:   iat.Unix(),
@@ -74,13 +76,19 @@ func (s *SASource) SetAuthHeader(r *http.Request) {
 		Algorithm: "RS256",
 		Typ:       "JWT",
 	}
-	key := rsa.PrivateKey(*s)
-	auth, err := jws.Encode(header, jwt, &key)
+	auth, err := jws.Encode(header, jwt, s.RSA)
 	if err != nil {
 		fmt.Printf("Whoops, JWT encoding failed: %s\n", err)
 		return
 	}
 	r.Header.Set("Authorization", "Bearer "+auth)
+
+	// Add key param if present
+	if s.Key != "" {
+		query := r.URL.Query()
+		query.Set("key", s.Key)
+		r.URL.RawQuery = query.Encode()
+	}
 }
 
 // Valid returns true.

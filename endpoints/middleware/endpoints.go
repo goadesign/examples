@@ -37,7 +37,7 @@ func Endpoints() goa.Middleware {
 			logger.Info("endpoints middleware", "header", info)
 			u := User{ID: "anonymous"}
 			if info != "" {
-				js, err := base64.StdEncoding.DecodeString(info)
+				js, err := base64.RawStdEncoding.DecodeString(info)
 				if err != nil {
 					logger.Error("invalid header Base64 encoding", "err", err)
 				} else {

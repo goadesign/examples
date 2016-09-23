@@ -42,7 +42,7 @@ func main() {
 	app.ParseFlags(os.Args)
 	apiKeySigner := newAPIKeySigner(key, format)
 	if jwt {
-		source, err := NewSASource(safile)
+		source, err := NewSASource(safile, key)
 		if err != nil {
 			fmt.Println("Failed to load service account JSON key file for creating JWT tokens")
 			os.Exit(-1)
