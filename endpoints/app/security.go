@@ -47,7 +47,7 @@ func NewJWTSecurity() *goa.OAuth2Security {
 	def := goa.OAuth2Security{
 		Flow:             "implicit",
 		TokenURL:         "",
-		AuthorizationURL: "http://localhost:8080/auth"}
+		AuthorizationURL: "http://goa-endpoints.appspot.com/auth"}
 	return &def
 }
 

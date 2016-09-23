@@ -91,6 +91,10 @@ paths:
       summary: jwt auth
       tags:
       - auth
+      x-security:
+      - jwt:
+          audiences:
+          - goa-endpoints.appspot.com
 produces:
 - application/json
 - application/xml

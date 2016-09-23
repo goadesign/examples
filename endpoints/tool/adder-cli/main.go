@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/goadesign/examples/endpoints/client"
 	"github.com/goadesign/examples/endpoints/tool/cli"
 	goaclient "github.com/goadesign/goa/client"
 	"github.com/spf13/cobra"
-	"net/http"
-	"os"
-	"time"
 )
 
 func main() {
@@ -32,21 +33,25 @@ func main() {
 	var key, format string
 	app.PersistentFlags().StringVar(&key, "key", "", "API key used for authentication")
 	app.PersistentFlags().StringVar(&format, "format", "Bearer %s", "Format used to create auth header or query from key")
-	var token, typ string
-	app.PersistentFlags().StringVar(&token, "token", "", "Token used for authentication")
-	app.PersistentFlags().StringVar(&typ, "token-type", "Bearer", "Token type used for authentication")
+	var jwt bool
+	app.PersistentFlags().BoolVar(&jwt, "jwt", false, "Use JWT for authentication, requires a service account JSON key file")
+	var safile string
+	app.PersistentFlags().StringVar(&safile, "sa", "./service.json", "Path to service account key JSON file")
 
 	// Parse flags and setup signers
 	app.ParseFlags(os.Args)
-	source := &goaclient.StaticTokenSource{
-		StaticToken: &goaclient.StaticToken{Type: typ, Value: token},
-	}
 	apiKeySigner := newAPIKeySigner(key, format)
-	jwtSigner := newJWTSigner(source)
+	source, err := NewSASource(safile)
+	if err != nil && jwt {
+		fmt.Println("Failed to load service account JSON key file for creating JWT tokens")
+		os.Exit(-1)
+	}
+	if jwt {
+		c.SetJWTSigner(newJWTSigner(source))
+	}
 
 	// Initialize API client
 	c.SetAPIKeySigner(apiKeySigner)
-	c.SetJWTSigner(jwtSigner)
 	c.UserAgent = "adder-cli/0"
 
 	// Register API commands
@@ -73,7 +78,7 @@ func newAPIKeySigner(key, format string) goaclient.Signer {
 		SignQuery: true,
 		KeyName:   "key",
 		KeyValue:  key,
-		Format:    format,
+		Format:    "%s",
 	}
 
 }
