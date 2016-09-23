@@ -25,7 +25,7 @@ func (c *Client) BasicAuth(ctx context.Context, path string) (*http.Response, er
 func (c *Client) NewBasicAuthRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
-		scheme = "http"
+		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -56,7 +56,7 @@ func (c *Client) JWTAuth(ctx context.Context, path string) (*http.Response, erro
 func (c *Client) NewJWTAuthRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
-		scheme = "http"
+		scheme = "https"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), nil)
