@@ -52,7 +52,9 @@ var _ = Resource("auth", func() {
 			Metadata("swagger:extension:x-issuer", "jwt-client.endpoints.sample.google.com")
 			Metadata("swagger:extension:x-jwks_uri", "https://www.googleapis.com/service_accounts/v1/jwk/account-1@goa-swagger.iam.gserviceaccount.com")
 		})
-		Routing(GET("info/jwt"))
+		Routing(GET("info/jwt", func() {
+			Metadata("swagger:extension:x-security", `json:[{"jwt":{"audiences":["goa-endpoints.appspot.com"]}}]`)
+		}))
 		Response(OK)
 	})
 })
