@@ -10,6 +10,10 @@ var _ = API("adder", func() {
 	Description("An example of a goa service deployed behind Google Cloud Endpoints - https://cloud.google.com/endpoints")
 	Host("goa-endpoints.appspot.com")
 	Scheme("https")
+
+	Origin("http://swagger.goa.design", func() {
+		Methods("GET", "POST")
+	})
 })
 
 // APIKey defines a security scheme using an API key (shared secret).

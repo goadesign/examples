@@ -14,6 +14,7 @@ package app
 
 import (
 	"github.com/goadesign/goa"
+	"github.com/goadesign/goa/cors"
 	"golang.org/x/net/context"
 	"net/http"
 )
@@ -44,6 +45,8 @@ type AuthController interface {
 func MountAuthController(service *goa.Service, ctrl AuthController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/auth/basic", ctrl.MuxHandler("preflight", handleAuthOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/auth/jwt", ctrl.MuxHandler("preflight", handleAuthOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -57,6 +60,7 @@ func MountAuthController(service *goa.Service, ctrl AuthController) {
 		}
 		return ctrl.Basic(rctx)
 	}
+	h = handleAuthOrigin(h)
 	h = handleSecurity("api_key", h)
 	service.Mux.Handle("GET", "/auth/basic", ctrl.MuxHandler("Basic", h, nil))
 	service.LogInfo("mount", "ctrl", "Auth", "action", "Basic", "route", "GET /auth/basic", "security", "api_key")
@@ -73,9 +77,35 @@ func MountAuthController(service *goa.Service, ctrl AuthController) {
 		}
 		return ctrl.JWT(rctx)
 	}
+	h = handleAuthOrigin(h)
 	h = handleSecurity("google_jwt", h)
 	service.Mux.Handle("GET", "/auth/jwt", ctrl.MuxHandler("JWT", h, nil))
 	service.LogInfo("mount", "ctrl", "Auth", "action", "JWT", "route", "GET /auth/jwt", "security", "google_jwt")
+}
+
+// handleAuthOrigin applies the CORS response headers corresponding to the origin.
+func handleAuthOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://swagger.goa.design") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Allow-Credentials", "false")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
 }
 
 // OperandsController is the controller interface for the Operands actions.
@@ -88,6 +118,7 @@ type OperandsController interface {
 func MountOperandsController(service *goa.Service, ctrl OperandsController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/add/:left/:right", ctrl.MuxHandler("preflight", handleOperandsOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -101,7 +132,33 @@ func MountOperandsController(service *goa.Service, ctrl OperandsController) {
 		}
 		return ctrl.Add(rctx)
 	}
+	h = handleOperandsOrigin(h)
 	h = handleSecurity("api_key", h)
 	service.Mux.Handle("GET", "/add/:left/:right", ctrl.MuxHandler("Add", h, nil))
 	service.LogInfo("mount", "ctrl", "Operands", "action", "Add", "route", "GET /add/:left/:right", "security", "api_key")
+}
+
+// handleOperandsOrigin applies the CORS response headers corresponding to the origin.
+func handleOperandsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://swagger.goa.design") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Allow-Credentials", "false")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
 }
