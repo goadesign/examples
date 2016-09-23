@@ -58,8 +58,8 @@ func MountAuthController(service *goa.Service, ctrl AuthController) {
 		return ctrl.Basic(rctx)
 	}
 	h = handleSecurity("api_key", h)
-	service.Mux.Handle("GET", "/auth/info/basic", ctrl.MuxHandler("Basic", h, nil))
-	service.LogInfo("mount", "ctrl", "Auth", "action", "Basic", "route", "GET /auth/info/basic", "security", "api_key")
+	service.Mux.Handle("GET", "/auth/basic", ctrl.MuxHandler("Basic", h, nil))
+	service.LogInfo("mount", "ctrl", "Auth", "action", "Basic", "route", "GET /auth/basic", "security", "api_key")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -73,9 +73,9 @@ func MountAuthController(service *goa.Service, ctrl AuthController) {
 		}
 		return ctrl.JWT(rctx)
 	}
-	h = handleSecurity("jwt", h)
-	service.Mux.Handle("GET", "/auth/info/jwt", ctrl.MuxHandler("JWT", h, nil))
-	service.LogInfo("mount", "ctrl", "Auth", "action", "JWT", "route", "GET /auth/info/jwt", "security", "jwt")
+	h = handleSecurity("google_jwt", h)
+	service.Mux.Handle("GET", "/auth/jwt", ctrl.MuxHandler("JWT", h, nil))
+	service.LogInfo("mount", "ctrl", "Auth", "action", "JWT", "route", "GET /auth/jwt", "security", "google_jwt")
 }
 
 // OperandsController is the controller interface for the Operands actions.

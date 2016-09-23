@@ -41,13 +41,13 @@ func main() {
 	// Parse flags and setup signers
 	app.ParseFlags(os.Args)
 	apiKeySigner := newAPIKeySigner(key, format)
-	source, err := NewSASource(safile)
-	if err != nil && jwt {
-		fmt.Println("Failed to load service account JSON key file for creating JWT tokens")
-		os.Exit(-1)
-	}
 	if jwt {
-		c.SetJWTSigner(newJWTSigner(source))
+		source, err := NewSASource(safile)
+		if err != nil {
+			fmt.Println("Failed to load service account JSON key file for creating JWT tokens")
+			os.Exit(-1)
+		}
+		c.SetGoogleJWTSigner(newJWTSigner(source))
 	}
 
 	// Initialize API client

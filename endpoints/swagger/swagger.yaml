@@ -61,7 +61,7 @@ paths:
       summary: add operands
       tags:
       - operands
-  /auth/info/basic:
+  /auth/basic:
     get:
       operationId: auth#basic
       responses:
@@ -76,7 +76,7 @@ paths:
       summary: basic auth
       tags:
       - auth
-  /auth/info/jwt:
+  /auth/jwt:
     get:
       operationId: auth#jwt
       responses:
@@ -87,12 +87,12 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - google_jwt: []
       summary: jwt auth
       tags:
       - auth
       x-security:
-      - jwt:
+      - google_jwt:
           audiences:
           - goa-endpoints.appspot.com
 produces:
@@ -112,10 +112,10 @@ securityDefinitions:
     in: query
     name: key
     type: apiKey
-  jwt:
+  google_jwt:
     authorizationUrl: http://goa-endpoints.appspot.com/auth
     flow: implicit
     type: oauth2
-    x-issuer: jwt-client.endpoints.sample.google.com
+    x-issuer: client.goa-endpoints.appspot.com
     x-jwks_uri: https://www.googleapis.com/service_accounts/v1/jwk/account-1@goa-swagger.iam.gserviceaccount.com
 swagger: "2.0"

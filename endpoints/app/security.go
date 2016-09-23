@@ -37,13 +37,13 @@ func NewAPIKeySecurity() *goa.APIKeySecurity {
 	return &def
 }
 
-// UseJWTMiddleware mounts the jwt auth middleware onto the service.
-func UseJWTMiddleware(service *goa.Service, middleware goa.Middleware) {
-	service.Context = context.WithValue(service.Context, authMiddlewareKey("jwt"), middleware)
+// UseGoogleJWTMiddleware mounts the google_jwt auth middleware onto the service.
+func UseGoogleJWTMiddleware(service *goa.Service, middleware goa.Middleware) {
+	service.Context = context.WithValue(service.Context, authMiddlewareKey("google_jwt"), middleware)
 }
 
-// NewJWTSecurity creates a jwt security definition.
-func NewJWTSecurity() *goa.OAuth2Security {
+// NewGoogleJWTSecurity creates a google_jwt security definition.
+func NewGoogleJWTSecurity() *goa.OAuth2Security {
 	def := goa.OAuth2Security{
 		Flow:             "implicit",
 		TokenURL:         "",

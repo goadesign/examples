@@ -60,7 +60,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp2 := new(BasicAuthCommand)
 	sub = &cobra.Command{
-		Use:   `auth ["/auth/info/basic"]`,
+		Use:   `auth ["/auth/basic"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -74,7 +74,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp3 := new(JWTAuthCommand)
 	sub = &cobra.Command{
-		Use:   `auth ["/auth/info/jwt"]`,
+		Use:   `auth ["/auth/jwt"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -243,7 +243,7 @@ func (cmd *BasicAuthCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/auth/info/basic"
+		path = "/auth/basic"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -267,7 +267,7 @@ func (cmd *JWTAuthCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/auth/info/jwt"
+		path = "/auth/jwt"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
