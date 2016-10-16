@@ -9,8 +9,7 @@ NOBUILD="gopherjs/." "code_regen/."
 DEPEND=\
 	github.com/ajg/form             \
 	github.com/dgrijalva/jwt-go     \
-	github.com/goadesign/goa        \
-	github.com/goadesign/goa/goagen \
+	github.com/goadesign/goa/...    \
 	github.com/goadesign/oauth2     \
 	github.com/tylerb/graceful      \
 	gopkg.in/yaml.v2
