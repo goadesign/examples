@@ -13,6 +13,7 @@ var _ = API("adder", func() {
 
 	Origin("http://swagger.goa.design", func() {
 		Methods("GET", "POST")
+		Headers("*")
 	})
 })
 
