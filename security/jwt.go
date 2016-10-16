@@ -79,6 +79,21 @@ func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 
 // Secure runs the secure action.
 func (c *JWTController) Secure(ctx *app.SecureJWTContext) error {
+	// Retrieve the token claims
+	token := jwt.ContextJWT(ctx)
+	if token == nil {
+		return fmt.Errorf("JWT token is missing from context") // internal error
+	}
+	claims := token.Claims.(jwtgo.MapClaims)
+
+	// Use the claims to authorize
+	subject := claims["sub"]
+	if subject != "subject" {
+		// A real app would probably use an "Unauthorized" response here
+		res := &app.Success{OK: false}
+		return ctx.OK(res)
+	}
+
 	res := &app.Success{OK: true}
 	return ctx.OK(res)
 }
