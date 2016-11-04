@@ -24,7 +24,11 @@ func NewJWTMiddleware() (goa.Middleware, error) {
 	if err != nil {
 		return nil, err
 	}
-	middleware := jwt.New(keys, ForceFail(), app.NewJWTSecurity())
+	resolver, err := jwt.NewSimpleResolver([]jwt.Key(keys))
+	if err != nil {
+		return nil, err
+	}
+	middleware := jwt.New(resolver, ForceFail(), app.NewJWTSecurity())
 	return middleware, nil
 }
 
@@ -105,12 +109,12 @@ func (c *JWTController) Unsecure(ctx *app.UnsecureJWTContext) error {
 }
 
 // LoadJWTPublicKeys loads PEM encoded RSA public keys used to validata and decrypt the JWT.
-func LoadJWTPublicKeys() ([]*rsa.PublicKey, error) {
+func LoadJWTPublicKeys() ([]jwt.Key, error) {
 	keyFiles, err := filepath.Glob("./jwtkey/*.pub")
 	if err != nil {
 		return nil, err
 	}
-	keys := make([]*rsa.PublicKey, len(keyFiles))
+	keys := make([]jwt.Key, len(keyFiles))
 	for i, keyFile := range keyFiles {
 		pem, err := ioutil.ReadFile(keyFile)
 		if err != nil {
