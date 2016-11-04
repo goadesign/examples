@@ -69,3 +69,13 @@ var HashHashPrismMedia = MediaType("application/vnd.goadesign.examples.hashhashp
 		Attribute("hash_hash")
 	})
 })
+
+var RecursivePrismMedia = MediaType("vnd.goadesign.examples.recursiveprism", func() {
+	Description("RecursivePrismMedia is a media type that contains children of the same type")
+	Attributes(func() {
+		Attribute("children", CollectionOf("vnd.goadesign.examples.recursiveprism"), "Children")
+	})
+	View("default", func() {
+		Attribute("children")
+	})
+})
