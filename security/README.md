@@ -196,7 +196,7 @@ Looking at the service logs we can see it received the authorization redirect wi
 Using the code to retrieve refresh and access tokens:
 
 ```
-❯ ./secure-cli --user client --pass secret get_token oauth2_provider --payload='{"grant_type":"authorization_code","code":"authcode","redirect_uri":"http://localhost:8080/handle_redirect"}' --content="application/x-www-form-urlencoded"
+❯ ./secure-cli --user client --pass secret getToken oauth2_provider --payload='{"grant_type":"authorization_code","code":"authcode","redirect_uri":"http://localhost:8080/handle_redirect"}' --content="application/x-www-form-urlencoded"
 2016/06/14 22:36:23 [INFO] started id=iwE21eIG POST=http://localhost:8080/oauth2/token
 2016/06/14 22:36:23 [INFO] completed id=iwE21eIG status=200 time=1.126004ms
 {"access_token":"accesstoken","expires_in":3600,"refresh_token":"refreshtoken","token_type":"Bearer"}
@@ -214,7 +214,7 @@ Using the access token to send requests to the secure endpoint:
 Refreshing the access token:
 
 ```
-❯ ./secure-cli --user client --pass secret get_token oauth2_provider --payload='{"grant_type":"refresh_token","refresh_token":"refreshtoken"}' --content="application/x-www-form-urlencoded"
+❯ ./secure-cli --user client --pass secret getToken oauth2_provider --payload='{"grant_type":"refresh_token","refresh_token":"refreshtoken"}' --content="application/x-www-form-urlencoded"
 2016/06/14 23:07:42 [INFO] started id=km2N7Udg POST=http://localhost:8080/oauth2/token
 2016/06/14 23:07:42 [INFO] completed id=km2N7Udg status=200 time=1.001427ms
 {"access_token":"accesstoken","expires_in":3600,"refresh_token":"refreshtoken","token_type":"Bearer"}
