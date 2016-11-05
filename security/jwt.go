@@ -19,17 +19,17 @@ import (
 
 // NewJWTMiddleware creates a middleware that checks for the presence of a JWT Authorization header
 // and validates its content. A real app would probably use goa's JWT security middleware instead.
+//
+// Note: the code below assumes the example is compiled against the master branch of goa.
+// If compiling against goa v1 the call to jwt.New needs to be:
+//
+//    middleware := jwt.New(keys, ForceFail(), app.NewJWTSecurity())
 func NewJWTMiddleware() (goa.Middleware, error) {
 	keys, err := LoadJWTPublicKeys()
 	if err != nil {
 		return nil, err
 	}
-	resolver, err := jwt.NewSimpleResolver([]jwt.Key(keys))
-	if err != nil {
-		return nil, err
-	}
-	middleware := jwt.New(resolver, ForceFail(), app.NewJWTSecurity())
-	return middleware, nil
+	return jwt.New(jwt.NewSimpleResolver(keys), ForceFail(), app.NewJWTSecurity()), nil
 }
 
 // JWTController implements the JWT resource.
