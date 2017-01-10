@@ -1,0 +1,33 @@
+LogRotation: true
+Socket:
+  # Listen on specifc udp address(host:port)
+  UDPAddress: "127.0.0.1:2000"
+  # Segement max size AWS X-Ray daemon accept in KB
+  BufferSizeKB: 64
+# Generate CPU or Memory profile
+Profile:
+  CPU: ""
+  Memory: ""
+Processor:
+  # Number of go routines used to push segments to AWS X-Ray service
+  Routines: 8
+  # Segment Batch Processor Queue Size
+  BatchProcessorQueueSize: 20
+  # Uncommment Region to send segments to AWS X-Ray service that in a specific region
+  Region: "us-west-2"
+Logging:
+  LogFormat: "%Date(2006-01-02T15:04:05Z07:00) [%Level] %Msg%n"
+  # Log level, from most verbose to least: dev, debug, info, warn, error, prod (default).
+  LogLevel: "dev"
+  # Output logs to the specified file path.
+  LogPath: ""
+# Max memory(MB) footprint AWS X-Ray daemon can consume. Zero or Negative use 5% of total memory available.
+MemoryLimit: 0
+# Overrides the default behavior of verifying SSL certificates.
+NoVerifySSL: false
+# Don’t check for EC2 instance metadata.
+LocalMode: true
+# Identifier (ARN) to identify resource that running daemon.
+ResourceARN: ""
+# Assume the specified IAM role to upload segments to a different account.
+RoleARN: ""
