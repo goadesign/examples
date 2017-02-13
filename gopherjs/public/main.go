@@ -125,8 +125,7 @@ func onLoad() {
 }
 
 func main() {
-	hc := &http.Client{}
-	c = client.New(hc)
+	c = client.New(nil)
 	c.Host = "127.0.0.1:8080"
 	ctx = context.Background()
 	doc = js.Global.Get("document")
