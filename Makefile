@@ -5,7 +5,9 @@
 # Generates and builds all examples.
 #
 DIRS=$(wildcard */.)
-NOBUILD="gopherjs/." "code_regen/."
+DIRS+=$(wildcard xray/*/.)
+ROOT=$(shell pwd)
+NOBUILD="gopherjs/." "code_regen/." "xray/."
 DEPEND=\
 	github.com/ajg/form             \
 	github.com/dgrijalva/jwt-go     \
@@ -30,5 +32,5 @@ build:
 			fi; \
 		done; \
 		if test "$$skip" = "1"; then continue; fi; \
-		echo $$d && cd $$d && go generate > /dev/null && go build && cd ..; \
+		echo $$d && cd $$d && go generate > /dev/null && go build && cd $(ROOT); \
 	done
