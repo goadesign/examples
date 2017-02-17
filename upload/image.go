@@ -49,25 +49,32 @@ func (c *ImageController) Show(ctx *app.ShowImageContext) error {
 // Upload runs the upload action.
 func (c *ImageController) Upload(ctx *app.UploadImageContext) error {
 	// Assumes the image is under multipart section named "file"
-	file, handler, err := ctx.FormFile("file")
+	reader, err := ctx.MultipartReader()
 	if err != nil {
-		return goa.ErrBadRequest("failed to load file: %s", err.Error())
+		return goa.ErrBadRequest("failed to load multipart request: %s", err)
 	}
-	defer file.Close()
-
-	// Save the file in the "images" directory
-	f, err := os.OpenFile("./images/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return fmt.Errorf("failed to save file: %s", err) // causes a 500 response
+	if reader == nil {
+		return goa.ErrBadRequest("not a multipart request")
 	}
-	defer f.Close()
-	io.Copy(f, file)
-
-	// Save the image metadata
-	data := c.saveImage(handler.Filename)
-
-	// And return it
-	return ctx.OK(&app.ImageMedia{ID: data.ID, Filename: data.Filename, UploadedAt: data.UploadedAt})
+	var images []*app.ImageMedia
+	for {
+		p, err := reader.NextPart()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return goa.ErrBadRequest("failed to load part: %s", err)
+		}
+		f, err := os.OpenFile("./images/"+p.FileName(), os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			return fmt.Errorf("failed to save file: %s", err) // causes a 500 response
+		}
+		defer f.Close()
+		io.Copy(f, p)
+		data := c.saveImage(p.FileName())
+		images = append(images, &app.ImageMedia{ID: data.ID, Filename: data.Filename, UploadedAt: data.UploadedAt})
+	}
+	return ctx.OK(images)
 }
 
 // loadImage looks for the image with the given id.
