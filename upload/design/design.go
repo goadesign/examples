@@ -15,8 +15,8 @@ var _ = Resource("image", func() {
 
 	Action("upload", func() {
 		Routing(POST("/"))
-		Description("Upload an image")
-		Response(OK, ImageMedia)
+		Description("Upload multiple images in multipart request")
+		Response(OK, CollectionOf(ImageMedia))
 	})
 
 	Action("show", func() {
