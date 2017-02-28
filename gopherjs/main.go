@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/goadesign/examples/upload/app"
+	"github.com/goadesign/examples/gopherjs/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 )
