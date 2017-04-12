@@ -1,11 +1,11 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
-	"golang.org/x/net/context"
 )
 
 // NewAPIKeyMiddleware creates a middleware that checks for the presence of an authorization header

@@ -1,14 +1,13 @@
 package main
 
 import (
+	"context"
 	"crypto/rsa"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"time"
-
-	"golang.org/x/net/context"
 
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/examples/security/app"
