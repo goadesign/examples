@@ -52,7 +52,7 @@ func NewArchiver(host string, client *http.Client) Archiver {
 // corresponding resource href.
 func (a *archiver) Archive(ctx context.Context, status int, body string) (string, error) {
 	// Wrap client with xray to trace request
-	c := client.New(middleware.TraceDoer(ctx, a.doer))
+	c := client.New(middleware.TraceDoer(a.doer))
 	c.Host = a.host
 
 	// Create payload
