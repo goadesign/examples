@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,7 +13,6 @@ import (
 	"github.com/goadesign/examples/upload/client"
 
 	"github.com/gopherjs/gopherjs/js"
-	"golang.org/x/net/context"
 )
 
 var (

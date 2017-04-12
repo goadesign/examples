@@ -1,12 +1,12 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
 	"github.com/goadesign/examples/security/app"
 	"github.com/goadesign/goa"
-	"golang.org/x/net/context"
 )
 
 // OAuth2Controller implements the OAuth2 resource.
