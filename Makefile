@@ -7,7 +7,7 @@
 DIRS=$(wildcard */.)
 DIRS+=$(wildcard xray/*/.)
 ROOT=$(shell pwd)
-NOBUILD="gopherjs/." "code_regen/." "xray/."
+NOBUILD="gopherjs/." "code_regen/." "xray/." "appengine/."
 DEPEND=\
 	github.com/ajg/form             \
 	github.com/dgrijalva/jwt-go     \
