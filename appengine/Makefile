@@ -8,15 +8,15 @@
 # Also, please be sure to vendoring If you use this command.
 #
 
-##### For Example ######
+##### Example ######
 
-for_example: depend bootstrap delete context
+example: depend bootstrap delete context
 
 delete:
-	rm ./hello.go
-	rm ./main.go
+	rm -f ./hello.go
+	rm -f ./main.go
 
-##### Convenient command ######
+##### Convenience targets ######
 
 REPO:=github.com/goadesign/examples/appengine
 GAE_PROJECT:=projectName
