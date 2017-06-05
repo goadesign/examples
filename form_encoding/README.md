@@ -21,7 +21,7 @@ cd $GOPATH/src/github.com/goadesign/examples/form_encoding
 go generate
 ```
 
-> *Note*: `go get` displays an error because it cannot find the pagkage `github.com/goadesign/examples/form_encoding/app` - this is expected as this package is generated and not committed. The error can be safely ignored.
+> *Note*: `go get` displays an error because it cannot find the package `github.com/goadesign/examples/form_encoding/app` - this is expected as this package is generated and not committed. The error can be safely ignored.
 
 ## Running the Example
 
