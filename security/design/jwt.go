@@ -12,7 +12,7 @@ var JWT = JWTSecurity("jwt", func() {
 	Scope("api:access", "API access") // Define "api:access" scope
 })
 
-// BasicAut defines a security scheme using basic authentication. The scheme protects the "signin"
+// BasicAuth defines a security scheme using basic authentication. The scheme protects the "signin"
 // action used to create JWTs.
 var SigninBasicAuth = BasicAuthSecurity("SigninBasicAuth")
 
