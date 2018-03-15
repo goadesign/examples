@@ -1,6 +1,6 @@
 language: go
 go:
-- 1.7.5
+- "1.10"
 sudo: false
 script:
 - export PATH=${PATH}:${HOME}/bin:${HOME}/gopath/bin
