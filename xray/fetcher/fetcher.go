@@ -7,6 +7,7 @@ import (
 	"github.com/goadesign/examples/xray/fetcher/app"
 	"github.com/goadesign/examples/xray/fetcher/services"
 	"github.com/goadesign/goa"
+	"github.com/goadesign/goa/client"
 	"github.com/goadesign/goa/middleware/xray"
 )
 
@@ -27,14 +28,14 @@ func NewFetcherController(service *goa.Service, a services.Archiver) *FetcherCon
 // Fetch runs the fetch action.
 func (c *FetcherController) Fetch(ctx *app.FetchFetcherContext) error {
 	// Create traced client
-	cl := xray.WrapClient(ctx, http.DefaultClient)
+	cl := xray.WrapDoer(client.HTTPClientDoer(http.DefaultClient))
 
 	// Make request to external endpoint
 	req, err := http.NewRequest("GET", ctx.URL, nil)
 	if err != nil {
 		return goa.ErrBadRequest("failed to build request", "err", err)
 	}
-	resp, err := cl.Do(req)
+	resp, err := cl.Do(ctx, req)
 	if err != nil {
 		return goa.ErrBadRequest("failed to make request", "err", err)
 	}
