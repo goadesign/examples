@@ -24,7 +24,8 @@ var _ = Resource("profiles", func() {
 var ProfilePayload = Type("ProfilePayload", func() {
 	Attribute("name", String, "Name")
 	Attribute("birthday", DateTime, "Birthday")
-	Required("name", "birthday")
+	Attribute("icon", File, "Icon")
+	Required("name", "birthday", "icon")
 })
 
 var ResultMedia = MediaType("application/vnd.goa.example.form", func() {
