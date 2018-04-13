@@ -20,6 +20,5 @@ func NewOperandsController(service *goa.Service) *OperandsController {
 
 // Add runs the add action.
 func (c *OperandsController) Add(ctx *app.AddOperandsContext) error {
-	ctx.OK([]byte(strconv.Itoa(ctx.Left + ctx.Right)))
-	return nil
+	return ctx.OK([]byte(strconv.Itoa(ctx.Left + ctx.Right)))
 }
