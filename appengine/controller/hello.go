@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
+
 	"github.com/goadesign/examples/appengine/app"
 	"github.com/goadesign/goa"
 )
@@ -20,6 +23,8 @@ func (c *HelloController) Show(ctx *app.ShowHelloContext) error {
 	// HelloController_Show: start_implement
 
 	// Put your logic here
+	appCtx := appengine.NewContext(ctx.Request)
+	log.Debugf(appCtx, "Debugging\n")
 
 	// HelloController_Show: end_implement
 	msg := "Hello World"
