@@ -119,7 +119,7 @@ func ShowHelloOK(t goatest.TInterface, ctx context.Context, service *goa.Service
 	u := &url.URL{
 		Path: fmt.Sprintf("/hello/"),
 	}
-	req, err := http.NewRequest("GET", u.String(), nil)
+	req, err := NewRequestWith(ctx, "GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}

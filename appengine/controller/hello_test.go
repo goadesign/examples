@@ -25,6 +25,7 @@ func TestCreateUser(t *testing.T) {
 		t.Errorf("NewRequest Error: %v\n", err)
 	}
 	ctx := appengine.NewContext(req)
+	ctx = test.WithNewRequestFunc(ctx, test.NewRequestFunc(inst.NewRequest))
 
 	service := goa.New("appengine")
 	ctrl := NewHelloController(service)
