@@ -34,7 +34,7 @@ go build
 
 Compile and run the client in a different terminal:
 ```
-cd client/adder-cli
+cd tool/adder-cli
 go build
 ./adder-cli add operands /add/1/2
 2016/03/21 00:33:10 [INFO] started id=nclom9xa GET=http://localhost:8080/add/1/2
