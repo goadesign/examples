@@ -26,7 +26,7 @@ DEPEND=\
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
 
-.phony: build clean
+.phony: all depend lint test build clean
 
 all: depend lint gen test
 	@echo DONE!
@@ -75,7 +75,7 @@ lint:
 	fi
 
 gen:
-	# NOTE: not all command line tools are generated
+	@# NOTE: not all command line tools are generated
 	@echo GENERATING CODE...
 	@rm -rf $(GOPATH)/src/goa.design/examples/basic/cmd             && \
 	rm -rf $(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli  && \
