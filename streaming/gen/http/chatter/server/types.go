@@ -9,8 +9,8 @@
 package server
 
 import (
-	chattersvc "goa.design/examples/streaming/gen/chatter"
-	chattersvcviews "goa.design/examples/streaming/gen/chatter/views"
+	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	goa "goa.design/goa"
 )
 
@@ -102,7 +102,7 @@ type ChatSummaryResponse struct {
 
 // NewChatSummaryResponseCollection builds the HTTP response body from the
 // result of the "summary" endpoint of the "chatter" service.
-func NewChatSummaryResponseCollection(res chattersvcviews.ChatSummaryCollectionView) ChatSummaryResponseCollection {
+func NewChatSummaryResponseCollection(res chatterviews.ChatSummaryCollectionView) ChatSummaryResponseCollection {
 	body := make([]*ChatSummaryResponse, len(res))
 	for i, val := range res {
 		body[i] = &ChatSummaryResponse{
@@ -116,7 +116,7 @@ func NewChatSummaryResponseCollection(res chattersvcviews.ChatSummaryCollectionV
 
 // NewSubscribeResponseBody builds the HTTP response body from the result of
 // the "subscribe" endpoint of the "chatter" service.
-func NewSubscribeResponseBody(res *chattersvc.Event) *SubscribeResponseBody {
+func NewSubscribeResponseBody(res *chatter.Event) *SubscribeResponseBody {
 	body := &SubscribeResponseBody{
 		Message: res.Message,
 		Action:  res.Action,
@@ -127,7 +127,7 @@ func NewSubscribeResponseBody(res *chattersvc.Event) *SubscribeResponseBody {
 
 // NewHistoryResponseBodyTiny builds the HTTP response body from the result of
 // the "history" endpoint of the "chatter" service.
-func NewHistoryResponseBodyTiny(res *chattersvcviews.ChatSummaryView) *HistoryResponseBodyTiny {
+func NewHistoryResponseBodyTiny(res *chatterviews.ChatSummaryView) *HistoryResponseBodyTiny {
 	body := &HistoryResponseBodyTiny{
 		Message: *res.Message,
 	}
@@ -136,7 +136,7 @@ func NewHistoryResponseBodyTiny(res *chattersvcviews.ChatSummaryView) *HistoryRe
 
 // NewHistoryResponseBody builds the HTTP response body from the result of the
 // "history" endpoint of the "chatter" service.
-func NewHistoryResponseBody(res *chattersvcviews.ChatSummaryView) *HistoryResponseBody {
+func NewHistoryResponseBody(res *chatterviews.ChatSummaryView) *HistoryResponseBody {
 	body := &HistoryResponseBody{
 		Message: *res.Message,
 		Length:  res.Length,
@@ -147,117 +147,117 @@ func NewHistoryResponseBody(res *chattersvcviews.ChatSummaryView) *HistoryRespon
 
 // NewLoginUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "login" endpoint of the "chatter" service.
-func NewLoginUnauthorizedResponseBody(res chattersvc.Unauthorized) LoginUnauthorizedResponseBody {
+func NewLoginUnauthorizedResponseBody(res chatter.Unauthorized) LoginUnauthorizedResponseBody {
 	body := LoginUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewEchoerInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "echoer" endpoint of the "chatter" service.
-func NewEchoerInvalidScopesResponseBody(res chattersvc.InvalidScopes) EchoerInvalidScopesResponseBody {
+func NewEchoerInvalidScopesResponseBody(res chatter.InvalidScopes) EchoerInvalidScopesResponseBody {
 	body := EchoerInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewEchoerUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "echoer" endpoint of the "chatter" service.
-func NewEchoerUnauthorizedResponseBody(res chattersvc.Unauthorized) EchoerUnauthorizedResponseBody {
+func NewEchoerUnauthorizedResponseBody(res chatter.Unauthorized) EchoerUnauthorizedResponseBody {
 	body := EchoerUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewListenerInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "listener" endpoint of the "chatter" service.
-func NewListenerInvalidScopesResponseBody(res chattersvc.InvalidScopes) ListenerInvalidScopesResponseBody {
+func NewListenerInvalidScopesResponseBody(res chatter.InvalidScopes) ListenerInvalidScopesResponseBody {
 	body := ListenerInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewListenerUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "listener" endpoint of the "chatter" service.
-func NewListenerUnauthorizedResponseBody(res chattersvc.Unauthorized) ListenerUnauthorizedResponseBody {
+func NewListenerUnauthorizedResponseBody(res chatter.Unauthorized) ListenerUnauthorizedResponseBody {
 	body := ListenerUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewSummaryInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "summary" endpoint of the "chatter" service.
-func NewSummaryInvalidScopesResponseBody(res chattersvc.InvalidScopes) SummaryInvalidScopesResponseBody {
+func NewSummaryInvalidScopesResponseBody(res chatter.InvalidScopes) SummaryInvalidScopesResponseBody {
 	body := SummaryInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewSummaryUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "summary" endpoint of the "chatter" service.
-func NewSummaryUnauthorizedResponseBody(res chattersvc.Unauthorized) SummaryUnauthorizedResponseBody {
+func NewSummaryUnauthorizedResponseBody(res chatter.Unauthorized) SummaryUnauthorizedResponseBody {
 	body := SummaryUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewSubscribeInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "subscribe" endpoint of the "chatter" service.
-func NewSubscribeInvalidScopesResponseBody(res chattersvc.InvalidScopes) SubscribeInvalidScopesResponseBody {
+func NewSubscribeInvalidScopesResponseBody(res chatter.InvalidScopes) SubscribeInvalidScopesResponseBody {
 	body := SubscribeInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewSubscribeUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "subscribe" endpoint of the "chatter" service.
-func NewSubscribeUnauthorizedResponseBody(res chattersvc.Unauthorized) SubscribeUnauthorizedResponseBody {
+func NewSubscribeUnauthorizedResponseBody(res chatter.Unauthorized) SubscribeUnauthorizedResponseBody {
 	body := SubscribeUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewHistoryInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "history" endpoint of the "chatter" service.
-func NewHistoryInvalidScopesResponseBody(res chattersvc.InvalidScopes) HistoryInvalidScopesResponseBody {
+func NewHistoryInvalidScopesResponseBody(res chatter.InvalidScopes) HistoryInvalidScopesResponseBody {
 	body := HistoryInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewHistoryUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "history" endpoint of the "chatter" service.
-func NewHistoryUnauthorizedResponseBody(res chattersvc.Unauthorized) HistoryUnauthorizedResponseBody {
+func NewHistoryUnauthorizedResponseBody(res chatter.Unauthorized) HistoryUnauthorizedResponseBody {
 	body := HistoryUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewLoginPayload builds a chatter service login endpoint payload.
-func NewLoginPayload() *chattersvc.LoginPayload {
-	return &chattersvc.LoginPayload{}
+func NewLoginPayload() *chatter.LoginPayload {
+	return &chatter.LoginPayload{}
 }
 
 // NewEchoerPayload builds a chatter service echoer endpoint payload.
-func NewEchoerPayload(token string) *chattersvc.EchoerPayload {
-	return &chattersvc.EchoerPayload{
+func NewEchoerPayload(token string) *chatter.EchoerPayload {
+	return &chatter.EchoerPayload{
 		Token: token,
 	}
 }
 
 // NewListenerPayload builds a chatter service listener endpoint payload.
-func NewListenerPayload(token string) *chattersvc.ListenerPayload {
-	return &chattersvc.ListenerPayload{
+func NewListenerPayload(token string) *chatter.ListenerPayload {
+	return &chatter.ListenerPayload{
 		Token: token,
 	}
 }
 
 // NewSummaryPayload builds a chatter service summary endpoint payload.
-func NewSummaryPayload(token string) *chattersvc.SummaryPayload {
-	return &chattersvc.SummaryPayload{
+func NewSummaryPayload(token string) *chatter.SummaryPayload {
+	return &chatter.SummaryPayload{
 		Token: token,
 	}
 }
 
 // NewSubscribePayload builds a chatter service subscribe endpoint payload.
-func NewSubscribePayload(token string) *chattersvc.SubscribePayload {
-	return &chattersvc.SubscribePayload{
+func NewSubscribePayload(token string) *chatter.SubscribePayload {
+	return &chatter.SubscribePayload{
 		Token: token,
 	}
 }
 
 // NewHistoryPayload builds a chatter service history endpoint payload.
-func NewHistoryPayload(view *string, token string) *chattersvc.HistoryPayload {
-	return &chattersvc.HistoryPayload{
+func NewHistoryPayload(view *string, token string) *chatter.HistoryPayload {
+	return &chatter.HistoryPayload{
 		View:  view,
 		Token: token,
 	}

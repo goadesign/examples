@@ -9,12 +9,12 @@
 package server
 
 import (
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calc "goa.design/examples/basic/gen/calc"
 )
 
 // NewAddPayload builds a calc service add endpoint payload.
-func NewAddPayload(a int, b int) *calcsvc.AddPayload {
-	return &calcsvc.AddPayload{
+func NewAddPayload(a int, b int) *calc.AddPayload {
+	return &calc.AddPayload{
 		A: a,
 		B: b,
 	}

@@ -11,8 +11,8 @@ import (
 	"strings"
 	"sync"
 
-	calc "goa.design/examples/basic"
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calcapi "goa.design/examples/basic"
+	calc "goa.design/examples/basic/gen/calc"
 )
 
 func main() {
@@ -34,24 +34,24 @@ func main() {
 		logger *log.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[calc] ", log.Ltime)
+		logger = log.New(os.Stderr, "[calcapi] ", log.Ltime)
 	}
 
 	// Initialize the services.
 	var (
-		calcSvc calcsvc.Service
+		calcSvc calc.Service
 	)
 	{
-		calcSvc = calc.NewCalc(logger)
+		calcSvc = calcapi.NewCalc(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		calcEndpoints *calcsvc.Endpoints
+		calcEndpoints *calc.Endpoints
 	)
 	{
-		calcEndpoints = calcsvc.NewEndpoints(calcSvc)
+		calcEndpoints = calc.NewEndpoints(calcSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines

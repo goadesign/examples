@@ -11,8 +11,8 @@ import (
 	"strings"
 	"sync"
 
-	divider "goa.design/examples/error"
-	dividersvc "goa.design/examples/error/gen/divider"
+	dividerapi "goa.design/examples/error"
+	divider "goa.design/examples/error/gen/divider"
 )
 
 func main() {
@@ -33,24 +33,24 @@ func main() {
 		logger *log.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[divider] ", log.Ltime)
+		logger = log.New(os.Stderr, "[dividerapi] ", log.Ltime)
 	}
 
 	// Initialize the services.
 	var (
-		dividerSvc dividersvc.Service
+		dividerSvc divider.Service
 	)
 	{
-		dividerSvc = divider.NewDivider(logger)
+		dividerSvc = dividerapi.NewDivider(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		dividerEndpoints *dividersvc.Endpoints
+		dividerEndpoints *divider.Endpoints
 	)
 	{
-		dividerEndpoints = dividersvc.NewEndpoints(dividerSvc)
+		dividerEndpoints = divider.NewEndpoints(dividerSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines

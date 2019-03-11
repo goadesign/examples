@@ -9,19 +9,19 @@
 package server
 
 import (
-	chattersvc "goa.design/examples/streaming/gen/chatter"
-	chattersvcviews "goa.design/examples/streaming/gen/chatter/views"
+	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goa "goa.design/goa"
 )
 
 // NewLoginPayload builds the payload of the "login" endpoint of the "chatter"
 // service from the gRPC request type.
-func NewLoginPayload(user string, password string) *chattersvc.LoginPayload {
-	payload := &chattersvc.LoginPayload{}
-	payload.User = user
-	payload.Password = password
-	return payload
+func NewLoginPayload(user string, password string) *chatter.LoginPayload {
+	v := &chatter.LoginPayload{}
+	v.User = user
+	v.Password = password
+	return v
 }
 
 // NewLoginResponse builds the gRPC response type from the result of the
@@ -34,10 +34,10 @@ func NewLoginResponse(result string) *chatterpb.LoginResponse {
 
 // NewEchoerPayload builds the payload of the "echoer" endpoint of the
 // "chatter" service from the gRPC request type.
-func NewEchoerPayload(token string) *chattersvc.EchoerPayload {
-	payload := &chattersvc.EchoerPayload{}
-	payload.Token = token
-	return payload
+func NewEchoerPayload(token string) *chatter.EchoerPayload {
+	v := &chatter.EchoerPayload{}
+	v.Token = token
+	return v
 }
 
 func NewEchoerResponse(result string) *chatterpb.EchoerResponse {
@@ -53,10 +53,10 @@ func NewEchoerStreamingRequest(v *chatterpb.EchoerStreamingRequest) string {
 
 // NewListenerPayload builds the payload of the "listener" endpoint of the
 // "chatter" service from the gRPC request type.
-func NewListenerPayload(token string) *chattersvc.ListenerPayload {
-	payload := &chattersvc.ListenerPayload{}
-	payload.Token = token
-	return payload
+func NewListenerPayload(token string) *chatter.ListenerPayload {
+	v := &chatter.ListenerPayload{}
+	v.Token = token
+	return v
 }
 
 func NewListenerStreamingRequest(v *chatterpb.ListenerStreamingRequest) string {
@@ -66,13 +66,13 @@ func NewListenerStreamingRequest(v *chatterpb.ListenerStreamingRequest) string {
 
 // NewSummaryPayload builds the payload of the "summary" endpoint of the
 // "chatter" service from the gRPC request type.
-func NewSummaryPayload(token string) *chattersvc.SummaryPayload {
-	payload := &chattersvc.SummaryPayload{}
-	payload.Token = token
-	return payload
+func NewSummaryPayload(token string) *chatter.SummaryPayload {
+	v := &chatter.SummaryPayload{}
+	v.Token = token
+	return v
 }
 
-func NewChatSummaryCollection(vresult chattersvcviews.ChatSummaryCollectionView) *chatterpb.ChatSummaryCollection {
+func NewChatSummaryCollection(vresult chatterviews.ChatSummaryCollectionView) *chatterpb.ChatSummaryCollection {
 	v := &chatterpb.ChatSummaryCollection{}
 	v.Field = make([]*chatterpb.ChatSummary, len(vresult))
 	for i, val := range vresult {
@@ -97,13 +97,13 @@ func NewSummaryStreamingRequest(v *chatterpb.SummaryStreamingRequest) string {
 
 // NewSubscribePayload builds the payload of the "subscribe" endpoint of the
 // "chatter" service from the gRPC request type.
-func NewSubscribePayload(token string) *chattersvc.SubscribePayload {
-	payload := &chattersvc.SubscribePayload{}
-	payload.Token = token
-	return payload
+func NewSubscribePayload(token string) *chatter.SubscribePayload {
+	v := &chatter.SubscribePayload{}
+	v.Token = token
+	return v
 }
 
-func NewSubscribeResponse(result *chattersvc.Event) *chatterpb.SubscribeResponse {
+func NewSubscribeResponse(result *chatter.Event) *chatterpb.SubscribeResponse {
 	v := &chatterpb.SubscribeResponse{
 		Message_: result.Message,
 		Action:   result.Action,
@@ -114,14 +114,14 @@ func NewSubscribeResponse(result *chattersvc.Event) *chatterpb.SubscribeResponse
 
 // NewHistoryPayload builds the payload of the "history" endpoint of the
 // "chatter" service from the gRPC request type.
-func NewHistoryPayload(view *string, token string) *chattersvc.HistoryPayload {
-	payload := &chattersvc.HistoryPayload{}
-	payload.View = view
-	payload.Token = token
-	return payload
+func NewHistoryPayload(view *string, token string) *chatter.HistoryPayload {
+	v := &chatter.HistoryPayload{}
+	v.View = view
+	v.Token = token
+	return v
 }
 
-func NewHistoryResponse(vresult *chattersvcviews.ChatSummaryView) *chatterpb.HistoryResponse {
+func NewHistoryResponse(vresult *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
 	v := &chatterpb.HistoryResponse{}
 	if vresult.Message != nil {
 		v.Message_ = *vresult.Message

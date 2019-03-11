@@ -12,13 +12,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	dividersvc "goa.design/examples/error/gen/divider"
+	divider "goa.design/examples/error/gen/divider"
 	dividerpb "goa.design/examples/error/gen/grpc/divider/pb"
 )
 
 // BuildIntegerDividePayload builds the payload for the divider integer_divide
 // endpoint from CLI flags.
-func BuildIntegerDividePayload(dividerIntegerDivideMessage string) (*dividersvc.IntOperands, error) {
+func BuildIntegerDividePayload(dividerIntegerDivideMessage string) (*divider.IntOperands, error) {
 	var err error
 	var message dividerpb.IntegerDivideRequest
 	{
@@ -32,16 +32,16 @@ func BuildIntegerDividePayload(dividerIntegerDivideMessage string) (*dividersvc.
 	if err != nil {
 		return nil, err
 	}
-	payload := &dividersvc.IntOperands{
+	v := &divider.IntOperands{
 		A: int(message.A),
 		B: int(message.B),
 	}
-	return payload, nil
+	return v, nil
 }
 
 // BuildDividePayload builds the payload for the divider divide endpoint from
 // CLI flags.
-func BuildDividePayload(dividerDivideMessage string) (*dividersvc.FloatOperands, error) {
+func BuildDividePayload(dividerDivideMessage string) (*divider.FloatOperands, error) {
 	var err error
 	var message dividerpb.DivideRequest
 	{
@@ -55,9 +55,9 @@ func BuildDividePayload(dividerDivideMessage string) (*dividersvc.FloatOperands,
 	if err != nil {
 		return nil, err
 	}
-	payload := &dividersvc.FloatOperands{
+	v := &divider.FloatOperands{
 		A: message.A,
 		B: message.B,
 	}
-	return payload, nil
+	return v, nil
 }
