@@ -1,6 +1,23 @@
 language: go
 go:
 - "1.12.x"
+cache:
+  directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
+    - $HOME/gopath/src/bitbucket.org
+    - $HOME/gopath/src/cloud.google.com
+    - $HOME/gopath/src/github.com/aws
+    - $HOME/gopath/src/github.com/mitchellh
+    - $HOME/gopath/src/github.com/ulikunitz
+    - $HOME/gopath/src/github.com/cheggaaa
+    - $HOME/gopath/src/github.com/mattn
+    - $HOME/gopath/src/go.opencensus.io
+    - $HOME/gopath/src/golang.org
+    - $HOME/gopath/src/google.golang.org
+    - $HOME/gopath/src/gopkg.in
+    - $HOME/gopath/src/honnef.co
+    - $HOME/gopath/src/k8s.io
 script:
 - export PATH=${PATH}:${HOME}/bin:${HOME}/gopath/bin
 - make travis
