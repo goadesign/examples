@@ -11,8 +11,8 @@ package client
 import (
 	"context"
 
-	chattersvc "goa.design/examples/streaming/gen/chatter"
-	chattersvcviews "goa.design/examples/streaming/gen/chatter/views"
+	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
@@ -25,30 +25,28 @@ type Client struct {
 	opts    []grpc.CallOption
 }
 
-// echoerClientStream implements the chattersvc.EchoerClientStream interface.
+// echoerClientStream implements the chatter.EchoerClientStream interface.
 type echoerClientStream struct {
 	stream chatterpb.Chatter_EchoerClient
 }
 
-// listenerClientStream implements the chattersvc.ListenerClientStream
-// interface.
+// listenerClientStream implements the chatter.ListenerClientStream interface.
 type listenerClientStream struct {
 	stream chatterpb.Chatter_ListenerClient
 }
 
-// summaryClientStream implements the chattersvc.SummaryClientStream interface.
+// summaryClientStream implements the chatter.SummaryClientStream interface.
 type summaryClientStream struct {
 	stream chatterpb.Chatter_SummaryClient
 	view   string
 }
 
-// subscribeClientStream implements the chattersvc.SubscribeClientStream
-// interface.
+// subscribeClientStream implements the chatter.SubscribeClientStream interface.
 type subscribeClientStream struct {
 	stream chatterpb.Chatter_SubscribeClient
 }
 
-// historyClientStream implements the chattersvc.HistoryClientStream interface.
+// historyClientStream implements the chatter.HistoryClientStream interface.
 type historyClientStream struct {
 	stream chatterpb.Chatter_HistoryClient
 	view   string
@@ -190,15 +188,15 @@ func (s *listenerClientStream) Close() error {
 
 // CloseAndRecv reads instances of "chatterpb.ChatSummaryCollection" from the
 // "summary" endpoint gRPC stream.
-func (s *summaryClientStream) CloseAndRecv() (chattersvc.ChatSummaryCollection, error) {
-	var res chattersvc.ChatSummaryCollection
+func (s *summaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, error) {
+	var res chatter.ChatSummaryCollection
 	v, err := s.stream.CloseAndRecv()
 	if err != nil {
 		return res, err
 	}
 	proj := NewChatSummaryCollection(v)
-	vres := chattersvcviews.ChatSummaryCollection{Projected: proj, View: "default"}
-	return chattersvc.NewChatSummaryCollection(vres), nil
+	vres := chatterviews.ChatSummaryCollection{Projected: proj, View: "default"}
+	return chatter.NewChatSummaryCollection(vres), nil
 }
 
 // Send streams instances of "chatterpb.SummaryStreamingRequest" to the
@@ -210,8 +208,8 @@ func (s *summaryClientStream) Send(res string) error {
 
 // Recv reads instances of "chatterpb.SubscribeResponse" from the "subscribe"
 // endpoint gRPC stream.
-func (s *subscribeClientStream) Recv() (*chattersvc.Event, error) {
-	var res *chattersvc.Event
+func (s *subscribeClientStream) Recv() (*chatter.Event, error) {
+	var res *chatter.Event
 	v, err := s.stream.Recv()
 	if err != nil {
 		return res, err
@@ -226,15 +224,15 @@ func (s *subscribeClientStream) Close() error {
 
 // Recv reads instances of "chatterpb.HistoryResponse" from the "history"
 // endpoint gRPC stream.
-func (s *historyClientStream) Recv() (*chattersvc.ChatSummary, error) {
-	var res *chattersvc.ChatSummary
+func (s *historyClientStream) Recv() (*chatter.ChatSummary, error) {
+	var res *chatter.ChatSummary
 	v, err := s.stream.Recv()
 	if err != nil {
 		return res, err
 	}
 	proj := NewChatSummaryView(v)
-	vres := &chattersvcviews.ChatSummary{Projected: proj, View: s.view}
-	return chattersvc.NewChatSummary(vres), nil
+	vres := &chatterviews.ChatSummary{Projected: proj, View: s.view}
+	return chatter.NewChatSummary(vres), nil
 }
 
 func (s *historyClientStream) Close() error {

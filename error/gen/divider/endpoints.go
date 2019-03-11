@@ -6,7 +6,7 @@
 // $ goa gen goa.design/examples/error/design -o
 // $(GOPATH)/src/goa.design/examples/error
 
-package dividersvc
+package divider
 
 import (
 	"context"

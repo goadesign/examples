@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	chattersvc "goa.design/examples/streaming/gen/chatter"
+	chatter "goa.design/examples/streaming/gen/chatter"
 	goa "goa.design/goa"
 	goahttp "goa.design/goa/http"
 )
@@ -59,7 +59,7 @@ type ConnConfigurer struct {
 	HistoryFn   goahttp.ConnConfigureFunc
 }
 
-// echoerServerStream implements the chattersvc.EchoerServerStream interface.
+// echoerServerStream implements the chatter.EchoerServerStream interface.
 type echoerServerStream struct {
 	once sync.Once
 	// upgrader is the websocket connection upgrader.
@@ -77,8 +77,7 @@ type echoerServerStream struct {
 	conn *websocket.Conn
 }
 
-// listenerServerStream implements the chattersvc.ListenerServerStream
-// interface.
+// listenerServerStream implements the chatter.ListenerServerStream interface.
 type listenerServerStream struct {
 	once sync.Once
 	// upgrader is the websocket connection upgrader.
@@ -96,7 +95,7 @@ type listenerServerStream struct {
 	conn *websocket.Conn
 }
 
-// summaryServerStream implements the chattersvc.SummaryServerStream interface.
+// summaryServerStream implements the chatter.SummaryServerStream interface.
 type summaryServerStream struct {
 	once sync.Once
 	// upgrader is the websocket connection upgrader.
@@ -114,8 +113,7 @@ type summaryServerStream struct {
 	conn *websocket.Conn
 }
 
-// subscribeServerStream implements the chattersvc.SubscribeServerStream
-// interface.
+// subscribeServerStream implements the chatter.SubscribeServerStream interface.
 type subscribeServerStream struct {
 	once sync.Once
 	// upgrader is the websocket connection upgrader.
@@ -133,7 +131,7 @@ type subscribeServerStream struct {
 	conn *websocket.Conn
 }
 
-// historyServerStream implements the chattersvc.HistoryServerStream interface.
+// historyServerStream implements the chatter.HistoryServerStream interface.
 type historyServerStream struct {
 	once sync.Once
 	// upgrader is the websocket connection upgrader.
@@ -149,14 +147,14 @@ type historyServerStream struct {
 	r *http.Request
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
-	// view is the view to render chattersvc.ChatSummary result type before sending
-	// to the websocket connection.
+	// view is the view to render chatter.ChatSummary result type before sending to
+	// the websocket connection.
 	view string
 }
 
 // New instantiates HTTP handlers for all the chatter service endpoints.
 func New(
-	e *chattersvc.Endpoints,
+	e *chatter.Endpoints,
 	mux goahttp.Muxer,
 	dec func(*http.Request) goahttp.Decoder,
 	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
@@ -315,7 +313,7 @@ func NewEchoerHandler(
 		{
 			ctx, cancel = context.WithCancel(ctx)
 		}
-		v := &chattersvc.EchoerEndpointInput{
+		v := &chatter.EchoerEndpointInput{
 			Stream: &echoerServerStream{
 				upgrader:     up,
 				connConfigFn: connConfigFn,
@@ -323,7 +321,7 @@ func NewEchoerHandler(
 				w:            w,
 				r:            r,
 			},
-			Payload: payload.(*chattersvc.EchoerPayload),
+			Payload: payload.(*chatter.EchoerPayload),
 		}
 		_, err = endpoint(ctx, v)
 
@@ -382,7 +380,7 @@ func NewListenerHandler(
 		{
 			ctx, cancel = context.WithCancel(ctx)
 		}
-		v := &chattersvc.ListenerEndpointInput{
+		v := &chatter.ListenerEndpointInput{
 			Stream: &listenerServerStream{
 				upgrader:     up,
 				connConfigFn: connConfigFn,
@@ -390,7 +388,7 @@ func NewListenerHandler(
 				w:            w,
 				r:            r,
 			},
-			Payload: payload.(*chattersvc.ListenerPayload),
+			Payload: payload.(*chatter.ListenerPayload),
 		}
 		_, err = endpoint(ctx, v)
 
@@ -449,7 +447,7 @@ func NewSummaryHandler(
 		{
 			ctx, cancel = context.WithCancel(ctx)
 		}
-		v := &chattersvc.SummaryEndpointInput{
+		v := &chatter.SummaryEndpointInput{
 			Stream: &summaryServerStream{
 				upgrader:     up,
 				connConfigFn: connConfigFn,
@@ -457,7 +455,7 @@ func NewSummaryHandler(
 				w:            w,
 				r:            r,
 			},
-			Payload: payload.(*chattersvc.SummaryPayload),
+			Payload: payload.(*chatter.SummaryPayload),
 		}
 		_, err = endpoint(ctx, v)
 
@@ -516,7 +514,7 @@ func NewSubscribeHandler(
 		{
 			ctx, cancel = context.WithCancel(ctx)
 		}
-		v := &chattersvc.SubscribeEndpointInput{
+		v := &chatter.SubscribeEndpointInput{
 			Stream: &subscribeServerStream{
 				upgrader:     up,
 				connConfigFn: connConfigFn,
@@ -524,7 +522,7 @@ func NewSubscribeHandler(
 				w:            w,
 				r:            r,
 			},
-			Payload: payload.(*chattersvc.SubscribePayload),
+			Payload: payload.(*chatter.SubscribePayload),
 		}
 		_, err = endpoint(ctx, v)
 
@@ -583,7 +581,7 @@ func NewHistoryHandler(
 		{
 			ctx, cancel = context.WithCancel(ctx)
 		}
-		v := &chattersvc.HistoryEndpointInput{
+		v := &chatter.HistoryEndpointInput{
 			Stream: &historyServerStream{
 				upgrader:     up,
 				connConfigFn: connConfigFn,
@@ -591,7 +589,7 @@ func NewHistoryHandler(
 				w:            w,
 				r:            r,
 			},
-			Payload: payload.(*chattersvc.HistoryPayload),
+			Payload: payload.(*chatter.HistoryPayload),
 		}
 		_, err = endpoint(ctx, v)
 
@@ -762,11 +760,11 @@ func (s *listenerServerStream) Close() error {
 	return s.conn.Close()
 }
 
-// SendAndClose streams instances of "chattersvc.ChatSummaryCollection" to the
+// SendAndClose streams instances of "chatter.ChatSummaryCollection" to the
 // "summary" endpoint websocket connection and closes the connection.
-func (s *summaryServerStream) SendAndClose(v chattersvc.ChatSummaryCollection) error {
+func (s *summaryServerStream) SendAndClose(v chatter.ChatSummaryCollection) error {
 	defer s.conn.Close()
-	res := chattersvc.NewViewedChatSummaryCollection(v, "default")
+	res := chatter.NewViewedChatSummaryCollection(v, "default")
 	body := NewChatSummaryResponseCollection(res.Projected)
 	return s.conn.WriteJSON(body)
 }
@@ -806,9 +804,9 @@ func (s *summaryServerStream) Recv() (string, error) {
 	return body, nil
 }
 
-// Send streams instances of "chattersvc.Event" to the "subscribe" endpoint
+// Send streams instances of "chatter.Event" to the "subscribe" endpoint
 // websocket connection.
-func (s *subscribeServerStream) Send(v *chattersvc.Event) error {
+func (s *subscribeServerStream) Send(v *chatter.Event) error {
 	var err error
 	// Upgrade the HTTP connection to a websocket connection only once. Connection
 	// upgrade is done here so that authorization logic in the endpoint is executed
@@ -862,9 +860,9 @@ func (s *subscribeServerStream) Close() error {
 	return s.conn.Close()
 }
 
-// Send streams instances of "chattersvc.ChatSummary" to the "history" endpoint
+// Send streams instances of "chatter.ChatSummary" to the "history" endpoint
 // websocket connection.
-func (s *historyServerStream) Send(v *chattersvc.ChatSummary) error {
+func (s *historyServerStream) Send(v *chatter.ChatSummary) error {
 	var err error
 	// Upgrade the HTTP connection to a websocket connection only once. Connection
 	// upgrade is done here so that authorization logic in the endpoint is executed
@@ -885,7 +883,7 @@ func (s *historyServerStream) Send(v *chattersvc.ChatSummary) error {
 	if err != nil {
 		return err
 	}
-	res := chattersvc.NewViewedChatSummary(v, s.view)
+	res := chatter.NewViewedChatSummary(v, s.view)
 	var body interface{}
 	switch s.view {
 	case "tiny":
@@ -926,8 +924,8 @@ func (s *historyServerStream) Close() error {
 	return s.conn.Close()
 }
 
-// SetView sets the view to render the chattersvc.ChatSummary type before
-// sending to the "history" endpoint websocket connection.
+// SetView sets the view to render the chatter.ChatSummary type before sending
+// to the "history" endpoint websocket connection.
 func (s *historyServerStream) SetView(view string) {
 	s.view = view
 }

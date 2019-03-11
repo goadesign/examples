@@ -8,9 +8,9 @@ import (
 	"sync"
 
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
-	calcsvcsvr "goa.design/examples/basic/gen/grpc/calc/server"
+	calcsvr "goa.design/examples/basic/gen/grpc/calc/server"
 	grpcmdlwr "goa.design/goa/grpc/middleware"
 	"goa.design/goa/middleware"
 	"google.golang.org/grpc"
@@ -18,7 +18,7 @@ import (
 
 // handleGRPCServer starts configures and starts a gRPC server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleGRPCServer(ctx context.Context, u *url.URL, calcEndpoints *calcsvc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleGRPCServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -33,10 +33,10 @@ func handleGRPCServer(ctx context.Context, u *url.URL, calcEndpoints *calcsvc.En
 	// the service input and output data structures to gRPC requests and
 	// responses.
 	var (
-		calcServer *calcsvcsvr.Server
+		calcServer *calcsvr.Server
 	)
 	{
-		calcServer = calcsvcsvr.New(calcEndpoints, nil)
+		calcServer = calcsvr.New(calcEndpoints, nil)
 	}
 
 	// Initialize gRPC server with the middleware.

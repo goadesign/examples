@@ -11,7 +11,7 @@ package server
 import (
 	"context"
 
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 	"goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
@@ -29,7 +29,7 @@ type ErrorNamer interface {
 }
 
 // New instantiates the server struct with the calc service endpoints.
-func New(e *calcsvc.Endpoints, uh goagrpc.UnaryHandler) *Server {
+func New(e *calc.Endpoints, uh goagrpc.UnaryHandler) *Server {
 	return &Server{
 		AddH: NewAddHandler(e.Add, uh),
 	}

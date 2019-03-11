@@ -15,7 +15,7 @@ import (
 	"net/http"
 	"net/url"
 
-	dividersvc "goa.design/examples/error/gen/divider"
+	divider "goa.design/examples/error/gen/divider"
 	goahttp "goa.design/goa/http"
 )
 
@@ -27,9 +27,9 @@ func (c *Client) BuildIntegerDivideRequest(ctx context.Context, v interface{}) (
 		b int
 	)
 	{
-		p, ok := v.(*dividersvc.IntOperands)
+		p, ok := v.(*divider.IntOperands)
 		if !ok {
-			return nil, goahttp.ErrInvalidType("divider", "integer_divide", "*dividersvc.IntOperands", v)
+			return nil, goahttp.ErrInvalidType("divider", "integer_divide", "*divider.IntOperands", v)
 		}
 		a = p.A
 		b = p.B
@@ -136,9 +136,9 @@ func (c *Client) BuildDivideRequest(ctx context.Context, v interface{}) (*http.R
 		b float64
 	)
 	{
-		p, ok := v.(*dividersvc.FloatOperands)
+		p, ok := v.(*divider.FloatOperands)
 		if !ok {
-			return nil, goahttp.ErrInvalidType("divider", "divide", "*dividersvc.FloatOperands", v)
+			return nil, goahttp.ErrInvalidType("divider", "divide", "*divider.FloatOperands", v)
 		}
 		a = p.A
 		b = p.B

@@ -11,7 +11,7 @@ package server
 import (
 	"context"
 
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 	goagrpc "goa.design/goa/grpc"
 	"google.golang.org/grpc/metadata"
@@ -38,7 +38,7 @@ func DecodeAddRequest(ctx context.Context, v interface{}, md metadata.MD) (inter
 			return nil, goagrpc.ErrInvalidType("calc", "add", "*calcpb.AddRequest", v)
 		}
 	}
-	var payload *calcsvc.AddPayload
+	var payload *calc.AddPayload
 	{
 		payload = NewAddPayload(message)
 	}
