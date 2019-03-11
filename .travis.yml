@@ -16,7 +16,7 @@ cache:
     - $HOME/gopath/src/github.com/ulikunitz
     - $HOME/gopath/src/github.com/cheggaaa
     - $HOME/gopath/src/github.com/mattn
-#    - $HOME/gopath/src/go.opencensus.io
+    - $HOME/gopath/src/go.opencensus.io
     - $HOME/gopath/src/golang.org
     - $HOME/gopath/src/google.golang.org
     - $HOME/gopath/src/gopkg.in
