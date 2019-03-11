@@ -8,6 +8,8 @@ cache:
     - $HOME/gopath/src/bitbucket.org
     - $HOME/gopath/src/cloud.google.com
     - $HOME/gopath/src/github.com/aws
+    - $HOME/gopath/src/github.com/golang
+    - $HOME/gopath/src/github.com/googleapis
     - $HOME/gopath/src/github.com/hashicorp
     - $HOME/gopath/src/github.com/mitchellh
     - $HOME/gopath/src/github.com/ulikunitz
