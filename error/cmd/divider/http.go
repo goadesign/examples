@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	dividersvc "goa.design/examples/error/gen/divider"
-	dividersvcsvr "goa.design/examples/error/gen/http/divider/server"
+	divider "goa.design/examples/error/gen/divider"
+	dividersvr "goa.design/examples/error/gen/http/divider/server"
 	goahttp "goa.design/goa/http"
 	httpmdlwr "goa.design/goa/http/middleware"
 	"goa.design/goa/middleware"
@@ -18,7 +18,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, dividerEndpoints *dividersvc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, dividerEndpoints *divider.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -49,14 +49,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, dividerEndpoints *divider
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		dividerServer *dividersvcsvr.Server
+		dividerServer *dividersvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		dividerServer = dividersvcsvr.New(dividerEndpoints, mux, dec, enc, eh)
+		dividerServer = dividersvr.New(dividerEndpoints, mux, dec, enc, eh)
 	}
 	// Configure the mux.
-	dividersvcsvr.Mount(mux, dividerServer)
+	dividersvr.Mount(mux, dividerServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.

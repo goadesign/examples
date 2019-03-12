@@ -9,8 +9,8 @@
 package client
 
 import (
-	chattersvc "goa.design/examples/streaming/gen/chatter"
-	chattersvcviews "goa.design/examples/streaming/gen/chatter/views"
+	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goa "goa.design/goa"
 )
@@ -46,10 +46,10 @@ func NewListenerStreamingRequest(spayload string) *chatterpb.ListenerStreamingRe
 	return v
 }
 
-func NewChatSummaryCollection(v *chatterpb.ChatSummaryCollection) chattersvcviews.ChatSummaryCollectionView {
-	vresult := make([]*chattersvcviews.ChatSummaryView, len(v.Field))
+func NewChatSummaryCollection(v *chatterpb.ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
+	vresult := make([]*chatterviews.ChatSummaryView, len(v.Field))
 	for i, val := range v.Field {
-		vresult[i] = &chattersvcviews.ChatSummaryView{
+		vresult[i] = &chatterviews.ChatSummaryView{
 			Message: &val.Message_,
 			SentAt:  &val.SentAt,
 		}
@@ -72,8 +72,8 @@ func NewSubscribeRequest() *chatterpb.SubscribeRequest {
 	return message
 }
 
-func NewEvent(v *chatterpb.SubscribeResponse) *chattersvc.Event {
-	result := &chattersvc.Event{
+func NewEvent(v *chatterpb.SubscribeResponse) *chatter.Event {
+	result := &chatter.Event{
 		Message: v.Message_,
 		Action:  v.Action,
 		AddedAt: v.AddedAt,
@@ -88,8 +88,8 @@ func NewHistoryRequest() *chatterpb.HistoryRequest {
 	return message
 }
 
-func NewChatSummaryView(v *chatterpb.HistoryResponse) *chattersvcviews.ChatSummaryView {
-	vresult := &chattersvcviews.ChatSummaryView{
+func NewChatSummaryView(v *chatterpb.HistoryResponse) *chatterviews.ChatSummaryView {
+	vresult := &chatterviews.ChatSummaryView{
 		Message: &v.Message_,
 		SentAt:  &v.SentAt,
 	}

@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	chattersvcc "goa.design/examples/streaming/gen/grpc/chatter/client"
+	chatterc "goa.design/examples/streaming/gen/grpc/chatter/client"
 	goa "goa.design/goa"
 	grpc "google.golang.org/grpc"
 )
@@ -142,26 +142,26 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	{
 		switch svcn {
 		case "chatter":
-			c := chattersvcc.NewClient(cc, opts...)
+			c := chatterc.NewClient(cc, opts...)
 			switch epn {
 			case "login":
 				endpoint = c.Login()
-				data, err = chattersvcc.BuildLoginPayload(*chatterLoginUserFlag, *chatterLoginPasswordFlag)
+				data, err = chatterc.BuildLoginPayload(*chatterLoginUserFlag, *chatterLoginPasswordFlag)
 			case "echoer":
 				endpoint = c.Echoer()
-				data, err = chattersvcc.BuildEchoerPayload(*chatterEchoerTokenFlag)
+				data, err = chatterc.BuildEchoerPayload(*chatterEchoerTokenFlag)
 			case "listener":
 				endpoint = c.Listener()
-				data, err = chattersvcc.BuildListenerPayload(*chatterListenerTokenFlag)
+				data, err = chatterc.BuildListenerPayload(*chatterListenerTokenFlag)
 			case "summary":
 				endpoint = c.Summary()
-				data, err = chattersvcc.BuildSummaryPayload(*chatterSummaryTokenFlag)
+				data, err = chatterc.BuildSummaryPayload(*chatterSummaryTokenFlag)
 			case "subscribe":
 				endpoint = c.Subscribe()
-				data, err = chattersvcc.BuildSubscribePayload(*chatterSubscribeTokenFlag)
+				data, err = chatterc.BuildSubscribePayload(*chatterSubscribeTokenFlag)
 			case "history":
 				endpoint = c.History()
-				data, err = chattersvcc.BuildHistoryPayload(*chatterHistoryViewFlag, *chatterHistoryTokenFlag)
+				data, err = chatterc.BuildHistoryPayload(*chatterHistoryViewFlag, *chatterHistoryTokenFlag)
 			}
 		}
 	}

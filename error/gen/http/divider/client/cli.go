@@ -12,12 +12,12 @@ import (
 	"fmt"
 	"strconv"
 
-	dividersvc "goa.design/examples/error/gen/divider"
+	divider "goa.design/examples/error/gen/divider"
 )
 
 // BuildIntegerDividePayload builds the payload for the divider integer_divide
 // endpoint from CLI flags.
-func BuildIntegerDividePayload(dividerIntegerDivideA string, dividerIntegerDivideB string) (*dividersvc.IntOperands, error) {
+func BuildIntegerDividePayload(dividerIntegerDivideA string, dividerIntegerDivideB string) (*divider.IntOperands, error) {
 	var err error
 	var a int
 	{
@@ -40,7 +40,7 @@ func BuildIntegerDividePayload(dividerIntegerDivideA string, dividerIntegerDivid
 	if err != nil {
 		return nil, err
 	}
-	payload := &dividersvc.IntOperands{
+	payload := &divider.IntOperands{
 		A: a,
 		B: b,
 	}
@@ -49,7 +49,7 @@ func BuildIntegerDividePayload(dividerIntegerDivideA string, dividerIntegerDivid
 
 // BuildDividePayload builds the payload for the divider divide endpoint from
 // CLI flags.
-func BuildDividePayload(dividerDivideA string, dividerDivideB string) (*dividersvc.FloatOperands, error) {
+func BuildDividePayload(dividerDivideA string, dividerDivideB string) (*divider.FloatOperands, error) {
 	var err error
 	var a float64
 	{
@@ -68,7 +68,7 @@ func BuildDividePayload(dividerDivideA string, dividerDivideB string) (*dividers
 	if err != nil {
 		return nil, err
 	}
-	payload := &dividersvc.FloatOperands{
+	payload := &divider.FloatOperands{
 		A: a,
 		B: b,
 	}

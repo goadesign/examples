@@ -11,7 +11,7 @@ package client
 import (
 	"context"
 
-	chattersvc "goa.design/examples/streaming/gen/chatter"
+	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goagrpc "goa.design/goa/grpc"
 	"google.golang.org/grpc"
@@ -31,9 +31,9 @@ func BuildLoginFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOption)
 
 // EncodeLoginRequest encodes requests sent to chatter login endpoint.
 func EncodeLoginRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*chattersvc.LoginPayload)
+	payload, ok := v.(*chatter.LoginPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("chatter", "login", "*chattersvc.LoginPayload", v)
+		return nil, goagrpc.ErrInvalidType("chatter", "login", "*chatter.LoginPayload", v)
 	}
 	(*md).Append("user", payload.User)
 	(*md).Append("password", payload.Password)
@@ -63,9 +63,9 @@ func BuildEchoerFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOption
 
 // EncodeEchoerRequest encodes requests sent to chatter echoer endpoint.
 func EncodeEchoerRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*chattersvc.EchoerPayload)
+	payload, ok := v.(*chatter.EchoerPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("chatter", "echoer", "*chattersvc.EchoerPayload", v)
+		return nil, goagrpc.ErrInvalidType("chatter", "echoer", "*chatter.EchoerPayload", v)
 	}
 	(*md).Append("authorization", payload.Token)
 	return nil, nil
@@ -91,9 +91,9 @@ func BuildListenerFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOpti
 
 // EncodeListenerRequest encodes requests sent to chatter listener endpoint.
 func EncodeListenerRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*chattersvc.ListenerPayload)
+	payload, ok := v.(*chatter.ListenerPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("chatter", "listener", "*chattersvc.ListenerPayload", v)
+		return nil, goagrpc.ErrInvalidType("chatter", "listener", "*chatter.ListenerPayload", v)
 	}
 	(*md).Append("authorization", payload.Token)
 	return nil, nil
@@ -119,9 +119,9 @@ func BuildSummaryFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOptio
 
 // EncodeSummaryRequest encodes requests sent to chatter summary endpoint.
 func EncodeSummaryRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*chattersvc.SummaryPayload)
+	payload, ok := v.(*chatter.SummaryPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("chatter", "summary", "*chattersvc.SummaryPayload", v)
+		return nil, goagrpc.ErrInvalidType("chatter", "summary", "*chatter.SummaryPayload", v)
 	}
 	(*md).Append("authorization", payload.Token)
 	return nil, nil
@@ -154,9 +154,9 @@ func BuildSubscribeFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOpt
 
 // EncodeSubscribeRequest encodes requests sent to chatter subscribe endpoint.
 func EncodeSubscribeRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*chattersvc.SubscribePayload)
+	payload, ok := v.(*chatter.SubscribePayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("chatter", "subscribe", "*chattersvc.SubscribePayload", v)
+		return nil, goagrpc.ErrInvalidType("chatter", "subscribe", "*chatter.SubscribePayload", v)
 	}
 	(*md).Append("authorization", payload.Token)
 	return NewSubscribeRequest(), nil
@@ -183,9 +183,9 @@ func BuildHistoryFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOptio
 
 // EncodeHistoryRequest encodes requests sent to chatter history endpoint.
 func EncodeHistoryRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*chattersvc.HistoryPayload)
+	payload, ok := v.(*chatter.HistoryPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("chatter", "history", "*chattersvc.HistoryPayload", v)
+		return nil, goagrpc.ErrInvalidType("chatter", "history", "*chatter.HistoryPayload", v)
 	}
 	if payload.View != nil {
 		(*md).Append("view", *payload.View)

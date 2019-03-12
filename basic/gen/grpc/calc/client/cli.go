@@ -12,12 +12,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 )
 
 // BuildAddPayload builds the payload for the calc add endpoint from CLI flags.
-func BuildAddPayload(calcAddMessage string) (*calcsvc.AddPayload, error) {
+func BuildAddPayload(calcAddMessage string) (*calc.AddPayload, error) {
 	var err error
 	var message calcpb.AddRequest
 	{
@@ -31,9 +31,9 @@ func BuildAddPayload(calcAddMessage string) (*calcsvc.AddPayload, error) {
 	if err != nil {
 		return nil, err
 	}
-	payload := &calcsvc.AddPayload{
+	v := &calc.AddPayload{
 		A: int(message.A),
 		B: int(message.B),
 	}
-	return payload, nil
+	return v, nil
 }

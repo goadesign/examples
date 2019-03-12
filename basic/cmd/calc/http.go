@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	calcsvc "goa.design/examples/basic/gen/calc"
-	calcsvcsvr "goa.design/examples/basic/gen/http/calc/server"
+	calc "goa.design/examples/basic/gen/calc"
+	calcsvr "goa.design/examples/basic/gen/http/calc/server"
 	goahttp "goa.design/goa/http"
 	httpmdlwr "goa.design/goa/http/middleware"
 	"goa.design/goa/middleware"
@@ -18,7 +18,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calcsvc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -49,14 +49,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calcsvc.En
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		calcServer *calcsvcsvr.Server
+		calcServer *calcsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		calcServer = calcsvcsvr.New(calcEndpoints, mux, dec, enc, eh)
+		calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh)
 	}
 	// Configure the mux.
-	calcsvcsvr.Mount(mux, calcServer)
+	calcsvr.Mount(mux, calcServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.

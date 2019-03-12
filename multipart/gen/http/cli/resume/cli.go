@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"os"
 
-	resumesvcc "goa.design/examples/multipart/gen/http/resume/client"
+	resumec "goa.design/examples/multipart/gen/http/resume/client"
 	goa "goa.design/goa"
 	goahttp "goa.design/goa/http"
 )
@@ -42,7 +42,7 @@ func ParseEndpoint(
 	enc func(*http.Request) goahttp.Encoder,
 	dec func(*http.Response) goahttp.Decoder,
 	restore bool,
-	resumeAddEncoderFn resumesvcc.ResumeAddEncoderFunc,
+	resumeAddEncoderFn resumec.ResumeAddEncoderFunc,
 ) (goa.Endpoint, interface{}, error) {
 	var (
 		resumeFlags = flag.NewFlagSet("resume", flag.ContinueOnError)
@@ -119,14 +119,14 @@ func ParseEndpoint(
 	{
 		switch svcn {
 		case "resume":
-			c := resumesvcc.NewClient(scheme, host, doer, enc, dec, restore)
+			c := resumec.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "list":
 				endpoint = c.List()
 				data = nil
 			case "add":
 				endpoint = c.Add(resumeAddEncoderFn)
-				data, err = resumesvcc.BuildAddPayload(*resumeAddBodyFlag)
+				data, err = resumec.BuildAddPayload(*resumeAddBodyFlag)
 			}
 		}
 	}

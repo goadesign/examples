@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	dividersvcc "goa.design/examples/error/gen/grpc/divider/client"
+	dividerc "goa.design/examples/error/gen/grpc/divider/client"
 	goa "goa.design/goa"
 	grpc "google.golang.org/grpc"
 )
@@ -115,14 +115,14 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	{
 		switch svcn {
 		case "divider":
-			c := dividersvcc.NewClient(cc, opts...)
+			c := dividerc.NewClient(cc, opts...)
 			switch epn {
 			case "integer-divide":
 				endpoint = c.IntegerDivide()
-				data, err = dividersvcc.BuildIntegerDividePayload(*dividerIntegerDivideMessageFlag)
+				data, err = dividerc.BuildIntegerDividePayload(*dividerIntegerDivideMessageFlag)
 			case "divide":
 				endpoint = c.Divide()
-				data, err = dividersvcc.BuildDividePayload(*dividerDivideMessageFlag)
+				data, err = dividerc.BuildDividePayload(*dividerDivideMessageFlag)
 			}
 		}
 	}
