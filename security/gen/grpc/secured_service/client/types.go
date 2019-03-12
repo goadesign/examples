@@ -20,9 +20,9 @@ func NewSigninRequest() *secured_servicepb.SigninRequest {
 	return message
 }
 
-// NewCreds builds the result type of the "signin" endpoint of the
+// NewSigninResult builds the result type of the "signin" endpoint of the
 // "secured_service" service from the gRPC response type.
-func NewCreds(message *secured_servicepb.SigninResponse) *securedservice.Creds {
+func NewSigninResult(message *secured_servicepb.SigninResponse) *securedservice.Creds {
 	result := &securedservice.Creds{
 		JWT:        message.Jwt,
 		APIKey:     message.ApiKey,
@@ -41,9 +41,9 @@ func NewSecureRequest(payload *securedservice.SecurePayload) *secured_servicepb.
 	return message
 }
 
-// NewSecureResponse builds the result type of the "secure" endpoint of the
+// NewSecureResult builds the result type of the "secure" endpoint of the
 // "secured_service" service from the gRPC response type.
-func NewSecureResponse(message *secured_servicepb.SecureResponse) string {
+func NewSecureResult(message *secured_servicepb.SecureResponse) string {
 	result := message.Field
 	return result
 }
@@ -57,9 +57,9 @@ func NewDoublySecureRequest(payload *securedservice.DoublySecurePayload) *secure
 	return message
 }
 
-// NewDoublySecureResponse builds the result type of the "doubly_secure"
-// endpoint of the "secured_service" service from the gRPC response type.
-func NewDoublySecureResponse(message *secured_servicepb.DoublySecureResponse) string {
+// NewDoublySecureResult builds the result type of the "doubly_secure" endpoint
+// of the "secured_service" service from the gRPC response type.
+func NewDoublySecureResult(message *secured_servicepb.DoublySecureResponse) string {
 	result := message.Field
 	return result
 }
@@ -80,10 +80,9 @@ func NewAlsoDoublySecureRequest(payload *securedservice.AlsoDoublySecurePayload)
 	return message
 }
 
-// NewAlsoDoublySecureResponse builds the result type of the
-// "also_doubly_secure" endpoint of the "secured_service" service from the gRPC
-// response type.
-func NewAlsoDoublySecureResponse(message *secured_servicepb.AlsoDoublySecureResponse) string {
+// NewAlsoDoublySecureResult builds the result type of the "also_doubly_secure"
+// endpoint of the "secured_service" service from the gRPC response type.
+func NewAlsoDoublySecureResult(message *secured_servicepb.AlsoDoublySecureResponse) string {
 	result := message.Field
 	return result
 }

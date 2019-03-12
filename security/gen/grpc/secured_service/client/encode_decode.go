@@ -47,7 +47,7 @@ func DecodeSigninResponse(ctx context.Context, v interface{}, hdr, trlr metadata
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "signin", "*secured_servicepb.SigninResponse", v)
 	}
-	res := NewCreds(message)
+	res := NewSigninResult(message)
 	return res, nil
 }
 
@@ -79,7 +79,7 @@ func DecodeSecureResponse(ctx context.Context, v interface{}, hdr, trlr metadata
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "secure", "*secured_servicepb.SecureResponse", v)
 	}
-	res := NewSecureResponse(message)
+	res := NewSecureResult(message)
 	return res, nil
 }
 
@@ -112,7 +112,7 @@ func DecodeDoublySecureResponse(ctx context.Context, v interface{}, hdr, trlr me
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "doubly_secure", "*secured_servicepb.DoublySecureResponse", v)
 	}
-	res := NewDoublySecureResponse(message)
+	res := NewDoublySecureResult(message)
 	return res, nil
 }
 
@@ -150,6 +150,6 @@ func DecodeAlsoDoublySecureResponse(ctx context.Context, v interface{}, hdr, trl
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "also_doubly_secure", "*secured_servicepb.AlsoDoublySecureResponse", v)
 	}
-	res := NewAlsoDoublySecureResponse(message)
+	res := NewAlsoDoublySecureResult(message)
 	return res, nil
 }

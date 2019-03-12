@@ -42,7 +42,7 @@ func DecodeListResponse(ctx context.Context, v interface{}, hdr, trlr metadata.M
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("storage", "list", "*storagepb.StoredBottleCollection", v)
 	}
-	res := NewStoredBottleCollection(message)
+	res := NewListResult(message)
 	vres := storageviews.StoredBottleCollection{Projected: res, View: view}
 	if err := storageviews.ValidateStoredBottleCollection(vres); err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func DecodeShowResponse(ctx context.Context, v interface{}, hdr, trlr metadata.M
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("storage", "show", "*storagepb.ShowResponse", v)
 	}
-	res := NewStoredBottleView(message)
+	res := NewShowResult(message)
 	vres := &storageviews.StoredBottle{Projected: res, View: view}
 	if err := storageviews.ValidateStoredBottle(vres); err != nil {
 		return nil, err
@@ -119,7 +119,7 @@ func DecodeAddResponse(ctx context.Context, v interface{}, hdr, trlr metadata.MD
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("storage", "add", "*storagepb.AddResponse", v)
 	}
-	res := NewAddResponse(message)
+	res := NewAddResult(message)
 	return res, nil
 }
 
@@ -192,7 +192,7 @@ func DecodeMultiAddResponse(ctx context.Context, v interface{}, hdr, trlr metada
 	if err := ValidateMultiAddResponse(message); err != nil {
 		return nil, err
 	}
-	res := NewMultiAddResponse(message)
+	res := NewMultiAddResult(message)
 	return res, nil
 }
 

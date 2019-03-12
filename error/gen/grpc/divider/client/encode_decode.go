@@ -46,7 +46,7 @@ func DecodeIntegerDivideResponse(ctx context.Context, v interface{}, hdr, trlr m
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("divider", "integer_divide", "*dividerpb.IntegerDivideResponse", v)
 	}
-	res := NewIntegerDivideResponse(message)
+	res := NewIntegerDivideResult(message)
 	return res, nil
 }
 
@@ -76,6 +76,6 @@ func DecodeDivideResponse(ctx context.Context, v interface{}, hdr, trlr metadata
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("divider", "divide", "*dividerpb.DivideResponse", v)
 	}
-	res := NewDivideResponse(message)
+	res := NewDivideResult(message)
 	return res, nil
 }

@@ -107,7 +107,7 @@ func DecodeAddRequest(ctx context.Context, v interface{}, md metadata.MD) (inter
 	}
 	var payload *storage.Bottle
 	{
-		payload = NewBottle(message)
+		payload = NewAddPayload(message)
 	}
 	return payload, nil
 }
@@ -161,7 +161,7 @@ func DecodeRateRequest(ctx context.Context, v interface{}, md metadata.MD) (inte
 	}
 	var payload map[uint32][]string
 	{
-		payload = NewRateRequest(message)
+		payload = NewRatePayload(message)
 	}
 	return payload, nil
 }
@@ -194,7 +194,7 @@ func DecodeMultiAddRequest(ctx context.Context, v interface{}, md metadata.MD) (
 	}
 	var payload []*storage.Bottle
 	{
-		payload = NewMultiAddRequest(message)
+		payload = NewMultiAddPayload(message)
 	}
 	return payload, nil
 }
