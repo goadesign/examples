@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"os"
 
-	chattersvcc "goa.design/examples/streaming/gen/http/chatter/client"
+	chatterc "goa.design/examples/streaming/gen/http/chatter/client"
 	goa "goa.design/goa"
 	goahttp "goa.design/goa/http"
 )
@@ -43,7 +43,7 @@ func ParseEndpoint(
 	dec func(*http.Response) goahttp.Decoder,
 	restore bool,
 	dialer goahttp.Dialer,
-	chatterConfigurer *chattersvcc.ConnConfigurer,
+	chatterConfigurer *chatterc.ConnConfigurer,
 ) (goa.Endpoint, interface{}, error) {
 	var (
 		chatterFlags = flag.NewFlagSet("chatter", flag.ContinueOnError)
@@ -151,26 +151,26 @@ func ParseEndpoint(
 	{
 		switch svcn {
 		case "chatter":
-			c := chattersvcc.NewClient(scheme, host, doer, enc, dec, restore, dialer, chatterConfigurer)
+			c := chatterc.NewClient(scheme, host, doer, enc, dec, restore, dialer, chatterConfigurer)
 			switch epn {
 			case "login":
 				endpoint = c.Login()
-				data, err = chattersvcc.BuildLoginPayload(*chatterLoginUserFlag, *chatterLoginPasswordFlag)
+				data, err = chatterc.BuildLoginPayload(*chatterLoginUserFlag, *chatterLoginPasswordFlag)
 			case "echoer":
 				endpoint = c.Echoer()
-				data, err = chattersvcc.BuildEchoerPayload(*chatterEchoerTokenFlag)
+				data, err = chatterc.BuildEchoerPayload(*chatterEchoerTokenFlag)
 			case "listener":
 				endpoint = c.Listener()
-				data, err = chattersvcc.BuildListenerPayload(*chatterListenerTokenFlag)
+				data, err = chatterc.BuildListenerPayload(*chatterListenerTokenFlag)
 			case "summary":
 				endpoint = c.Summary()
-				data, err = chattersvcc.BuildSummaryPayload(*chatterSummaryTokenFlag)
+				data, err = chatterc.BuildSummaryPayload(*chatterSummaryTokenFlag)
 			case "subscribe":
 				endpoint = c.Subscribe()
-				data, err = chattersvcc.BuildSubscribePayload(*chatterSubscribeTokenFlag)
+				data, err = chatterc.BuildSubscribePayload(*chatterSubscribeTokenFlag)
 			case "history":
 				endpoint = c.History()
-				data, err = chattersvcc.BuildHistoryPayload(*chatterHistoryViewFlag, *chatterHistoryTokenFlag)
+				data, err = chatterc.BuildHistoryPayload(*chatterHistoryViewFlag, *chatterHistoryTokenFlag)
 			}
 		}
 	}

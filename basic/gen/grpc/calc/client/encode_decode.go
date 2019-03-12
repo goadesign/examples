@@ -11,7 +11,7 @@ package client
 import (
 	"context"
 
-	calcsvc "goa.design/examples/basic/gen/calc"
+	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 	goagrpc "goa.design/goa/grpc"
 	"google.golang.org/grpc"
@@ -31,9 +31,9 @@ func BuildAddFunc(grpccli calcpb.CalcClient, cliopts ...grpc.CallOption) goagrpc
 
 // EncodeAddRequest encodes requests sent to calc add endpoint.
 func EncodeAddRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*calcsvc.AddPayload)
+	payload, ok := v.(*calc.AddPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("calc", "add", "*calcsvc.AddPayload", v)
+		return nil, goagrpc.ErrInvalidType("calc", "add", "*calc.AddPayload", v)
 	}
 	return NewAddRequest(payload), nil
 }

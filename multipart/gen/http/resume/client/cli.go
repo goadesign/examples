@@ -12,12 +12,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	resumesvc "goa.design/examples/multipart/gen/resume"
+	resume "goa.design/examples/multipart/gen/resume"
 )
 
 // BuildAddPayload builds the payload for the resume add endpoint from CLI
 // flags.
-func BuildAddPayload(resumeAddBody string) ([]*resumesvc.Resume, error) {
+func BuildAddPayload(resumeAddBody string) ([]*resume.Resume, error) {
 	var err error
 	var body []*ResumeRequestBody
 	{
@@ -29,15 +29,15 @@ func BuildAddPayload(resumeAddBody string) ([]*resumesvc.Resume, error) {
 	if err != nil {
 		return nil, err
 	}
-	v := make([]*resumesvc.Resume, len(body))
+	v := make([]*resume.Resume, len(body))
 	for i, val := range body {
-		v[i] = &resumesvc.Resume{
+		v[i] = &resume.Resume{
 			Name: val.Name,
 		}
 		if val.Experience != nil {
-			v[i].Experience = make([]*resumesvc.Experience, len(val.Experience))
+			v[i].Experience = make([]*resume.Experience, len(val.Experience))
 			for j, val := range val.Experience {
-				v[i].Experience[j] = &resumesvc.Experience{
+				v[i].Experience[j] = &resume.Experience{
 					Company:  val.Company,
 					Role:     val.Role,
 					Duration: val.Duration,
@@ -45,9 +45,9 @@ func BuildAddPayload(resumeAddBody string) ([]*resumesvc.Resume, error) {
 			}
 		}
 		if val.Education != nil {
-			v[i].Education = make([]*resumesvc.Education, len(val.Education))
+			v[i].Education = make([]*resume.Education, len(val.Education))
 			for j, val := range val.Education {
-				v[i].Education[j] = &resumesvc.Education{
+				v[i].Education[j] = &resume.Education{
 					Institution: val.Institution,
 					Major:       val.Major,
 				}

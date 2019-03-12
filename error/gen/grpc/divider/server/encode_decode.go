@@ -11,7 +11,7 @@ package server
 import (
 	"context"
 
-	dividersvc "goa.design/examples/error/gen/divider"
+	divider "goa.design/examples/error/gen/divider"
 	dividerpb "goa.design/examples/error/gen/grpc/divider/pb"
 	goagrpc "goa.design/goa/grpc"
 	"google.golang.org/grpc/metadata"
@@ -40,7 +40,7 @@ func DecodeIntegerDivideRequest(ctx context.Context, v interface{}, md metadata.
 			return nil, goagrpc.ErrInvalidType("divider", "integer_divide", "*dividerpb.IntegerDivideRequest", v)
 		}
 	}
-	var payload *dividersvc.IntOperands
+	var payload *divider.IntOperands
 	{
 		payload = NewIntOperands(message)
 	}
@@ -70,7 +70,7 @@ func DecodeDivideRequest(ctx context.Context, v interface{}, md metadata.MD) (in
 			return nil, goagrpc.ErrInvalidType("divider", "divide", "*dividerpb.DivideRequest", v)
 		}
 	}
-	var payload *dividersvc.FloatOperands
+	var payload *divider.FloatOperands
 	{
 		payload = NewFloatOperands(message)
 	}

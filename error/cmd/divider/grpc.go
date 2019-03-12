@@ -8,9 +8,9 @@ import (
 	"sync"
 
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	dividersvc "goa.design/examples/error/gen/divider"
+	divider "goa.design/examples/error/gen/divider"
 	dividerpb "goa.design/examples/error/gen/grpc/divider/pb"
-	dividersvcsvr "goa.design/examples/error/gen/grpc/divider/server"
+	dividersvr "goa.design/examples/error/gen/grpc/divider/server"
 	grpcmdlwr "goa.design/goa/grpc/middleware"
 	"goa.design/goa/middleware"
 	"google.golang.org/grpc"
@@ -18,7 +18,7 @@ import (
 
 // handleGRPCServer starts configures and starts a gRPC server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleGRPCServer(ctx context.Context, u *url.URL, dividerEndpoints *dividersvc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleGRPCServer(ctx context.Context, u *url.URL, dividerEndpoints *divider.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -33,10 +33,10 @@ func handleGRPCServer(ctx context.Context, u *url.URL, dividerEndpoints *divider
 	// the service input and output data structures to gRPC requests and
 	// responses.
 	var (
-		dividerServer *dividersvcsvr.Server
+		dividerServer *dividersvr.Server
 	)
 	{
-		dividerServer = dividersvcsvr.New(dividerEndpoints, nil)
+		dividerServer = dividersvr.New(dividerEndpoints, nil)
 	}
 
 	// Initialize gRPC server with the middleware.

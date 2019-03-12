@@ -11,7 +11,7 @@ package client
 import (
 	"context"
 
-	dividersvc "goa.design/examples/error/gen/divider"
+	divider "goa.design/examples/error/gen/divider"
 	dividerpb "goa.design/examples/error/gen/grpc/divider/pb"
 	goagrpc "goa.design/goa/grpc"
 	"google.golang.org/grpc"
@@ -32,9 +32,9 @@ func BuildIntegerDivideFunc(grpccli dividerpb.DividerClient, cliopts ...grpc.Cal
 // EncodeIntegerDivideRequest encodes requests sent to divider integer_divide
 // endpoint.
 func EncodeIntegerDivideRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*dividersvc.IntOperands)
+	payload, ok := v.(*divider.IntOperands)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("divider", "integer_divide", "*dividersvc.IntOperands", v)
+		return nil, goagrpc.ErrInvalidType("divider", "integer_divide", "*divider.IntOperands", v)
 	}
 	return NewIntegerDivideRequest(payload), nil
 }
@@ -63,9 +63,9 @@ func BuildDivideFunc(grpccli dividerpb.DividerClient, cliopts ...grpc.CallOption
 
 // EncodeDivideRequest encodes requests sent to divider divide endpoint.
 func EncodeDivideRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*dividersvc.FloatOperands)
+	payload, ok := v.(*divider.FloatOperands)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("divider", "divide", "*dividersvc.FloatOperands", v)
+		return nil, goagrpc.ErrInvalidType("divider", "divide", "*divider.FloatOperands", v)
 	}
 	return NewDivideRequest(payload), nil
 }

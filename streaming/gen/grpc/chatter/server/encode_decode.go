@@ -12,7 +12,7 @@ import (
 	"context"
 	"strings"
 
-	chattersvc "goa.design/examples/streaming/gen/chatter"
+	chatter "goa.design/examples/streaming/gen/chatter"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
 	"google.golang.org/grpc/metadata"
@@ -52,7 +52,7 @@ func DecodeLoginRequest(ctx context.Context, v interface{}, md metadata.MD) (int
 	if err != nil {
 		return nil, err
 	}
-	var payload *chattersvc.LoginPayload
+	var payload *chatter.LoginPayload
 	{
 		payload = NewLoginPayload(user, password)
 	}
@@ -76,7 +76,7 @@ func DecodeEchoerRequest(ctx context.Context, v interface{}, md metadata.MD) (in
 	if err != nil {
 		return nil, err
 	}
-	var payload *chattersvc.EchoerPayload
+	var payload *chatter.EchoerPayload
 	{
 		payload = NewEchoerPayload(token)
 		if strings.Contains(payload.Token, " ") {
@@ -105,7 +105,7 @@ func DecodeListenerRequest(ctx context.Context, v interface{}, md metadata.MD) (
 	if err != nil {
 		return nil, err
 	}
-	var payload *chattersvc.ListenerPayload
+	var payload *chatter.ListenerPayload
 	{
 		payload = NewListenerPayload(token)
 		if strings.Contains(payload.Token, " ") {
@@ -134,7 +134,7 @@ func DecodeSummaryRequest(ctx context.Context, v interface{}, md metadata.MD) (i
 	if err != nil {
 		return nil, err
 	}
-	var payload *chattersvc.SummaryPayload
+	var payload *chatter.SummaryPayload
 	{
 		payload = NewSummaryPayload(token)
 		if strings.Contains(payload.Token, " ") {
@@ -163,7 +163,7 @@ func DecodeSubscribeRequest(ctx context.Context, v interface{}, md metadata.MD) 
 	if err != nil {
 		return nil, err
 	}
-	var payload *chattersvc.SubscribePayload
+	var payload *chatter.SubscribePayload
 	{
 		payload = NewSubscribePayload(token)
 		if strings.Contains(payload.Token, " ") {
@@ -196,7 +196,7 @@ func DecodeHistoryRequest(ctx context.Context, v interface{}, md metadata.MD) (i
 	if err != nil {
 		return nil, err
 	}
-	var payload *chattersvc.HistoryPayload
+	var payload *chatter.HistoryPayload
 	{
 		payload = NewHistoryPayload(view, token)
 		if strings.Contains(payload.Token, " ") {

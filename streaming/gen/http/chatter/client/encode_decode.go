@@ -15,8 +15,8 @@ import (
 	"net/http"
 	"net/url"
 
-	chattersvc "goa.design/examples/streaming/gen/chatter"
-	chattersvcviews "goa.design/examples/streaming/gen/chatter/views"
+	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	goahttp "goa.design/goa/http"
 )
 
@@ -39,9 +39,9 @@ func (c *Client) BuildLoginRequest(ctx context.Context, v interface{}) (*http.Re
 // server.
 func EncodeLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*chattersvc.LoginPayload)
+		p, ok := v.(*chatter.LoginPayload)
 		if !ok {
-			return goahttp.ErrInvalidType("chatter", "login", "*chattersvc.LoginPayload", v)
+			return goahttp.ErrInvalidType("chatter", "login", "*chatter.LoginPayload", v)
 		}
 		req.SetBasicAuth(p.User, p.Password)
 		return nil
@@ -52,7 +52,7 @@ func EncodeLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 // login endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 // DecodeLoginResponse may return the following errors:
-//	- "unauthorized" (type chattersvc.Unauthorized): http.StatusUnauthorized
+//	- "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //	- error: internal error
 func DecodeLoginResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -122,9 +122,9 @@ func (c *Client) BuildEchoerRequest(ctx context.Context, v interface{}) (*http.R
 // echoer server.
 func EncodeEchoerRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*chattersvc.EchoerPayload)
+		p, ok := v.(*chatter.EchoerPayload)
 		if !ok {
-			return goahttp.ErrInvalidType("chatter", "echoer", "*chattersvc.EchoerPayload", v)
+			return goahttp.ErrInvalidType("chatter", "echoer", "*chatter.EchoerPayload", v)
 		}
 		req.Header.Set("Authorization", p.Token)
 		return nil
@@ -135,8 +135,8 @@ func EncodeEchoerRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 // echoer endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 // DecodeEchoerResponse may return the following errors:
-//	- "invalid-scopes" (type chattersvc.InvalidScopes): http.StatusForbidden
-//	- "unauthorized" (type chattersvc.Unauthorized): http.StatusUnauthorized
+//	- "invalid-scopes" (type chatter.InvalidScopes): http.StatusForbidden
+//	- "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //	- error: internal error
 func DecodeEchoerResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -216,9 +216,9 @@ func (c *Client) BuildListenerRequest(ctx context.Context, v interface{}) (*http
 // listener server.
 func EncodeListenerRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*chattersvc.ListenerPayload)
+		p, ok := v.(*chatter.ListenerPayload)
 		if !ok {
-			return goahttp.ErrInvalidType("chatter", "listener", "*chattersvc.ListenerPayload", v)
+			return goahttp.ErrInvalidType("chatter", "listener", "*chatter.ListenerPayload", v)
 		}
 		req.Header.Set("Authorization", p.Token)
 		return nil
@@ -229,8 +229,8 @@ func EncodeListenerRequest(encoder func(*http.Request) goahttp.Encoder) func(*ht
 // chatter listener endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 // DecodeListenerResponse may return the following errors:
-//	- "invalid-scopes" (type chattersvc.InvalidScopes): http.StatusForbidden
-//	- "unauthorized" (type chattersvc.Unauthorized): http.StatusUnauthorized
+//	- "invalid-scopes" (type chatter.InvalidScopes): http.StatusForbidden
+//	- "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //	- error: internal error
 func DecodeListenerResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -302,9 +302,9 @@ func (c *Client) BuildSummaryRequest(ctx context.Context, v interface{}) (*http.
 // summary server.
 func EncodeSummaryRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*chattersvc.SummaryPayload)
+		p, ok := v.(*chatter.SummaryPayload)
 		if !ok {
-			return goahttp.ErrInvalidType("chatter", "summary", "*chattersvc.SummaryPayload", v)
+			return goahttp.ErrInvalidType("chatter", "summary", "*chatter.SummaryPayload", v)
 		}
 		req.Header.Set("Authorization", p.Token)
 		return nil
@@ -315,8 +315,8 @@ func EncodeSummaryRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 // chatter summary endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 // DecodeSummaryResponse may return the following errors:
-//	- "invalid-scopes" (type chattersvc.InvalidScopes): http.StatusForbidden
-//	- "unauthorized" (type chattersvc.Unauthorized): http.StatusUnauthorized
+//	- "invalid-scopes" (type chatter.InvalidScopes): http.StatusForbidden
+//	- "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //	- error: internal error
 func DecodeSummaryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -344,11 +344,11 @@ func DecodeSummaryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			}
 			p := NewSummaryChatSummaryCollectionOK(body)
 			view := "default"
-			vres := chattersvcviews.ChatSummaryCollection{p, view}
-			if err = chattersvcviews.ValidateChatSummaryCollection(vres); err != nil {
+			vres := chatterviews.ChatSummaryCollection{p, view}
+			if err = chatterviews.ValidateChatSummaryCollection(vres); err != nil {
 				return nil, goahttp.ErrValidationError("chatter", "summary", err)
 			}
-			res := chattersvc.NewChatSummaryCollection(vres)
+			res := chatter.NewChatSummaryCollection(vres)
 			return res, nil
 		case http.StatusForbidden:
 			var (
@@ -403,9 +403,9 @@ func (c *Client) BuildSubscribeRequest(ctx context.Context, v interface{}) (*htt
 // subscribe server.
 func EncodeSubscribeRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*chattersvc.SubscribePayload)
+		p, ok := v.(*chatter.SubscribePayload)
 		if !ok {
-			return goahttp.ErrInvalidType("chatter", "subscribe", "*chattersvc.SubscribePayload", v)
+			return goahttp.ErrInvalidType("chatter", "subscribe", "*chatter.SubscribePayload", v)
 		}
 		req.Header.Set("Authorization", p.Token)
 		return nil
@@ -416,8 +416,8 @@ func EncodeSubscribeRequest(encoder func(*http.Request) goahttp.Encoder) func(*h
 // chatter subscribe endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 // DecodeSubscribeResponse may return the following errors:
-//	- "invalid-scopes" (type chattersvc.InvalidScopes): http.StatusForbidden
-//	- "unauthorized" (type chattersvc.Unauthorized): http.StatusUnauthorized
+//	- "invalid-scopes" (type chatter.InvalidScopes): http.StatusForbidden
+//	- "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //	- error: internal error
 func DecodeSubscribeResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -502,9 +502,9 @@ func (c *Client) BuildHistoryRequest(ctx context.Context, v interface{}) (*http.
 // history server.
 func EncodeHistoryRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*chattersvc.HistoryPayload)
+		p, ok := v.(*chatter.HistoryPayload)
 		if !ok {
-			return goahttp.ErrInvalidType("chatter", "history", "*chattersvc.HistoryPayload", v)
+			return goahttp.ErrInvalidType("chatter", "history", "*chatter.HistoryPayload", v)
 		}
 		req.Header.Set("Authorization", p.Token)
 		values := req.URL.Query()
@@ -520,8 +520,8 @@ func EncodeHistoryRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 // chatter history endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 // DecodeHistoryResponse may return the following errors:
-//	- "invalid-scopes" (type chattersvc.InvalidScopes): http.StatusForbidden
-//	- "unauthorized" (type chattersvc.Unauthorized): http.StatusUnauthorized
+//	- "invalid-scopes" (type chatter.InvalidScopes): http.StatusForbidden
+//	- "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //	- error: internal error
 func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -549,11 +549,11 @@ func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			}
 			p := NewHistoryChatSummaryOK(&body)
 			view := resp.Header.Get("goa-view")
-			vres := &chattersvcviews.ChatSummary{p, view}
-			if err = chattersvcviews.ValidateChatSummary(vres); err != nil {
+			vres := &chatterviews.ChatSummary{p, view}
+			if err = chatterviews.ValidateChatSummary(vres); err != nil {
 				return nil, goahttp.ErrValidationError("chatter", "history", err)
 			}
-			res := chattersvc.NewChatSummary(vres)
+			res := chatter.NewChatSummary(vres)
 			return res, nil
 		case http.StatusForbidden:
 			var (

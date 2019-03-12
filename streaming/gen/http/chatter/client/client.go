@@ -14,8 +14,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	chattersvc "goa.design/examples/streaming/gen/chatter"
-	chattersvcviews "goa.design/examples/streaming/gen/chatter/views"
+	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	goa "goa.design/goa"
 	goahttp "goa.design/goa/http"
 )
@@ -66,33 +66,31 @@ type ConnConfigurer struct {
 	HistoryFn   goahttp.ConnConfigureFunc
 }
 
-// echoerClientStream implements the chattersvc.EchoerClientStream interface.
+// echoerClientStream implements the chatter.EchoerClientStream interface.
 type echoerClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// listenerClientStream implements the chattersvc.ListenerClientStream
-// interface.
+// listenerClientStream implements the chatter.ListenerClientStream interface.
 type listenerClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// summaryClientStream implements the chattersvc.SummaryClientStream interface.
+// summaryClientStream implements the chatter.SummaryClientStream interface.
 type summaryClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// subscribeClientStream implements the chattersvc.SubscribeClientStream
-// interface.
+// subscribeClientStream implements the chatter.SubscribeClientStream interface.
 type subscribeClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// historyClientStream implements the chattersvc.HistoryClientStream interface.
+// historyClientStream implements the chatter.HistoryClientStream interface.
 type historyClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
@@ -325,11 +323,11 @@ func (c *Client) Summary() goa.Endpoint {
 }
 
 // CloseAndRecv stops sending messages to the "summary" endpoint websocket
-// connection and reads instances of "chattersvc.ChatSummaryCollection" from
-// the connection.
-func (s *summaryClientStream) CloseAndRecv() (chattersvc.ChatSummaryCollection, error) {
+// connection and reads instances of "chatter.ChatSummaryCollection" from the
+// connection.
+func (s *summaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, error) {
 	var (
-		rv   chattersvc.ChatSummaryCollection
+		rv   chatter.ChatSummaryCollection
 		body SummaryResponseBody
 		err  error
 	)
@@ -347,11 +345,11 @@ func (s *summaryClientStream) CloseAndRecv() (chattersvc.ChatSummaryCollection, 
 		return rv, err
 	}
 	res := NewSummaryChatSummaryCollectionOK(body)
-	vres := chattersvcviews.ChatSummaryCollection{res, "default"}
-	if err := chattersvcviews.ValidateChatSummaryCollection(vres); err != nil {
+	vres := chatterviews.ChatSummaryCollection{res, "default"}
+	if err := chatterviews.ValidateChatSummaryCollection(vres); err != nil {
 		return rv, goahttp.ErrValidationError("chatter", "summary", err)
 	}
-	return chattersvc.NewChatSummaryCollection(vres), nil
+	return chatter.NewChatSummaryCollection(vres), nil
 }
 
 // Send streams instances of "string" to the "summary" endpoint websocket
@@ -395,11 +393,11 @@ func (c *Client) Subscribe() goa.Endpoint {
 	}
 }
 
-// Recv reads instances of "chattersvc.Event" from the "subscribe" endpoint
+// Recv reads instances of "chatter.Event" from the "subscribe" endpoint
 // websocket connection.
-func (s *subscribeClientStream) Recv() (*chattersvc.Event, error) {
+func (s *subscribeClientStream) Recv() (*chatter.Event, error) {
 	var (
-		rv   *chattersvc.Event
+		rv   *chatter.Event
 		body SubscribeResponseBody
 		err  error
 	)
@@ -456,11 +454,11 @@ func (c *Client) History() goa.Endpoint {
 	}
 }
 
-// Recv reads instances of "chattersvc.ChatSummary" from the "history" endpoint
+// Recv reads instances of "chatter.ChatSummary" from the "history" endpoint
 // websocket connection.
-func (s *historyClientStream) Recv() (*chattersvc.ChatSummary, error) {
+func (s *historyClientStream) Recv() (*chatter.ChatSummary, error) {
 	var (
-		rv   *chattersvc.ChatSummary
+		rv   *chatter.ChatSummary
 		body HistoryResponseBody
 		err  error
 	)
@@ -473,11 +471,11 @@ func (s *historyClientStream) Recv() (*chattersvc.ChatSummary, error) {
 		return rv, err
 	}
 	res := NewHistoryChatSummaryOK(&body)
-	vres := &chattersvcviews.ChatSummary{res, s.view}
-	if err := chattersvcviews.ValidateChatSummary(vres); err != nil {
+	vres := &chatterviews.ChatSummary{res, s.view}
+	if err := chatterviews.ValidateChatSummary(vres); err != nil {
 		return rv, goahttp.ErrValidationError("chatter", "history", err)
 	}
-	return chattersvc.NewChatSummary(vres), nil
+	return chatter.NewChatSummary(vres), nil
 }
 
 // SetView sets the view to render the  type before sending to the "history"

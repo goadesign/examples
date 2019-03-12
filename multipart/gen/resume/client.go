@@ -6,7 +6,7 @@
 // $ goa gen goa.design/examples/multipart/design -o
 // $(GOPATH)/src/goa.design/examples/multipart
 
-package resumesvc
+package resume
 
 import (
 	"context"
