@@ -46,7 +46,7 @@ func DecodeLoginResponse(ctx context.Context, v interface{}, hdr, trlr metadata.
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "login", "*chatterpb.LoginResponse", v)
 	}
-	res := NewLoginResponse(message)
+	res := NewLoginResult(message)
 	return res, nil
 }
 

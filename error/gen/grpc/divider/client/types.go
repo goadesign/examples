@@ -23,9 +23,9 @@ func NewIntegerDivideRequest(payload *divider.IntOperands) *dividerpb.IntegerDiv
 	return message
 }
 
-// NewIntegerDivideResponse builds the result type of the "integer_divide"
+// NewIntegerDivideResult builds the result type of the "integer_divide"
 // endpoint of the "divider" service from the gRPC response type.
-func NewIntegerDivideResponse(message *dividerpb.IntegerDivideResponse) int {
+func NewIntegerDivideResult(message *dividerpb.IntegerDivideResponse) int {
 	result := int(message.Field)
 	return result
 }
@@ -40,9 +40,9 @@ func NewDivideRequest(payload *divider.FloatOperands) *dividerpb.DivideRequest {
 	return message
 }
 
-// NewDivideResponse builds the result type of the "divide" endpoint of the
+// NewDivideResult builds the result type of the "divide" endpoint of the
 // "divider" service from the gRPC response type.
-func NewDivideResponse(message *dividerpb.DivideResponse) float64 {
+func NewDivideResult(message *dividerpb.DivideResponse) float64 {
 	result := message.Field
 	return result
 }

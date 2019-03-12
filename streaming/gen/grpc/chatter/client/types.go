@@ -22,9 +22,9 @@ func NewLoginRequest() *chatterpb.LoginRequest {
 	return message
 }
 
-// NewLoginResponse builds the result type of the "login" endpoint of the
+// NewLoginResult builds the result type of the "login" endpoint of the
 // "chatter" service from the gRPC response type.
-func NewLoginResponse(message *chatterpb.LoginResponse) string {
+func NewLoginResult(message *chatterpb.LoginResponse) string {
 	result := message.Field
 	return result
 }

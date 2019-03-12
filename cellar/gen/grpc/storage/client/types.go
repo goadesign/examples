@@ -24,9 +24,9 @@ func NewListRequest() *storagepb.ListRequest {
 	return message
 }
 
-// NewStoredBottleCollection builds the result type of the "list" endpoint of
-// the "storage" service from the gRPC response type.
-func NewStoredBottleCollection(message *storagepb.StoredBottleCollection) storageviews.StoredBottleCollectionView {
+// NewListResult builds the result type of the "list" endpoint of the "storage"
+// service from the gRPC response type.
+func NewListResult(message *storagepb.StoredBottleCollection) storageviews.StoredBottleCollectionView {
 	result := make([]*storageviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
 		result[i] = &storageviews.StoredBottleView{
@@ -61,9 +61,9 @@ func NewShowRequest(payload *storage.ShowPayload) *storagepb.ShowRequest {
 	return message
 }
 
-// NewStoredBottleView builds the result type of the "show" endpoint of the
-// "storage" service from the gRPC response type.
-func NewStoredBottleView(message *storagepb.ShowResponse) *storageviews.StoredBottleView {
+// NewShowResult builds the result type of the "show" endpoint of the "storage"
+// service from the gRPC response type.
+func NewShowResult(message *storagepb.ShowResponse) *storageviews.StoredBottleView {
 	result := &storageviews.StoredBottleView{
 		ID:          &message.Id,
 		Name:        &message.Name,
@@ -116,9 +116,9 @@ func NewAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
 	return message
 }
 
-// NewAddResponse builds the result type of the "add" endpoint of the "storage"
+// NewAddResult builds the result type of the "add" endpoint of the "storage"
 // service from the gRPC response type.
-func NewAddResponse(message *storagepb.AddResponse) string {
+func NewAddResult(message *storagepb.AddResponse) string {
 	result := message.Field
 	return result
 }
@@ -183,9 +183,9 @@ func NewMultiAddRequest(payload []*storage.Bottle) *storagepb.MultiAddRequest {
 	return message
 }
 
-// NewMultiAddResponse builds the result type of the "multi_add" endpoint of
-// the "storage" service from the gRPC response type.
-func NewMultiAddResponse(message *storagepb.MultiAddResponse) []string {
+// NewMultiAddResult builds the result type of the "multi_add" endpoint of the
+// "storage" service from the gRPC response type.
+func NewMultiAddResult(message *storagepb.MultiAddResponse) []string {
 	result := make([]string, len(message.Field))
 	for i, val := range message.Field {
 		result[i] = val
