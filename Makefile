@@ -40,16 +40,19 @@ ifeq ($(GOOS),linux)
 PROTOC="protoc-$(PROTOC_VERSION)-linux-x86_64"
 PROTOC_EXEC="$(PROTOC)/bin/protoc"
 GOBIN="$(GOPATH)/bin"
+IMPORTS_PATH=/*.go
 else
 	ifeq ($(GOOS),darwin)
 PROTOC="protoc-$(PROTOC_VERSION)-osx-x86_64"
 PROTOC_EXEC="$(PROTOC)/bin/protoc"
 GOBIN="$(GOPATH)/bin"
+IMPORTS_PATH=/*.go
 	else
 		ifeq ($(GOOS),windows)
 PROTOC="protoc-$(PROTOC_VERSION)-win32"
 PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
 GOBIN="$(GOPATH)\bin"
+IMPORTS_PATH=\*.go
 		endif
 	endif
 endif
@@ -66,7 +69,7 @@ depend:
 lint:
 	@echo LINTING CODE...
 	@for d in $(DIRS) ; do \
-		if [ "`goimports -l $$d/*.go | grep -v '.pb.go' | tee /dev/stderr`" ]; then \
+		if [ "`goimports -l $$d$(IMPORTS_PATH) | grep -v '.pb.go' | tee /dev/stderr`" ]; then \
 			echo "^ - Repo contains improperly formatted go files" && echo && exit 1; \
 		fi \
 	done
@@ -139,7 +142,6 @@ test:
 	@go test ./... > /dev/null
 
 check-freshness:
-	@cd $(GOPATH)/src/goa.design/examples
 	@if [ "`git status -s | wc -l`" -gt "0" ]; then \
 	        echo "[ERROR] generated code not in-sync with design:"; \
 	        echo; \
