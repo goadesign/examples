@@ -139,6 +139,7 @@ test:
 	@go test ./... > /dev/null
 
 check-freshness:
+	@cd $(GOPATH)/src/goa.design/examples
 	@if [ "`git status -s | wc -l`" -gt "0" ]; then \
 	        echo "[ERROR] generated code not in-sync with design:"; \
 	        echo; \
