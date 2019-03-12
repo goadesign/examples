@@ -139,4 +139,11 @@ test:
 	@go test ./... > /dev/null
 
 check-freshness:
-	git status
+	@if [ "`git status -s | wc -l`" -gt "0" ]; then \
+	        echo "[ERROR] generated code not in-sync with design:"; \
+	        echo; \
+	        git status -s; \
+	        git --no-pager diff; \
+	        echo; \
+	        exit 1; \
+	fi
