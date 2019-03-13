@@ -51,7 +51,7 @@ func DecodePickResponse(ctx context.Context, v interface{}, hdr, trlr metadata.M
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("sommelier", "pick", "*sommelierpb.StoredBottleCollection", v)
 	}
-	res := NewStoredBottleCollection(message)
+	res := NewPickResult(message)
 	vres := sommelierviews.StoredBottleCollection{Projected: res, View: view}
 	if err := sommelierviews.ValidateStoredBottleCollection(vres); err != nil {
 		return nil, err

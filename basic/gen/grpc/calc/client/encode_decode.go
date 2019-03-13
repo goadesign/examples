@@ -44,6 +44,6 @@ func DecodeAddResponse(ctx context.Context, v interface{}, hdr, trlr metadata.MD
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("calc", "add", "*calcpb.AddResponse", v)
 	}
-	res := NewAddResponse(message)
+	res := NewAddResult(message)
 	return res, nil
 }

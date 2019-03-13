@@ -45,7 +45,7 @@ func DecodePickRequest(ctx context.Context, v interface{}, md metadata.MD) (inte
 	}
 	var payload *sommelier.Criteria
 	{
-		payload = NewCriteria(message)
+		payload = NewPickPayload(message)
 	}
 	return payload, nil
 }
