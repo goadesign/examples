@@ -13,7 +13,7 @@
 # Meta targets:
 # - "all" is the default target, it runs all the targets in the order above.
 #
-DIRS=$(shell go list -f {{.Dir}} goa.design/examples/...)
+GO_FILES=$(shell find . -type f -name '*.go')
 
 # Only list test and build dependencies
 # Standard dependencies are installed via go get
@@ -40,19 +40,16 @@ ifeq ($(GOOS),linux)
 PROTOC="protoc-$(PROTOC_VERSION)-linux-x86_64"
 PROTOC_EXEC="$(PROTOC)/bin/protoc"
 GOBIN="$(GOPATH)/bin"
-IMPORTS_PATH=/*.go
 else
 	ifeq ($(GOOS),darwin)
 PROTOC="protoc-$(PROTOC_VERSION)-osx-x86_64"
 PROTOC_EXEC="$(PROTOC)/bin/protoc"
 GOBIN="$(GOPATH)/bin"
-IMPORTS_PATH=/*.go
 	else
 		ifeq ($(GOOS),windows)
 PROTOC="protoc-$(PROTOC_VERSION)-win32"
 PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
 GOBIN="$(GOPATH)\bin"
-IMPORTS_PATH=\*.go
 		endif
 	endif
 endif
@@ -68,11 +65,9 @@ depend:
 
 lint:
 	@echo LINTING CODE...
-	@for d in $(DIRS) ; do \
-		if [ "`goimports -l $$d$(IMPORTS_PATH) | grep -v '.pb.go' | tee /dev/stderr`" ]; then \
-			echo "^ - Repo contains improperly formatted go files" && echo && exit 1; \
-		fi \
-	done
+	@if [ "`goimports -l $(GO_FILES) | grep -v .pb.go | tee /dev/stderr`" ]; then \
+		echo "^ - Repo contains improperly formatted go files" && echo && exit 1; \
+	fi
 	@if [ "`golint ./... | grep -vf .golint_exclude | tee /dev/stderr`" ]; then \
 		echo "^ - Lint errors!" && echo && exit 1; \
 	fi
