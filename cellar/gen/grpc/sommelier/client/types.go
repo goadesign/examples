@@ -36,9 +36,9 @@ func NewPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 	return message
 }
 
-// NewStoredBottleCollection builds the result type of the "pick" endpoint of
-// the "sommelier" service from the gRPC response type.
-func NewStoredBottleCollection(message *sommelierpb.StoredBottleCollection) sommelierviews.StoredBottleCollectionView {
+// NewPickResult builds the result type of the "pick" endpoint of the
+// "sommelier" service from the gRPC response type.
+func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.StoredBottleCollectionView {
 	result := make([]*sommelierviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
 		result[i] = &sommelierviews.StoredBottleView{

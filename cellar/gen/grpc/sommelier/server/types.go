@@ -17,9 +17,9 @@ import (
 	goa "goa.design/goa"
 )
 
-// NewCriteria builds the payload of the "pick" endpoint of the "sommelier"
+// NewPickPayload builds the payload of the "pick" endpoint of the "sommelier"
 // service from the gRPC request type.
-func NewCriteria(message *sommelierpb.PickRequest) *sommelier.Criteria {
+func NewPickPayload(message *sommelierpb.PickRequest) *sommelier.Criteria {
 	v := &sommelier.Criteria{
 		Name:   &message.Name,
 		Winery: &message.Winery,

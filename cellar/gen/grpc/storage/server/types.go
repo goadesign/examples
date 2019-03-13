@@ -105,9 +105,9 @@ func NewShowResponse(result *storageviews.StoredBottleView) *storagepb.ShowRespo
 	return message
 }
 
-// NewBottle builds the payload of the "add" endpoint of the "storage" service
-// from the gRPC request type.
-func NewBottle(message *storagepb.AddRequest) *storage.Bottle {
+// NewAddPayload builds the payload of the "add" endpoint of the "storage"
+// service from the gRPC request type.
+func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 	v := &storage.Bottle{
 		Name:        message.Name,
 		Vintage:     message.Vintage,
@@ -153,9 +153,9 @@ func NewRemoveResponse() *storagepb.RemoveResponse {
 	return message
 }
 
-// NewRateRequest builds the payload of the "rate" endpoint of the "storage"
+// NewRatePayload builds the payload of the "rate" endpoint of the "storage"
 // service from the gRPC request type.
-func NewRateRequest(message *storagepb.RateRequest) map[uint32][]string {
+func NewRatePayload(message *storagepb.RateRequest) map[uint32][]string {
 	v := make(map[uint32][]string, len(message.Field))
 	for key, val := range message.Field {
 		tk := key
@@ -175,9 +175,9 @@ func NewRateResponse() *storagepb.RateResponse {
 	return message
 }
 
-// NewMultiAddRequest builds the payload of the "multi_add" endpoint of the
+// NewMultiAddPayload builds the payload of the "multi_add" endpoint of the
 // "storage" service from the gRPC request type.
-func NewMultiAddRequest(message *storagepb.MultiAddRequest) []*storage.Bottle {
+func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
 		v[i] = &storage.Bottle{

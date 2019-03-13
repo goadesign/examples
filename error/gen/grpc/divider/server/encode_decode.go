@@ -42,7 +42,7 @@ func DecodeIntegerDivideRequest(ctx context.Context, v interface{}, md metadata.
 	}
 	var payload *divider.IntOperands
 	{
-		payload = NewIntOperands(message)
+		payload = NewIntegerDividePayload(message)
 	}
 	return payload, nil
 }
@@ -72,7 +72,7 @@ func DecodeDivideRequest(ctx context.Context, v interface{}, md metadata.MD) (in
 	}
 	var payload *divider.FloatOperands
 	{
-		payload = NewFloatOperands(message)
+		payload = NewDividePayload(message)
 	}
 	return payload, nil
 }
