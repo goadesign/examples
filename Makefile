@@ -75,6 +75,8 @@ lint:
 gen:
 	@# NOTE: not all command line tools are generated
 	@echo GENERATING CODE...
+	@pwd
+	@ls
 	@rm -rf $(GOPATH)/src/goa.design/examples/basic/cmd             && \
 	rm -rf $(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli  && \
 	rm -rf $(GOPATH)/src/goa.design/examples/encodings/cmd          && \
@@ -95,6 +97,8 @@ gen:
 	goa example goa.design/examples/security/design  -o $(GOPATH)/src/goa.design/examples/security  && \
 	goa gen     goa.design/examples/streaming/design -o $(GOPATH)/src/goa.design/examples/streaming && \
 	goa example goa.design/examples/streaming/design -o $(GOPATH)/src/goa.design/examples/streaming
+	@pwd
+	@ls
 
 build:
 	@cd $(GOPATH)/src/goa.design/examples/basic && \
