@@ -75,7 +75,7 @@ lint:
 gen:
 	@# NOTE: not all command line tools are generated
 	@echo GENERATING CODE...
-	@rm -rf $(call FILE_PATH,$(GOPATH)/src/goa.design/examples/basic/cmd) && \
+	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd"             && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli"  && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/encodings/cmd"          && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd"              && \
