@@ -49,7 +49,7 @@ GOBIN=$(GOPATH)/bin
 		ifeq ($(GOOS),windows)
 PROTOC=protoc-$(PROTOC_VERSION)-win32
 PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
-GOBIN=$(GOPATH)\bin
+GOBIN="$(GOPATH)\bin"
 		endif
 	endif
 endif
