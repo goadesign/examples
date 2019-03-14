@@ -137,6 +137,8 @@ test:
 	@go test ./... > /dev/null
 
 check-freshness:
+	@pwd
+	@ls
 	@if [ "`git status -s | wc -l`" -gt "0" ]; then \
 	        echo "[ERROR] generated code not in-sync with design:"; \
 	        echo; \
