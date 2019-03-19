@@ -8,7 +8,7 @@
 
 syntax = "proto3";
 
-package multi_auth;
+package secured_service;
 
 option go_package = "secured_servicepb";
 

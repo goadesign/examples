@@ -8,7 +8,7 @@
 
 syntax = "proto3";
 
-package cellar;
+package storage;
 
 option go_package = "storagepb";
 
