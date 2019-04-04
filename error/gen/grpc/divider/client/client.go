@@ -14,6 +14,7 @@ import (
 	dividerpb "goa.design/examples/error/gen/grpc/divider/pb"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
+	goapb "goa.design/goa/grpc/pb"
 	"google.golang.org/grpc"
 )
 
@@ -41,7 +42,13 @@ func (c *Client) IntegerDivide() goa.Endpoint {
 			DecodeIntegerDivideResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -56,7 +63,13 @@ func (c *Client) Divide() goa.Endpoint {
 			DecodeDivideResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}

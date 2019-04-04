@@ -76,6 +76,13 @@ message Component {
 	uint32 percentage = 2;
 }
 
+message ShowNotFoundError {
+	// Message of error
+	string message_ = 1;
+	// ID of missing bottle
+	string id = 2;
+}
+
 message ShowRequest {
 	// ID of bottle to show
 	string id = 1;

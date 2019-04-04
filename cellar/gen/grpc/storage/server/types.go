@@ -105,6 +105,16 @@ func NewShowResponse(result *storageviews.StoredBottleView) *storagepb.ShowRespo
 	return message
 }
 
+// NewShowNotFoundError builds the gRPC error response type from the error of
+// the "show" endpoint of the "storage" service.
+func NewShowNotFoundError(er *storage.NotFound) *storagepb.ShowNotFoundError {
+	message := &storagepb.ShowNotFoundError{
+		Message_: er.Message,
+		Id:       er.ID,
+	}
+	return message
+}
+
 // NewAddPayload builds the payload of the "add" endpoint of the "storage"
 // service from the gRPC request type.
 func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {

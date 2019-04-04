@@ -62,7 +62,7 @@ func (s *Server) Signin(ctx context.Context, message *secured_servicepb.SigninRe
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
@@ -89,9 +89,9 @@ func (s *Server) Secure(ctx context.Context, message *secured_servicepb.SecureRe
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "invalid-scopes":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "unauthorized":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
@@ -118,9 +118,9 @@ func (s *Server) DoublySecure(ctx context.Context, message *secured_servicepb.Do
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "invalid-scopes":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "unauthorized":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
@@ -147,9 +147,9 @@ func (s *Server) AlsoDoublySecure(ctx context.Context, message *secured_servicep
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "invalid-scopes":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "unauthorized":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)

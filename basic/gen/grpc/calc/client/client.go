@@ -40,7 +40,7 @@ func (c *Client) Add() goa.Endpoint {
 			DecodeAddResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}

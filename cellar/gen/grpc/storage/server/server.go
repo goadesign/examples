@@ -86,7 +86,8 @@ func (s *Server) Show(ctx context.Context, message *storagepb.ShowRequest) (*sto
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "not_found":
-				return nil, goagrpc.NewStatusError(codes.NotFound, err)
+				er := err.(*storage.NotFound)
+				return nil, goagrpc.NewStatusError(codes.NotFound, err, NewShowNotFoundError(er))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
