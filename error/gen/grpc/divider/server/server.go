@@ -57,11 +57,11 @@ func (s *Server) IntegerDivide(ctx context.Context, message *dividerpb.IntegerDi
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "has_remainder":
-				return nil, goagrpc.NewStatusError(codes.Unknown, err)
+				return nil, goagrpc.NewStatusError(codes.Unknown, err, goagrpc.NewErrorResponse(err))
 			case "div_by_zero":
-				return nil, goagrpc.NewStatusError(codes.InvalidArgument, err)
+				return nil, goagrpc.NewStatusError(codes.InvalidArgument, err, goagrpc.NewErrorResponse(err))
 			case "timeout":
-				return nil, goagrpc.NewStatusError(codes.DeadlineExceeded, err)
+				return nil, goagrpc.NewStatusError(codes.DeadlineExceeded, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
@@ -87,9 +87,9 @@ func (s *Server) Divide(ctx context.Context, message *dividerpb.DivideRequest) (
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "div_by_zero":
-				return nil, goagrpc.NewStatusError(codes.InvalidArgument, err)
+				return nil, goagrpc.NewStatusError(codes.InvalidArgument, err, goagrpc.NewErrorResponse(err))
 			case "timeout":
-				return nil, goagrpc.NewStatusError(codes.DeadlineExceeded, err)
+				return nil, goagrpc.NewStatusError(codes.DeadlineExceeded, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)

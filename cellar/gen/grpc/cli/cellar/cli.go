@@ -286,7 +286,7 @@ Show bottle by ID
 
 Example:
     `+os.Args[0]+` storage show --message '{
-      "id": "Rerum harum qui natus et aut soluta."
+      "id": "Soluta minus."
    }' --view "tiny"
 `, os.Args[0])
 }
@@ -307,16 +307,12 @@ Example:
          {
             "percentage": 86,
             "varietal": "Syrah"
-         },
-         {
-            "percentage": 86,
-            "varietal": "Syrah"
          }
       ],
       "description": "Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah",
       "name": "Blue\'s Cuvee",
       "rating": 2,
-      "vintage": 1982,
+      "vintage": 1998,
       "winery": {
          "country": "USA",
          "name": "Longoria",
@@ -335,7 +331,7 @@ Remove bottle from storage
 
 Example:
     `+os.Args[0]+` storage remove --message '{
-      "id": "Ducimus expedita in quam eos distinctio."
+      "id": "Ut molestiae possimus."
    }'
 `, os.Args[0])
 }
@@ -360,6 +356,28 @@ Add n number of bottles and return their IDs. This is a multipart request and ea
 Example:
     `+os.Args[0]+` storage multi-add --message '{
       "field": [
+         {
+            "composition": [
+               {
+                  "percentage": 86,
+                  "varietal": "Syrah"
+               },
+               {
+                  "percentage": 86,
+                  "varietal": "Syrah"
+               }
+            ],
+            "description": "Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah",
+            "name": "Blue\'s Cuvee",
+            "rating": 3,
+            "vintage": 2012,
+            "winery": {
+               "country": "USA",
+               "name": "Longoria",
+               "region": "Central Coast, California",
+               "url": "http://www.longoriawine.com/"
+            }
+         },
          {
             "composition": [
                {
@@ -508,9 +526,10 @@ Example:
          }
       ],
       "ids": [
-         "Deleniti fugit omnis dolor est consequuntur sed.",
-         "Officiis voluptatem omnis.",
-         "Natus optio praesentium cum."
+         "Ea praesentium repudiandae quia.",
+         "Temporibus ut dicta.",
+         "Est quia corrupti saepe.",
+         "Facere harum dolores adipisci repellat."
       ]
    }'
 `, os.Args[0])

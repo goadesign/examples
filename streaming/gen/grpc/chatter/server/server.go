@@ -91,7 +91,7 @@ func (s *Server) Login(ctx context.Context, message *chatterpb.LoginRequest) (*c
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
@@ -118,9 +118,9 @@ func (s *Server) Echoer(stream chatterpb.Chatter_EchoerServer) error {
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -134,9 +134,9 @@ func (s *Server) Echoer(stream chatterpb.Chatter_EchoerServer) error {
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -164,9 +164,9 @@ func (s *Server) Listener(stream chatterpb.Chatter_ListenerServer) error {
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -180,9 +180,9 @@ func (s *Server) Listener(stream chatterpb.Chatter_ListenerServer) error {
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -209,9 +209,9 @@ func (s *Server) Summary(stream chatterpb.Chatter_SummaryServer) error {
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -225,9 +225,9 @@ func (s *Server) Summary(stream chatterpb.Chatter_SummaryServer) error {
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -255,9 +255,9 @@ func (s *Server) Subscribe(message *chatterpb.SubscribeRequest, stream chatterpb
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -271,9 +271,9 @@ func (s *Server) Subscribe(message *chatterpb.SubscribeRequest, stream chatterpb
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -300,9 +300,9 @@ func (s *Server) History(message *chatterpb.HistoryRequest, stream chatterpb.Cha
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)
@@ -316,9 +316,9 @@ func (s *Server) History(message *chatterpb.HistoryRequest, stream chatterpb.Cha
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "unauthorized":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			case "invalid-scopes":
-				return goagrpc.NewStatusError(codes.Unauthenticated, err)
+				return goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return goagrpc.EncodeError(err)

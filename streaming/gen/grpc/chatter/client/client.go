@@ -16,6 +16,7 @@ import (
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
+	goapb "goa.design/goa/grpc/pb"
 	"google.golang.org/grpc"
 )
 
@@ -69,7 +70,13 @@ func (c *Client) Login() goa.Endpoint {
 			DecodeLoginResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -84,7 +91,13 @@ func (c *Client) Echoer() goa.Endpoint {
 			DecodeEchoerResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -99,7 +112,13 @@ func (c *Client) Listener() goa.Endpoint {
 			DecodeListenerResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -114,7 +133,13 @@ func (c *Client) Summary() goa.Endpoint {
 			DecodeSummaryResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -130,7 +155,13 @@ func (c *Client) Subscribe() goa.Endpoint {
 			DecodeSubscribeResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -145,7 +176,13 @@ func (c *Client) History() goa.Endpoint {
 			DecodeHistoryResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
