@@ -14,6 +14,7 @@ import (
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
+	goapb "goa.design/goa/grpc/pb"
 	"google.golang.org/grpc"
 )
 
@@ -40,7 +41,13 @@ func (c *Client) Pick() goa.Endpoint {
 			DecodePickResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}

@@ -14,6 +14,7 @@ import (
 	secured_servicepb "goa.design/examples/security/gen/grpc/secured_service/pb"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
+	goapb "goa.design/goa/grpc/pb"
 	"google.golang.org/grpc"
 )
 
@@ -42,7 +43,13 @@ func (c *Client) Signin() goa.Endpoint {
 			DecodeSigninResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -58,7 +65,13 @@ func (c *Client) Secure() goa.Endpoint {
 			DecodeSecureResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -74,7 +87,13 @@ func (c *Client) DoublySecure() goa.Endpoint {
 			DecodeDoublySecureResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -90,7 +109,13 @@ func (c *Client) AlsoDoublySecure() goa.Endpoint {
 			DecodeAlsoDoublySecureResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}

@@ -14,6 +14,7 @@ import (
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	goa "goa.design/goa"
 	goagrpc "goa.design/goa/grpc"
+	goapb "goa.design/goa/grpc/pb"
 	"google.golang.org/grpc"
 )
 
@@ -40,7 +41,7 @@ func (c *Client) List() goa.Endpoint {
 			DecodeListResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}
@@ -55,7 +56,15 @@ func (c *Client) Show() goa.Endpoint {
 			DecodeShowResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *storagepb.ShowNotFoundError:
+				return nil, NewShowNotFoundError(message)
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault(err.Error())
+			}
 		}
 		return res, nil
 	}
@@ -70,7 +79,7 @@ func (c *Client) Add() goa.Endpoint {
 			DecodeAddResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}
@@ -85,7 +94,7 @@ func (c *Client) Remove() goa.Endpoint {
 			nil)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}
@@ -100,7 +109,7 @@ func (c *Client) Rate() goa.Endpoint {
 			nil)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}
@@ -115,7 +124,7 @@ func (c *Client) MultiAdd() goa.Endpoint {
 			DecodeMultiAddResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}
@@ -131,7 +140,7 @@ func (c *Client) MultiUpdate() goa.Endpoint {
 			nil)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			return nil, goagrpc.DecodeError(err)
+			return nil, goa.Fault(err.Error())
 		}
 		return res, nil
 	}

@@ -54,9 +54,9 @@ func (s *Server) Pick(ctx context.Context, message *sommelierpb.PickRequest) (*s
 		if en, ok := err.(ErrorNamer); ok {
 			switch en.ErrorName() {
 			case "no_criteria":
-				return nil, goagrpc.NewStatusError(codes.InvalidArgument, err)
+				return nil, goagrpc.NewStatusError(codes.InvalidArgument, err, goagrpc.NewErrorResponse(err))
 			case "no_match":
-				return nil, goagrpc.NewStatusError(codes.NotFound, err)
+				return nil, goagrpc.NewStatusError(codes.NotFound, err, goagrpc.NewErrorResponse(err))
 			}
 		}
 		return nil, goagrpc.EncodeError(err)
