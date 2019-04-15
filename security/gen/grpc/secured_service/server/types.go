@@ -72,10 +72,15 @@ func NewDoublySecureResponse(result string) *secured_servicepb.DoublySecureRespo
 // NewAlsoDoublySecurePayload builds the payload of the "also_doubly_secure"
 // endpoint of the "secured_service" service from the gRPC request type.
 func NewAlsoDoublySecurePayload(message *secured_servicepb.AlsoDoublySecureRequest, oauthToken *string, token *string) *securedservice.AlsoDoublySecurePayload {
-	v := &securedservice.AlsoDoublySecurePayload{
-		Username: &message.Username,
-		Password: &message.Password,
-		Key:      &message.Key,
+	v := &securedservice.AlsoDoublySecurePayload{}
+	if message.Username != "" {
+		v.Username = &message.Username
+	}
+	if message.Password != "" {
+		v.Password = &message.Password
+	}
+	if message.Key != "" {
+		v.Key = &message.Key
 	}
 	v.OauthToken = oauthToken
 	v.Token = token

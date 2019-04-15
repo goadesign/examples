@@ -20,9 +20,12 @@ import (
 // NewPickPayload builds the payload of the "pick" endpoint of the "sommelier"
 // service from the gRPC request type.
 func NewPickPayload(message *sommelierpb.PickRequest) *sommelier.Criteria {
-	v := &sommelier.Criteria{
-		Name:   &message.Name,
-		Winery: &message.Winery,
+	v := &sommelier.Criteria{}
+	if message.Name != "" {
+		v.Name = &message.Name
+	}
+	if message.Winery != "" {
+		v.Winery = &message.Winery
 	}
 	if message.Varietal != nil {
 		v.Varietal = make([]string, len(message.Varietal))
@@ -148,9 +151,6 @@ func ValidateComponent(message *sommelierpb.Component) (err error) {
 // svcSommelierviewsWineryViewToSommelierpbWinery builds a value of type
 // *sommelierpb.Winery from a value of type *sommelierviews.WineryView.
 func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
-	if v == nil {
-		return nil
-	}
 	res := &sommelierpb.Winery{}
 	if v.Name != nil {
 		res.Name = *v.Name
@@ -171,11 +171,18 @@ func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView
 // protobufSommelierpbWineryToSommelierviewsWineryView builds a value of type
 // *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
 func protobufSommelierpbWineryToSommelierviewsWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
-	res := &sommelierviews.WineryView{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		URL:     &v.Url,
+	res := &sommelierviews.WineryView{}
+	if v.Name != "" {
+		res.Name = &v.Name
+	}
+	if v.Region != "" {
+		res.Region = &v.Region
+	}
+	if v.Country != "" {
+		res.Country = &v.Country
+	}
+	if v.Url != "" {
+		res.URL = &v.Url
 	}
 
 	return res
