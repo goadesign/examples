@@ -32,9 +32,12 @@ func BuildPickPayload(sommelierPickMessage string) (*sommelier.Criteria, error) 
 	if err != nil {
 		return nil, err
 	}
-	v := &sommelier.Criteria{
-		Name:   &message.Name,
-		Winery: &message.Winery,
+	v := &sommelier.Criteria{}
+	if message.Name != "" {
+		v.Name = &message.Name
+	}
+	if message.Winery != "" {
+		v.Winery = &message.Winery
 	}
 	if message.Varietal != nil {
 		v.Varietal = make([]string, len(message.Varietal))

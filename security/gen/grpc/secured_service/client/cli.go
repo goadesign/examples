@@ -115,10 +115,15 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage string, 
 	if err != nil {
 		return nil, err
 	}
-	v := &securedservice.AlsoDoublySecurePayload{
-		Username: &message.Username,
-		Password: &message.Password,
-		Key:      &message.Key,
+	v := &securedservice.AlsoDoublySecurePayload{}
+	if message.Username != "" {
+		v.Username = &message.Username
+	}
+	if message.Password != "" {
+		v.Password = &message.Password
+	}
+	if message.Key != "" {
+		v.Key = &message.Key
 	}
 	v.OauthToken = oauthToken
 	v.Token = token

@@ -119,10 +119,14 @@ func NewShowNotFoundError(er *storage.NotFound) *storagepb.ShowNotFoundError {
 // service from the gRPC request type.
 func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 	v := &storage.Bottle{
-		Name:        message.Name,
-		Vintage:     message.Vintage,
-		Description: &message.Description,
-		Rating:      &message.Rating,
+		Name:    message.Name,
+		Vintage: message.Vintage,
+	}
+	if message.Description != "" {
+		v.Description = &message.Description
+	}
+	if message.Rating != 0 {
+		v.Rating = &message.Rating
 	}
 	if message.Winery != nil {
 		v.Winery = protobufStoragepbWineryToStorageWinery(message.Winery)
@@ -131,8 +135,10 @@ func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
 			v.Composition[i] = &storage.Component{
-				Varietal:   val.Varietal,
-				Percentage: &val.Percentage,
+				Varietal: val.Varietal,
+			}
+			if val.Percentage != 0 {
+				v.Composition[i].Percentage = &val.Percentage
 			}
 		}
 	}
@@ -191,10 +197,14 @@ func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
 		v[i] = &storage.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
-			Description: &val.Description,
-			Rating:      &val.Rating,
+			Name:    val.Name,
+			Vintage: val.Vintage,
+		}
+		if val.Description != "" {
+			v[i].Description = &val.Description
+		}
+		if val.Rating != 0 {
+			v[i].Rating = &val.Rating
 		}
 		if val.Winery != nil {
 			v[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
@@ -203,8 +213,10 @@ func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				v[i].Composition[j] = &storage.Component{
-					Varietal:   val.Varietal,
-					Percentage: &val.Percentage,
+					Varietal: val.Varietal,
+				}
+				if val.Percentage != 0 {
+					v[i].Composition[j].Percentage = &val.Percentage
 				}
 			}
 		}
@@ -237,10 +249,14 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 		for i, val := range message.Bottles {
 			v.Bottles[i] = &storage.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
-				Description: &val.Description,
-				Rating:      &val.Rating,
+				Name:    val.Name,
+				Vintage: val.Vintage,
+			}
+			if val.Description != "" {
+				v.Bottles[i].Description = &val.Description
+			}
+			if val.Rating != 0 {
+				v.Bottles[i].Rating = &val.Rating
 			}
 			if val.Winery != nil {
 				v.Bottles[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
@@ -249,8 +265,10 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
 				for j, val := range val.Composition {
 					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   val.Varietal,
-						Percentage: &val.Percentage,
+						Varietal: val.Varietal,
+					}
+					if val.Percentage != 0 {
+						v.Bottles[i].Composition[j].Percentage = &val.Percentage
 					}
 				}
 			}
@@ -363,14 +381,20 @@ func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
 			}
 		}
 	}
-	if utf8.RuneCountInString(message.Description) > 2000 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
+	if message.Description != "" {
+		if utf8.RuneCountInString(message.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
+		}
 	}
-	if message.Rating < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
+	if message.Rating != 0 {
+		if message.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
+		}
 	}
-	if message.Rating > 5 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
+	if message.Rating != 0 {
+		if message.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
+		}
 	}
 	return
 }
@@ -401,14 +425,20 @@ func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
 			}
 		}
 	}
-	if utf8.RuneCountInString(message.Description) > 2000 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
+	if message.Description != "" {
+		if utf8.RuneCountInString(message.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
+		}
 	}
-	if message.Rating < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
+	if message.Rating != 0 {
+		if message.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
+		}
 	}
-	if message.Rating > 5 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
+	if message.Rating != 0 {
+		if message.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
+		}
 	}
 	return
 }
@@ -507,9 +537,6 @@ func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err erro
 // svcStorageviewsWineryViewToStoragepbWinery builds a value of type
 // *storagepb.Winery from a value of type *storageviews.WineryView.
 func svcStorageviewsWineryViewToStoragepbWinery(v *storageviews.WineryView) *storagepb.Winery {
-	if v == nil {
-		return nil
-	}
 	res := &storagepb.Winery{}
 	if v.Name != nil {
 		res.Name = *v.Name
@@ -530,11 +557,18 @@ func svcStorageviewsWineryViewToStoragepbWinery(v *storageviews.WineryView) *sto
 // protobufStoragepbWineryToStorageviewsWineryView builds a value of type
 // *storageviews.WineryView from a value of type *storagepb.Winery.
 func protobufStoragepbWineryToStorageviewsWineryView(v *storagepb.Winery) *storageviews.WineryView {
-	res := &storageviews.WineryView{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		URL:     &v.Url,
+	res := &storageviews.WineryView{}
+	if v.Name != "" {
+		res.Name = &v.Name
+	}
+	if v.Region != "" {
+		res.Region = &v.Region
+	}
+	if v.Country != "" {
+		res.Country = &v.Country
+	}
+	if v.Url != "" {
+		res.URL = &v.Url
 	}
 
 	return res
@@ -547,7 +581,9 @@ func protobufStoragepbWineryToStorageWinery(v *storagepb.Winery) *storage.Winery
 		Name:    v.Name,
 		Region:  v.Region,
 		Country: v.Country,
-		URL:     &v.Url,
+	}
+	if v.Url != "" {
+		res.URL = &v.Url
 	}
 
 	return res
