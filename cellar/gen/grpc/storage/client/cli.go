@@ -62,10 +62,14 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 		return nil, err
 	}
 	v := &storage.Bottle{
-		Name:        message.Name,
-		Vintage:     message.Vintage,
-		Description: &message.Description,
-		Rating:      &message.Rating,
+		Name:    message.Name,
+		Vintage: message.Vintage,
+	}
+	if message.Description != "" {
+		v.Description = &message.Description
+	}
+	if message.Rating != 0 {
+		v.Rating = &message.Rating
 	}
 	if message.Winery != nil {
 		v.Winery = protobufStoragepbWineryToStorageWinery(message.Winery)
@@ -74,8 +78,10 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
 			v.Composition[i] = &storage.Component{
-				Varietal:   val.Varietal,
-				Percentage: &val.Percentage,
+				Varietal: val.Varietal,
+			}
+			if val.Percentage != 0 {
+				v.Composition[i].Percentage = &val.Percentage
 			}
 		}
 	}
@@ -151,10 +157,14 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
 		v[i] = &storage.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
-			Description: &val.Description,
-			Rating:      &val.Rating,
+			Name:    val.Name,
+			Vintage: val.Vintage,
+		}
+		if val.Description != "" {
+			v[i].Description = &val.Description
+		}
+		if val.Rating != 0 {
+			v[i].Rating = &val.Rating
 		}
 		if val.Winery != nil {
 			v[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
@@ -163,8 +173,10 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				v[i].Composition[j] = &storage.Component{
-					Varietal:   val.Varietal,
-					Percentage: &val.Percentage,
+					Varietal: val.Varietal,
+				}
+				if val.Percentage != 0 {
+					v[i].Composition[j].Percentage = &val.Percentage
 				}
 			}
 		}
@@ -199,10 +211,14 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 		for i, val := range message.Bottles {
 			v.Bottles[i] = &storage.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
-				Description: &val.Description,
-				Rating:      &val.Rating,
+				Name:    val.Name,
+				Vintage: val.Vintage,
+			}
+			if val.Description != "" {
+				v.Bottles[i].Description = &val.Description
+			}
+			if val.Rating != 0 {
+				v.Bottles[i].Rating = &val.Rating
 			}
 			if val.Winery != nil {
 				v.Bottles[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
@@ -211,8 +227,10 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
 				for j, val := range val.Composition {
 					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   val.Varietal,
-						Percentage: &val.Percentage,
+						Varietal: val.Varietal,
+					}
+					if val.Percentage != 0 {
+						v.Bottles[i].Composition[j].Percentage = &val.Percentage
 					}
 				}
 			}
