@@ -29,9 +29,6 @@ func BuildPickPayload(sommelierPickMessage string) (*sommelier.Criteria, error) 
 			}
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &sommelier.Criteria{}
 	if message.Name != "" {
 		v.Name = &message.Name

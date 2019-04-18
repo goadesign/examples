@@ -179,7 +179,6 @@ func (s *chatterSvc) Subscribe(ctx context.Context, p *chattersvc.SubscribePaylo
 		select {
 		case <-ctx.Done():
 			done = true
-			break
 		default:
 			if ev := diff(s.storedMessages, old); ev != nil {
 				old = s.storedMessages

@@ -90,9 +90,6 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 			return nil, err
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &storage.Bottle{
 		Name:        body.Name,
 		Vintage:     body.Vintage,
@@ -137,9 +134,6 @@ func BuildMultiAddPayload(storageMultiAddBody string) ([]*storage.Bottle, error)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, example of valid JSON:\n%s", "'[\n      {\n         \"composition\": [\n            {\n               \"percentage\": 95,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 95,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 1,\n         \"vintage\": 1978,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      },\n      {\n         \"composition\": [\n            {\n               \"percentage\": 95,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 95,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 1,\n         \"vintage\": 1978,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      },\n      {\n         \"composition\": [\n            {\n               \"percentage\": 95,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 95,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 1,\n         \"vintage\": 1978,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      }\n   ]'")
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := make([]*storage.Bottle, len(body))
 	for i, val := range body {
@@ -195,9 +189,6 @@ func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateId
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for ids, example of valid JSON:\n%s", "'[\n      \"Aut aut.\",\n      \"Fugiat aliquid facere doloremque placeat ea vel.\",\n      \"Incidunt earum dolorem suscipit ut iusto.\"\n   ]'")
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := &storage.MultiUpdatePayload{}
 	if body.Bottles != nil {

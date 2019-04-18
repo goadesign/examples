@@ -35,9 +35,6 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 			view = &storageShowView
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &storage.ShowPayload{
 		ID: message.Id,
 	}
@@ -57,9 +54,6 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 				return nil, fmt.Errorf("invalid JSON for message, example of valid JSON:\n%s", "'{\n      \"composition\": [\n         {\n            \"percentage\": 86,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 86,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 2,\n      \"vintage\": 1998,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 			}
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := &storage.Bottle{
 		Name:    message.Name,
@@ -101,9 +95,6 @@ func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, er
 			}
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &storage.RemovePayload{
 		ID: message.Id,
 	}
@@ -122,9 +113,6 @@ func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
 				return nil, fmt.Errorf("invalid JSON for message, example of valid JSON:\n%s", "?")
 			}
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := make(map[uint32][]string, len(message.Field))
 	for key, val := range message.Field {
@@ -150,9 +138,6 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 				return nil, fmt.Errorf("invalid JSON for message, example of valid JSON:\n%s", "'{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 			}
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
@@ -196,9 +181,6 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 				return nil, fmt.Errorf("invalid JSON for message, example of valid JSON:\n%s", "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 86,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2012,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Ea praesentium repudiandae quia.\",\n         \"Temporibus ut dicta.\",\n         \"Est quia corrupti saepe.\",\n         \"Facere harum dolores adipisci repellat.\"\n      ]\n   }'")
 			}
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := &storage.MultiUpdatePayload{}
 	if message.Ids != nil {
