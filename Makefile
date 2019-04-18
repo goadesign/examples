@@ -25,6 +25,7 @@ DEPEND=\
 	goa.design/goa/... \
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
+	honnef.co/go/tools/cmd/staticcheck
 
 .phony: all depend lint test build clean
 
