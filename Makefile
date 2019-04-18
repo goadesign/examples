@@ -29,7 +29,7 @@ DEPEND=\
 
 .phony: all depend lint test build clean
 
-all: depend lint gen test
+all: depend gen lint test
 	@echo DONE!
 
 travis: all check-freshness
