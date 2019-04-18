@@ -25,10 +25,11 @@ DEPEND=\
 	goa.design/goa/... \
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
+	honnef.co/go/tools/cmd/staticcheck
 
 .phony: all depend lint test build clean
 
-all: depend lint gen test
+all: depend gen lint test
 	@echo DONE!
 
 travis: all check-freshness
@@ -70,6 +71,9 @@ lint:
 	fi
 	@if [ "`golint ./... | grep -vf .golint_exclude | tee /dev/stderr`" ]; then \
 		echo "^ - Lint errors!" && echo && exit 1; \
+	fi
+	@if [ "`staticcheck -checks all,-ST1000,-ST1001 ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
+		echo "^ - staticcheck errors!" && echo && exit 1; \
 	fi
 
 gen:

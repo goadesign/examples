@@ -40,19 +40,17 @@ func BuildSecurePayload(securedServiceSecureFail string, securedServiceSecureTok
 	var fail *bool
 	{
 		if securedServiceSecureFail != "" {
-			val, err := strconv.ParseBool(securedServiceSecureFail)
+			var val bool
+			val, err = strconv.ParseBool(securedServiceSecureFail)
 			fail = &val
 			if err != nil {
-				err = fmt.Errorf("invalid value for fail, must be BOOL")
+				return nil, fmt.Errorf("invalid value for fail, must be BOOL")
 			}
 		}
 	}
 	var token string
 	{
 		token = securedServiceSecureToken
-	}
-	if err != nil {
-		return nil, err
 	}
 	payload := &securedservice.SecurePayload{
 		Fail:  fail,

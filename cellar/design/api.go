@@ -12,10 +12,12 @@ var _ = API("cellar", func() {
 		Host("localhost", func() {
 			Description("default host")
 			URI("http://localhost:8000/cellar")
+			URI("grpc://localhost:8080/cellar")
 		})
 		Host("goa.design", func() {
 			Description("public host")
 			URI("https://goa.design/cellar")
+			URI("grpcs://goa.design/cellar")
 		})
 	})
 })

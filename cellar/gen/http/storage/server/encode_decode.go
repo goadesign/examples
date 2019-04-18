@@ -204,7 +204,6 @@ func DecodeRateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.De
 							err = goa.MergeErrors(err, goa.InvalidFieldTypeError("keya", keyaRaw, "unsigned integer"))
 						}
 						keya = uint32(v)
-						keyRaw = keyRaw[closeIdx+1:]
 					}
 					query[keya] = valRaw
 				}

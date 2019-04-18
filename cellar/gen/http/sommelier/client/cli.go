@@ -26,9 +26,6 @@ func BuildPickPayload(sommelierPickBody string) (*sommelier.Criteria, error) {
 			return nil, fmt.Errorf("invalid JSON for body, example of valid JSON:\n%s", "'{\n      \"name\": \"Blue\\'s Cuvee\",\n      \"varietal\": [\n         \"pinot noir\",\n         \"merlot\",\n         \"cabernet franc\"\n      ],\n      \"winery\": \"longoria\"\n   }'")
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &sommelier.Criteria{
 		Name:   body.Name,
 		Winery: body.Winery,
