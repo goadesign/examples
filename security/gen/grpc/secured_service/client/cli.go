@@ -50,9 +50,6 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 	{
 		token = securedServiceSecureToken
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &securedservice.SecurePayload{
 		Fail: &message.Fail,
 	}
@@ -76,9 +73,6 @@ func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedS
 	var token string
 	{
 		token = securedServiceDoublySecureToken
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := &securedservice.DoublySecurePayload{
 		Key: message.Key,
@@ -111,9 +105,6 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage string, 
 		if securedServiceAlsoDoublySecureToken != "" {
 			token = &securedServiceAlsoDoublySecureToken
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := &securedservice.AlsoDoublySecurePayload{}
 	if message.Username != "" {

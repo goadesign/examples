@@ -24,7 +24,7 @@ func BuildAddPayload(calcAddA string, calcAddB string) (*calc.AddPayload, error)
 		v, err = strconv.ParseInt(calcAddA, 10, 64)
 		a = int(v)
 		if err != nil {
-			err = fmt.Errorf("invalid value for a, must be INT")
+			return nil, fmt.Errorf("invalid value for a, must be INT")
 		}
 	}
 	var b int
@@ -33,11 +33,8 @@ func BuildAddPayload(calcAddA string, calcAddB string) (*calc.AddPayload, error)
 		v, err = strconv.ParseInt(calcAddB, 10, 64)
 		b = int(v)
 		if err != nil {
-			err = fmt.Errorf("invalid value for b, must be INT")
+			return nil, fmt.Errorf("invalid value for b, must be INT")
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	payload := &calc.AddPayload{
 		A: a,

@@ -75,11 +75,8 @@ func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 			errc <- srv.Serve(lis)
 		}()
 
-		select {
-		case <-ctx.Done():
-			logger.Printf("shutting down gRPC server at %q", u.Host)
-			srv.GracefulStop()
-			return
-		}
+		ctx.Done()
+		logger.Printf("shutting down gRPC server at %q", u.Host)
+		srv.GracefulStop()
 	}()
 }

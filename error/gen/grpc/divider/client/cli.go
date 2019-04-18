@@ -29,9 +29,6 @@ func BuildIntegerDividePayload(dividerIntegerDivideMessage string) (*divider.Int
 			}
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	v := &divider.IntOperands{
 		A: int(message.A),
 		B: int(message.B),
@@ -51,9 +48,6 @@ func BuildDividePayload(dividerDivideMessage string) (*divider.FloatOperands, er
 				return nil, fmt.Errorf("invalid JSON for message, example of valid JSON:\n%s", "'{\n      \"a\": 0.7822693555171186,\n      \"b\": 0.5749246657891343\n   }'")
 			}
 		}
-	}
-	if err != nil {
-		return nil, err
 	}
 	v := &divider.FloatOperands{
 		A: message.A,
