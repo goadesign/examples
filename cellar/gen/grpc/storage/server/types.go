@@ -284,54 +284,6 @@ func NewMultiUpdateResponse() *storagepb.MultiUpdateResponse {
 	return message
 }
 
-// ValidateStoredBottleCollection runs the validations defined on
-// StoredBottleCollection.
-func ValidateStoredBottleCollection(message *storagepb.StoredBottleCollection) (err error) {
-	for _, e := range message.Field {
-		if e != nil {
-			if err2 := ValidateStoredBottle(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// ValidateStoredBottle runs the validations defined on StoredBottle.
-func ValidateStoredBottle(message *storagepb.StoredBottle) (err error) {
-	if utf8.RuneCountInString(message.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", message.Name, utf8.RuneCountInString(message.Name), 100, false))
-	}
-	if message.Winery != nil {
-		if err2 := ValidateWinery(message.Winery); err2 != nil {
-			err = goa.MergeErrors(err, err2)
-		}
-	}
-	if message.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 1900, true))
-	}
-	if message.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 2020, false))
-	}
-	for _, e := range message.Composition {
-		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	if utf8.RuneCountInString(message.Description) > 2000 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
-	}
-	if message.Rating < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
-	}
-	if message.Rating > 5 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
-	}
-	return
-}
-
 // ValidateWinery runs the validations defined on Winery.
 func ValidateWinery(message *storagepb.Winery) (err error) {
 	err = goa.MergeErrors(err, goa.ValidatePattern("message.region", message.Region, "(?i)[a-z '\\.]+"))
@@ -351,50 +303,6 @@ func ValidateComponent(message *storagepb.Component) (err error) {
 	}
 	if message.Percentage > 100 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError("message.percentage", message.Percentage, 100, false))
-	}
-	return
-}
-
-// ValidateShowResponse runs the validations defined on ShowResponse.
-func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
-	if message.Winery == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "message"))
-	}
-	if utf8.RuneCountInString(message.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", message.Name, utf8.RuneCountInString(message.Name), 100, false))
-	}
-	if message.Winery != nil {
-		if err2 := ValidateWinery(message.Winery); err2 != nil {
-			err = goa.MergeErrors(err, err2)
-		}
-	}
-	if message.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 1900, true))
-	}
-	if message.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 2020, false))
-	}
-	for _, e := range message.Composition {
-		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	if message.Description != "" {
-		if utf8.RuneCountInString(message.Description) > 2000 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
-		}
-	}
-	if message.Rating != 0 {
-		if message.Rating < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
-		}
-	}
-	if message.Rating != 0 {
-		if message.Rating > 5 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
-		}
 	}
 	return
 }
@@ -503,14 +411,6 @@ func ValidateBottle(message *storagepb.Bottle) (err error) {
 	}
 	if message.Rating > 5 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
-	}
-	return
-}
-
-// ValidateMultiAddResponse runs the validations defined on MultiAddResponse.
-func ValidateMultiAddResponse(message *storagepb.MultiAddResponse) (err error) {
-	if message.Field == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
 	}
 	return
 }
