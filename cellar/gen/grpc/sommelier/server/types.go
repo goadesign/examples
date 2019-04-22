@@ -9,12 +9,9 @@
 package server
 
 import (
-	"unicode/utf8"
-
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	sommelierviews "goa.design/examples/cellar/gen/sommelier/views"
-	goa "goa.design/goa"
 )
 
 // NewPickPayload builds the payload of the "pick" endpoint of the "sommelier"
@@ -75,77 +72,6 @@ func NewStoredBottleCollection(result sommelierviews.StoredBottleCollectionView)
 		}
 	}
 	return message
-}
-
-// ValidateStoredBottleCollection runs the validations defined on
-// StoredBottleCollection.
-func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection) (err error) {
-	for _, e := range message.Field {
-		if e != nil {
-			if err2 := ValidateStoredBottle(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// ValidateStoredBottle runs the validations defined on StoredBottle.
-func ValidateStoredBottle(message *sommelierpb.StoredBottle) (err error) {
-	if utf8.RuneCountInString(message.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", message.Name, utf8.RuneCountInString(message.Name), 100, false))
-	}
-	if message.Winery != nil {
-		if err2 := ValidateWinery(message.Winery); err2 != nil {
-			err = goa.MergeErrors(err, err2)
-		}
-	}
-	if message.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 1900, true))
-	}
-	if message.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 2020, false))
-	}
-	for _, e := range message.Composition {
-		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	if utf8.RuneCountInString(message.Description) > 2000 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", message.Description, utf8.RuneCountInString(message.Description), 2000, false))
-	}
-	if message.Rating < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 1, true))
-	}
-	if message.Rating > 5 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", message.Rating, 5, false))
-	}
-	return
-}
-
-// ValidateWinery runs the validations defined on Winery.
-func ValidateWinery(message *sommelierpb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.region", message.Region, "(?i)[a-z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.country", message.Country, "(?i)[a-z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.url", message.Url, "(?i)^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
-	return
-}
-
-// ValidateComponent runs the validations defined on Component.
-func ValidateComponent(message *sommelierpb.Component) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.varietal", message.Varietal, "[A-Za-z' ]+"))
-	if utf8.RuneCountInString(message.Varietal) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.varietal", message.Varietal, utf8.RuneCountInString(message.Varietal), 100, false))
-	}
-	if message.Percentage < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.percentage", message.Percentage, 1, true))
-	}
-	if message.Percentage > 100 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.percentage", message.Percentage, 100, false))
-	}
-	return
 }
 
 // svcSommelierviewsWineryViewToSommelierpbWinery builds a value of type
