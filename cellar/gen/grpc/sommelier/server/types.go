@@ -171,15 +171,10 @@ func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView
 // protobufSommelierpbWineryToSommelierviewsWineryView builds a value of type
 // *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
 func protobufSommelierpbWineryToSommelierviewsWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
-	res := &sommelierviews.WineryView{}
-	if v.Name != "" {
-		res.Name = &v.Name
-	}
-	if v.Region != "" {
-		res.Region = &v.Region
-	}
-	if v.Country != "" {
-		res.Country = &v.Country
+	res := &sommelierviews.WineryView{
+		Name:    &v.Name,
+		Region:  &v.Region,
+		Country: &v.Country,
 	}
 	if v.Url != "" {
 		res.URL = &v.Url

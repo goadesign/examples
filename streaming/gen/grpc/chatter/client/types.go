@@ -49,16 +49,13 @@ func NewListenerStreamingRequest(spayload string) *chatterpb.ListenerStreamingRe
 func NewChatSummaryCollection(v *chatterpb.ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
 	vresult := make([]*chatterviews.ChatSummaryView, len(v.Field))
 	for i, val := range v.Field {
-		vresult[i] = &chatterviews.ChatSummaryView{}
-		if val.Message_ != "" {
-			vresult[i].Message = &val.Message_
+		vresult[i] = &chatterviews.ChatSummaryView{
+			Message: &val.Message_,
+			SentAt:  &val.SentAt,
 		}
 		if val.Length != 0 {
 			lengthptr := int(val.Length)
 			vresult[i].Length = &lengthptr
-		}
-		if val.SentAt != "" {
-			vresult[i].SentAt = &val.SentAt
 		}
 	}
 	return vresult
@@ -94,16 +91,13 @@ func NewHistoryRequest() *chatterpb.HistoryRequest {
 }
 
 func NewChatSummaryView(v *chatterpb.HistoryResponse) *chatterviews.ChatSummaryView {
-	vresult := &chatterviews.ChatSummaryView{}
-	if v.Message_ != "" {
-		vresult.Message = &v.Message_
+	vresult := &chatterviews.ChatSummaryView{
+		Message: &v.Message_,
+		SentAt:  &v.SentAt,
 	}
 	if v.Length != 0 {
 		lengthptr := int(v.Length)
 		vresult.Length = &lengthptr
-	}
-	if v.SentAt != "" {
-		vresult.SentAt = &v.SentAt
 	}
 	return vresult
 }
