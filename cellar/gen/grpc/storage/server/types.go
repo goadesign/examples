@@ -557,15 +557,10 @@ func svcStorageviewsWineryViewToStoragepbWinery(v *storageviews.WineryView) *sto
 // protobufStoragepbWineryToStorageviewsWineryView builds a value of type
 // *storageviews.WineryView from a value of type *storagepb.Winery.
 func protobufStoragepbWineryToStorageviewsWineryView(v *storagepb.Winery) *storageviews.WineryView {
-	res := &storageviews.WineryView{}
-	if v.Name != "" {
-		res.Name = &v.Name
-	}
-	if v.Region != "" {
-		res.Region = &v.Region
-	}
-	if v.Country != "" {
-		res.Country = &v.Country
+	res := &storageviews.WineryView{
+		Name:    &v.Name,
+		Region:  &v.Region,
+		Country: &v.Country,
 	}
 	if v.Url != "" {
 		res.URL = &v.Url
