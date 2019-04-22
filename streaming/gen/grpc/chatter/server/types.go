@@ -12,7 +12,6 @@ import (
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
-	goa "goa.design/goa"
 )
 
 // NewLoginPayload builds the payload of the "login" endpoint of the "chatter"
@@ -133,41 +132,4 @@ func NewHistoryResponse(vresult *chatterviews.ChatSummaryView) *chatterpb.Histor
 		v.SentAt = *vresult.SentAt
 	}
 	return v
-}
-
-// ValidateChatSummaryCollection runs the validations defined on
-// ChatSummaryCollection.
-func ValidateChatSummaryCollection(message *chatterpb.ChatSummaryCollection) (err error) {
-	for _, e := range message.Field {
-		if e != nil {
-			if err2 := ValidateChatSummary(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// ValidateChatSummary runs the validations defined on ChatSummary.
-func ValidateChatSummary(message *chatterpb.ChatSummary) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.sent_at", message.SentAt, goa.FormatDateTime))
-
-	return
-}
-
-// ValidateSubscribeResponse runs the validations defined on SubscribeResponse.
-func ValidateSubscribeResponse(message *chatterpb.SubscribeResponse) (err error) {
-	if !(message.Action == "added") {
-		err = goa.MergeErrors(err, goa.InvalidEnumValueError("message.action", message.Action, []interface{}{"added"}))
-	}
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.added_at", message.AddedAt, goa.FormatDateTime))
-
-	return
-}
-
-// ValidateHistoryResponse runs the validations defined on HistoryResponse.
-func ValidateHistoryResponse(message *chatterpb.HistoryResponse) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.sent_at", message.SentAt, goa.FormatDateTime))
-
-	return
 }
