@@ -41,15 +41,10 @@ func NewPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.StoredBottleCollectionView {
 	result := make([]*sommelierviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
-		result[i] = &sommelierviews.StoredBottleView{}
-		if val.Id != "" {
-			result[i].ID = &val.Id
-		}
-		if val.Name != "" {
-			result[i].Name = &val.Name
-		}
-		if val.Vintage != 0 {
-			result[i].Vintage = &val.Vintage
+		result[i] = &sommelierviews.StoredBottleView{
+			ID:      &val.Id,
+			Name:    &val.Name,
+			Vintage: &val.Vintage,
 		}
 		if val.Description != "" {
 			result[i].Description = &val.Description
@@ -63,9 +58,8 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 		if val.Composition != nil {
 			result[i].Composition = make([]*sommelierviews.ComponentView, len(val.Composition))
 			for j, val := range val.Composition {
-				result[i].Composition[j] = &sommelierviews.ComponentView{}
-				if val.Varietal != "" {
-					result[i].Composition[j].Varietal = &val.Varietal
+				result[i].Composition[j] = &sommelierviews.ComponentView{
+					Varietal: &val.Varietal,
 				}
 				if val.Percentage != 0 {
 					result[i].Composition[j].Percentage = &val.Percentage
@@ -170,15 +164,10 @@ func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView
 // protobufSommelierpbWineryToSommelierviewsWineryView builds a value of type
 // *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
 func protobufSommelierpbWineryToSommelierviewsWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
-	res := &sommelierviews.WineryView{}
-	if v.Name != "" {
-		res.Name = &v.Name
-	}
-	if v.Region != "" {
-		res.Region = &v.Region
-	}
-	if v.Country != "" {
-		res.Country = &v.Country
+	res := &sommelierviews.WineryView{
+		Name:    &v.Name,
+		Region:  &v.Region,
+		Country: &v.Country,
 	}
 	if v.Url != "" {
 		res.URL = &v.Url
