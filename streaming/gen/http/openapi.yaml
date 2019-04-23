@@ -124,6 +124,12 @@ paths:
       summary: login chatter
       description: Creates a valid JWT token for auth to chat.
       operationId: chatter#login
+      parameters:
+      - name: Authorization
+        in: header
+        description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
+        required: true
+        type: string
       responses:
         "200":
           description: OK response.

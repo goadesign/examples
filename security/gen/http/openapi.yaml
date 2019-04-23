@@ -113,9 +113,14 @@ paths:
         in: query
         required: false
         type: string
-      - name: Authorization
+      - name: X-Authorization
         in: header
         description: JWT used for authentication
+        required: false
+        type: string
+      - name: Authorization
+        in: header
+        description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
         required: false
         type: string
       responses:
@@ -147,6 +152,12 @@ paths:
       summary: signin secured_service
       description: Creates a valid JWT
       operationId: secured_service#signin
+      parameters:
+      - name: Authorization
+        in: header
+        description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
+        required: true
+        type: string
       responses:
         "200":
           description: OK response.
@@ -228,6 +239,8 @@ securityDefinitions:
   api_key:
     type: apiKey
     description: Secures endpoint by requiring an API key.
+    name: Authorization
+    in: header
   basic:
     type: basic
     description: Basic authentication used to authenticate security principal during
@@ -246,8 +259,8 @@ securityDefinitions:
     description: Secures endpoint by requiring a valid OAuth2 token retrieved via
       the signin endpoint. Supports scopes "api:read" and "api:write".
     flow: accessCode
-    authorizationUrl: /authorization
-    tokenUrl: /token
+    authorizationUrl: http://goa.design/authorization
+    tokenUrl: http://goa.design/token
     scopes:
       api:read: Read-only access
       api:write: Read and write access
