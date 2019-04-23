@@ -251,7 +251,7 @@ func DecodeAlsoDoublySecureRequest(mux goahttp.Muxer, decoder func(*http.Request
 		if oauthTokenRaw != "" {
 			oauthToken = &oauthTokenRaw
 		}
-		tokenRaw := r.Header.Get("Authorization")
+		tokenRaw := r.Header.Get("X-Authorization")
 		if tokenRaw != "" {
 			token = &tokenRaw
 		}

@@ -308,7 +308,7 @@ func EncodeAlsoDoublySecureRequest(encoder func(*http.Request) goahttp.Encoder) 
 			return goahttp.ErrInvalidType("secured_service", "also_doubly_secure", "*securedservice.AlsoDoublySecurePayload", v)
 		}
 		if p.Token != nil {
-			req.Header.Set("Authorization", *p.Token)
+			req.Header.Set("X-Authorization", *p.Token)
 		}
 		values := req.URL.Query()
 		if p.Key != nil {
