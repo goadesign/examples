@@ -51,7 +51,7 @@ paths:
       schemes:
       - http
       security:
-      - _scheme_jwt_header_Authorization: []
+      - jwt_header_Authorization: []
     put:
       tags:
       - secured_service
@@ -90,8 +90,8 @@ paths:
       schemes:
       - http
       security:
-      - _scheme_api_key_query_k: []
-        _scheme_jwt_header_Authorization: []
+      - api_key_query_k: []
+        jwt_header_Authorization: []
     post:
       tags:
       - secured_service
@@ -139,10 +139,10 @@ paths:
       schemes:
       - http
       security:
-      - _scheme_api_key_query_k: []
-        _scheme_jwt_header_X-Authorization: []
-      - _scheme_basic_header_Authorization: []
-        _scheme_oauth2_query_oauth:
+      - api_key_query_k: []
+        jwt_header_X-Authorization: []
+      - basic_header_Authorization: []
+        oauth2_query_oauth:
         - api:read
         - api:write
   /signin:
@@ -174,7 +174,7 @@ paths:
       schemes:
       - http
       security:
-      - _scheme_basic_header_Authorization: []
+      - basic_header_Authorization: []
 definitions:
   SecuredServiceAlsoDoublySecureInvalidScopesResponseBody:
     title: SecuredServiceAlsoDoublySecureInvalidScopesResponseBody
@@ -236,16 +236,16 @@ definitions:
     description: Credentials are invalid
     example: Veniam quis nulla officiis id rerum.
 securityDefinitions:
-  _scheme_api_key_query_k:
+  api_key_query_k:
     type: apiKey
     description: Secures endpoint by requiring an API key.
     name: k
     in: query
-  _scheme_basic_header_Authorization:
+  basic_header_Authorization:
     type: basic
     description: Basic authentication used to authenticate security principal during
       signin
-  _scheme_jwt_header_Authorization:
+  jwt_header_Authorization:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
@@ -254,7 +254,7 @@ securityDefinitions:
         * `api:write`: Read and write access
     name: Authorization
     in: header
-  _scheme_jwt_header_X-Authorization:
+  jwt_header_X-Authorization:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
@@ -263,7 +263,7 @@ securityDefinitions:
         * `api:write`: Read and write access
     name: X-Authorization
     in: header
-  _scheme_oauth2_query_oauth:
+  oauth2_query_oauth:
     type: oauth2
     description: Secures endpoint by requiring a valid OAuth2 token retrieved via
       the signin endpoint. Supports scopes "api:read" and "api:write".

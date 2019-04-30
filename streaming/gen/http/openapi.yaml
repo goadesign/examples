@@ -45,7 +45,7 @@ paths:
       schemes:
       - ws
       security:
-      - _scheme_jwt_header_Authorization: []
+      - jwt_header_Authorization: []
   /history:
     get:
       tags:
@@ -84,7 +84,7 @@ paths:
       schemes:
       - ws
       security:
-      - _scheme_jwt_header_Authorization: []
+      - jwt_header_Authorization: []
   /listener:
     get:
       tags:
@@ -116,7 +116,7 @@ paths:
       schemes:
       - ws
       security:
-      - _scheme_jwt_header_Authorization: []
+      - jwt_header_Authorization: []
   /login:
     post:
       tags:
@@ -142,7 +142,7 @@ paths:
       schemes:
       - http
       security:
-      - _scheme_basic_header_Authorization: []
+      - basic_header_Authorization: []
   /subscribe:
     get:
       tags:
@@ -180,7 +180,7 @@ paths:
       schemes:
       - ws
       security:
-      - _scheme_jwt_header_Authorization: []
+      - jwt_header_Authorization: []
   /summary:
     get:
       tags:
@@ -214,7 +214,7 @@ paths:
       schemes:
       - ws
       security:
-      - _scheme_jwt_header_Authorization: []
+      - jwt_header_Authorization: []
 definitions:
   ChatSummaryResponse:
     title: 'Mediatype identifier: application/vnd.goa.summary; view=default'
@@ -357,10 +357,10 @@ definitions:
     type: string
     example: Ad non id iure sunt dolorem perspiciatis.
 securityDefinitions:
-  _scheme_basic_header_Authorization:
+  basic_header_Authorization:
     type: basic
     description: Secures the login endpoint.
-  _scheme_jwt_header_Authorization:
+  jwt_header_Authorization:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token. Supports scopes "stream:read" and "stream:write".
