@@ -140,9 +140,9 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 				Flows: []*security.OAuthFlow{
 					&security.OAuthFlow{
 						Type:             "authorization_code",
-						AuthorizationURL: "/authorization",
-						TokenURL:         "/token",
-						RefreshURL:       "/refresh",
+						AuthorizationURL: "http://goa.design/authorization",
+						TokenURL:         "http://goa.design/token",
+						RefreshURL:       "http://goa.design/refresh",
 					},
 				},
 			}

@@ -51,7 +51,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - jwt_header_Authorization: []
     put:
       tags:
       - secured_service
@@ -90,8 +90,8 @@ paths:
       schemes:
       - http
       security:
-      - api_key: []
-        jwt: []
+      - api_key_query_k: []
+        jwt_header_Authorization: []
     post:
       tags:
       - secured_service
@@ -113,9 +113,14 @@ paths:
         in: query
         required: false
         type: string
-      - name: Authorization
+      - name: X-Authorization
         in: header
         description: JWT used for authentication
+        required: false
+        type: string
+      - name: Authorization
+        in: header
+        description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
         required: false
         type: string
       responses:
@@ -134,10 +139,10 @@ paths:
       schemes:
       - http
       security:
-      - api_key: []
-        jwt: []
-      - basic: []
-        oauth2:
+      - api_key_query_k: []
+        jwt_header_X-Authorization: []
+      - basic_header_Authorization: []
+        oauth2_query_oauth:
         - api:read
         - api:write
   /signin:
@@ -147,6 +152,12 @@ paths:
       summary: signin secured_service
       description: Creates a valid JWT
       operationId: secured_service#signin
+      parameters:
+      - name: Authorization
+        in: header
+        description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
+        required: true
+        type: string
       responses:
         "200":
           description: OK response.
@@ -163,7 +174,7 @@ paths:
       schemes:
       - http
       security:
-      - basic: []
+      - basic_header_Authorization: []
 definitions:
   SecuredServiceAlsoDoublySecureInvalidScopesResponseBody:
     title: SecuredServiceAlsoDoublySecureInvalidScopesResponseBody
@@ -225,14 +236,16 @@ definitions:
     description: Credentials are invalid
     example: Veniam quis nulla officiis id rerum.
 securityDefinitions:
-  api_key:
+  api_key_query_k:
     type: apiKey
     description: Secures endpoint by requiring an API key.
-  basic:
+    name: k
+    in: query
+  basic_header_Authorization:
     type: basic
     description: Basic authentication used to authenticate security principal during
       signin
-  jwt:
+  jwt_header_Authorization:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
@@ -241,13 +254,22 @@ securityDefinitions:
         * `api:write`: Read and write access
     name: Authorization
     in: header
-  oauth2:
+  jwt_header_X-Authorization:
+    type: apiKey
+    description: |-
+      Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+      **Security Scopes**:
+        * `api:read`: Read-only access
+        * `api:write`: Read and write access
+    name: X-Authorization
+    in: header
+  oauth2_query_oauth:
     type: oauth2
     description: Secures endpoint by requiring a valid OAuth2 token retrieved via
       the signin endpoint. Supports scopes "api:read" and "api:write".
     flow: accessCode
-    authorizationUrl: /authorization
-    tokenUrl: /token
+    authorizationUrl: http://goa.design/authorization
+    tokenUrl: http://goa.design/token
     scopes:
       api:read: Read-only access
       api:write: Read and write access
