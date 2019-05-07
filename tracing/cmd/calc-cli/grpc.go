@@ -6,9 +6,9 @@ import (
 
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	cli "goa.design/examples/basic/gen/grpc/cli/calc"
-	"goa.design/goa"
-	"goa.design/goa/grpc/middleware"
-	"goa.design/goa/grpc/middleware/xray"
+	"goa.design/goa/v3"
+	"goa.design/goa/v3/grpc/middleware"
+	"goa.design/goa/v3/grpc/middleware/xray"
 	"google.golang.org/grpc"
 )
 

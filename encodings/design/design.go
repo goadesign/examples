@@ -1,7 +1,7 @@
 package design
 
 import (
-	. "goa.design/goa/dsl"
+	. "goa.design/goa/v3/dsl"
 )
 
 var _ = API("encodings", func() {

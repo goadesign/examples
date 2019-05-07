@@ -5,7 +5,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	securedservice "goa.design/examples/security/gen/secured_service"
-	"goa.design/goa/security"
+	"goa.design/goa/v3/security"
 )
 
 var (

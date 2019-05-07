@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	cli "goa.design/examples/streaming/gen/http/cli/chatter"
-	"goa.design/goa"
-	goahttp "goa.design/goa/http"
+	"goa.design/goa/v3"
+	goahttp "goa.design/goa/v3/http"
 )
 
 func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interface{}, error) {

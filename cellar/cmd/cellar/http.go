@@ -15,9 +15,9 @@ import (
 	swaggersvr "goa.design/examples/cellar/gen/http/swagger/server"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	storage "goa.design/examples/cellar/gen/storage"
-	goahttp "goa.design/goa/http"
-	httpmiddleware "goa.design/goa/http/middleware"
-	"goa.design/goa/middleware"
+	goahttp "goa.design/goa/v3/http"
+	httpmiddleware "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given

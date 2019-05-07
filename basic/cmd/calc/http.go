@@ -11,9 +11,9 @@ import (
 
 	calc "goa.design/examples/basic/gen/calc"
 	calcsvr "goa.design/examples/basic/gen/http/calc/server"
-	goahttp "goa.design/goa/http"
-	httpmdlwr "goa.design/goa/http/middleware"
-	"goa.design/goa/middleware"
+	goahttp "goa.design/goa/v3/http"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
