@@ -11,8 +11,8 @@ import (
 	chattersvc "goa.design/examples/streaming/gen/chatter"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	chattersvcsvr "goa.design/examples/streaming/gen/grpc/chatter/server"
-	grpcmdlwr "goa.design/goa/grpc/middleware"
-	"goa.design/goa/middleware"
+	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
+	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
 )
 

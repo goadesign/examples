@@ -5,8 +5,8 @@ import (
 	"time"
 
 	cli "goa.design/examples/error/gen/http/cli/divider"
-	"goa.design/goa"
-	goahttp "goa.design/goa/http"
+	goa "goa.design/goa/v3"
+	goahttp "goa.design/goa/v3/http"
 )
 
 func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interface{}, error) {
