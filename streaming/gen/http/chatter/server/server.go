@@ -668,22 +668,8 @@ func (s *echoerServerStream) Recv() (string, error) {
 // Close closes the "echoer" endpoint websocket connection.
 func (s *echoerServerStream) Close() error {
 	var err error
-	// Upgrade the HTTP connection to a websocket connection only once. Connection
-	// upgrade is done here so that authorization logic in the endpoint is executed
-	// before calling the actual service method which may call Close().
-	s.once.Do(func() {
-		var conn *websocket.Conn
-		conn, err = s.upgrader.Upgrade(s.w, s.r, nil)
-		if err != nil {
-			return
-		}
-		if s.connConfigFn != nil {
-			conn = s.connConfigFn(conn, s.cancel)
-		}
-		s.conn = conn
-	})
-	if err != nil {
-		return err
+	if s.conn == nil {
+		return nil
 	}
 	if err = s.conn.WriteControl(
 		websocket.CloseMessage,
@@ -733,22 +719,8 @@ func (s *listenerServerStream) Recv() (string, error) {
 // Close closes the "listener" endpoint websocket connection.
 func (s *listenerServerStream) Close() error {
 	var err error
-	// Upgrade the HTTP connection to a websocket connection only once. Connection
-	// upgrade is done here so that authorization logic in the endpoint is executed
-	// before calling the actual service method which may call Close().
-	s.once.Do(func() {
-		var conn *websocket.Conn
-		conn, err = s.upgrader.Upgrade(s.w, s.r, nil)
-		if err != nil {
-			return
-		}
-		if s.connConfigFn != nil {
-			conn = s.connConfigFn(conn, s.cancel)
-		}
-		s.conn = conn
-	})
-	if err != nil {
-		return err
+	if s.conn == nil {
+		return nil
 	}
 	if err = s.conn.WriteControl(
 		websocket.CloseMessage,
@@ -833,22 +805,8 @@ func (s *subscribeServerStream) Send(v *chatter.Event) error {
 // Close closes the "subscribe" endpoint websocket connection.
 func (s *subscribeServerStream) Close() error {
 	var err error
-	// Upgrade the HTTP connection to a websocket connection only once. Connection
-	// upgrade is done here so that authorization logic in the endpoint is executed
-	// before calling the actual service method which may call Close().
-	s.once.Do(func() {
-		var conn *websocket.Conn
-		conn, err = s.upgrader.Upgrade(s.w, s.r, nil)
-		if err != nil {
-			return
-		}
-		if s.connConfigFn != nil {
-			conn = s.connConfigFn(conn, s.cancel)
-		}
-		s.conn = conn
-	})
-	if err != nil {
-		return err
+	if s.conn == nil {
+		return nil
 	}
 	if err = s.conn.WriteControl(
 		websocket.CloseMessage,
@@ -897,22 +855,8 @@ func (s *historyServerStream) Send(v *chatter.ChatSummary) error {
 // Close closes the "history" endpoint websocket connection.
 func (s *historyServerStream) Close() error {
 	var err error
-	// Upgrade the HTTP connection to a websocket connection only once. Connection
-	// upgrade is done here so that authorization logic in the endpoint is executed
-	// before calling the actual service method which may call Close().
-	s.once.Do(func() {
-		var conn *websocket.Conn
-		conn, err = s.upgrader.Upgrade(s.w, s.r, nil)
-		if err != nil {
-			return
-		}
-		if s.connConfigFn != nil {
-			conn = s.connConfigFn(conn, s.cancel)
-		}
-		s.conn = conn
-	})
-	if err != nil {
-		return err
+	if s.conn == nil {
+		return nil
 	}
 	if err = s.conn.WriteControl(
 		websocket.CloseMessage,

@@ -8,8 +8,6 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -825,29 +823,6 @@ type ChatterServer interface {
 	Subscribe(*SubscribeRequest, Chatter_SubscribeServer) error
 	// Returns the chat messages sent to the server.
 	History(*HistoryRequest, Chatter_HistoryServer) error
-}
-
-// UnimplementedChatterServer can be embedded to have forward compatible implementations.
-type UnimplementedChatterServer struct {
-}
-
-func (*UnimplementedChatterServer) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
-}
-func (*UnimplementedChatterServer) Echoer(srv Chatter_EchoerServer) error {
-	return status.Errorf(codes.Unimplemented, "method Echoer not implemented")
-}
-func (*UnimplementedChatterServer) Listener(srv Chatter_ListenerServer) error {
-	return status.Errorf(codes.Unimplemented, "method Listener not implemented")
-}
-func (*UnimplementedChatterServer) Summary(srv Chatter_SummaryServer) error {
-	return status.Errorf(codes.Unimplemented, "method Summary not implemented")
-}
-func (*UnimplementedChatterServer) Subscribe(req *SubscribeRequest, srv Chatter_SubscribeServer) error {
-	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
-}
-func (*UnimplementedChatterServer) History(req *HistoryRequest, srv Chatter_HistoryServer) error {
-	return status.Errorf(codes.Unimplemented, "method History not implemented")
 }
 
 func RegisterChatterServer(s *grpc.Server, srv ChatterServer) {

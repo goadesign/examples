@@ -8,8 +8,6 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -275,17 +273,6 @@ type DividerServer interface {
 	IntegerDivide(context.Context, *IntegerDivideRequest) (*IntegerDivideResponse, error)
 	// Divide implements divide.
 	Divide(context.Context, *DivideRequest) (*DivideResponse, error)
-}
-
-// UnimplementedDividerServer can be embedded to have forward compatible implementations.
-type UnimplementedDividerServer struct {
-}
-
-func (*UnimplementedDividerServer) IntegerDivide(ctx context.Context, req *IntegerDivideRequest) (*IntegerDivideResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IntegerDivide not implemented")
-}
-func (*UnimplementedDividerServer) Divide(ctx context.Context, req *DivideRequest) (*DivideResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Divide not implemented")
 }
 
 func RegisterDividerServer(s *grpc.Server, srv DividerServer) {
