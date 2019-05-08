@@ -8,6 +8,8 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -167,6 +169,14 @@ func (c *calcClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.CallO
 type CalcServer interface {
 	// Add implements add.
 	Add(context.Context, *AddRequest) (*AddResponse, error)
+}
+
+// UnimplementedCalcServer can be embedded to have forward compatible implementations.
+type UnimplementedCalcServer struct {
+}
+
+func (*UnimplementedCalcServer) Add(ctx context.Context, req *AddRequest) (*AddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
 }
 
 func RegisterCalcServer(s *grpc.Server, srv CalcServer) {
