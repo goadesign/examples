@@ -12,6 +12,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 	chatter "goa.design/examples/streaming/gen/chatter"
@@ -388,6 +389,15 @@ func (c *Client) Subscribe() goa.Endpoint {
 		if c.configurer.SubscribeFn != nil {
 			conn = c.configurer.SubscribeFn(conn, cancel)
 		}
+		go func() {
+			<-ctx.Done()
+			conn.WriteControl(
+				websocket.CloseMessage,
+				websocket.FormatCloseMessage(websocket.CloseNormalClosure, "client closing connection"),
+				time.Now().Add(time.Second),
+			)
+			conn.Close()
+		}()
 		stream := &subscribeClientStream{conn: conn}
 		return stream, nil
 	}
@@ -447,6 +457,15 @@ func (c *Client) History() goa.Endpoint {
 		if c.configurer.HistoryFn != nil {
 			conn = c.configurer.HistoryFn(conn, cancel)
 		}
+		go func() {
+			<-ctx.Done()
+			conn.WriteControl(
+				websocket.CloseMessage,
+				websocket.FormatCloseMessage(websocket.CloseNormalClosure, "client closing connection"),
+				time.Now().Add(time.Second),
+			)
+			conn.Close()
+		}()
 		stream := &historyClientStream{conn: conn}
 		view := resp.Header.Get("goa-view")
 		stream.SetView(view)

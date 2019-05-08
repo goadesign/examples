@@ -8,8 +8,6 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -407,14 +405,6 @@ func (c *sommelierClient) Pick(ctx context.Context, in *PickRequest, opts ...grp
 type SommelierServer interface {
 	// Pick implements pick.
 	Pick(context.Context, *PickRequest) (*StoredBottleCollection, error)
-}
-
-// UnimplementedSommelierServer can be embedded to have forward compatible implementations.
-type UnimplementedSommelierServer struct {
-}
-
-func (*UnimplementedSommelierServer) Pick(ctx context.Context, req *PickRequest) (*StoredBottleCollection, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Pick not implemented")
 }
 
 func RegisterSommelierServer(s *grpc.Server, srv SommelierServer) {
