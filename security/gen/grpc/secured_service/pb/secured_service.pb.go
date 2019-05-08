@@ -8,8 +8,6 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -488,23 +486,6 @@ type SecuredServiceServer interface {
 	// This action is secured with the jwt scheme and also requires an API key
 	// header.
 	AlsoDoublySecure(context.Context, *AlsoDoublySecureRequest) (*AlsoDoublySecureResponse, error)
-}
-
-// UnimplementedSecuredServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedSecuredServiceServer struct {
-}
-
-func (*UnimplementedSecuredServiceServer) Signin(ctx context.Context, req *SigninRequest) (*SigninResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
-}
-func (*UnimplementedSecuredServiceServer) Secure(ctx context.Context, req *SecureRequest) (*SecureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Secure not implemented")
-}
-func (*UnimplementedSecuredServiceServer) DoublySecure(ctx context.Context, req *DoublySecureRequest) (*DoublySecureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DoublySecure not implemented")
-}
-func (*UnimplementedSecuredServiceServer) AlsoDoublySecure(ctx context.Context, req *AlsoDoublySecureRequest) (*AlsoDoublySecureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AlsoDoublySecure not implemented")
 }
 
 func RegisterSecuredServiceServer(s *grpc.Server, srv SecuredServiceServer) {
