@@ -8,6 +8,8 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -1232,6 +1234,32 @@ type StorageServer interface {
 	// has field name 'bottle' and contains the encoded bottle info to be updated.
 	// The IDs in the query parameter is mapped to each part in the request.
 	MultiUpdate(context.Context, *MultiUpdateRequest) (*MultiUpdateResponse, error)
+}
+
+// UnimplementedStorageServer can be embedded to have forward compatible implementations.
+type UnimplementedStorageServer struct {
+}
+
+func (*UnimplementedStorageServer) List(ctx context.Context, req *ListRequest) (*StoredBottleCollection, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (*UnimplementedStorageServer) Show(ctx context.Context, req *ShowRequest) (*ShowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Show not implemented")
+}
+func (*UnimplementedStorageServer) Add(ctx context.Context, req *AddRequest) (*AddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
+}
+func (*UnimplementedStorageServer) Remove(ctx context.Context, req *RemoveRequest) (*RemoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
+}
+func (*UnimplementedStorageServer) Rate(ctx context.Context, req *RateRequest) (*RateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Rate not implemented")
+}
+func (*UnimplementedStorageServer) MultiAdd(ctx context.Context, req *MultiAddRequest) (*MultiAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MultiAdd not implemented")
+}
+func (*UnimplementedStorageServer) MultiUpdate(ctx context.Context, req *MultiUpdateRequest) (*MultiUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MultiUpdate not implemented")
 }
 
 func RegisterStorageServer(s *grpc.Server, srv StorageServer) {
