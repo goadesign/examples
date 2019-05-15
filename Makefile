@@ -29,10 +29,10 @@ DEPEND=\
 
 .phony: all depend lint test build clean
 
-all: depend gen lint test
+all: gen lint test
 	@echo DONE!
 
-travis: all check-freshness
+travis: depend all check-freshness
 
 # Install protoc
 GOOS=$(shell go env GOOS)
