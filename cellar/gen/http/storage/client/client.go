@@ -14,8 +14,8 @@ import (
 	"net/http"
 
 	storage "goa.design/examples/cellar/gen/storage"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Client lists the storage service endpoint HTTP clients.

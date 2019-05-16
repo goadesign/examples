@@ -13,7 +13,7 @@ import (
 
 	storage "goa.design/examples/cellar/gen/storage"
 	storageviews "goa.design/examples/cellar/gen/storage/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // AddRequestBody is the type of the "storage" service "add" endpoint HTTP

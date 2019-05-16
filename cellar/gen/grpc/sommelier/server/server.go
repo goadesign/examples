@@ -13,8 +13,8 @@ import (
 
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
-	goa "goa.design/goa/v3"
 	goagrpc "goa.design/goa/v3/grpc"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/codes"
 )
 

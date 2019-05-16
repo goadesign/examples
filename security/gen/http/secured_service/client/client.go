@@ -12,8 +12,8 @@ import (
 	"context"
 	"net/http"
 
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Client lists the secured_service service endpoint HTTP clients.

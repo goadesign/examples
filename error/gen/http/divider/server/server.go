@@ -13,8 +13,8 @@ import (
 	"net/http"
 
 	divider "goa.design/examples/error/gen/divider"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Server lists the divider service endpoint HTTP handlers.

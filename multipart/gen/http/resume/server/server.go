@@ -14,8 +14,8 @@ import (
 	"net/http"
 
 	resume "goa.design/examples/multipart/gen/resume"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Server lists the resume service endpoint HTTP handlers.

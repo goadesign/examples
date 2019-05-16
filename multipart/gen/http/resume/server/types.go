@@ -11,7 +11,7 @@ package server
 import (
 	resume "goa.design/examples/multipart/gen/resume"
 	resumeviews "goa.design/examples/multipart/gen/resume/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // StoredResumeResponseCollection is the type of the "resume" service "list"

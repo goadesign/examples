@@ -15,7 +15,7 @@ import (
 
 	sommelierc "goa.design/examples/cellar/gen/grpc/sommelier/client"
 	storagec "goa.design/examples/cellar/gen/grpc/storage/client"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	grpc "google.golang.org/grpc"
 )
 

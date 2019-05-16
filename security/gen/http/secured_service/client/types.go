@@ -10,7 +10,7 @@ package client
 
 import (
 	securedservice "goa.design/examples/security/gen/secured_service"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // SigninResponseBody is the type of the "secured_service" service "signin"

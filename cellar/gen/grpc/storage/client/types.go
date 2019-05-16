@@ -14,7 +14,7 @@ import (
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	storage "goa.design/examples/cellar/gen/storage"
 	storageviews "goa.design/examples/cellar/gen/storage/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewListRequest builds the gRPC request type from the payload of the "list"

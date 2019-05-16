@@ -14,7 +14,7 @@ import (
 	"unicode/utf8"
 
 	storage "goa.design/examples/cellar/gen/storage"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildShowPayload builds the payload for the storage show endpoint from CLI

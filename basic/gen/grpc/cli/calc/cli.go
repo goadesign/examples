@@ -14,7 +14,7 @@ import (
 	"os"
 
 	calcc "goa.design/examples/basic/gen/grpc/calc/client"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	grpc "google.golang.org/grpc"
 )
 

@@ -9,7 +9,7 @@
 package views
 
 import (
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // ChatSummaryCollection is the viewed result type that is projected based on a

@@ -5,7 +5,7 @@ import (
 	"os"
 
 	cli "goa.design/examples/basic/gen/grpc/cli/calc"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc"
 )
 

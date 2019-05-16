@@ -15,8 +15,8 @@ import (
 
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	sommelierviews "goa.design/examples/cellar/gen/sommelier/views"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // EncodePickResponse returns an encoder for responses returned by the

@@ -14,8 +14,8 @@ import (
 
 	resume "goa.design/examples/multipart/gen/resume"
 	resumeviews "goa.design/examples/multipart/gen/resume/views"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // EncodeListResponse returns an encoder for responses returned by the resume

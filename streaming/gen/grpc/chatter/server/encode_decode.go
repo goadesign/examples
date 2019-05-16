@@ -13,8 +13,8 @@ import (
 	"strings"
 
 	chatter "goa.design/examples/streaming/gen/chatter"
-	goa "goa.design/goa/v3"
 	goagrpc "goa.design/goa/v3/grpc"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/metadata"
 )
 

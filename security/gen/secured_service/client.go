@@ -11,7 +11,7 @@ package securedservice
 import (
 	"context"
 
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Client is the "secured_service" service client.

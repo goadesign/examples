@@ -11,7 +11,7 @@ package client
 import (
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // SummaryResponseBody is the type of the "chatter" service "summary" endpoint

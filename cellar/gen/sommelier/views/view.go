@@ -11,7 +11,7 @@ package views
 import (
 	"unicode/utf8"
 
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // StoredBottleCollection is the viewed result type that is projected based on

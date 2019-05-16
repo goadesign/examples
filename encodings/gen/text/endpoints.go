@@ -11,7 +11,7 @@ package text
 import (
 	"context"
 
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Endpoints wraps the "text" service endpoints.

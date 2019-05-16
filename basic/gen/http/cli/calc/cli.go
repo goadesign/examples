@@ -15,8 +15,8 @@ import (
 	"os"
 
 	calcc "goa.design/examples/basic/gen/http/calc/client"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // UsageCommands returns the set of commands and sub-commands using the format
