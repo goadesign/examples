@@ -14,8 +14,8 @@ import (
 	storagesvr "goa.design/examples/cellar/gen/grpc/storage/server"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	storage "goa.design/examples/cellar/gen/storage"
-	grpcmdlwr "goa.design/goa/grpc/middleware"
-	"goa.design/goa/middleware"
+	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
+	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
 )
 

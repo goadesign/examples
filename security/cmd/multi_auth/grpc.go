@@ -11,8 +11,8 @@ import (
 	secured_servicepb "goa.design/examples/security/gen/grpc/secured_service/pb"
 	securedservicesvr "goa.design/examples/security/gen/grpc/secured_service/server"
 	securedservice "goa.design/examples/security/gen/secured_service"
-	grpcmdlwr "goa.design/goa/grpc/middleware"
-	"goa.design/goa/middleware"
+	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
+	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
 )
 

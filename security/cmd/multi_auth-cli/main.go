@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"goa.design/goa"
+	goa "goa.design/goa/v3/pkg"
 )
 
 func main() {

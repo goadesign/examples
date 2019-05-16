@@ -11,9 +11,9 @@ import (
 
 	textsvr "goa.design/examples/encodings/gen/http/text/server"
 	text "goa.design/examples/encodings/gen/text"
-	goahttp "goa.design/goa/http"
-	httpmdlwr "goa.design/goa/http/middleware"
-	"goa.design/goa/middleware"
+	goahttp "goa.design/goa/v3/http"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given

@@ -5,7 +5,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	chattersvc "goa.design/examples/streaming/gen/chatter"
-	"goa.design/goa/security"
+	"goa.design/goa/v3/security"
 )
 
 var (

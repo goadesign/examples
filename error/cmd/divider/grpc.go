@@ -11,8 +11,8 @@ import (
 	divider "goa.design/examples/error/gen/divider"
 	dividerpb "goa.design/examples/error/gen/grpc/divider/pb"
 	dividersvr "goa.design/examples/error/gen/grpc/divider/server"
-	grpcmdlwr "goa.design/goa/grpc/middleware"
-	"goa.design/goa/middleware"
+	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
+	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
 )
 

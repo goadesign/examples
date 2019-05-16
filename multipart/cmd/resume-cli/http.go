@@ -6,8 +6,8 @@ import (
 
 	resume "goa.design/examples/multipart"
 	cli "goa.design/examples/multipart/gen/http/cli/resume"
-	"goa.design/goa"
-	goahttp "goa.design/goa/http"
+	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interface{}, error) {

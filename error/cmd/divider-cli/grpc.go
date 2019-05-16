@@ -5,7 +5,7 @@ import (
 	"os"
 
 	cli "goa.design/examples/error/gen/grpc/cli/divider"
-	"goa.design/goa"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc"
 )
 

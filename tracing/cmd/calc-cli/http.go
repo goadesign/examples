@@ -5,10 +5,10 @@ import (
 	"time"
 
 	cli "goa.design/examples/basic/gen/http/cli/calc"
-	"goa.design/goa"
-	goahttp "goa.design/goa/http"
-	"goa.design/goa/http/middleware"
-	"goa.design/goa/http/middleware/xray"
+	goahttp "goa.design/goa/v3/http"
+	"goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/http/middleware/xray"
+	goa "goa.design/goa/v3/pkg"
 )
 
 func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interface{}, error) {
