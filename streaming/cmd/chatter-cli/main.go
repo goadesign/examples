@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	chattersvc "goa.design/examples/streaming/gen/chatter"
-	"goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 func main() {
