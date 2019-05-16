@@ -11,9 +11,9 @@ import (
 	calcsvc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 	calcsvcsvr "goa.design/examples/basic/gen/grpc/calc/server"
-	grpcmdlwr "goa.design/goa/grpc/middleware"
-	"goa.design/goa/grpc/middleware/xray"
-	"goa.design/goa/middleware"
+	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
+	"goa.design/goa/v3/grpc/middleware/xray"
+	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
 )
 

@@ -11,9 +11,9 @@ import (
 
 	securedservicesvr "goa.design/examples/security/gen/http/secured_service/server"
 	securedservice "goa.design/examples/security/gen/secured_service"
-	goahttp "goa.design/goa/http"
-	httpmdlwr "goa.design/goa/http/middleware"
-	"goa.design/goa/middleware"
+	goahttp "goa.design/goa/v3/http"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given

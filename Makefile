@@ -15,6 +15,8 @@
 #
 GO_FILES=$(shell find . -type f -name '*.go')
 
+export GO111MODULE=on
+
 # Only list test and build dependencies
 # Standard dependencies are installed via go get
 DEPEND=\
@@ -22,7 +24,6 @@ DEPEND=\
 	github.com/cheggaaa/pb \
 	github.com/golang/protobuf/protoc-gen-go \
 	github.com/golang/protobuf/proto \
-	goa.design/goa/... \
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
 	honnef.co/go/tools/cmd/staticcheck
@@ -56,13 +57,15 @@ GOBIN="$(GOPATH)\bin"
 endif
 depend:
 	@echo INSTALLING DEPENDENCIES...
-	@go get -v $(DEPEND)
-	@go install github.com/hashicorp/go-getter/cmd/go-getter && \
+	@env GO111MODULE=off go get -v $(DEPEND)
+	@go get -v goa.design/goa/v3
+	@go get -v goa.design/goa/v3/...
+	@env GO111MODULE=off go install github.com/hashicorp/go-getter/cmd/go-getter && \
 		go-getter https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip $(PROTOC) && \
 		cp $(PROTOC_EXEC) $(GOBIN) && \
 		rm -r $(PROTOC)
-	@go install github.com/golang/protobuf/protoc-gen-go
-	@go get -t -v ./...
+	@env GO111MODULE=off go install github.com/golang/protobuf/protoc-gen-go
+	@go get -v ./...
 
 lint:
 	@echo LINTING CODE...

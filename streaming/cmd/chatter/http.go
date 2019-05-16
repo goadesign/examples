@@ -12,9 +12,9 @@ import (
 	"github.com/gorilla/websocket"
 	chattersvc "goa.design/examples/streaming/gen/chatter"
 	chattersvcsvr "goa.design/examples/streaming/gen/http/chatter/server"
-	goahttp "goa.design/goa/http"
-	httpmdlwr "goa.design/goa/http/middleware"
-	"goa.design/goa/middleware"
+	goahttp "goa.design/goa/v3/http"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
