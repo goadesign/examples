@@ -4,6 +4,7 @@
 [![Slack](https://img.shields.io/badge/slack-gophers-orange.svg?style=flat)](https://gophers.slack.com/messages/goa/)
 
 _Looking for Goa v1 examples? find them [here](https://github.com/goadesign/examples/tree/v1)._
+_Looking for Goa v2 examples? find them [here](https://github.com/goadesign/examples/tree/v2)._
 
 This repository contains examples of microservices implemented using
 [Goa](https://github.com/goadesign/goa). Each example focuses on a specific topic as indicated by
