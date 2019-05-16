@@ -14,7 +14,7 @@ import (
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	storage "goa.design/examples/cellar/gen/storage"
 	storageviews "goa.design/examples/cellar/gen/storage/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewStoredBottleCollection builds the gRPC response type from the result of

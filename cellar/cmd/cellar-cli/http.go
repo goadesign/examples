@@ -6,8 +6,8 @@ import (
 
 	cellar "goa.design/examples/cellar"
 	cli "goa.design/examples/cellar/gen/http/cli/cellar"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interface{}, error) {

@@ -223,8 +223,8 @@ func newStoredBottleCollectionTiny(vres storageviews.StoredBottleCollectionView)
 	return res
 }
 
-// newStoredBottleCollectionView projects result type StoredBottleCollection
-// into projected type StoredBottleCollectionView using the "default" view.
+// newStoredBottleCollectionView projects result type StoredBottleCollection to
+// projected type StoredBottleCollectionView using the "default" view.
 func newStoredBottleCollectionView(res StoredBottleCollection) storageviews.StoredBottleCollectionView {
 	vres := make(storageviews.StoredBottleCollectionView, len(res))
 	for i, n := range res {
@@ -234,7 +234,7 @@ func newStoredBottleCollectionView(res StoredBottleCollection) storageviews.Stor
 }
 
 // newStoredBottleCollectionViewTiny projects result type
-// StoredBottleCollection into projected type StoredBottleCollectionView using
+// StoredBottleCollection to projected type StoredBottleCollectionView using
 // the "tiny" view.
 func newStoredBottleCollectionViewTiny(res StoredBottleCollection) storageviews.StoredBottleCollectionView {
 	vres := make(storageviews.StoredBottleCollectionView, len(res))
@@ -291,7 +291,7 @@ func newStoredBottleTiny(vres *storageviews.StoredBottleView) *StoredBottle {
 	return res
 }
 
-// newStoredBottleView projects result type StoredBottle into projected type
+// newStoredBottleView projects result type StoredBottle to projected type
 // StoredBottleView using the "default" view.
 func newStoredBottleView(res *StoredBottle) *storageviews.StoredBottleView {
 	vres := &storageviews.StoredBottleView{
@@ -316,8 +316,8 @@ func newStoredBottleView(res *StoredBottle) *storageviews.StoredBottleView {
 	return vres
 }
 
-// newStoredBottleViewTiny projects result type StoredBottle into projected
-// type StoredBottleView using the "tiny" view.
+// newStoredBottleViewTiny projects result type StoredBottle to projected type
+// StoredBottleView using the "tiny" view.
 func newStoredBottleViewTiny(res *StoredBottle) *storageviews.StoredBottleView {
 	vres := &storageviews.StoredBottleView{
 		ID:   &res.ID,
@@ -355,8 +355,8 @@ func newWineryTiny(vres *storageviews.WineryView) *Winery {
 	return res
 }
 
-// newWineryView projects result type Winery into projected type WineryView
-// using the "default" view.
+// newWineryView projects result type Winery to projected type WineryView using
+// the "default" view.
 func newWineryView(res *Winery) *storageviews.WineryView {
 	vres := &storageviews.WineryView{
 		Name:    &res.Name,
@@ -367,7 +367,7 @@ func newWineryView(res *Winery) *storageviews.WineryView {
 	return vres
 }
 
-// newWineryViewTiny projects result type Winery into projected type WineryView
+// newWineryViewTiny projects result type Winery to projected type WineryView
 // using the "tiny" view.
 func newWineryViewTiny(res *Winery) *storageviews.WineryView {
 	vres := &storageviews.WineryView{

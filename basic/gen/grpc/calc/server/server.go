@@ -13,8 +13,8 @@ import (
 
 	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
-	goa "goa.design/goa/v3"
 	goagrpc "goa.design/goa/v3/grpc"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Server implements the calcpb.CalcServer interface.

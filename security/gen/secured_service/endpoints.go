@@ -11,7 +11,7 @@ package securedservice
 import (
 	"context"
 
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	"goa.design/goa/v3/security"
 )
 

@@ -14,7 +14,7 @@ import (
 	"os"
 
 	securedservicec "goa.design/examples/security/gen/grpc/secured_service/client"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	grpc "google.golang.org/grpc"
 )
 

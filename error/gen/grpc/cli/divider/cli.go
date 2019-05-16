@@ -14,7 +14,7 @@ import (
 	"os"
 
 	dividerc "goa.design/examples/error/gen/grpc/divider/client"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	grpc "google.golang.org/grpc"
 )
 

@@ -310,7 +310,7 @@ func newChatSummaryCollection(vres chatterviews.ChatSummaryCollectionView) ChatS
 }
 
 // newChatSummaryCollectionViewTiny projects result type ChatSummaryCollection
-// into projected type ChatSummaryCollectionView using the "tiny" view.
+// to projected type ChatSummaryCollectionView using the "tiny" view.
 func newChatSummaryCollectionViewTiny(res ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
 	vres := make(chatterviews.ChatSummaryCollectionView, len(res))
 	for i, n := range res {
@@ -319,7 +319,7 @@ func newChatSummaryCollectionViewTiny(res ChatSummaryCollection) chatterviews.Ch
 	return vres
 }
 
-// newChatSummaryCollectionView projects result type ChatSummaryCollection into
+// newChatSummaryCollectionView projects result type ChatSummaryCollection to
 // projected type ChatSummaryCollectionView using the "default" view.
 func newChatSummaryCollectionView(res ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
 	vres := make(chatterviews.ChatSummaryCollectionView, len(res))
@@ -354,7 +354,7 @@ func newChatSummary(vres *chatterviews.ChatSummaryView) *ChatSummary {
 	return res
 }
 
-// newChatSummaryViewTiny projects result type ChatSummary into projected type
+// newChatSummaryViewTiny projects result type ChatSummary to projected type
 // ChatSummaryView using the "tiny" view.
 func newChatSummaryViewTiny(res *ChatSummary) *chatterviews.ChatSummaryView {
 	vres := &chatterviews.ChatSummaryView{
@@ -363,7 +363,7 @@ func newChatSummaryViewTiny(res *ChatSummary) *chatterviews.ChatSummaryView {
 	return vres
 }
 
-// newChatSummaryView projects result type ChatSummary into projected type
+// newChatSummaryView projects result type ChatSummary to projected type
 // ChatSummaryView using the "default" view.
 func newChatSummaryView(res *ChatSummary) *chatterviews.ChatSummaryView {
 	vres := &chatterviews.ChatSummaryView{

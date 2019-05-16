@@ -13,8 +13,8 @@ import (
 	"net/http"
 
 	calc "goa.design/examples/basic/gen/calc"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Server lists the calc service endpoint HTTP handlers.

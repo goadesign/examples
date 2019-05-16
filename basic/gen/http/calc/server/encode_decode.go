@@ -13,8 +13,8 @@ import (
 	"net/http"
 	"strconv"
 
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // EncodeAddResponse returns an encoder for responses returned by the calc add

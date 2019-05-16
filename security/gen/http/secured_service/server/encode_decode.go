@@ -15,8 +15,8 @@ import (
 	"strings"
 
 	securedservice "goa.design/examples/security/gen/secured_service"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // EncodeSigninResponse returns an encoder for responses returned by the

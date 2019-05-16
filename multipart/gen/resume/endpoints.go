@@ -11,7 +11,7 @@ package resume
 import (
 	"context"
 
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Endpoints wraps the "resume" service endpoints.

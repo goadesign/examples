@@ -11,7 +11,7 @@ package chatter
 import (
 	"context"
 
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Client is the "chatter" service client.

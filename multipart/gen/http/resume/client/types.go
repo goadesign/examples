@@ -11,7 +11,7 @@ package client
 import (
 	resume "goa.design/examples/multipart/gen/resume"
 	resumeviews "goa.design/examples/multipart/gen/resume/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // ListResponseBody is the type of the "resume" service "list" endpoint HTTP

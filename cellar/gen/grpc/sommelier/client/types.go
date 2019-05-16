@@ -14,7 +14,7 @@ import (
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	sommelierviews "goa.design/examples/cellar/gen/sommelier/views"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewPickRequest builds the gRPC request type from the payload of the "pick"

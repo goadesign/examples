@@ -9,7 +9,7 @@
 package client
 
 import (
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // IntegerDivideHasRemainderResponseBody is the type of the "divider" service

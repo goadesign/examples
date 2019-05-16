@@ -13,8 +13,8 @@ import (
 
 	secured_servicepb "goa.design/examples/security/gen/grpc/secured_service/pb"
 	securedservice "goa.design/examples/security/gen/secured_service"
-	goa "goa.design/goa/v3"
 	goagrpc "goa.design/goa/v3/grpc"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/codes"
 )
 

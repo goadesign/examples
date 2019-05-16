@@ -109,8 +109,8 @@ func newStoredResumeCollection(vres resumeviews.StoredResumeCollectionView) Stor
 	return res
 }
 
-// newStoredResumeCollectionView projects result type StoredResumeCollection
-// into projected type StoredResumeCollectionView using the "default" view.
+// newStoredResumeCollectionView projects result type StoredResumeCollection to
+// projected type StoredResumeCollectionView using the "default" view.
 func newStoredResumeCollectionView(res StoredResumeCollection) resumeviews.StoredResumeCollectionView {
 	vres := make(resumeviews.StoredResumeCollectionView, len(res))
 	for i, n := range res {
@@ -154,7 +154,7 @@ func newStoredResume(vres *resumeviews.StoredResumeView) *StoredResume {
 	return res
 }
 
-// newStoredResumeView projects result type StoredResume into projected type
+// newStoredResumeView projects result type StoredResume to projected type
 // StoredResumeView using the "default" view.
 func newStoredResumeView(res *StoredResume) *resumeviews.StoredResumeView {
 	vres := &resumeviews.StoredResumeView{

@@ -14,9 +14,9 @@ import (
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
-	goa "goa.design/goa/v3"
 	goagrpc "goa.design/goa/v3/grpc"
 	goapb "goa.design/goa/v3/grpc/pb"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc"
 )
 

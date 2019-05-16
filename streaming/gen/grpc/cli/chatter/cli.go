@@ -14,7 +14,7 @@ import (
 	"os"
 
 	chatterc "goa.design/examples/streaming/gen/grpc/chatter/client"
-	goa "goa.design/goa/v3"
+	goa "goa.design/goa/v3/pkg"
 	grpc "google.golang.org/grpc"
 )
 

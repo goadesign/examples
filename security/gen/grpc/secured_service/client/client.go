@@ -12,9 +12,9 @@ import (
 	"context"
 
 	secured_servicepb "goa.design/examples/security/gen/grpc/secured_service/pb"
-	goa "goa.design/goa/v3"
 	goagrpc "goa.design/goa/v3/grpc"
 	goapb "goa.design/goa/v3/grpc/pb"
+	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc"
 )
 

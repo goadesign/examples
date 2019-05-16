@@ -13,8 +13,8 @@ import (
 	"net/http"
 
 	text "goa.design/examples/encodings/gen/text"
-	goa "goa.design/goa/v3"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Server lists the text service endpoint HTTP handlers.
