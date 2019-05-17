@@ -64,7 +64,7 @@ depend:
 		go-getter https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip $(PROTOC) && \
 		cp $(PROTOC_EXEC) $(GOBIN) && \
 		rm -r $(PROTOC)
-	@env GO111MODULE=off go install github.com/golang/protobuf/protoc-gen-go
+	@env GO111MODULE=off go get -u github.com/golang/protobuf/protoc-gen-go
 	@go get -v ./...
 
 lint:
