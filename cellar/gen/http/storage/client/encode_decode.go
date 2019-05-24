@@ -537,6 +537,20 @@ func unmarshalWineryResponseToStorageviewsWineryView(v *WineryResponse) *storage
 	return res
 }
 
+// unmarshalComponentResponseToStorageviewsComponentView builds a value of type
+// *storageviews.ComponentView from a value of type *ComponentResponse.
+func unmarshalComponentResponseToStorageviewsComponentView(v *ComponentResponse) *storageviews.ComponentView {
+	if v == nil {
+		return nil
+	}
+	res := &storageviews.ComponentView{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
 // unmarshalWineryResponseBodyToStorageviewsWineryView builds a value of type
 // *storageviews.WineryView from a value of type *WineryResponseBody.
 func unmarshalWineryResponseBodyToStorageviewsWineryView(v *WineryResponseBody) *storageviews.WineryView {
@@ -545,6 +559,20 @@ func unmarshalWineryResponseBodyToStorageviewsWineryView(v *WineryResponseBody) 
 		Region:  v.Region,
 		Country: v.Country,
 		URL:     v.URL,
+	}
+
+	return res
+}
+
+// unmarshalComponentResponseBodyToStorageviewsComponentView builds a value of
+// type *storageviews.ComponentView from a value of type *ComponentResponseBody.
+func unmarshalComponentResponseBodyToStorageviewsComponentView(v *ComponentResponseBody) *storageviews.ComponentView {
+	if v == nil {
+		return nil
+	}
+	res := &storageviews.ComponentView{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
 	}
 
 	return res
@@ -563,6 +591,20 @@ func marshalStorageWineryToWineryRequestBody(v *storage.Winery) *WineryRequestBo
 	return res
 }
 
+// marshalStorageComponentToComponentRequestBody builds a value of type
+// *ComponentRequestBody from a value of type *storage.Component.
+func marshalStorageComponentToComponentRequestBody(v *storage.Component) *ComponentRequestBody {
+	if v == nil {
+		return nil
+	}
+	res := &ComponentRequestBody{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
 // marshalWineryRequestBodyToStorageWinery builds a value of type
 // *storage.Winery from a value of type *WineryRequestBody.
 func marshalWineryRequestBodyToStorageWinery(v *WineryRequestBody) *storage.Winery {
@@ -571,6 +613,64 @@ func marshalWineryRequestBodyToStorageWinery(v *WineryRequestBody) *storage.Wine
 		Region:  v.Region,
 		Country: v.Country,
 		URL:     v.URL,
+	}
+
+	return res
+}
+
+// marshalComponentRequestBodyToStorageComponent builds a value of type
+// *storage.Component from a value of type *ComponentRequestBody.
+func marshalComponentRequestBodyToStorageComponent(v *ComponentRequestBody) *storage.Component {
+	if v == nil {
+		return nil
+	}
+	res := &storage.Component{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
+// marshalStorageBottleToBottleRequestBody builds a value of type
+// *BottleRequestBody from a value of type *storage.Bottle.
+func marshalStorageBottleToBottleRequestBody(v *storage.Bottle) *BottleRequestBody {
+	res := &BottleRequestBody{
+		Name:        v.Name,
+		Vintage:     v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	if v.Winery != nil {
+		res.Winery = marshalStorageWineryToWineryRequestBody(v.Winery)
+	}
+	if v.Composition != nil {
+		res.Composition = make([]*ComponentRequestBody, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = marshalStorageComponentToComponentRequestBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalBottleRequestBodyToStorageBottle builds a value of type
+// *storage.Bottle from a value of type *BottleRequestBody.
+func marshalBottleRequestBodyToStorageBottle(v *BottleRequestBody) *storage.Bottle {
+	res := &storage.Bottle{
+		Name:        v.Name,
+		Vintage:     v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	if v.Winery != nil {
+		res.Winery = marshalWineryRequestBodyToStorageWinery(v.Winery)
+	}
+	if v.Composition != nil {
+		res.Composition = make([]*storage.Component, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
+		}
 	}
 
 	return res

@@ -89,20 +89,13 @@ func NewResumeRequestBody(p []*resume.Resume) []*ResumeRequestBody {
 		if val.Experience != nil {
 			body[i].Experience = make([]*ExperienceRequestBody, len(val.Experience))
 			for j, val := range val.Experience {
-				body[i].Experience[j] = &ExperienceRequestBody{
-					Company:  val.Company,
-					Role:     val.Role,
-					Duration: val.Duration,
-				}
+				body[i].Experience[j] = marshalResumeExperienceToExperienceRequestBody(val)
 			}
 		}
 		if val.Education != nil {
 			body[i].Education = make([]*EducationRequestBody, len(val.Education))
 			for j, val := range val.Education {
-				body[i].Education[j] = &EducationRequestBody{
-					Institution: val.Institution,
-					Major:       val.Major,
-				}
+				body[i].Education[j] = marshalResumeEducationToEducationRequestBody(val)
 			}
 		}
 	}
@@ -121,18 +114,11 @@ func NewListStoredResumeCollectionOK(body ListResponseBody) resumeviews.StoredRe
 		}
 		v[i].Experience = make([]*resumeviews.ExperienceView, len(val.Experience))
 		for j, val := range val.Experience {
-			v[i].Experience[j] = &resumeviews.ExperienceView{
-				Company:  val.Company,
-				Role:     val.Role,
-				Duration: val.Duration,
-			}
+			v[i].Experience[j] = unmarshalExperienceResponseToResumeviewsExperienceView(val)
 		}
 		v[i].Education = make([]*resumeviews.EducationView, len(val.Education))
 		for j, val := range val.Education {
-			v[i].Education[j] = &resumeviews.EducationView{
-				Institution: val.Institution,
-				Major:       val.Major,
-			}
+			v[i].Education[j] = unmarshalEducationResponseToResumeviewsEducationView(val)
 		}
 	}
 	return v

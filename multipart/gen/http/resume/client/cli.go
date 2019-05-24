@@ -34,20 +34,13 @@ func BuildAddPayload(resumeAddBody string) ([]*resume.Resume, error) {
 		if val.Experience != nil {
 			v[i].Experience = make([]*resume.Experience, len(val.Experience))
 			for j, val := range val.Experience {
-				v[i].Experience[j] = &resume.Experience{
-					Company:  val.Company,
-					Role:     val.Role,
-					Duration: val.Duration,
-				}
+				v[i].Experience[j] = marshalExperienceRequestBodyToResumeExperience(val)
 			}
 		}
 		if val.Education != nil {
 			v[i].Education = make([]*resume.Education, len(val.Education))
 			for j, val := range val.Education {
-				v[i].Education[j] = &resume.Education{
-					Institution: val.Institution,
-					Major:       val.Major,
-				}
+				v[i].Education[j] = marshalEducationRequestBodyToResumeEducation(val)
 			}
 		}
 	}

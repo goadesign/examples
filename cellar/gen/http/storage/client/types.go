@@ -181,10 +181,7 @@ func NewAddRequestBody(p *storage.Bottle) *AddRequestBody {
 	if p.Composition != nil {
 		body.Composition = make([]*ComponentRequestBody, len(p.Composition))
 		for i, val := range p.Composition {
-			body.Composition[i] = &ComponentRequestBody{
-				Varietal:   val.Varietal,
-				Percentage: val.Percentage,
-			}
+			body.Composition[i] = marshalStorageComponentToComponentRequestBody(val)
 		}
 	}
 	return body
@@ -207,10 +204,7 @@ func NewBottleRequestBody(p []*storage.Bottle) []*BottleRequestBody {
 		if val.Composition != nil {
 			body[i].Composition = make([]*ComponentRequestBody, len(val.Composition))
 			for j, val := range val.Composition {
-				body[i].Composition[j] = &ComponentRequestBody{
-					Varietal:   val.Varietal,
-					Percentage: val.Percentage,
-				}
+				body[i].Composition[j] = marshalStorageComponentToComponentRequestBody(val)
 			}
 		}
 	}
@@ -224,24 +218,7 @@ func NewMultiUpdateRequestBody(p *storage.MultiUpdatePayload) *MultiUpdateReques
 	if p.Bottles != nil {
 		body.Bottles = make([]*BottleRequestBody, len(p.Bottles))
 		for i, val := range p.Bottles {
-			body.Bottles[i] = &BottleRequestBody{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
-				Description: val.Description,
-				Rating:      val.Rating,
-			}
-			if val.Winery != nil {
-				body.Bottles[i].Winery = marshalStorageWineryToWineryRequestBody(val.Winery)
-			}
-			if val.Composition != nil {
-				body.Bottles[i].Composition = make([]*ComponentRequestBody, len(val.Composition))
-				for j, val := range val.Composition {
-					body.Bottles[i].Composition[j] = &ComponentRequestBody{
-						Varietal:   val.Varietal,
-						Percentage: val.Percentage,
-					}
-				}
-			}
+			body.Bottles[i] = marshalStorageBottleToBottleRequestBody(val)
 		}
 	}
 	return body
@@ -263,10 +240,7 @@ func NewListStoredBottleCollectionOK(body ListResponseBody) storageviews.StoredB
 		if val.Composition != nil {
 			v[i].Composition = make([]*storageviews.ComponentView, len(val.Composition))
 			for j, val := range val.Composition {
-				v[i].Composition[j] = &storageviews.ComponentView{
-					Varietal:   val.Varietal,
-					Percentage: val.Percentage,
-				}
+				v[i].Composition[j] = unmarshalComponentResponseToStorageviewsComponentView(val)
 			}
 		}
 	}
@@ -287,10 +261,7 @@ func NewShowStoredBottleOK(body *ShowResponseBody) *storageviews.StoredBottleVie
 	if body.Composition != nil {
 		v.Composition = make([]*storageviews.ComponentView, len(body.Composition))
 		for i, val := range body.Composition {
-			v.Composition[i] = &storageviews.ComponentView{
-				Varietal:   val.Varietal,
-				Percentage: val.Percentage,
-			}
+			v.Composition[i] = unmarshalComponentResponseBodyToStorageviewsComponentView(val)
 		}
 	}
 	return v

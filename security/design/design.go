@@ -29,6 +29,7 @@ var APIKeyAuth = APIKeySecurity("api_key", func() {
 // protects the "signin" action used to create JWTs.
 var BasicAuth = BasicAuthSecurity("basic", func() {
 	Description("Basic authentication used to authenticate security principal during signin")
+	Scope("api:read", "Read-only access")
 })
 
 // OAuth2Auth defines a security scheme that uses OAuth2 tokens.
