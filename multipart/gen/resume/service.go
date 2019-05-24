@@ -135,20 +135,13 @@ func newStoredResume(vres *resumeviews.StoredResumeView) *StoredResume {
 	if vres.Experience != nil {
 		res.Experience = make([]*Experience, len(vres.Experience))
 		for i, val := range vres.Experience {
-			res.Experience[i] = &Experience{
-				Company:  *val.Company,
-				Role:     *val.Role,
-				Duration: *val.Duration,
-			}
+			res.Experience[i] = transformResumeviewsExperienceViewToExperience(val)
 		}
 	}
 	if vres.Education != nil {
 		res.Education = make([]*Education, len(vres.Education))
 		for i, val := range vres.Education {
-			res.Education[i] = &Education{
-				Institution: *val.Institution,
-				Major:       *val.Major,
-			}
+			res.Education[i] = transformResumeviewsEducationViewToEducation(val)
 		}
 	}
 	return res
@@ -165,21 +158,66 @@ func newStoredResumeView(res *StoredResume) *resumeviews.StoredResumeView {
 	if res.Experience != nil {
 		vres.Experience = make([]*resumeviews.ExperienceView, len(res.Experience))
 		for i, val := range res.Experience {
-			vres.Experience[i] = &resumeviews.ExperienceView{
-				Company:  &val.Company,
-				Role:     &val.Role,
-				Duration: &val.Duration,
-			}
+			vres.Experience[i] = transformExperienceToResumeviewsExperienceView(val)
 		}
 	}
 	if res.Education != nil {
 		vres.Education = make([]*resumeviews.EducationView, len(res.Education))
 		for i, val := range res.Education {
-			vres.Education[i] = &resumeviews.EducationView{
-				Institution: &val.Institution,
-				Major:       &val.Major,
-			}
+			vres.Education[i] = transformEducationToResumeviewsEducationView(val)
 		}
 	}
 	return vres
+}
+
+// transformResumeviewsExperienceViewToExperience builds a value of type
+// *Experience from a value of type *resumeviews.ExperienceView.
+func transformResumeviewsExperienceViewToExperience(v *resumeviews.ExperienceView) *Experience {
+	if v == nil {
+		return nil
+	}
+	res := &Experience{
+		Company:  *v.Company,
+		Role:     *v.Role,
+		Duration: *v.Duration,
+	}
+
+	return res
+}
+
+// transformResumeviewsEducationViewToEducation builds a value of type
+// *Education from a value of type *resumeviews.EducationView.
+func transformResumeviewsEducationViewToEducation(v *resumeviews.EducationView) *Education {
+	if v == nil {
+		return nil
+	}
+	res := &Education{
+		Institution: *v.Institution,
+		Major:       *v.Major,
+	}
+
+	return res
+}
+
+// transformExperienceToResumeviewsExperienceView builds a value of type
+// *resumeviews.ExperienceView from a value of type *Experience.
+func transformExperienceToResumeviewsExperienceView(v *Experience) *resumeviews.ExperienceView {
+	res := &resumeviews.ExperienceView{
+		Company:  &v.Company,
+		Role:     &v.Role,
+		Duration: &v.Duration,
+	}
+
+	return res
+}
+
+// transformEducationToResumeviewsEducationView builds a value of type
+// *resumeviews.EducationView from a value of type *Education.
+func transformEducationToResumeviewsEducationView(v *Education) *resumeviews.EducationView {
+	res := &resumeviews.EducationView{
+		Institution: &v.Institution,
+		Major:       &v.Major,
+	}
+
+	return res
 }

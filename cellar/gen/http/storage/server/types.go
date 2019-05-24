@@ -181,10 +181,7 @@ func NewShowResponseBody(res *storageviews.StoredBottleView) *ShowResponseBody {
 	if res.Composition != nil {
 		body.Composition = make([]*ComponentResponseBody, len(res.Composition))
 		for i, val := range res.Composition {
-			body.Composition[i] = &ComponentResponseBody{
-				Varietal:   *val.Varietal,
-				Percentage: val.Percentage,
-			}
+			body.Composition[i] = marshalStorageviewsComponentViewToComponentResponseBody(val)
 		}
 	}
 	return body
@@ -233,10 +230,7 @@ func NewAddBottle(body *AddRequestBody) *storage.Bottle {
 	if body.Composition != nil {
 		v.Composition = make([]*storage.Component, len(body.Composition))
 		for i, val := range body.Composition {
-			v.Composition[i] = &storage.Component{
-				Varietal:   *val.Varietal,
-				Percentage: val.Percentage,
-			}
+			v.Composition[i] = unmarshalComponentRequestBodyToStorageComponent(val)
 		}
 	}
 	return v
@@ -263,10 +257,7 @@ func NewMultiAddBottle(body []*BottleRequestBody) []*storage.Bottle {
 		if val.Composition != nil {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
-				v[i].Composition[j] = &storage.Component{
-					Varietal:   *val.Varietal,
-					Percentage: val.Percentage,
-				}
+				v[i].Composition[j] = unmarshalComponentRequestBodyToStorageComponent(val)
 			}
 		}
 	}
@@ -278,22 +269,7 @@ func NewMultiUpdatePayload(body *MultiUpdateRequestBody, ids []string) *storage.
 	v := &storage.MultiUpdatePayload{}
 	v.Bottles = make([]*storage.Bottle, len(body.Bottles))
 	for i, val := range body.Bottles {
-		v.Bottles[i] = &storage.Bottle{
-			Name:        *val.Name,
-			Vintage:     *val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
-		}
-		v.Bottles[i].Winery = unmarshalWineryRequestBodyToStorageWinery(val.Winery)
-		if val.Composition != nil {
-			v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
-			for j, val := range val.Composition {
-				v.Bottles[i].Composition[j] = &storage.Component{
-					Varietal:   *val.Varietal,
-					Percentage: val.Percentage,
-				}
-			}
-		}
+		v.Bottles[i] = unmarshalBottleRequestBodyToStorageBottle(val)
 	}
 	v.Ids = ids
 	return v

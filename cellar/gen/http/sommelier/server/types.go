@@ -89,10 +89,7 @@ func NewStoredBottleResponseCollection(res sommelierviews.StoredBottleCollection
 		if val.Composition != nil {
 			body[i].Composition = make([]*ComponentResponse, len(val.Composition))
 			for j, val := range val.Composition {
-				body[i].Composition[j] = &ComponentResponse{
-					Varietal:   *val.Varietal,
-					Percentage: val.Percentage,
-				}
+				body[i].Composition[j] = marshalSommelierviewsComponentViewToComponentResponse(val)
 			}
 		}
 	}

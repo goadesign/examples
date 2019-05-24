@@ -263,10 +263,7 @@ func newStoredBottle(vres *storageviews.StoredBottleView) *StoredBottle {
 	if vres.Composition != nil {
 		res.Composition = make([]*Component, len(vres.Composition))
 		for i, val := range vres.Composition {
-			res.Composition[i] = &Component{
-				Varietal:   *val.Varietal,
-				Percentage: val.Percentage,
-			}
+			res.Composition[i] = transformStorageviewsComponentViewToComponent(val)
 		}
 	}
 	if vres.Winery != nil {
@@ -304,10 +301,7 @@ func newStoredBottleView(res *StoredBottle) *storageviews.StoredBottleView {
 	if res.Composition != nil {
 		vres.Composition = make([]*storageviews.ComponentView, len(res.Composition))
 		for i, val := range res.Composition {
-			vres.Composition[i] = &storageviews.ComponentView{
-				Varietal:   &val.Varietal,
-				Percentage: val.Percentage,
-			}
+			vres.Composition[i] = transformComponentToStorageviewsComponentView(val)
 		}
 	}
 	if res.Winery != nil {
@@ -374,4 +368,32 @@ func newWineryViewTiny(res *Winery) *storageviews.WineryView {
 		Name: &res.Name,
 	}
 	return vres
+}
+
+// transformStorageviewsComponentViewToComponent builds a value of type
+// *Component from a value of type *storageviews.ComponentView.
+func transformStorageviewsComponentViewToComponent(v *storageviews.ComponentView) *Component {
+	if v == nil {
+		return nil
+	}
+	res := &Component{
+		Varietal:   *v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
+// transformComponentToStorageviewsComponentView builds a value of type
+// *storageviews.ComponentView from a value of type *Component.
+func transformComponentToStorageviewsComponentView(v *Component) *storageviews.ComponentView {
+	if v == nil {
+		return nil
+	}
+	res := &storageviews.ComponentView{
+		Varietal:   &v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
 }

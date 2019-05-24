@@ -129,3 +129,17 @@ func unmarshalWineryResponseToSommelierviewsWineryView(v *WineryResponse) *somme
 
 	return res
 }
+
+// unmarshalComponentResponseToSommelierviewsComponentView builds a value of
+// type *sommelierviews.ComponentView from a value of type *ComponentResponse.
+func unmarshalComponentResponseToSommelierviewsComponentView(v *ComponentResponse) *sommelierviews.ComponentView {
+	if v == nil {
+		return nil
+	}
+	res := &sommelierviews.ComponentView{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}

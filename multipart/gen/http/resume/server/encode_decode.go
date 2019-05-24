@@ -72,3 +72,55 @@ func NewResumeAddDecoder(mux goahttp.Muxer, resumeAddDecoderFn ResumeAddDecoderF
 		})
 	}
 }
+
+// marshalResumeviewsExperienceViewToExperienceResponse builds a value of type
+// *ExperienceResponse from a value of type *resumeviews.ExperienceView.
+func marshalResumeviewsExperienceViewToExperienceResponse(v *resumeviews.ExperienceView) *ExperienceResponse {
+	res := &ExperienceResponse{
+		Company:  *v.Company,
+		Role:     *v.Role,
+		Duration: *v.Duration,
+	}
+
+	return res
+}
+
+// marshalResumeviewsEducationViewToEducationResponse builds a value of type
+// *EducationResponse from a value of type *resumeviews.EducationView.
+func marshalResumeviewsEducationViewToEducationResponse(v *resumeviews.EducationView) *EducationResponse {
+	res := &EducationResponse{
+		Institution: *v.Institution,
+		Major:       *v.Major,
+	}
+
+	return res
+}
+
+// unmarshalExperienceRequestBodyToResumeExperience builds a value of type
+// *resume.Experience from a value of type *ExperienceRequestBody.
+func unmarshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) *resume.Experience {
+	if v == nil {
+		return nil
+	}
+	res := &resume.Experience{
+		Company:  *v.Company,
+		Role:     *v.Role,
+		Duration: *v.Duration,
+	}
+
+	return res
+}
+
+// unmarshalEducationRequestBodyToResumeEducation builds a value of type
+// *resume.Education from a value of type *EducationRequestBody.
+func unmarshalEducationRequestBodyToResumeEducation(v *EducationRequestBody) *resume.Education {
+	if v == nil {
+		return nil
+	}
+	res := &resume.Education{
+		Institution: *v.Institution,
+		Major:       *v.Major,
+	}
+
+	return res
+}
