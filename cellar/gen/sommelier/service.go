@@ -195,10 +195,7 @@ func newStoredBottle(vres *sommelierviews.StoredBottleView) *StoredBottle {
 	if vres.Composition != nil {
 		res.Composition = make([]*Component, len(vres.Composition))
 		for i, val := range vres.Composition {
-			res.Composition[i] = &Component{
-				Varietal:   *val.Varietal,
-				Percentage: val.Percentage,
-			}
+			res.Composition[i] = transformSommelierviewsComponentViewToComponent(val)
 		}
 	}
 	if vres.Winery != nil {
@@ -236,10 +233,7 @@ func newStoredBottleView(res *StoredBottle) *sommelierviews.StoredBottleView {
 	if res.Composition != nil {
 		vres.Composition = make([]*sommelierviews.ComponentView, len(res.Composition))
 		for i, val := range res.Composition {
-			vres.Composition[i] = &sommelierviews.ComponentView{
-				Varietal:   &val.Varietal,
-				Percentage: val.Percentage,
-			}
+			vres.Composition[i] = transformComponentToSommelierviewsComponentView(val)
 		}
 	}
 	if res.Winery != nil {
@@ -306,4 +300,32 @@ func newWineryViewTiny(res *Winery) *sommelierviews.WineryView {
 		Name: &res.Name,
 	}
 	return vres
+}
+
+// transformSommelierviewsComponentViewToComponent builds a value of type
+// *Component from a value of type *sommelierviews.ComponentView.
+func transformSommelierviewsComponentViewToComponent(v *sommelierviews.ComponentView) *Component {
+	if v == nil {
+		return nil
+	}
+	res := &Component{
+		Varietal:   *v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
+// transformComponentToSommelierviewsComponentView builds a value of type
+// *sommelierviews.ComponentView from a value of type *Component.
+func transformComponentToSommelierviewsComponentView(v *Component) *sommelierviews.ComponentView {
+	if v == nil {
+		return nil
+	}
+	res := &sommelierviews.ComponentView{
+		Varietal:   &v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
 }

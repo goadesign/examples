@@ -160,3 +160,84 @@ func DecodeAddResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody
 		}
 	}
 }
+
+// unmarshalExperienceResponseToResumeviewsExperienceView builds a value of
+// type *resumeviews.ExperienceView from a value of type *ExperienceResponse.
+func unmarshalExperienceResponseToResumeviewsExperienceView(v *ExperienceResponse) *resumeviews.ExperienceView {
+	res := &resumeviews.ExperienceView{
+		Company:  v.Company,
+		Role:     v.Role,
+		Duration: v.Duration,
+	}
+
+	return res
+}
+
+// unmarshalEducationResponseToResumeviewsEducationView builds a value of type
+// *resumeviews.EducationView from a value of type *EducationResponse.
+func unmarshalEducationResponseToResumeviewsEducationView(v *EducationResponse) *resumeviews.EducationView {
+	res := &resumeviews.EducationView{
+		Institution: v.Institution,
+		Major:       v.Major,
+	}
+
+	return res
+}
+
+// marshalResumeExperienceToExperienceRequestBody builds a value of type
+// *ExperienceRequestBody from a value of type *resume.Experience.
+func marshalResumeExperienceToExperienceRequestBody(v *resume.Experience) *ExperienceRequestBody {
+	if v == nil {
+		return nil
+	}
+	res := &ExperienceRequestBody{
+		Company:  v.Company,
+		Role:     v.Role,
+		Duration: v.Duration,
+	}
+
+	return res
+}
+
+// marshalResumeEducationToEducationRequestBody builds a value of type
+// *EducationRequestBody from a value of type *resume.Education.
+func marshalResumeEducationToEducationRequestBody(v *resume.Education) *EducationRequestBody {
+	if v == nil {
+		return nil
+	}
+	res := &EducationRequestBody{
+		Institution: v.Institution,
+		Major:       v.Major,
+	}
+
+	return res
+}
+
+// marshalExperienceRequestBodyToResumeExperience builds a value of type
+// *resume.Experience from a value of type *ExperienceRequestBody.
+func marshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) *resume.Experience {
+	if v == nil {
+		return nil
+	}
+	res := &resume.Experience{
+		Company:  v.Company,
+		Role:     v.Role,
+		Duration: v.Duration,
+	}
+
+	return res
+}
+
+// marshalEducationRequestBodyToResumeEducation builds a value of type
+// *resume.Education from a value of type *EducationRequestBody.
+func marshalEducationRequestBodyToResumeEducation(v *EducationRequestBody) *resume.Education {
+	if v == nil {
+		return nil
+	}
+	res := &resume.Education{
+		Institution: v.Institution,
+		Major:       v.Major,
+	}
+
+	return res
+}

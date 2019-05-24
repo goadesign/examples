@@ -102,10 +102,7 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 	if body.Composition != nil {
 		v.Composition = make([]*storage.Component, len(body.Composition))
 		for i, val := range body.Composition {
-			v.Composition[i] = &storage.Component{
-				Varietal:   val.Varietal,
-				Percentage: val.Percentage,
-			}
+			v.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
 		}
 	}
 	return v, nil
@@ -149,10 +146,7 @@ func BuildMultiAddPayload(storageMultiAddBody string) ([]*storage.Bottle, error)
 		if val.Composition != nil {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
-				v[i].Composition[j] = &storage.Component{
-					Varietal:   val.Varietal,
-					Percentage: val.Percentage,
-				}
+				v[i].Composition[j] = marshalComponentRequestBodyToStorageComponent(val)
 			}
 		}
 	}
@@ -194,24 +188,7 @@ func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateId
 	if body.Bottles != nil {
 		v.Bottles = make([]*storage.Bottle, len(body.Bottles))
 		for i, val := range body.Bottles {
-			v.Bottles[i] = &storage.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
-				Description: val.Description,
-				Rating:      val.Rating,
-			}
-			if val.Winery != nil {
-				v.Bottles[i].Winery = marshalWineryRequestBodyToStorageWinery(val.Winery)
-			}
-			if val.Composition != nil {
-				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
-				for j, val := range val.Composition {
-					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   val.Varietal,
-						Percentage: val.Percentage,
-					}
-				}
-			}
+			v.Bottles[i] = marshalBottleRequestBodyToStorageBottle(val)
 		}
 	}
 	v.Ids = ids
