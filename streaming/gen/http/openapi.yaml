@@ -20,7 +20,7 @@ paths:
       description: |-
         Echoes the message sent by the client.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
           * `stream:write`
       operationId: chatter#echoer
       parameters:
@@ -54,7 +54,7 @@ paths:
       description: |-
         Returns the chat messages sent to the server.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
           * `stream:read`
       operationId: chatter#history
       parameters:
@@ -93,7 +93,7 @@ paths:
       description: |-
         Listens to the messages sent by the client.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
           * `stream:write`
       operationId: chatter#listener
       parameters:
@@ -151,7 +151,7 @@ paths:
       description: |-
         Subscribe to events sent when new chat messages are added.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
           * `stream:write`
       operationId: chatter#subscribe
       parameters:
@@ -189,7 +189,7 @@ paths:
       description: |-
         Summarizes the chat messages sent by the client.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
           * `stream:write`
       operationId: chatter#summary
       parameters:
@@ -364,6 +364,7 @@ securityDefinitions:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token. Supports scopes "stream:read" and "stream:write".
+
       **Security Scopes**:
         * `stream:read`: Read-only access
         * `stream:write`: Read and write access

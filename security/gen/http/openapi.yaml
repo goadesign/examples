@@ -21,7 +21,7 @@ paths:
       description: |-
         This action is secured with the jwt scheme
 
-        Required security scopes:
+        **Required security scopes for jwt**:
           * `api:read`
       operationId: secured_service#secure
       parameters:
@@ -59,7 +59,11 @@ paths:
       description: |-
         This action is secured with the jwt scheme and also requires an API key query string.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
+          * `api:read`
+          * `api:write`
+
+        **Required security scopes for api_key**:
           * `api:read`
           * `api:write`
       operationId: secured_service#doubly_secure
@@ -99,7 +103,15 @@ paths:
       description: |-
         This action is secured with the jwt scheme and also requires an API key header.
 
-        Required security scopes:
+        **Required security scopes for jwt**:
+          * `api:read`
+          * `api:write`
+
+        **Required security scopes for api_key**:
+          * `api:read`
+          * `api:write`
+
+        **Required security scopes for basic**:
           * `api:read`
           * `api:write`
       operationId: secured_service#also_doubly_secure
@@ -243,12 +255,16 @@ securityDefinitions:
     in: query
   basic_header_Authorization:
     type: basic
-    description: Basic authentication used to authenticate security principal during
-      signin
+    description: |-
+      Basic authentication used to authenticate security principal during signin
+
+      **Security Scopes**:
+        * `api:read`: Read-only access
   jwt_header_Authorization:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+
       **Security Scopes**:
         * `api:read`: Read-only access
         * `api:write`: Read and write access
@@ -258,6 +274,7 @@ securityDefinitions:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+
       **Security Scopes**:
         * `api:read`: Read-only access
         * `api:write`: Read and write access
