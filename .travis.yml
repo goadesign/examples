@@ -23,4 +23,5 @@ cache:
     - $HOME/gopath/src/k8s.io
 script:
 - export PATH=${PATH}:${HOME}/bin:${HOME}/gopath/bin
+- mkdir ${GOPATH}/src/goa.design && ln -s ${GOPATH}/src/github.com/goadesign/examples ${GOPATH}/src/goa.design/examples
 - make travis
