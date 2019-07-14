@@ -101,7 +101,9 @@ func NewLoginEndpoint(s Service, authBasicFn security.AuthBasicFunc) goa.Endpoin
 		p := req.(*LoginPayload)
 		var err error
 		sc := security.BasicScheme{
-			Name: "basic",
+			Name:           "basic",
+			Scopes:         []string{},
+			RequiredScopes: []string{},
 		}
 		ctx, err = authBasicFn(ctx, p.User, p.Password, &sc)
 		if err != nil {

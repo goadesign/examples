@@ -52,7 +52,9 @@ func NewSigninEndpoint(s Service, authBasicFn security.AuthBasicFunc) goa.Endpoi
 		p := req.(*SigninPayload)
 		var err error
 		sc := security.BasicScheme{
-			Name: "basic",
+			Name:           "basic",
+			Scopes:         []string{},
+			RequiredScopes: []string{},
 		}
 		ctx, err = authBasicFn(ctx, p.Username, p.Password, &sc)
 		if err != nil {
@@ -95,7 +97,9 @@ func NewDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, authAPIK
 		ctx, err = authJWTFn(ctx, p.Token, &sc)
 		if err == nil {
 			sc := security.APIKeyScheme{
-				Name: "api_key",
+				Name:           "api_key",
+				Scopes:         []string{},
+				RequiredScopes: []string{"api:read", "api:write"},
 			}
 			ctx, err = authAPIKeyFn(ctx, p.Key, &sc)
 		}
@@ -124,7 +128,9 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 		ctx, err = authJWTFn(ctx, token, &sc)
 		if err == nil {
 			sc := security.APIKeyScheme{
-				Name: "api_key",
+				Name:           "api_key",
+				Scopes:         []string{},
+				RequiredScopes: []string{"api:read", "api:write"},
 			}
 			var key string
 			if p.Key != nil {
@@ -153,7 +159,9 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 			ctx, err = authOAuth2Fn(ctx, token, &sc)
 			if err == nil {
 				sc := security.BasicScheme{
-					Name: "basic",
+					Name:           "basic",
+					Scopes:         []string{},
+					RequiredScopes: []string{"api:read", "api:write"},
 				}
 				var user string
 				if p.Username != nil {

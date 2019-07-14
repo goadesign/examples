@@ -25,7 +25,10 @@ func BuildSigninFunc(grpccli secured_servicepb.SecuredServiceClient, cliopts ...
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Signin(ctx, reqpb.(*secured_servicepb.SigninRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Signin(ctx, reqpb.(*secured_servicepb.SigninRequest), opts...)
+		}
+		return grpccli.Signin(ctx, &secured_servicepb.SigninRequest{}, opts...)
 	}
 }
 
@@ -58,7 +61,10 @@ func BuildSecureFunc(grpccli secured_servicepb.SecuredServiceClient, cliopts ...
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Secure(ctx, reqpb.(*secured_servicepb.SecureRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Secure(ctx, reqpb.(*secured_servicepb.SecureRequest), opts...)
+		}
+		return grpccli.Secure(ctx, &secured_servicepb.SecureRequest{}, opts...)
 	}
 }
 
@@ -90,7 +96,10 @@ func BuildDoublySecureFunc(grpccli secured_servicepb.SecuredServiceClient, cliop
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.DoublySecure(ctx, reqpb.(*secured_servicepb.DoublySecureRequest), opts...)
+		if reqpb != nil {
+			return grpccli.DoublySecure(ctx, reqpb.(*secured_servicepb.DoublySecureRequest), opts...)
+		}
+		return grpccli.DoublySecure(ctx, &secured_servicepb.DoublySecureRequest{}, opts...)
 	}
 }
 
@@ -123,7 +132,10 @@ func BuildAlsoDoublySecureFunc(grpccli secured_servicepb.SecuredServiceClient, c
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.AlsoDoublySecure(ctx, reqpb.(*secured_servicepb.AlsoDoublySecureRequest), opts...)
+		if reqpb != nil {
+			return grpccli.AlsoDoublySecure(ctx, reqpb.(*secured_servicepb.AlsoDoublySecureRequest), opts...)
+		}
+		return grpccli.AlsoDoublySecure(ctx, &secured_servicepb.AlsoDoublySecureRequest{}, opts...)
 	}
 }
 

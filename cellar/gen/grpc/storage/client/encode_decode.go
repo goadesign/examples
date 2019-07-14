@@ -26,7 +26,10 @@ func BuildListFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallOption) 
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.List(ctx, reqpb.(*storagepb.ListRequest), opts...)
+		if reqpb != nil {
+			return grpccli.List(ctx, reqpb.(*storagepb.ListRequest), opts...)
+		}
+		return grpccli.List(ctx, &storagepb.ListRequest{}, opts...)
 	}
 }
 
@@ -57,7 +60,10 @@ func BuildShowFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallOption) 
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Show(ctx, reqpb.(*storagepb.ShowRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Show(ctx, reqpb.(*storagepb.ShowRequest), opts...)
+		}
+		return grpccli.Show(ctx, &storagepb.ShowRequest{}, opts...)
 	}
 }
 
@@ -100,7 +106,10 @@ func BuildAddFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallOption) g
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Add(ctx, reqpb.(*storagepb.AddRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Add(ctx, reqpb.(*storagepb.AddRequest), opts...)
+		}
+		return grpccli.Add(ctx, &storagepb.AddRequest{}, opts...)
 	}
 }
 
@@ -130,7 +139,10 @@ func BuildRemoveFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallOption
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Remove(ctx, reqpb.(*storagepb.RemoveRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Remove(ctx, reqpb.(*storagepb.RemoveRequest), opts...)
+		}
+		return grpccli.Remove(ctx, &storagepb.RemoveRequest{}, opts...)
 	}
 }
 
@@ -150,7 +162,10 @@ func BuildRateFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallOption) 
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Rate(ctx, reqpb.(*storagepb.RateRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Rate(ctx, reqpb.(*storagepb.RateRequest), opts...)
+		}
+		return grpccli.Rate(ctx, &storagepb.RateRequest{}, opts...)
 	}
 }
 
@@ -170,7 +185,10 @@ func BuildMultiAddFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallOpti
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.MultiAdd(ctx, reqpb.(*storagepb.MultiAddRequest), opts...)
+		if reqpb != nil {
+			return grpccli.MultiAdd(ctx, reqpb.(*storagepb.MultiAddRequest), opts...)
+		}
+		return grpccli.MultiAdd(ctx, &storagepb.MultiAddRequest{}, opts...)
 	}
 }
 
@@ -203,7 +221,10 @@ func BuildMultiUpdateFunc(grpccli storagepb.StorageClient, cliopts ...grpc.CallO
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.MultiUpdate(ctx, reqpb.(*storagepb.MultiUpdateRequest), opts...)
+		if reqpb != nil {
+			return grpccli.MultiUpdate(ctx, reqpb.(*storagepb.MultiUpdateRequest), opts...)
+		}
+		return grpccli.MultiUpdate(ctx, &storagepb.MultiUpdateRequest{}, opts...)
 	}
 }
 
