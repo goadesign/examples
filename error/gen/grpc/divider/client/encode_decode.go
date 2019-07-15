@@ -25,7 +25,10 @@ func BuildIntegerDivideFunc(grpccli dividerpb.DividerClient, cliopts ...grpc.Cal
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.IntegerDivide(ctx, reqpb.(*dividerpb.IntegerDivideRequest), opts...)
+		if reqpb != nil {
+			return grpccli.IntegerDivide(ctx, reqpb.(*dividerpb.IntegerDivideRequest), opts...)
+		}
+		return grpccli.IntegerDivide(ctx, &dividerpb.IntegerDivideRequest{}, opts...)
 	}
 }
 
@@ -57,7 +60,10 @@ func BuildDivideFunc(grpccli dividerpb.DividerClient, cliopts ...grpc.CallOption
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Divide(ctx, reqpb.(*dividerpb.DivideRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Divide(ctx, reqpb.(*dividerpb.DivideRequest), opts...)
+		}
+		return grpccli.Divide(ctx, &dividerpb.DivideRequest{}, opts...)
 	}
 }
 

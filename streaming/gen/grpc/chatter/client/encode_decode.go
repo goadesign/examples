@@ -25,7 +25,10 @@ func BuildLoginFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOption)
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Login(ctx, reqpb.(*chatterpb.LoginRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Login(ctx, reqpb.(*chatterpb.LoginRequest), opts...)
+		}
+		return grpccli.Login(ctx, &chatterpb.LoginRequest{}, opts...)
 	}
 }
 
@@ -57,6 +60,9 @@ func BuildEchoerFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOption
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
+		if reqpb != nil {
+			return grpccli.Echoer(ctx, opts...)
+		}
 		return grpccli.Echoer(ctx, opts...)
 	}
 }
@@ -85,6 +91,9 @@ func BuildListenerFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOpti
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
+		if reqpb != nil {
+			return grpccli.Listener(ctx, opts...)
+		}
 		return grpccli.Listener(ctx, opts...)
 	}
 }
@@ -112,6 +121,9 @@ func BuildSummaryFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOptio
 	return func(ctx context.Context, reqpb interface{}, opts ...grpc.CallOption) (interface{}, error) {
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
+		}
+		if reqpb != nil {
+			return grpccli.Summary(ctx, opts...)
 		}
 		return grpccli.Summary(ctx, opts...)
 	}
@@ -148,7 +160,10 @@ func BuildSubscribeFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOpt
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Subscribe(ctx, reqpb.(*chatterpb.SubscribeRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Subscribe(ctx, reqpb.(*chatterpb.SubscribeRequest), opts...)
+		}
+		return grpccli.Subscribe(ctx, &chatterpb.SubscribeRequest{}, opts...)
 	}
 }
 
@@ -177,7 +192,10 @@ func BuildHistoryFunc(grpccli chatterpb.ChatterClient, cliopts ...grpc.CallOptio
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.History(ctx, reqpb.(*chatterpb.HistoryRequest), opts...)
+		if reqpb != nil {
+			return grpccli.History(ctx, reqpb.(*chatterpb.HistoryRequest), opts...)
+		}
+		return grpccli.History(ctx, &chatterpb.HistoryRequest{}, opts...)
 	}
 }
 

@@ -26,7 +26,10 @@ func BuildPickFunc(grpccli sommelierpb.SommelierClient, cliopts ...grpc.CallOpti
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Pick(ctx, reqpb.(*sommelierpb.PickRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Pick(ctx, reqpb.(*sommelierpb.PickRequest), opts...)
+		}
+		return grpccli.Pick(ctx, &sommelierpb.PickRequest{}, opts...)
 	}
 }
 
