@@ -25,7 +25,10 @@ func BuildAddFunc(grpccli calcpb.CalcClient, cliopts ...grpc.CallOption) goagrpc
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
-		return grpccli.Add(ctx, reqpb.(*calcpb.AddRequest), opts...)
+		if reqpb != nil {
+			return grpccli.Add(ctx, reqpb.(*calcpb.AddRequest), opts...)
+		}
+		return grpccli.Add(ctx, &calcpb.AddRequest{}, opts...)
 	}
 }
 
