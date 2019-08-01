@@ -75,7 +75,7 @@ lint:
 	@if [ "`golint ./... | grep -vf .golint_exclude | tee /dev/stderr`" ]; then \
 		echo "^ - Lint errors!" && echo && exit 1; \
 	fi
-	@if [ "`staticcheck -checks all,-ST1000,-ST1001 ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
+	@if [ "`staticcheck -checks all,-ST1000,-ST1001,-ST1021 ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
 		echo "^ - staticcheck errors!" && echo && exit 1; \
 	fi
 
