@@ -24,9 +24,10 @@ var (
 	Key = []byte("secret")
 )
 
-// SecuredServiceBasicAuth implements the authorization logic for service
-// "secured_service" for the "basic" security scheme.
-func SecuredServiceBasicAuth(ctx context.Context, user, pass string, s *security.BasicScheme) (context.Context, error) {
+
+// BasicAuth implements the authorization logic for service "secured_service"
+// for the "basic" security scheme.
+func (s *securedServiceSvc) BasicAuth(ctx context.Context, user, pass string, scheme *security.BasicScheme) (context.Context, error) {
 	if user != "goa" {
 		return ctx, ErrUnauthorized
 	}
@@ -36,9 +37,9 @@ func SecuredServiceBasicAuth(ctx context.Context, user, pass string, s *security
 	return ctx, nil
 }
 
-// SecuredServiceJWTAuth implements the authorization logic for service
-// "secured_service" for the "jwt" security scheme.
-func SecuredServiceJWTAuth(ctx context.Context, token string, s *security.JWTScheme) (context.Context, error) {
+// JWTAuth implements the authorization logic for service "secured_service" for
+// the "jwt" security scheme.
+func (s *securedServiceSvc) JWTAuth(ctx context.Context, token string, scheme *security.JWTScheme) (context.Context, error) {
 	claims := make(jwt.MapClaims)
 
 	// authorize request
@@ -60,24 +61,24 @@ func SecuredServiceJWTAuth(ctx context.Context, token string, s *security.JWTSch
 	for _, scp := range scopes {
 		scopesInToken = append(scopesInToken, scp.(string))
 	}
-	if err := s.Validate(scopesInToken); err != nil {
+	if err := scheme.Validate(scopesInToken); err != nil {
 		return ctx, securedservice.InvalidScopes(err.Error())
 	}
 	return ctx, nil
 }
 
-// SecuredServiceAPIKeyAuth implements the authorization logic for service
-// "secured_service" for the "api_key" security scheme.
-func SecuredServiceAPIKeyAuth(ctx context.Context, key string, s *security.APIKeyScheme) (context.Context, error) {
+// APIKeyAuth implements the authorization logic for service "secured_service"
+// for the "api_key" security scheme.
+func (s *securedServiceSvc) APIKeyAuth(ctx context.Context, key string, scheme *security.APIKeyScheme) (context.Context, error) {
 	if key != "my_awesome_api_key" {
 		return ctx, ErrUnauthorized
 	}
 	return ctx, nil
 }
 
-// SecuredServiceOAuth2Auth implements the authorization logic for service
-// "secured_service" for the "oauth2" security scheme.
-func SecuredServiceOAuth2Auth(ctx context.Context, token string, s *security.OAuth2Scheme) (context.Context, error) {
+// OAuth2Auth implements the authorization logic for service "secured_service"
+// for the "oauth2" security scheme.
+func (s *securedServiceSvc) OAuth2Auth(ctx context.Context, token string, scheme *security.OAuth2Scheme) (context.Context, error) {
 	claims := make(jwt.MapClaims)
 
 	// authorize request
@@ -99,7 +100,7 @@ func SecuredServiceOAuth2Auth(ctx context.Context, token string, s *security.OAu
 	for _, scp := range scopes {
 		scopesInToken = append(scopesInToken, scp.(string))
 	}
-	if err := s.Validate(scopesInToken); err != nil {
+	if err := scheme.Validate(scopesInToken); err != nil {
 		return ctx, securedservice.InvalidScopes(err.Error())
 	}
 	return ctx, nil
