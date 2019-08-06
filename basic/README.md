@@ -1,7 +1,7 @@
 # Calc Service
 
 This example provides a basic overview of Goa. It consists of a single
-service that implements an endpoints that adds two integers adn returns
+service that implements an endpoints that adds two integers and returns
 the result (exciting I know).
 
 The example shows how to generate server and client code that supports
