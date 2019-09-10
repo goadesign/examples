@@ -14,56 +14,35 @@
 # - "all" is the default target, it runs all the targets in the order above.
 #
 GO_FILES=$(shell find . -type f -name '*.go')
+GOA:=$(shell goa version 2> /dev/null)
+GOOS=$(shell go env GOOS)
 
 export GO111MODULE=on
 
 # Only list test and build dependencies
 # Standard dependencies are installed via go get
 DEPEND=\
-	github.com/hashicorp/go-getter \
-	github.com/golang/protobuf/protoc-gen-go \
-	github.com/golang/protobuf/proto \
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
 	honnef.co/go/tools/cmd/staticcheck
 
 .phony: all depend lint test build clean
 
-all: gen lint test
+all: check-goa gen lint test
 	@echo DONE!
 
 travis: depend all check-freshness
 
-# Install protoc
-GOOS=$(shell go env GOOS)
-PROTOC_VERSION=3.6.1
-ifeq ($(GOOS),linux)
-PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
-PROTOC_EXEC=$(PROTOC)/bin/protoc
-GOBIN=$(GOPATH)/bin
+check-goa:
+ifdef GOA
+	@echo $(GOA)
 else
-	ifeq ($(GOOS),darwin)
-PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
-PROTOC_EXEC=$(PROTOC)/bin/protoc
-GOBIN=$(GOPATH)/bin
-	else
-		ifeq ($(GOOS),windows)
-PROTOC=protoc-$(PROTOC_VERSION)-win32
-PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
-GOBIN="$(GOPATH)\bin"
-		endif
-	endif
+	$(error "Goa tool not found, install Goa first!")
 endif
+
 depend:
 	@echo INSTALLING DEPENDENCIES...
 	@env GO111MODULE=off go get -v $(DEPEND)
-	@go get -v goa.design/goa/v3
-	@go get -v goa.design/goa/v3/...
-	@env GO111MODULE=off go install github.com/hashicorp/go-getter/cmd/go-getter && \
-		go-getter https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip $(PROTOC) && \
-		cp $(PROTOC_EXEC) $(GOBIN) && \
-		rm -r $(PROTOC)
-	@env GO111MODULE=off go get -u github.com/golang/protobuf/protoc-gen-go
 	@go get -v ./...
 
 lint:
