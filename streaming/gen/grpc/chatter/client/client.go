@@ -26,29 +26,29 @@ type Client struct {
 	opts    []grpc.CallOption
 }
 
-// echoerClientStream implements the chatter.EchoerClientStream interface.
-type echoerClientStream struct {
+// EchoerClientStream implements the chatter.EchoerClientStream interface.
+type EchoerClientStream struct {
 	stream chatterpb.Chatter_EchoerClient
 }
 
-// listenerClientStream implements the chatter.ListenerClientStream interface.
-type listenerClientStream struct {
+// ListenerClientStream implements the chatter.ListenerClientStream interface.
+type ListenerClientStream struct {
 	stream chatterpb.Chatter_ListenerClient
 }
 
-// summaryClientStream implements the chatter.SummaryClientStream interface.
-type summaryClientStream struct {
+// SummaryClientStream implements the chatter.SummaryClientStream interface.
+type SummaryClientStream struct {
 	stream chatterpb.Chatter_SummaryClient
 	view   string
 }
 
-// subscribeClientStream implements the chatter.SubscribeClientStream interface.
-type subscribeClientStream struct {
+// SubscribeClientStream implements the chatter.SubscribeClientStream interface.
+type SubscribeClientStream struct {
 	stream chatterpb.Chatter_SubscribeClient
 }
 
-// historyClientStream implements the chatter.HistoryClientStream interface.
-type historyClientStream struct {
+// HistoryClientStream implements the chatter.HistoryClientStream interface.
+type HistoryClientStream struct {
 	stream chatterpb.Chatter_HistoryClient
 	view   string
 }
@@ -190,7 +190,7 @@ func (c *Client) History() goa.Endpoint {
 
 // Recv reads instances of "chatterpb.EchoerResponse" from the "echoer"
 // endpoint gRPC stream.
-func (s *echoerClientStream) Recv() (string, error) {
+func (s *EchoerClientStream) Recv() (string, error) {
 	var res string
 	v, err := s.stream.Recv()
 	if err != nil {
@@ -201,31 +201,31 @@ func (s *echoerClientStream) Recv() (string, error) {
 
 // Send streams instances of "chatterpb.EchoerStreamingRequest" to the "echoer"
 // endpoint gRPC stream.
-func (s *echoerClientStream) Send(res string) error {
+func (s *EchoerClientStream) Send(res string) error {
 	v := NewEchoerStreamingRequest(res)
 	return s.stream.Send(v)
 }
 
-func (s *echoerClientStream) Close() error {
+func (s *EchoerClientStream) Close() error {
 	// Close the send direction of the stream
 	return s.stream.CloseSend()
 }
 
 // Send streams instances of "chatterpb.ListenerStreamingRequest" to the
 // "listener" endpoint gRPC stream.
-func (s *listenerClientStream) Send(res string) error {
+func (s *ListenerClientStream) Send(res string) error {
 	v := NewListenerStreamingRequest(res)
 	return s.stream.Send(v)
 }
 
-func (s *listenerClientStream) Close() error {
+func (s *ListenerClientStream) Close() error {
 	// Close the send direction of the stream
 	return s.stream.CloseSend()
 }
 
 // CloseAndRecv reads instances of "chatterpb.ChatSummaryCollection" from the
 // "summary" endpoint gRPC stream.
-func (s *summaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, error) {
+func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, error) {
 	var res chatter.ChatSummaryCollection
 	v, err := s.stream.CloseAndRecv()
 	if err != nil {
@@ -238,14 +238,14 @@ func (s *summaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 
 // Send streams instances of "chatterpb.SummaryStreamingRequest" to the
 // "summary" endpoint gRPC stream.
-func (s *summaryClientStream) Send(res string) error {
+func (s *SummaryClientStream) Send(res string) error {
 	v := NewSummaryStreamingRequest(res)
 	return s.stream.Send(v)
 }
 
 // Recv reads instances of "chatterpb.SubscribeResponse" from the "subscribe"
 // endpoint gRPC stream.
-func (s *subscribeClientStream) Recv() (*chatter.Event, error) {
+func (s *SubscribeClientStream) Recv() (*chatter.Event, error) {
 	var res *chatter.Event
 	v, err := s.stream.Recv()
 	if err != nil {
@@ -259,7 +259,7 @@ func (s *subscribeClientStream) Recv() (*chatter.Event, error) {
 
 // Recv reads instances of "chatterpb.HistoryResponse" from the "history"
 // endpoint gRPC stream.
-func (s *historyClientStream) Recv() (*chatter.ChatSummary, error) {
+func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 	var res *chatter.ChatSummary
 	v, err := s.stream.Recv()
 	if err != nil {
@@ -271,6 +271,6 @@ func (s *historyClientStream) Recv() (*chatter.ChatSummary, error) {
 }
 
 // SetView sets the view.
-func (s *historyClientStream) SetView(view string) {
+func (s *HistoryClientStream) SetView(view string) {
 	s.view = view
 }

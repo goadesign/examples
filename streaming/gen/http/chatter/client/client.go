@@ -67,32 +67,32 @@ type ConnConfigurer struct {
 	HistoryFn   goahttp.ConnConfigureFunc
 }
 
-// echoerClientStream implements the chatter.EchoerClientStream interface.
-type echoerClientStream struct {
+// EchoerClientStream implements the chatter.EchoerClientStream interface.
+type EchoerClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// listenerClientStream implements the chatter.ListenerClientStream interface.
-type listenerClientStream struct {
+// ListenerClientStream implements the chatter.ListenerClientStream interface.
+type ListenerClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// summaryClientStream implements the chatter.SummaryClientStream interface.
-type summaryClientStream struct {
+// SummaryClientStream implements the chatter.SummaryClientStream interface.
+type SummaryClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// subscribeClientStream implements the chatter.SubscribeClientStream interface.
-type subscribeClientStream struct {
+// SubscribeClientStream implements the chatter.SubscribeClientStream interface.
+type SubscribeClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 }
 
-// historyClientStream implements the chatter.HistoryClientStream interface.
-type historyClientStream struct {
+// HistoryClientStream implements the chatter.HistoryClientStream interface.
+type HistoryClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
 	// view is the view to render  result type before sending to the websocket
@@ -198,14 +198,14 @@ func (c *Client) Echoer() goa.Endpoint {
 		if c.configurer.EchoerFn != nil {
 			conn = c.configurer.EchoerFn(conn, cancel)
 		}
-		stream := &echoerClientStream{conn: conn}
+		stream := &EchoerClientStream{conn: conn}
 		return stream, nil
 	}
 }
 
 // Recv reads instances of "string" from the "echoer" endpoint websocket
 // connection.
-func (s *echoerClientStream) Recv() (string, error) {
+func (s *EchoerClientStream) Recv() (string, error) {
 	var (
 		rv   string
 		body string
@@ -223,12 +223,12 @@ func (s *echoerClientStream) Recv() (string, error) {
 
 // Send streams instances of "string" to the "echoer" endpoint websocket
 // connection.
-func (s *echoerClientStream) Send(v string) error {
+func (s *EchoerClientStream) Send(v string) error {
 	return s.conn.WriteJSON(v)
 }
 
 // Close closes the "echoer" endpoint websocket connection.
-func (s *echoerClientStream) Close() error {
+func (s *EchoerClientStream) Close() error {
 	var err error
 	// Send a nil payload to the server implying client closing connection.
 	if err = s.conn.WriteJSON(nil); err != nil {
@@ -267,19 +267,19 @@ func (c *Client) Listener() goa.Endpoint {
 		if c.configurer.ListenerFn != nil {
 			conn = c.configurer.ListenerFn(conn, cancel)
 		}
-		stream := &listenerClientStream{conn: conn}
+		stream := &ListenerClientStream{conn: conn}
 		return stream, nil
 	}
 }
 
 // Send streams instances of "string" to the "listener" endpoint websocket
 // connection.
-func (s *listenerClientStream) Send(v string) error {
+func (s *ListenerClientStream) Send(v string) error {
 	return s.conn.WriteJSON(v)
 }
 
 // Close closes the "listener" endpoint websocket connection.
-func (s *listenerClientStream) Close() error {
+func (s *ListenerClientStream) Close() error {
 	var err error
 	// Send a nil payload to the server implying client closing connection.
 	if err = s.conn.WriteJSON(nil); err != nil {
@@ -318,7 +318,7 @@ func (c *Client) Summary() goa.Endpoint {
 		if c.configurer.SummaryFn != nil {
 			conn = c.configurer.SummaryFn(conn, cancel)
 		}
-		stream := &summaryClientStream{conn: conn}
+		stream := &SummaryClientStream{conn: conn}
 		return stream, nil
 	}
 }
@@ -326,7 +326,7 @@ func (c *Client) Summary() goa.Endpoint {
 // CloseAndRecv stops sending messages to the "summary" endpoint websocket
 // connection and reads instances of "chatter.ChatSummaryCollection" from the
 // connection.
-func (s *summaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, error) {
+func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, error) {
 	var (
 		rv   chatter.ChatSummaryCollection
 		body SummaryResponseBody
@@ -355,7 +355,7 @@ func (s *summaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 
 // Send streams instances of "string" to the "summary" endpoint websocket
 // connection.
-func (s *summaryClientStream) Send(v string) error {
+func (s *SummaryClientStream) Send(v string) error {
 	return s.conn.WriteJSON(v)
 }
 
@@ -398,14 +398,14 @@ func (c *Client) Subscribe() goa.Endpoint {
 			)
 			conn.Close()
 		}()
-		stream := &subscribeClientStream{conn: conn}
+		stream := &SubscribeClientStream{conn: conn}
 		return stream, nil
 	}
 }
 
 // Recv reads instances of "chatter.Event" from the "subscribe" endpoint
 // websocket connection.
-func (s *subscribeClientStream) Recv() (*chatter.Event, error) {
+func (s *SubscribeClientStream) Recv() (*chatter.Event, error) {
 	var (
 		rv   *chatter.Event
 		body SubscribeResponseBody
@@ -466,7 +466,7 @@ func (c *Client) History() goa.Endpoint {
 			)
 			conn.Close()
 		}()
-		stream := &historyClientStream{conn: conn}
+		stream := &HistoryClientStream{conn: conn}
 		view := resp.Header.Get("goa-view")
 		stream.SetView(view)
 		return stream, nil
@@ -475,7 +475,7 @@ func (c *Client) History() goa.Endpoint {
 
 // Recv reads instances of "chatter.ChatSummary" from the "history" endpoint
 // websocket connection.
-func (s *historyClientStream) Recv() (*chatter.ChatSummary, error) {
+func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 	var (
 		rv   *chatter.ChatSummary
 		body HistoryResponseBody
@@ -499,6 +499,6 @@ func (s *historyClientStream) Recv() (*chatter.ChatSummary, error) {
 
 // SetView sets the view to render the  type before sending to the "history"
 // endpoint websocket connection.
-func (s *historyClientStream) SetView(view string) {
+func (s *HistoryClientStream) SetView(view string) {
 	s.view = view
 }

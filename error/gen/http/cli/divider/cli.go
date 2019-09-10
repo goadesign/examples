@@ -30,7 +30,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` divider integer--divide --a 3601367395041194197 --b 8717444617646084941` + "\n" +
+	return os.Args[0] + ` divider integer-divide --a 3601367395041194197 --b 8717444617646084941` + "\n" +
 		""
 }
 
@@ -161,7 +161,7 @@ IntegerDivide implements integer_divide.
     -b INT: Right operand
 
 Example:
-    `+os.Args[0]+` divider integer--divide --a 3601367395041194197 --b 8717444617646084941
+    `+os.Args[0]+` divider integer-divide --a 3601367395041194197 --b 8717444617646084941
 `, os.Args[0])
 }
 
