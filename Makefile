@@ -21,7 +21,6 @@ export GO111MODULE=on
 # Standard dependencies are installed via go get
 DEPEND=\
 	github.com/hashicorp/go-getter \
-	github.com/cheggaaa/pb \
 	github.com/golang/protobuf/protoc-gen-go \
 	github.com/golang/protobuf/proto \
 	golang.org/x/lint/golint \
