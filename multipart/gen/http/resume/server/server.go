@@ -109,6 +109,7 @@ func NewListHandler(
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "list")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "resume")
+		var err error
 
 		res, err := endpoint(ctx, nil)
 

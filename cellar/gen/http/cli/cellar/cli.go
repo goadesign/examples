@@ -378,7 +378,7 @@ Add n number of bottles and return their IDs. This is a multipart request and ea
     -body JSON: 
 
 Example:
-    `+os.Args[0]+` storage multi--add --body '[
+    `+os.Args[0]+` storage multi-add --body '[
       {
          "composition": [
             {
@@ -457,7 +457,7 @@ Update bottles with the given IDs. This is a multipart request and each part has
     -ids JSON: 
 
 Example:
-    `+os.Args[0]+` storage multi--update --body '{
+    `+os.Args[0]+` storage multi-update --body '{
       "bottles": [
          {
             "composition": [

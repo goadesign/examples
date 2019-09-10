@@ -206,7 +206,7 @@ This action is secured with the jwt scheme and also requires an API key query st
     -token STRING: 
 
 Example:
-    `+os.Args[0]+` secured-service doubly--secure --message '{
+    `+os.Args[0]+` secured-service doubly-secure --message '{
       "key": "abcdef12345"
    }' --token "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
 `, os.Args[0])
@@ -221,7 +221,7 @@ This action is secured with the jwt scheme and also requires an API key header.
     -token STRING: 
 
 Example:
-    `+os.Args[0]+` secured-service also--doubly--secure --message '{
+    `+os.Args[0]+` secured-service also-doubly-secure --message '{
       "key": "abcdef12345",
       "password": "password",
       "username": "user"
