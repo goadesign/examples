@@ -37,7 +37,8 @@ check-goa:
 ifdef GOA
 	@echo $(GOA)
 else
-	$(error "Goa tool not found, install Goa first!")
+	go get -u goa.design/goa/v3
+	go get -u goa.design/goa/v3/...
 endif
 
 depend:
