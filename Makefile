@@ -15,6 +15,8 @@
 #
 GO_FILES=$(shell find . -type f -name '*.go')
 
+export GO111MODULE=off
+
 # Only list test and build dependencies
 # Standard dependencies are installed via go get
 DEPEND=\
