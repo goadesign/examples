@@ -1,4 +1,6 @@
 language: go
+env:
+- GO111MODULE=off
 dist: xenial
 go:
 - "1.12.x"
