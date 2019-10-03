@@ -6,7 +6,6 @@ go:
 - "1.12.x"
 cache:
   directories:
-    - $HOME/gopath/pkg
     - $HOME/gopath/src/bitbucket.org
     - $HOME/gopath/src/cloud.google.com
     - $HOME/gopath/src/github.com/aws
