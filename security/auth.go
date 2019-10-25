@@ -24,7 +24,6 @@ var (
 	Key = []byte("secret")
 )
 
-
 // BasicAuth implements the authorization logic for service "secured_service"
 // for the "basic" security scheme.
 func (s *securedServiceSvc) BasicAuth(ctx context.Context, user, pass string, scheme *security.BasicScheme) (context.Context, error) {
