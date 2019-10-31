@@ -39,7 +39,7 @@ func main() {
 				addr = "https://{version}.goa.design/calc"
 				addr = strings.Replace(addr, "{version}", *versionF, -1)
 			default:
-				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: development|production)", *hostF)
+				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: development|production)\n", *hostF)
 				os.Exit(1)
 			}
 		}
@@ -54,7 +54,7 @@ func main() {
 	{
 		u, err := url.Parse(addr)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "invalid URL %#v: %s", addr, err)
+			fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
 			os.Exit(1)
 		}
 		scheme = u.Scheme
@@ -72,7 +72,7 @@ func main() {
 		case "grpc", "grpcs":
 			endpoint, payload, err = doGRPC(scheme, host, timeout, debug)
 		default:
-			fmt.Fprintf(os.Stderr, "invalid scheme: %q (valid schemes: grpc|grpcs|http|https)", scheme)
+			fmt.Fprintf(os.Stderr, "invalid scheme: %q (valid schemes: grpc|grpcs|http|https)\n", scheme)
 			os.Exit(1)
 		}
 	}

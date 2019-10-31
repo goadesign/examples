@@ -138,9 +138,11 @@ paths:
         request and each part has field name 'bottle' and contains the encoded bottle
         info to be added.
       operationId: storage#multi_add
+      consumes:
+      - multipart/form-data
       parameters:
       - name: array
-        in: body
+        in: formData
         required: true
         schema:
           type: array
@@ -166,6 +168,8 @@ paths:
         to be updated. The IDs in the query parameter is mapped to each part in the
         request.
       operationId: storage#multi_update
+      consumes:
+      - multipart/form-data
       parameters:
       - name: ids
         in: query
@@ -176,7 +180,7 @@ paths:
           type: string
         collectionFormat: multi
       - name: multi_update_request_body
-        in: body
+        in: formData
         required: true
         schema:
           $ref: '#/definitions/StorageMultiUpdateRequestBody'

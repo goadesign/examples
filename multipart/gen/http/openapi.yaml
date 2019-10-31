@@ -34,9 +34,11 @@ paths:
         request and each part has field name 'resume' and contains the encoded resume
         to be added.
       operationId: resume#add
+      consumes:
+      - multipart/form-data
       parameters:
       - name: array
-        in: body
+        in: formData
         required: true
         schema:
           type: array
