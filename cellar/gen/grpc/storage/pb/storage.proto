@@ -1,4 +1,4 @@
-// Code generated with goa v2.0.4, DO NOT EDIT.
+// Code generated with goa v2.0.7, DO NOT EDIT.
 //
 // storage protocol buffer definition
 //
@@ -45,17 +45,17 @@ message StoredBottle {
 	// ID is the unique id of the bottle.
 	string id = 8;
 	// Name of bottle
-	string name = 1;
+	string name = 2;
 	// Winery that produces wine
-	Winery winery = 2;
+	Winery winery = 3;
 	// Vintage of bottle
-	uint32 vintage = 3;
+	uint32 vintage = 4;
 	// Composition is the list of grape varietals and associated percentage.
-	repeated Component composition = 4;
+	repeated Component composition = 5;
 	// Description of bottle
-	string description = 5;
+	string description = 6;
 	// Rating of bottle from 1 (worst) to 5 (best)
-	uint32 rating = 6;
+	uint32 rating = 7;
 }
 
 message Winery {
@@ -92,17 +92,17 @@ message ShowResponse {
 	// ID is the unique id of the bottle.
 	string id = 8;
 	// Name of bottle
-	string name = 1;
+	string name = 2;
 	// Winery that produces wine
-	Winery winery = 2;
+	Winery winery = 3;
 	// Vintage of bottle
-	uint32 vintage = 3;
+	uint32 vintage = 4;
 	// Composition is the list of grape varietals and associated percentage.
-	repeated Component composition = 4;
+	repeated Component composition = 5;
 	// Description of bottle
-	string description = 5;
+	string description = 6;
 	// Rating of bottle from 1 (worst) to 5 (best)
-	uint32 rating = 6;
+	uint32 rating = 7;
 }
 
 message AddRequest {
