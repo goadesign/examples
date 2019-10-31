@@ -35,7 +35,7 @@ func main() {
 			case "localhost":
 				addr = "http://localhost:80"
 			default:
-				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)", *hostF)
+				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)\n", *hostF)
 				os.Exit(1)
 			}
 		}
@@ -50,7 +50,7 @@ func main() {
 	{
 		u, err := url.Parse(addr)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "invalid URL %#v: %s", addr, err)
+			fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
 			os.Exit(1)
 		}
 		scheme = u.Scheme
@@ -66,7 +66,7 @@ func main() {
 		case "http", "https":
 			endpoint, payload, err = doHTTP(scheme, host, timeout, debug)
 		default:
-			fmt.Fprintf(os.Stderr, "invalid scheme: %q (valid schemes: grpc|http)", scheme)
+			fmt.Fprintf(os.Stderr, "invalid scheme: %q (valid schemes: grpc|http)\n", scheme)
 			os.Exit(1)
 		}
 	}
