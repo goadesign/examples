@@ -122,6 +122,8 @@ paths:
       - http
   /swagger.json:
     get:
+      tags:
+      - text
       summary: Download ../../gen/http/openapi.json
       operationId: text#/swagger.json
       responses:
