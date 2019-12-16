@@ -53,7 +53,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, dividerEndpoints *divider
 	)
 	{
 		eh := errorHandler(logger)
-		dividerServer = dividersvr.New(dividerEndpoints, mux, dec, enc, eh)
+		dividerServer = dividersvr.New(dividerEndpoints, mux, dec, enc, eh, nil)
 	}
 	// Configure the mux.
 	dividersvr.Mount(mux, dividerServer)

@@ -54,7 +54,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, resumeEndpoints *resume.E
 	)
 	{
 		eh := errorHandler(logger)
-		resumeServer = resumesvr.New(resumeEndpoints, mux, dec, enc, eh, resumeapi.ResumeAddDecoderFunc)
+		resumeServer = resumesvr.New(resumeEndpoints, mux, dec, enc, eh, nil, resumeapi.ResumeAddDecoderFunc)
 	}
 	// Configure the mux.
 	resumesvr.Mount(mux, resumeServer)

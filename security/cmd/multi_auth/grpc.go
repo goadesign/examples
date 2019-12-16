@@ -14,6 +14,7 @@ import (
 	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
 	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 // handleGRPCServer starts configures and starts a gRPC server on the given
@@ -55,6 +56,10 @@ func handleGRPCServer(ctx context.Context, u *url.URL, securedServiceEndpoints *
 			logger.Printf("serving gRPC method %s", svc+"/"+m.Name)
 		}
 	}
+
+	// Register the server reflection service on the server.
+	// See https://grpc.github.io/grpc/core/md_doc_server-reflection.html.
+	reflection.Register(srv)
 
 	(*wg).Add(1)
 	go func() {
