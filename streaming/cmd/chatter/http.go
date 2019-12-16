@@ -57,7 +57,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 		upgrader := &websocket.Upgrader{}
 		chatterConfigurer := chattersvcsvr.NewConnConfigurer(nil)
 		chatterConfigurer.SubscribeFn = pingPonger(logger)
-		chatterServer = chattersvcsvr.New(chatterEndpoints, mux, dec, enc, eh, upgrader, chatterConfigurer)
+		chatterServer = chattersvcsvr.New(chatterEndpoints, mux, dec, enc, eh, nil, upgrader, chatterConfigurer)
 	}
 	// Configure the mux.
 	chattersvcsvr.Mount(mux, chatterServer)

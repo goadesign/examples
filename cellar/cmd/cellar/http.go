@@ -59,9 +59,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 	)
 	{
 		eh := errorHandler(logger)
-		sommelierServer = sommeliersvr.New(sommelierEndpoints, mux, dec, enc, eh)
-		storageServer = storagesvr.New(storageEndpoints, mux, dec, enc, eh, cellar.StorageMultiAddDecoderFunc, cellar.StorageMultiUpdateDecoderFunc)
-		swaggerServer = swaggersvr.New(nil, mux, dec, enc, eh)
+		sommelierServer = sommeliersvr.New(sommelierEndpoints, mux, dec, enc, eh, nil)
+		storageServer = storagesvr.New(storageEndpoints, mux, dec, enc, eh, nil, cellar.StorageMultiAddDecoderFunc, cellar.StorageMultiUpdateDecoderFunc)
+		swaggerServer = swaggersvr.New(nil, mux, dec, enc, eh, nil)
 	}
 	// Configure the mux.
 	sommeliersvr.Mount(mux, sommelierServer)

@@ -53,7 +53,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, textEndpoints *text.Endpo
 	)
 	{
 		eh := errorHandler(logger)
-		textServer = textsvr.New(textEndpoints, mux, dec, enc, eh)
+		textServer = textsvr.New(textEndpoints, mux, dec, enc, eh, nil)
 	}
 	// Configure the mux.
 	textsvr.Mount(mux, textServer)

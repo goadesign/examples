@@ -53,7 +53,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, securedServiceEndpoints *
 	)
 	{
 		eh := errorHandler(logger)
-		securedServiceServer = securedservicesvr.New(securedServiceEndpoints, mux, dec, enc, eh)
+		securedServiceServer = securedservicesvr.New(securedServiceEndpoints, mux, dec, enc, eh, nil)
 	}
 	// Configure the mux.
 	securedservicesvr.Mount(mux, securedServiceServer)
