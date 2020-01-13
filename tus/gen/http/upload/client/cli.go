@@ -82,7 +82,7 @@ func BuildPatchPayload(uploadPatchBody string, uploadPatchID string, uploadPatch
 	res := &upload.PatchPayload{
 		Content: v,
 	}
-	res.ID = &id
+	res.ID = id
 	res.TusResumable = tusResumable
 	res.UploadOffset = uploadOffset
 	res.UploadChecksum = uploadChecksum

@@ -19,6 +19,8 @@ func main() {
 	// Define command line flags, add any other flag required to configure the
 	// service.
 	var (
+		uploadDir = flag.String("dir", ".", "Upload target directory")
+		maxSize   = flag.Uint("max-size", 1024*1024*20, "Maximum allowed upload size in bytes")
 		hostF     = flag.String("host", "development", "Server host (valid values: development)")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
@@ -40,7 +42,7 @@ func main() {
 		uploadSvc upload.Service
 	)
 	{
-		uploadSvc = tusupload.NewUpload(logger)
+		uploadSvc = tusupload.NewUpload(*uploadDir, *maxSize, logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

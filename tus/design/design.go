@@ -23,9 +23,14 @@ var _ = API("tus upload", func() {
 var _ = Service("upload", func() {
 	Description("The upload service exposes the methods required to implement the tus protocol")
 
+	Error("InvalidTusResumable", func() {
+		Description("If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status")
+	})
+
 	HTTP(func() {
 		// Base path for all HTTP methods.
 		Path("/files")
+		Response("InvalidTusResumable", StatusPreconditionFailed)
 	})
 
 	Method("head", func() {
@@ -39,9 +44,10 @@ var _ = Service("upload", func() {
 		})
 
 		Result(func() {
-			Reference(TUSCoreHeaders)
+			Reference(TUSCoreResponseHeaders)
 			Reference(TUSExtensionHeaders)
 			Attribute("tusResumable")
+			Attribute("tusVersion")
 			Attribute("uploadOffset")
 			Attribute("uploadLength")
 			Attribute("uploadDeferLength")
@@ -55,6 +61,7 @@ var _ = Service("upload", func() {
 			Header("uploadOffset")
 			Response(StatusOK, func() {
 				Header("tusResumable")
+				Header("tusVersion")
 				Header("uploadOffset")
 				Header("uploadLength")
 				Header("uploadDeferLength")
@@ -73,13 +80,14 @@ var _ = Service("upload", func() {
 			Attribute("uploadOffset")
 			Attribute("uploadChecksum")
 			Attribute("content", Bytes, "Initial upload content")
-			Required("tusResumable", "uploadOffset", "content")
+			Required("id", "tusResumable", "uploadOffset", "content")
 		})
 
 		Result(func() {
-			Reference(TUSCoreHeaders)
+			Reference(TUSCoreResponseHeaders)
 			Reference(TUSExtensionHeaders)
 			Attribute("tusResumable")
+			Attribute("tusVersion")
 			Attribute("uploadOffset")
 			Attribute("uploadExpires")
 			Required("tusResumable", "uploadOffset")
@@ -109,6 +117,7 @@ var _ = Service("upload", func() {
 			Body("content")
 			Response(StatusNoContent, func() {
 				Header("tusResumable")
+				Header("tusVersion")
 				Header("uploadOffset")
 				Header("uploadExpires")
 			})
@@ -163,6 +172,7 @@ var _ = Service("upload", func() {
 			Reference(TUSCoreResponseHeaders)
 			Reference(TUSExtensionHeaders)
 			Attribute("tusResumable")
+			Attribute("tusVersion")
 			Attribute("uploadOffset")
 			Attribute("uploadExpires")
 			Attribute("location", String, "URL of created resource", func() {
@@ -195,6 +205,7 @@ var _ = Service("upload", func() {
 			Response(StatusCreated, func() {
 				Header("location")
 				Header("tusResumable")
+				Header("tusVersion")
 				Header("uploadOffset")
 				Header("uploadExpires")
 			})
@@ -216,8 +227,9 @@ var _ = Service("upload", func() {
 		})
 
 		Result(func() {
-			Reference(TUSCoreHeaders)
+			Reference(TUSCoreResponseHeaders)
 			Attribute("tusResumable")
+			Attribute("tusVersion")
 			Required("tusResumable")
 		})
 
@@ -230,6 +242,7 @@ var _ = Service("upload", func() {
 			Header("tusResumable")
 			Response(StatusNoContent, func() {
 				Header("tusResumable")
+				Header("tusVersion")
 			})
 			Response("NotFound", StatusNotFound)
 		})

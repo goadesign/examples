@@ -53,9 +53,14 @@ func EncodeHeadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 		if !ok {
 			return goahttp.ErrInvalidType("upload", "head", "*upload.HeadPayload", v)
 		}
-		req.Header.Set("tusResumable", p.TusResumable)
+		{
+			head := p.TusResumable
+			req.Header.Set("tusResumable", head)
+		}
 		if p.UploadOffset != nil {
-			req.Header.Set("uploadOffset", *p.UploadOffset)
+			head := *p.UploadOffset
+			headStr := strconv.FormatUint(uint64(head), 10)
+			req.Header.Set("uploadOffset", headStr)
 		}
 		return nil
 	}
@@ -64,6 +69,9 @@ func EncodeHeadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 // DecodeHeadResponse returns a decoder for responses returned by the upload
 // head endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
+// DecodeHeadResponse may return the following errors:
+//	- "InvalidTusResumable" (type *goa.ServiceError): http.StatusPreconditionFailed
+//	- error: internal error
 func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -82,6 +90,7 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 		case http.StatusOK:
 			var (
 				tusResumable      string
+				tusVersion        *string
 				uploadOffset      uint
 				uploadLength      *uint
 				uploadDeferLength *int
@@ -94,6 +103,15 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
+			tusVersionRaw := resp.Header.Get("Tusversion")
+			if tusVersionRaw != "" {
+				tusVersion = &tusVersionRaw
+			}
+			if tusVersion != nil {
+				if !(*tusVersion == "1.0.0") {
+					err = goa.MergeErrors(err, goa.InvalidEnumValueError("tusVersion", *tusVersion, []interface{}{"1.0.0"}))
+				}
+			}
 			{
 				uploadOffsetRaw := resp.Header.Get("Uploadoffset")
 				if uploadOffsetRaw == "" {
@@ -139,8 +157,22 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			if err != nil {
 				return nil, goahttp.ErrValidationError("upload", "head", err)
 			}
-			res := NewHeadResultOK(tusResumable, uploadOffset, uploadLength, uploadDeferLength, uploadMetadata)
+			res := NewHeadResultOK(tusResumable, tusVersion, uploadOffset, uploadLength, uploadDeferLength, uploadMetadata)
 			return res, nil
+		case http.StatusPreconditionFailed:
+			var (
+				body HeadInvalidTusResumableResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("upload", "head", err)
+			}
+			err = ValidateHeadInvalidTusResumableResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("upload", "head", err)
+			}
+			return nil, NewHeadInvalidTusResumable(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("upload", "head", resp.StatusCode, string(body))
@@ -159,9 +191,7 @@ func (c *Client) BuildPatchRequest(ctx context.Context, v interface{}) (*http.Re
 		if !ok {
 			return nil, goahttp.ErrInvalidType("upload", "patch", "*upload.PatchPayload", v)
 		}
-		if p.ID != nil {
-			id = *p.ID
-		}
+		id = p.ID
 	}
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: PatchUploadPath(id)}
 	req, err := http.NewRequest("PATCH", u.String(), nil)
@@ -183,10 +213,18 @@ func EncodePatchRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 		if !ok {
 			return goahttp.ErrInvalidType("upload", "patch", "*upload.PatchPayload", v)
 		}
-		req.Header.Set("tusResumable", p.TusResumable)
-		req.Header.Set("uploadOffset", p.UploadOffset)
+		{
+			head := p.TusResumable
+			req.Header.Set("tusResumable", head)
+		}
+		{
+			head := p.UploadOffset
+			headStr := strconv.FormatUint(uint64(head), 10)
+			req.Header.Set("uploadOffset", headStr)
+		}
 		if p.UploadChecksum != nil {
-			req.Header.Set("uploadChecksum", *p.UploadChecksum)
+			head := *p.UploadChecksum
+			req.Header.Set("uploadChecksum", head)
 		}
 		body := p
 		if err := encoder(req).Encode(&body); err != nil {
@@ -205,6 +243,7 @@ func EncodePatchRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 //	- "NotFound" (type *goa.ServiceError): http.StatusNotFound
 //	- "InvalidChecksumAlgorithm" (type *goa.ServiceError): http.StatusBadRequest
 //	- "ChecksumMismatch" (type *goa.ServiceError): 460
+//	- "InvalidTusResumable" (type *goa.ServiceError): http.StatusPreconditionFailed
 //	- error: internal error
 func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -224,6 +263,7 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 		case http.StatusNoContent:
 			var (
 				tusResumable  string
+				tusVersion    *string
 				uploadOffset  uint
 				uploadExpires *string
 				err           error
@@ -234,6 +274,15 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
+			tusVersionRaw := resp.Header.Get("Tusversion")
+			if tusVersionRaw != "" {
+				tusVersion = &tusVersionRaw
+			}
+			if tusVersion != nil {
+				if !(*tusVersion == "1.0.0") {
+					err = goa.MergeErrors(err, goa.InvalidEnumValueError("tusVersion", *tusVersion, []interface{}{"1.0.0"}))
+				}
+			}
 			{
 				uploadOffsetRaw := resp.Header.Get("Uploadoffset")
 				if uploadOffsetRaw == "" {
@@ -252,7 +301,7 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			if err != nil {
 				return nil, goahttp.ErrValidationError("upload", "patch", err)
 			}
-			res := NewPatchResultNoContent(tusResumable, uploadOffset, uploadExpires)
+			res := NewPatchResultNoContent(tusResumable, tusVersion, uploadOffset, uploadExpires)
 			return res, nil
 		case http.StatusUnsupportedMediaType:
 			var (
@@ -324,6 +373,20 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 				return nil, goahttp.ErrValidationError("upload", "patch", err)
 			}
 			return nil, NewPatchChecksumMismatch(&body)
+		case http.StatusPreconditionFailed:
+			var (
+				body PatchInvalidTusResumableResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("upload", "patch", err)
+			}
+			err = ValidatePatchInvalidTusResumableResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("upload", "patch", err)
+			}
+			return nil, NewPatchInvalidTusResumable(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("upload", "patch", resp.StatusCode, string(body))
@@ -349,6 +412,9 @@ func (c *Client) BuildOptionsRequest(ctx context.Context, v interface{}) (*http.
 // DecodeOptionsResponse returns a decoder for responses returned by the upload
 // options endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
+// DecodeOptionsResponse may return the following errors:
+//	- "InvalidTusResumable" (type *goa.ServiceError): http.StatusPreconditionFailed
+//	- error: internal error
 func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -378,6 +444,7 @@ func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restore
 				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
 			}
 			tusResumable = tusResumableRaw
+			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 			tusVersionRaw := resp.Header.Get("Tusversion")
 			if tusVersionRaw == "" {
 				err = goa.MergeErrors(err, goa.MissingFieldError("tusVersion", "header"))
@@ -418,6 +485,20 @@ func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			}
 			res := NewOptionsResultNoContent(tusResumable, tusVersion, tusExtension, tusMaxSize, tusChecksumAlgorithm)
 			return res, nil
+		case http.StatusPreconditionFailed:
+			var (
+				body OptionsInvalidTusResumableResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("upload", "options", err)
+			}
+			err = ValidateOptionsInvalidTusResumableResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("upload", "options", err)
+			}
+			return nil, NewOptionsInvalidTusResumable(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("upload", "options", resp.StatusCode, string(body))
@@ -448,15 +529,23 @@ func EncodePostRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 		if !ok {
 			return goahttp.ErrInvalidType("upload", "post", "*upload.PostPayload", v)
 		}
-		req.Header.Set("tusResumable", p.TusResumable)
+		{
+			head := p.TusResumable
+			req.Header.Set("tusResumable", head)
+		}
 		if p.UploadDeferLength != nil {
-			req.Header.Set("uploadDeferLength", *p.UploadDeferLength)
+			head := *p.UploadDeferLength
+			headStr := strconv.Itoa(head)
+			req.Header.Set("uploadDeferLength", headStr)
 		}
 		if p.UploadChecksum != nil {
-			req.Header.Set("uploadChecksum", *p.UploadChecksum)
+			head := *p.UploadChecksum
+			req.Header.Set("uploadChecksum", head)
 		}
 		if p.TusMaxSize != nil {
-			req.Header.Set("tusMaxSize", *p.TusMaxSize)
+			head := *p.TusMaxSize
+			headStr := strconv.FormatUint(uint64(head), 10)
+			req.Header.Set("tusMaxSize", headStr)
 		}
 		body := p
 		if err := encoder(req).Encode(&body); err != nil {
@@ -474,6 +563,7 @@ func EncodePostRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 //	- "InvalidChecksumAlgorithm" (type *goa.ServiceError): http.StatusBadRequest
 //	- "MaximumSizeExceeded" (type *goa.ServiceError): http.StatusRequestEntityTooLarge
 //	- "ChecksumMismatch" (type *goa.ServiceError): 460
+//	- "InvalidTusResumable" (type *goa.ServiceError): http.StatusPreconditionFailed
 //	- error: internal error
 func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -494,7 +584,8 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			var (
 				location      string
 				tusResumable  string
-				uploadOffset  string
+				tusVersion    *string
+				uploadOffset  uint
 				uploadExpires *string
 				err           error
 			)
@@ -510,11 +601,27 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
 			}
 			tusResumable = tusResumableRaw
-			uploadOffsetRaw := resp.Header.Get("Uploadoffset")
-			if uploadOffsetRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("uploadOffset", "header"))
+			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
+			tusVersionRaw := resp.Header.Get("Tusversion")
+			if tusVersionRaw != "" {
+				tusVersion = &tusVersionRaw
 			}
-			uploadOffset = uploadOffsetRaw
+			if tusVersion != nil {
+				if !(*tusVersion == "1.0.0") {
+					err = goa.MergeErrors(err, goa.InvalidEnumValueError("tusVersion", *tusVersion, []interface{}{"1.0.0"}))
+				}
+			}
+			{
+				uploadOffsetRaw := resp.Header.Get("Uploadoffset")
+				if uploadOffsetRaw == "" {
+					return nil, goahttp.ErrValidationError("upload", "post", goa.MissingFieldError("uploadOffset", "header"))
+				}
+				v, err2 := strconv.ParseUint(uploadOffsetRaw, 10, strconv.IntSize)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("uploadOffset", uploadOffsetRaw, "unsigned integer"))
+				}
+				uploadOffset = uint(v)
+			}
 			uploadExpiresRaw := resp.Header.Get("Uploadexpires")
 			if uploadExpiresRaw != "" {
 				uploadExpires = &uploadExpiresRaw
@@ -522,7 +629,7 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			if err != nil {
 				return nil, goahttp.ErrValidationError("upload", "post", err)
 			}
-			res := NewPostResultCreated(location, tusResumable, uploadOffset, uploadExpires)
+			res := NewPostResultCreated(location, tusResumable, tusVersion, uploadOffset, uploadExpires)
 			return res, nil
 		case http.StatusBadRequest:
 			en := resp.Header.Get("goa-error")
@@ -587,6 +694,20 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				return nil, goahttp.ErrValidationError("upload", "post", err)
 			}
 			return nil, NewPostChecksumMismatch(&body)
+		case http.StatusPreconditionFailed:
+			var (
+				body PostInvalidTusResumableResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("upload", "post", err)
+			}
+			err = ValidatePostInvalidTusResumableResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("upload", "post", err)
+			}
+			return nil, NewPostInvalidTusResumable(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("upload", "post", resp.StatusCode, string(body))
@@ -627,7 +748,10 @@ func EncodeDeleteRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 		if !ok {
 			return goahttp.ErrInvalidType("upload", "delete", "*upload.DeletePayload", v)
 		}
-		req.Header.Set("tusResumable", p.TusResumable)
+		{
+			head := p.TusResumable
+			req.Header.Set("tusResumable", head)
+		}
 		return nil
 	}
 }
@@ -637,6 +761,7 @@ func EncodeDeleteRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 // restored after having been read.
 // DecodeDeleteResponse may return the following errors:
 //	- "NotFound" (type *goa.ServiceError): http.StatusNotFound
+//	- "InvalidTusResumable" (type *goa.ServiceError): http.StatusPreconditionFailed
 //	- error: internal error
 func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -656,6 +781,7 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 		case http.StatusNoContent:
 			var (
 				tusResumable string
+				tusVersion   *string
 				err          error
 			)
 			tusResumableRaw := resp.Header.Get("Tusresumable")
@@ -664,10 +790,19 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
+			tusVersionRaw := resp.Header.Get("Tusversion")
+			if tusVersionRaw != "" {
+				tusVersion = &tusVersionRaw
+			}
+			if tusVersion != nil {
+				if !(*tusVersion == "1.0.0") {
+					err = goa.MergeErrors(err, goa.InvalidEnumValueError("tusVersion", *tusVersion, []interface{}{"1.0.0"}))
+				}
+			}
 			if err != nil {
 				return nil, goahttp.ErrValidationError("upload", "delete", err)
 			}
-			res := NewDeleteResultNoContent(tusResumable)
+			res := NewDeleteResultNoContent(tusResumable, tusVersion)
 			return res, nil
 		case http.StatusNotFound:
 			var (
@@ -683,6 +818,20 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 				return nil, goahttp.ErrValidationError("upload", "delete", err)
 			}
 			return nil, NewDeleteNotFound(&body)
+		case http.StatusPreconditionFailed:
+			var (
+				body DeleteInvalidTusResumableResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("upload", "delete", err)
+			}
+			err = ValidateDeleteInvalidTusResumableResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("upload", "delete", err)
+			}
+			return nil, NewDeleteInvalidTusResumable(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("upload", "delete", resp.StatusCode, string(body))
