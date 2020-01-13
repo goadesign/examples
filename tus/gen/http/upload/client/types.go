@@ -12,6 +12,24 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
+// HeadInvalidTusResumableResponseBody is the type of the "upload" service
+// "head" endpoint HTTP response body for the "InvalidTusResumable" error.
+type HeadInvalidTusResumableResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // PatchInvalidContentTypeResponseBody is the type of the "upload" service
 // "patch" endpoint HTTP response body for the "InvalidContentType" error.
 type PatchInvalidContentTypeResponseBody struct {
@@ -103,6 +121,42 @@ type PatchChecksumMismatchResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// PatchInvalidTusResumableResponseBody is the type of the "upload" service
+// "patch" endpoint HTTP response body for the "InvalidTusResumable" error.
+type PatchInvalidTusResumableResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// OptionsInvalidTusResumableResponseBody is the type of the "upload" service
+// "options" endpoint HTTP response body for the "InvalidTusResumable" error.
+type OptionsInvalidTusResumableResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // PostInvalidDeferLengthResponseBody is the type of the "upload" service
 // "post" endpoint HTTP response body for the "InvalidDeferLength" error.
 type PostInvalidDeferLengthResponseBody struct {
@@ -175,6 +229,24 @@ type PostChecksumMismatchResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// PostInvalidTusResumableResponseBody is the type of the "upload" service
+// "post" endpoint HTTP response body for the "InvalidTusResumable" error.
+type PostInvalidTusResumableResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // DeleteNotFoundResponseBody is the type of the "upload" service "delete"
 // endpoint HTTP response body for the "NotFound" error.
 type DeleteNotFoundResponseBody struct {
@@ -193,11 +265,30 @@ type DeleteNotFoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// DeleteInvalidTusResumableResponseBody is the type of the "upload" service
+// "delete" endpoint HTTP response body for the "InvalidTusResumable" error.
+type DeleteInvalidTusResumableResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // NewHeadResultOK builds a "upload" service "head" endpoint result from a HTTP
 // "OK" response.
-func NewHeadResultOK(tusResumable string, uploadOffset uint, uploadLength *uint, uploadDeferLength *int, uploadMetadata *string) *upload.HeadResult {
+func NewHeadResultOK(tusResumable string, tusVersion *string, uploadOffset uint, uploadLength *uint, uploadDeferLength *int, uploadMetadata *string) *upload.HeadResult {
 	return &upload.HeadResult{
 		TusResumable:      tusResumable,
+		TusVersion:        tusVersion,
 		UploadOffset:      uploadOffset,
 		UploadLength:      uploadLength,
 		UploadDeferLength: uploadDeferLength,
@@ -205,11 +296,26 @@ func NewHeadResultOK(tusResumable string, uploadOffset uint, uploadLength *uint,
 	}
 }
 
+// NewHeadInvalidTusResumable builds a upload service head endpoint
+// InvalidTusResumable error.
+func NewHeadInvalidTusResumable(body *HeadInvalidTusResumableResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+	return v
+}
+
 // NewPatchResultNoContent builds a "upload" service "patch" endpoint result
 // from a HTTP "NoContent" response.
-func NewPatchResultNoContent(tusResumable string, uploadOffset uint, uploadExpires *string) *upload.PatchResult {
+func NewPatchResultNoContent(tusResumable string, tusVersion *string, uploadOffset uint, uploadExpires *string) *upload.PatchResult {
 	return &upload.PatchResult{
 		TusResumable:  tusResumable,
+		TusVersion:    tusVersion,
 		UploadOffset:  uploadOffset,
 		UploadExpires: uploadExpires,
 	}
@@ -284,6 +390,20 @@ func NewPatchChecksumMismatch(body *PatchChecksumMismatchResponseBody) *goa.Serv
 	return v
 }
 
+// NewPatchInvalidTusResumable builds a upload service patch endpoint
+// InvalidTusResumable error.
+func NewPatchInvalidTusResumable(body *PatchInvalidTusResumableResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+	return v
+}
+
 // NewOptionsResultNoContent builds a "upload" service "options" endpoint
 // result from a HTTP "NoContent" response.
 func NewOptionsResultNoContent(tusResumable string, tusVersion string, tusExtension string, tusMaxSize *uint, tusChecksumAlgorithm string) *upload.OptionsResult {
@@ -296,12 +416,27 @@ func NewOptionsResultNoContent(tusResumable string, tusVersion string, tusExtens
 	}
 }
 
+// NewOptionsInvalidTusResumable builds a upload service options endpoint
+// InvalidTusResumable error.
+func NewOptionsInvalidTusResumable(body *OptionsInvalidTusResumableResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+	return v
+}
+
 // NewPostResultCreated builds a "upload" service "post" endpoint result from a
 // HTTP "Created" response.
-func NewPostResultCreated(location string, tusResumable string, uploadOffset string, uploadExpires *string) *upload.PostResult {
+func NewPostResultCreated(location string, tusResumable string, tusVersion *string, uploadOffset uint, uploadExpires *string) *upload.PostResult {
 	return &upload.PostResult{
 		Location:      location,
 		TusResumable:  tusResumable,
+		TusVersion:    tusVersion,
 		UploadOffset:  uploadOffset,
 		UploadExpires: uploadExpires,
 	}
@@ -363,11 +498,26 @@ func NewPostChecksumMismatch(body *PostChecksumMismatchResponseBody) *goa.Servic
 	return v
 }
 
+// NewPostInvalidTusResumable builds a upload service post endpoint
+// InvalidTusResumable error.
+func NewPostInvalidTusResumable(body *PostInvalidTusResumableResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+	return v
+}
+
 // NewDeleteResultNoContent builds a "upload" service "delete" endpoint result
 // from a HTTP "NoContent" response.
-func NewDeleteResultNoContent(tusResumable string) *upload.DeleteResult {
+func NewDeleteResultNoContent(tusResumable string, tusVersion *string) *upload.DeleteResult {
 	return &upload.DeleteResult{
 		TusResumable: tusResumable,
+		TusVersion:   tusVersion,
 	}
 }
 
@@ -382,6 +532,44 @@ func NewDeleteNotFound(body *DeleteNotFoundResponseBody) *goa.ServiceError {
 		Fault:     *body.Fault,
 	}
 	return v
+}
+
+// NewDeleteInvalidTusResumable builds a upload service delete endpoint
+// InvalidTusResumable error.
+func NewDeleteInvalidTusResumable(body *DeleteInvalidTusResumableResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+	return v
+}
+
+// ValidateHeadInvalidTusResumableResponseBody runs the validations defined on
+// head_InvalidTusResumable_response_body
+func ValidateHeadInvalidTusResumableResponseBody(body *HeadInvalidTusResumableResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
 }
 
 // ValidatePatchInvalidContentTypeResponseBody runs the validations defined on
@@ -504,6 +692,54 @@ func ValidatePatchChecksumMismatchResponseBody(body *PatchChecksumMismatchRespon
 	return
 }
 
+// ValidatePatchInvalidTusResumableResponseBody runs the validations defined on
+// patch_InvalidTusResumable_response_body
+func ValidatePatchInvalidTusResumableResponseBody(body *PatchInvalidTusResumableResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateOptionsInvalidTusResumableResponseBody runs the validations defined
+// on options_InvalidTusResumable_response_body
+func ValidateOptionsInvalidTusResumableResponseBody(body *OptionsInvalidTusResumableResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
 // ValidatePostInvalidDeferLengthResponseBody runs the validations defined on
 // post_InvalidDeferLength_response_body
 func ValidatePostInvalidDeferLengthResponseBody(body *PostInvalidDeferLengthResponseBody) (err error) {
@@ -600,9 +836,57 @@ func ValidatePostChecksumMismatchResponseBody(body *PostChecksumMismatchResponse
 	return
 }
 
+// ValidatePostInvalidTusResumableResponseBody runs the validations defined on
+// post_InvalidTusResumable_response_body
+func ValidatePostInvalidTusResumableResponseBody(body *PostInvalidTusResumableResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
 // ValidateDeleteNotFoundResponseBody runs the validations defined on
 // delete_NotFound_response_body
 func ValidateDeleteNotFoundResponseBody(body *DeleteNotFoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateDeleteInvalidTusResumableResponseBody runs the validations defined
+// on delete_InvalidTusResumable_response_body
+func ValidateDeleteInvalidTusResumableResponseBody(body *DeleteInvalidTusResumableResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

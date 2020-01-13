@@ -29,7 +29,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` upload head --id "666dfedc1646ac7a507aa76ebaa109b8" --tus-resumable "1.0.0" --upload-offset 3215157341924155124` + "\n" +
+	return os.Args[0] + ` upload head --id "666dfedc1646ac7a507aa76ebaa109b8" --tus-resumable "1.0.0" --upload-offset 14668360370687589685` + "\n" +
 		""
 }
 
@@ -202,7 +202,7 @@ Clients use the HEAD request to determine the offset at which the upload should 
     -upload-offset UINT: 
 
 Example:
-    `+os.Args[0]+` upload head --id "666dfedc1646ac7a507aa76ebaa109b8" --tus-resumable "1.0.0" --upload-offset 3215157341924155124
+    `+os.Args[0]+` upload head --id "666dfedc1646ac7a507aa76ebaa109b8" --tus-resumable "1.0.0" --upload-offset 14668360370687589685
 `, os.Args[0])
 }
 
@@ -217,7 +217,7 @@ Clients use the PATCH method to start or resume an upload.
     -upload-checksum STRING: 
 
 Example:
-    `+os.Args[0]+` upload patch --body "RW9zIHZlbC4=" --id "844e3408e54c83d5b8e764c0c7ca3d11" --tus-resumable "1.0.0" --upload-offset 544471010116121267 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0="
+    `+os.Args[0]+` upload patch --body "RXQgaW1wZWRpdCB2aXRhZSBuaWhpbC4=" --id "844e3408e54c83d5b8e764c0c7ca3d11" --tus-resumable "1.0.0" --upload-offset 17132572726449409173 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0="
 `, os.Args[0])
 }
 
@@ -242,7 +242,7 @@ Clients use the POST method against a known upload creation URL to request a new
     -tus-max-size UINT: 
 
 Example:
-    `+os.Args[0]+` upload post --body "RWEgZXQgY29ycG9yaXMgdm9sdXB0YXRlbSBwb3Jyby4=" --tus-resumable "1.0.0" --upload-defer-length 1 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --tus-max-size 1572911323508702288
+    `+os.Args[0]+` upload post --body "QXV0IGNvcnJ1cHRpIHJlcHJlaGVuZGVyaXQgZG9sb3JpYnVzIGRlYml0aXMgZG9sb3JlcyB0ZW1wb3JpYnVzLg==" --tus-resumable "1.0.0" --upload-defer-length 1 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --tus-max-size 5390496776787623334
 `, os.Args[0])
 }
 

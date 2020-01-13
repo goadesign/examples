@@ -2,6 +2,7 @@ package tusupload
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	upload "goa.design/examples/tus/gen/upload"
@@ -10,28 +11,37 @@ import (
 // upload service example implementation.
 // The example methods log the requests and return zero values.
 type uploadsrvc struct {
-	maxSize uint
-	logger  *log.Logger
+	uploadDir string
+	maxSize   uint
+	logger    *log.Logger
 }
 
-// TusResumable is the version of tus implemented by this service.
-const TusResumable = "1.0.0"
-
 // NewUpload returns the upload service implementation.
-func NewUpload(maxSize uint, logger *log.Logger) upload.Service {
-	return &uploadsrvc{maxSize, logger}
+func NewUpload(uploadDir string, maxSize uint, logger *log.Logger) upload.Service {
+	return &uploadsrvc{uploadDir, maxSize, logger}
 }
 
 // Clients use the HEAD request to determine the offset at which the upload
 // should be continued.
-func (s *uploadsrvc) Head(ctx context.Context, p *upload.HeadPayload) (res *upload.HeadResult, err error) {
-	res = &upload.HeadResult{}
-	s.logger.Print("upload.head")
-	return
+func (s *uploadsrvc) Head(ctx context.Context, p *upload.HeadPayload) (*upload.HeadResult, error) {
+	up, ok := activeUploads[p.ID]
+	if !ok {
+		return nil, upload.MakeNotFound(fmt.Errorf("no ongoing upload with id %q", p.ID))
+	}
+	return &upload.HeadResult{
+		UploadOffset:      up.offset,
+		UploadLength:      up.length,
+		UploadDeferLength: up.deferLength,
+		UploadMetadata:    up.metadata,
+	}, nil
 }
 
 // Clients use the PATCH method to start or resume an upload.
 func (s *uploadsrvc) Patch(ctx context.Context, p *upload.PatchPayload) (res *upload.PatchResult, err error) {
+	up, ok := activeUploads[p.ID]
+	if !ok {
+		return nil, upload.MakeNotFound(fmt.Errorf("no ongoing upload with id %q", p.ID))
+	}
 	res = &upload.PatchResult{}
 	s.logger.Print("upload.patch")
 	return
@@ -41,7 +51,6 @@ func (s *uploadsrvc) Patch(ctx context.Context, p *upload.PatchPayload) (res *up
 // current configuration.
 func (s *uploadsrvc) Options(ctx context.Context) (res *upload.OptionsResult, err error) {
 	res = &upload.OptionsResult{
-		TusResumable:         TusResumable,
 		TusVersion:           []string{"1.0.0"},
 		TusExtension:         "creation,creation-with-upload,creation-defer-length,expiration,checksum,termination",
 		TusChecksumAlgorithm: "sha1,md5,crc32",

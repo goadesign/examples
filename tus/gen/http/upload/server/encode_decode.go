@@ -24,6 +24,9 @@ func EncodeHeadResponse(encoder func(context.Context, http.ResponseWriter) goaht
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*upload.HeadResult)
 		w.Header().Set("Tusresumable", res.TusResumable)
+		if res.TusVersion != nil {
+			w.Header().Set("Tusversion", *res.TusVersion)
+		}
 		val := res.UploadOffset
 		uploadOffsets := strconv.FormatUint(uint64(val), 10)
 		w.Header().Set("Uploadoffset", uploadOffsets)
@@ -84,12 +87,43 @@ func DecodeHeadRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.De
 	}
 }
 
+// EncodeHeadError returns an encoder for errors returned by the head upload
+// endpoint.
+func EncodeHeadError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "InvalidTusResumable":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewHeadInvalidTusResumableResponseBody(res)
+			}
+			w.Header().Set("goa-error", "InvalidTusResumable")
+			w.WriteHeader(http.StatusPreconditionFailed)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodePatchResponse returns an encoder for responses returned by the upload
 // patch endpoint.
 func EncodePatchResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*upload.PatchResult)
 		w.Header().Set("Tusresumable", res.TusResumable)
+		if res.TusVersion != nil {
+			w.Header().Set("Tusversion", *res.TusVersion)
+		}
 		val := res.UploadOffset
 		uploadOffsets := strconv.FormatUint(uint64(val), 10)
 		w.Header().Set("Uploadoffset", uploadOffsets)
@@ -226,6 +260,18 @@ func EncodePatchError(encoder func(context.Context, http.ResponseWriter) goahttp
 			w.Header().Set("goa-error", "ChecksumMismatch")
 			w.WriteHeader(460)
 			return enc.Encode(body)
+		case "InvalidTusResumable":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewPatchInvalidTusResumableResponseBody(res)
+			}
+			w.Header().Set("goa-error", "InvalidTusResumable")
+			w.WriteHeader(http.StatusPreconditionFailed)
+			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
 		}
@@ -251,6 +297,34 @@ func EncodeOptionsResponse(encoder func(context.Context, http.ResponseWriter) go
 	}
 }
 
+// EncodeOptionsError returns an encoder for errors returned by the options
+// upload endpoint.
+func EncodeOptionsError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "InvalidTusResumable":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewOptionsInvalidTusResumableResponseBody(res)
+			}
+			w.Header().Set("goa-error", "InvalidTusResumable")
+			w.WriteHeader(http.StatusPreconditionFailed)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodePostResponse returns an encoder for responses returned by the upload
 // post endpoint.
 func EncodePostResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -258,7 +332,12 @@ func EncodePostResponse(encoder func(context.Context, http.ResponseWriter) goaht
 		res := v.(*upload.PostResult)
 		w.Header().Set("Location", res.Location)
 		w.Header().Set("Tusresumable", res.TusResumable)
-		w.Header().Set("Uploadoffset", res.UploadOffset)
+		if res.TusVersion != nil {
+			w.Header().Set("Tusversion", *res.TusVersion)
+		}
+		val := res.UploadOffset
+		uploadOffsets := strconv.FormatUint(uint64(val), 10)
+		w.Header().Set("Uploadoffset", uploadOffsets)
 		if res.UploadExpires != nil {
 			w.Header().Set("Uploadexpires", *res.UploadExpires)
 		}
@@ -392,6 +471,18 @@ func EncodePostError(encoder func(context.Context, http.ResponseWriter) goahttp.
 			w.Header().Set("goa-error", "ChecksumMismatch")
 			w.WriteHeader(460)
 			return enc.Encode(body)
+		case "InvalidTusResumable":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewPostInvalidTusResumableResponseBody(res)
+			}
+			w.Header().Set("goa-error", "InvalidTusResumable")
+			w.WriteHeader(http.StatusPreconditionFailed)
+			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
 		}
@@ -404,6 +495,9 @@ func EncodeDeleteResponse(encoder func(context.Context, http.ResponseWriter) goa
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*upload.DeleteResult)
 		w.Header().Set("Tusresumable", res.TusResumable)
+		if res.TusVersion != nil {
+			w.Header().Set("Tusversion", *res.TusVersion)
+		}
 		w.WriteHeader(http.StatusNoContent)
 		return nil
 	}
@@ -457,6 +551,18 @@ func EncodeDeleteError(encoder func(context.Context, http.ResponseWriter) goahtt
 			}
 			w.Header().Set("goa-error", "NotFound")
 			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "InvalidTusResumable":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewDeleteInvalidTusResumableResponseBody(res)
+			}
+			w.Header().Set("goa-error", "InvalidTusResumable")
+			w.WriteHeader(http.StatusPreconditionFailed)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)

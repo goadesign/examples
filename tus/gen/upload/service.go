@@ -55,6 +55,9 @@ type HeadPayload struct {
 type HeadResult struct {
 	// tusResumable represents a tus protocol version.
 	TusResumable string
+	// tusVersion is a comma separated list of protocol versions supported by the
+	// server. This implementation only supports 1.0.0.
+	TusVersion *string
 	// uploadOffset represents a byte offset within a resource.
 	UploadOffset uint
 	// uploadLength represents the size of the entire upload in bytes.
@@ -70,7 +73,7 @@ type HeadResult struct {
 // PatchPayload is the payload type of the upload service patch method.
 type PatchPayload struct {
 	// id is the unique upload identifier.
-	ID *string
+	ID string
 	// tusResumable represents a tus protocol version.
 	TusResumable string
 	// uploadOffset represents a byte offset within a resource.
@@ -87,6 +90,9 @@ type PatchPayload struct {
 type PatchResult struct {
 	// tusResumable represents a tus protocol version.
 	TusResumable string
+	// tusVersion is a comma separated list of protocol versions supported by the
+	// server. This implementation only supports 1.0.0.
+	TusVersion *string
 	// uploadOffset represents a byte offset within a resource.
 	UploadOffset uint
 	// The Upload-Expires response header indicates the time after which the
@@ -134,8 +140,11 @@ type PostPayload struct {
 type PostResult struct {
 	// tusResumable represents a tus protocol version.
 	TusResumable string
+	// tusVersion is a comma separated list of protocol versions supported by the
+	// server. This implementation only supports 1.0.0.
+	TusVersion *string
 	// uploadOffset represents a byte offset within a resource.
-	UploadOffset string
+	UploadOffset uint
 	// The Upload-Expires response header indicates the time after which the
 	// unfinished upload expires.
 	UploadExpires *string
@@ -155,6 +164,18 @@ type DeletePayload struct {
 type DeleteResult struct {
 	// tusResumable represents a tus protocol version.
 	TusResumable string
+	// tusVersion is a comma separated list of protocol versions supported by the
+	// server. This implementation only supports 1.0.0.
+	TusVersion *string
+}
+
+// MakeInvalidTusResumable builds a goa.ServiceError from an error.
+func MakeInvalidTusResumable(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "InvalidTusResumable",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
 }
 
 // MakeInvalidContentType builds a goa.ServiceError from an error.

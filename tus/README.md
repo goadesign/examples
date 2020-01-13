@@ -31,6 +31,7 @@ extensions:
 
 * `creation`
 * `creation-with-upload`
+* `creation-defer-length`
 * `expiration`
 * `checksum`
 * `termination`
