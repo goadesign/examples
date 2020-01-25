@@ -25,6 +25,7 @@ DEPEND=\
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
 	honnef.co/go/tools/cmd/staticcheck \
+	github.com/golang/protobuf/protoc-gen-go \
 	github.com/hashicorp/go-getter/cmd/go-getter
 
 .phony: all depend lint test build clean
