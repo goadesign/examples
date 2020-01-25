@@ -67,7 +67,7 @@ depend:
 	@cp $(PROTOC_EXEC) $(GOPATH)/bin && \
 		rm -r $(PROTOC) && \
 		echo "`protoc --version`"
-	@go get -v ./...
+	@go mod download
 
 lint:
 	@echo LINTING CODE...
