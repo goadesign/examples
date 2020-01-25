@@ -24,7 +24,10 @@ export GO111MODULE=on
 DEPEND=\
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
-	honnef.co/go/tools/cmd/staticcheck
+	github.com/golang/protobuf/protoc-gen-go \
+	github.com/golang/protobuf/proto \
+	honnef.co/go/tools/cmd/staticcheck \
+	github.com/hashicorp/go-getter/cmd/go-getter
 
 .phony: all depend lint test build clean
 
@@ -32,6 +35,13 @@ all: check-goa gen lint test
 	@echo DONE!
 
 travis: depend all check-freshness
+
+# Install protoc
+PROTOC_VERSION=3.6.1
+ifeq ($(GOOS),linux)
+PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
+PROTOC_EXEC=$(PROTOC)/bin/protoc
+endif
 
 check-goa:
 ifdef GOA
@@ -43,8 +53,14 @@ endif
 
 depend:
 	@echo INSTALLING DEPENDENCIES...
-	@env GO111MODULE=off go get -v $(DEPEND)
-	@go get -v ./...
+	@go mod download
+	@env go get -v $(DEPEND)
+	@echo installing protoc
+	go-getter https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip $(PROTOC)
+	@cp $(PROTOC_EXEC) $(GOPATH)/bin && \
+		rm -r $(PROTOC) && \
+		echo "`protoc --version`"
+	@echo done installing dependencies
 
 lint:
 	@echo LINTING CODE...
