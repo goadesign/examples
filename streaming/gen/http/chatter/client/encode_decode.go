@@ -126,7 +126,10 @@ func EncodeEchoerRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "echoer", "*chatter.EchoerPayload", v)
 		}
-		req.Header.Set("Authorization", p.Token)
+		{
+			head := p.Token
+			req.Header.Set("Authorization", head)
+		}
 		return nil
 	}
 }
@@ -220,7 +223,10 @@ func EncodeListenerRequest(encoder func(*http.Request) goahttp.Encoder) func(*ht
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "listener", "*chatter.ListenerPayload", v)
 		}
-		req.Header.Set("Authorization", p.Token)
+		{
+			head := p.Token
+			req.Header.Set("Authorization", head)
+		}
 		return nil
 	}
 }
@@ -306,7 +312,10 @@ func EncodeSummaryRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "summary", "*chatter.SummaryPayload", v)
 		}
-		req.Header.Set("Authorization", p.Token)
+		{
+			head := p.Token
+			req.Header.Set("Authorization", head)
+		}
 		return nil
 	}
 }
@@ -407,7 +416,10 @@ func EncodeSubscribeRequest(encoder func(*http.Request) goahttp.Encoder) func(*h
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "subscribe", "*chatter.SubscribePayload", v)
 		}
-		req.Header.Set("Authorization", p.Token)
+		{
+			head := p.Token
+			req.Header.Set("Authorization", head)
+		}
 		return nil
 	}
 }
@@ -506,7 +518,10 @@ func EncodeHistoryRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "history", "*chatter.HistoryPayload", v)
 		}
-		req.Header.Set("Authorization", p.Token)
+		{
+			head := p.Token
+			req.Header.Set("Authorization", head)
+		}
 		values := req.URL.Query()
 		if p.View != nil {
 			values.Add("view", *p.View)

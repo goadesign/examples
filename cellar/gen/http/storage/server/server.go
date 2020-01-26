@@ -55,13 +55,19 @@ type StorageMultiAddDecoderFunc func(*multipart.Reader, *[]*storage.Bottle) erro
 // the "storage" service "multi_update" endpoint.
 type StorageMultiUpdateDecoderFunc func(*multipart.Reader, **storage.MultiUpdatePayload) error
 
-// New instantiates HTTP handlers for all the storage service endpoints.
+// New instantiates HTTP handlers for all the storage service endpoints using
+// the provided encoder and decoder. The handlers are mounted on the given mux
+// using the HTTP verb and path defined in the design. errhandler is called
+// whenever a response fails to be encoded. formatter is used to format errors
+// returned by the service methods prior to encoding. Both errhandler and
+// formatter are optional and can be nil.
 func New(
 	e *storage.Endpoints,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 	storageMultiAddDecoderFn StorageMultiAddDecoderFunc,
 	storageMultiUpdateDecoderFn StorageMultiUpdateDecoderFunc,
 ) *Server {
@@ -75,13 +81,13 @@ func New(
 			{"MultiAdd", "POST", "/storage/multi_add"},
 			{"MultiUpdate", "PUT", "/storage/multi_update"},
 		},
-		List:        NewListHandler(e.List, mux, dec, enc, eh),
-		Show:        NewShowHandler(e.Show, mux, dec, enc, eh),
-		Add:         NewAddHandler(e.Add, mux, dec, enc, eh),
-		Remove:      NewRemoveHandler(e.Remove, mux, dec, enc, eh),
-		Rate:        NewRateHandler(e.Rate, mux, dec, enc, eh),
-		MultiAdd:    NewMultiAddHandler(e.MultiAdd, mux, NewStorageMultiAddDecoder(mux, storageMultiAddDecoderFn), enc, eh),
-		MultiUpdate: NewMultiUpdateHandler(e.MultiUpdate, mux, NewStorageMultiUpdateDecoder(mux, storageMultiUpdateDecoderFn), enc, eh),
+		List:        NewListHandler(e.List, mux, decoder, encoder, errhandler, formatter),
+		Show:        NewShowHandler(e.Show, mux, decoder, encoder, errhandler, formatter),
+		Add:         NewAddHandler(e.Add, mux, decoder, encoder, errhandler, formatter),
+		Remove:      NewRemoveHandler(e.Remove, mux, decoder, encoder, errhandler, formatter),
+		Rate:        NewRateHandler(e.Rate, mux, decoder, encoder, errhandler, formatter),
+		MultiAdd:    NewMultiAddHandler(e.MultiAdd, mux, NewStorageMultiAddDecoder(mux, storageMultiAddDecoderFn), encoder, errhandler, formatter),
+		MultiUpdate: NewMultiUpdateHandler(e.MultiUpdate, mux, NewStorageMultiUpdateDecoder(mux, storageMultiUpdateDecoderFn), encoder, errhandler, formatter),
 	}
 }
 
@@ -127,29 +133,31 @@ func MountListHandler(mux goahttp.Muxer, h http.Handler) {
 func NewListHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		encodeResponse = EncodeListResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		encodeResponse = EncodeListResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "list")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "storage")
+		var err error
 
 		res, err := endpoint(ctx, nil)
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -171,14 +179,15 @@ func MountShowHandler(mux goahttp.Muxer, h http.Handler) {
 func NewShowHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeShowRequest(mux, dec)
-		encodeResponse = EncodeShowResponse(enc)
-		encodeError    = EncodeShowError(enc)
+		decodeRequest  = DecodeShowRequest(mux, decoder)
+		encodeResponse = EncodeShowResponse(encoder)
+		encodeError    = EncodeShowError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -187,7 +196,7 @@ func NewShowHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -196,12 +205,12 @@ func NewShowHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -223,14 +232,15 @@ func MountAddHandler(mux goahttp.Muxer, h http.Handler) {
 func NewAddHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeAddRequest(mux, dec)
-		encodeResponse = EncodeAddResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		decodeRequest  = DecodeAddRequest(mux, decoder)
+		encodeResponse = EncodeAddResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -239,7 +249,7 @@ func NewAddHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -248,12 +258,12 @@ func NewAddHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -275,14 +285,15 @@ func MountRemoveHandler(mux goahttp.Muxer, h http.Handler) {
 func NewRemoveHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeRemoveRequest(mux, dec)
-		encodeResponse = EncodeRemoveResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		decodeRequest  = DecodeRemoveRequest(mux, decoder)
+		encodeResponse = EncodeRemoveResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -291,7 +302,7 @@ func NewRemoveHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -300,12 +311,12 @@ func NewRemoveHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -327,14 +338,15 @@ func MountRateHandler(mux goahttp.Muxer, h http.Handler) {
 func NewRateHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeRateRequest(mux, dec)
-		encodeResponse = EncodeRateResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		decodeRequest  = DecodeRateRequest(mux, decoder)
+		encodeResponse = EncodeRateResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -343,7 +355,7 @@ func NewRateHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -352,12 +364,12 @@ func NewRateHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -379,14 +391,15 @@ func MountMultiAddHandler(mux goahttp.Muxer, h http.Handler) {
 func NewMultiAddHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeMultiAddRequest(mux, dec)
-		encodeResponse = EncodeMultiAddResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		decodeRequest  = DecodeMultiAddRequest(mux, decoder)
+		encodeResponse = EncodeMultiAddResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -395,7 +408,7 @@ func NewMultiAddHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -404,12 +417,12 @@ func NewMultiAddHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -431,14 +444,15 @@ func MountMultiUpdateHandler(mux goahttp.Muxer, h http.Handler) {
 func NewMultiUpdateHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeMultiUpdateRequest(mux, dec)
-		encodeResponse = EncodeMultiUpdateResponse(enc)
-		encodeError    = goahttp.ErrorEncoder(enc)
+		decodeRequest  = DecodeMultiUpdateRequest(mux, decoder)
+		encodeResponse = EncodeMultiUpdateResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -447,7 +461,7 @@ func NewMultiUpdateHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -456,12 +470,12 @@ func NewMultiUpdateHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }

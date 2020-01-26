@@ -40,19 +40,25 @@ type MountPoint struct {
 	Pattern string
 }
 
-// New instantiates HTTP handlers for all the sommelier service endpoints.
+// New instantiates HTTP handlers for all the sommelier service endpoints using
+// the provided encoder and decoder. The handlers are mounted on the given mux
+// using the HTTP verb and path defined in the design. errhandler is called
+// whenever a response fails to be encoded. formatter is used to format errors
+// returned by the service methods prior to encoding. Both errhandler and
+// formatter are optional and can be nil.
 func New(
 	e *sommelier.Endpoints,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
 			{"Pick", "POST", "/sommelier"},
 		},
-		Pick: NewPickHandler(e.Pick, mux, dec, enc, eh),
+		Pick: NewPickHandler(e.Pick, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -86,14 +92,15 @@ func MountPickHandler(mux goahttp.Muxer, h http.Handler) {
 func NewPickHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
-	dec func(*http.Request) goahttp.Decoder,
-	enc func(context.Context, http.ResponseWriter) goahttp.Encoder,
-	eh func(context.Context, http.ResponseWriter, error),
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodePickRequest(mux, dec)
-		encodeResponse = EncodePickResponse(enc)
-		encodeError    = EncodePickError(enc)
+		decodeRequest  = DecodePickRequest(mux, decoder)
+		encodeResponse = EncodePickResponse(encoder)
+		encodeError    = EncodePickError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -102,7 +109,7 @@ func NewPickHandler(
 		payload, err := decodeRequest(r)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
@@ -111,12 +118,12 @@ func NewPickHandler(
 
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
-				eh(ctx, w, err)
+				errhandler(ctx, w, err)
 			}
 			return
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
-			eh(ctx, w, err)
+			errhandler(ctx, w, err)
 		}
 	})
 }
