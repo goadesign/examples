@@ -54,6 +54,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, securedServiceEndpoints *
 	{
 		eh := errorHandler(logger)
 		securedServiceServer = securedservicesvr.New(securedServiceEndpoints, mux, dec, enc, eh, nil)
+		if debug {
+			servers := goahttp.Servers{
+				securedServiceServer,
+			}
+			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
+		}
 	}
 	// Configure the mux.
 	securedservicesvr.Mount(mux, securedServiceServer)
@@ -62,9 +68,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, securedServiceEndpoints *
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
 	{
-		if debug {
-			handler = httpmdlwr.Debug(mux, os.Stdout)(handler)
-		}
 		handler = httpmdlwr.Log(adapter)(handler)
 		handler = httpmdlwr.RequestID()(handler)
 	}
