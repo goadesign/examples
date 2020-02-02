@@ -54,6 +54,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, dividerEndpoints *divider
 	{
 		eh := errorHandler(logger)
 		dividerServer = dividersvr.New(dividerEndpoints, mux, dec, enc, eh, nil)
+		if debug {
+			servers := goahttp.Servers{
+				dividerServer,
+			}
+			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
+		}
 	}
 	// Configure the mux.
 	dividersvr.Mount(mux, dividerServer)
@@ -62,9 +68,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, dividerEndpoints *divider
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
 	{
-		if debug {
-			handler = httpmdlwr.Debug(mux, os.Stdout)(handler)
-		}
 		handler = httpmdlwr.Log(adapter)(handler)
 		handler = httpmdlwr.RequestID()(handler)
 	}

@@ -9,8 +9,7 @@ require (
 	github.com/gorilla/websocket v1.4.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/sergi/go-diff v1.1.0 // indirect
-	goa.design/goa/v3 v3.0.9
+	goa.design/goa/v3 v3.0.10
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
 	golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9 // indirect
 	google.golang.org/genproto v0.0.0-20200122232147-0452cf42e150 // indirect

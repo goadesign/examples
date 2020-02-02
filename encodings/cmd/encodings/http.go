@@ -54,6 +54,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, textEndpoints *text.Endpo
 	{
 		eh := errorHandler(logger)
 		textServer = textsvr.New(textEndpoints, mux, dec, enc, eh, nil)
+		if debug {
+			servers := goahttp.Servers{
+				textServer,
+			}
+			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
+		}
 	}
 	// Configure the mux.
 	textsvr.Mount(mux, textServer)
@@ -62,9 +68,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, textEndpoints *text.Endpo
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
 	{
-		if debug {
-			handler = httpmdlwr.Debug(mux, os.Stdout)(handler)
-		}
 		handler = httpmdlwr.Log(adapter)(handler)
 		handler = httpmdlwr.RequestID()(handler)
 	}
