@@ -32,7 +32,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, resumeEndpoints *resume.E
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
 	// Other encodings can be used by providing the corresponding functions,
-	// see goa.design/encoding.
+	// see goa.design/implement/encoding.
 	var (
 		dec = goahttp.RequestDecoder
 		enc = goahttp.ResponseEncoder
@@ -54,7 +54,13 @@ func handleHTTPServer(ctx context.Context, u *url.URL, resumeEndpoints *resume.E
 	)
 	{
 		eh := errorHandler(logger)
-		resumeServer = resumesvr.New(resumeEndpoints, mux, dec, enc, eh, resumeapi.ResumeAddDecoderFunc)
+		resumeServer = resumesvr.New(resumeEndpoints, mux, dec, enc, eh, nil, resumeapi.ResumeAddDecoderFunc)
+		if debug {
+			servers := goahttp.Servers{
+				resumeServer,
+			}
+			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
+		}
 	}
 	// Configure the mux.
 	resumesvr.Mount(mux, resumeServer)
@@ -63,9 +69,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, resumeEndpoints *resume.E
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
 	{
-		if debug {
-			handler = httpmdlwr.Debug(mux, os.Stdout)(handler)
-		}
 		handler = httpmdlwr.Log(adapter)(handler)
 		handler = httpmdlwr.RequestID()(handler)
 	}
