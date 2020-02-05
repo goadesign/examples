@@ -1,0 +1,79 @@
+# Upload and Download
+
+This example illustrates how to implement upload and download of binary files
+using Goa. The example uses straight HTTP and shows how both server and client
+code can stream content without having to load the entire payload in memory.
+
+## Design
+
+The `upload` service exposes two methods: `upload` which allows clients to
+stream content to the server and `download` which does the opposite. The key DSL
+functions that enable the streaming are
+[StreamingPayload](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#StreamingPayload)
+and
+[StreamingResult](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#StreamingResult).
+The design also makes use of
+[NoWebSocket](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#NoWebSocket) to
+leverage straight HTTP instead of WebSockets (which are the default for the HTTP
+transport implementation of streaming).
+
+Here is the desing of the `upload` method:
+
+```go
+Method("upload", func() {
+	StreamingPayload(Bytes)
+	Result(String)
+	HTTP(func() {
+		POST("/")
+		NoWebSocket() // Use straight HTTP to stream
+	})
+})
+```
+
+and the design of the `download` method:
+
+```go
+Method("download", func() {
+	Payload(String)
+	StreamingResult(Bytes)
+	HTTP(func() {
+		GET("/{id}")
+	    NoWebSocket() // Use straight HTTP to stream
+	})
+})
+```
+
+## Advanced use cases
+
+Note that a single method can combine both upload and download:
+
+```go
+Method("up_and_down", func() {
+	StreamingPayload(Bytes)
+	StreamingResult(Bytes)
+	HTTP(func() {
+		PUT("/{id}")
+	    NoWebSocket()
+	})
+})
+```
+
+## Building and Running the Generated Server and Client
+
+The generated example server and client can be built and run as follows
+
+```
+$ go build ./cmd/upload && go build ./cmd/upload-cli
+
+# Run the server
+
+$ ./upload
+
+# Run the client
+
+# The generated client tool --file argument makes it possible to upload a file.
+$ ./upload-cli --url="http://localhost:8000" updown upload --file goa.png
+
+$ ./upload-cli --url="http://localhost:8000" updown download --id goa.png
+
+```
