@@ -68,12 +68,12 @@ incompatible with gRPC.`)
 		HTTP(func() {
 			GET("/{*name}") // Encode payload in URL path
 
-			// Bypass response body encoder code generation to alleviate need for
-			// loading the entire response body in memory.
-			SkipResponseBodyEncodeDecode()
-
 			Response(func() {
 				Header("length:Content-Length")
+
+				// Bypass response body encoder code generation to alleviate need for
+				// loading the entire response body in memory.
+				SkipResponseBodyEncodeDecode()
 			})
 		})
 	})
