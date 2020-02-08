@@ -9,51 +9,46 @@ code can stream content without having to load the entire payload in memory.
 The `upload` service exposes two methods: `upload` which allows clients to
 stream content to the server and `download` which does the opposite. The key DSL
 functions that enable the streaming are
-[StreamingPayload](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#StreamingPayload)
+[SkipRequestBodyEncodeDecode](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#SkipRequestBodyEncodeDecode)
 and
-[StreamingResult](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#StreamingResult).
-The design also makes use of
-[NoWebSocket](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#NoWebSocket) to
-leverage straight HTTP instead of WebSockets (which are the default for the HTTP
-transport implementation of streaming).
+[SkipResponseBodyEncodeDecode](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#SkipResponseBodyEncodeDecode).
+The DSL functions tell Goa to bypass the generation of an encoder and decoder for the HTTP request
+and response bodies respectively.
 
-Here is the desing of the `upload` method:
+Here is an highlight of the key parts of the `upload` method design:
 
 ```go
 Method("upload", func() {
-	StreamingPayload(Bytes)
+	Payload(func() {
+		Attribute("length", UInt, "...")
+		Attribute("name", String, "...")
+		Required("length", "name")
+	})
 	Result(String)
 	HTTP(func() {
-		POST("/")
-		NoWebSocket() // Use straight HTTP to stream
+		POST("/{*name}")
+		Header("length:Content-Length")
+		SkipRequestBodyEncodeDecode()
 	})
 })
 ```
 
-and the design of the `download` method:
+and of the `download` method design:
 
 ```go
 Method("download", func() {
-	Payload(String)
-	StreamingResult(Bytes)
-	HTTP(func() {
-		GET("/{id}")
-	    NoWebSocket() // Use straight HTTP to stream
+	Payload(String) // Name of downloaded file
+	Result(func() {
+		Attribute("length", UInt, "...")
+		Required("length")
 	})
-})
-```
 
-## Advanced use cases
-
-Note that a single method can combine both upload and download:
-
-```go
-Method("up_and_down", func() {
-	StreamingPayload(Bytes)
-	StreamingResult(Bytes)
 	HTTP(func() {
-		PUT("/{id}")
-	    NoWebSocket()
+		GET("/{*name}")
+		Response(func() {
+			Header("length:Content-Length")
+			SkipResponseBodyEncodeDecode()
+		})
 	})
 })
 ```
