@@ -29,7 +29,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` updown upload --name "goa.png" --length 4194304` + "\n" +
+	return os.Args[0] + ` updown upload --name "goa.png" --length 4194304 --stream "goa.png"` + "\n" +
 		""
 }
 
@@ -48,6 +48,7 @@ func ParseEndpoint(
 		updownUploadFlags      = flag.NewFlagSet("upload", flag.ExitOnError)
 		updownUploadNameFlag   = updownUploadFlags.String("name", "REQUIRED", "Name is the name of the file being uploaded")
 		updownUploadLengthFlag = updownUploadFlags.String("length", "REQUIRED", "")
+		updownUploadStreamFlag = updownUploadFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
 
 		updownDownloadFlags = flag.NewFlagSet("download", flag.ExitOnError)
 		updownDownloadPFlag = updownDownloadFlags.String("p", "REQUIRED", "string is the payload type of the updown service download method.")
@@ -124,6 +125,9 @@ func ParseEndpoint(
 			case "upload":
 				endpoint = c.Upload()
 				data, err = updownc.BuildUploadPayload(*updownUploadNameFlag, *updownUploadLengthFlag)
+				if err == nil {
+					data, err = updownc.BuildUploadStreamPayload(data, *updownUploadStreamFlag)
+				}
 			case "download":
 				endpoint = c.Download()
 				data = *updownDownloadPFlag
@@ -163,14 +167,15 @@ Additional help:
 `, os.Args[0], os.Args[0])
 }
 func updownUploadUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] updown upload -name STRING -length UINT
+	fmt.Fprintf(os.Stderr, `%s [flags] updown upload -name STRING -length UINT -stream STRING
 
 Upload implements upload.
     -name STRING: Name is the name of the file being uploaded
     -length UINT: 
+    -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` updown upload --name "goa.png" --length 4194304
+    `+os.Args[0]+` updown upload --name "goa.png" --length 4194304 --stream "goa.png"
 `, os.Args[0])
 }
 

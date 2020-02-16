@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 
 	updown "goa.design/examples/upload_download/gen/updown"
@@ -23,15 +24,18 @@ import (
 
 // BuildUploadRequest instantiates a HTTP request object with method and path
 // set to call the "updown" service "upload" endpoint
-func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}, body io.Reader) (*http.Request, error) {
+func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
 		name string
+		body io.Reader
 	)
 	{
-		p, ok := v.(*updown.UploadPayload)
+		rd, ok := v.(*updown.UploadRequestData)
 		if !ok {
-			return nil, goahttp.ErrInvalidType("updown", "upload", "*updown.UploadPayload", v)
+			return nil, goahttp.ErrInvalidType("updown", "upload", "updown.UploadRequestData", v)
 		}
+		p := rd.Payload
+		body = rd.Body
 		name = p.Name
 	}
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UploadUpdownPath(name)}
@@ -96,6 +100,19 @@ func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			return nil, goahttp.ErrInvalidResponse("updown", "upload", resp.StatusCode, string(body))
 		}
 	}
+}
+
+// // BuildUploadStreamPayload creates a streaming endpoint request payload from
+// the method payload and the path to the file to be streamed
+func BuildUploadStreamPayload(payload interface{}, fpath string) (*updown.UploadRequestData, error) {
+	f, err := os.Open(fpath)
+	if err != nil {
+		return nil, err
+	}
+	return &updown.UploadRequestData{
+		Payload: payload.(*updown.UploadPayload),
+		Body:    f,
+	}, nil
 }
 
 // BuildDownloadRequest instantiates a HTTP request object with method and path
