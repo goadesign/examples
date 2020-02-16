@@ -9,14 +9,11 @@ package updown
 
 import (
 	"context"
+	"io"
 )
 
-// Service updown exposes both a upload and download methods.
-
-// This example demonstrates how to implement upload and download of big files
-// in
+// Service updown demonstrates how to implement upload and download of files in
 // Goa without having to load the entire content in memory first.
-
 // The upload method uses SkipRequestBodyEncodeDecode to delegate reading the
 // HTTP
 // request body to the service logic. This alleviates the need for loading the
@@ -26,16 +23,15 @@ import (
 // methods that only define a HTTP transport mapping. This example
 // implementation
 // leverages package "mime/multipart" to read the request body.
-
 // Similarly the download method uses SkipResponseBodyEncodeDecode to stream the
 // file to the client without requiring to load the complete content in memory
 // first. As with SkipRequestBodyDecode using SkipResponseBodyEncodeDecode is
 // incompatible with gRPC.
 type Service interface {
 	// Upload implements upload.
-	Upload(context.Context, *UploadPayload, UploadServerStream) (err error)
+	Upload(context.Context, *UploadPayload, io.ReadCloser) (res string, err error)
 	// Download implements download.
-	Download(context.Context, string, DownloadServerStream) (err error)
+	Download(context.Context, string) (res *DownloadResult, body io.ReadCloser, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -47,37 +43,6 @@ const ServiceName = "updown"
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
 var MethodNames = [2]string{"upload", "download"}
-
-// UploadServerStream is the interface a "upload" endpoint server stream must
-// satisfy.
-type UploadServerStream interface {
-	// SendAndClose streams instances of "string" and closes the stream.
-	SendAndClose(string) error
-}
-
-// UploadClientStream is the interface a "upload" endpoint client stream must
-// satisfy.
-type UploadClientStream interface {
-	// CloseAndRecv stops sending messages to the stream and reads instances of
-	// "string" from the stream.
-	CloseAndRecv() (string, error)
-}
-
-// DownloadServerStream is the interface a "download" endpoint server stream
-// must satisfy.
-type DownloadServerStream interface {
-	// Send streams instances of "DownloadResult".
-	Send(*DownloadResult) error
-	// Close closes the stream.
-	Close() error
-}
-
-// DownloadClientStream is the interface a "download" endpoint client stream
-// must satisfy.
-type DownloadClientStream interface {
-	// Recv reads instances of "DownloadResult" from the stream.
-	Recv() (*DownloadResult, error)
-}
 
 // UploadPayload is the payload type of the updown service upload method.
 type UploadPayload struct {

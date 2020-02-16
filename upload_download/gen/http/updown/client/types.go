@@ -11,10 +11,6 @@ import (
 	updown "goa.design/examples/upload_download/gen/updown"
 )
 
-// UploadStreamingBody is the type of the "updown" service "upload" endpoint
-// HTTP request body.
-type UploadStreamingBody EmptyStreamingBody
-
 // NewDownloadResultOK builds a "updown" service "download" endpoint result
 // from a HTTP "OK" response.
 func NewDownloadResultOK(length uint) *updown.DownloadResult {

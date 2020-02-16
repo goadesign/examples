@@ -9,6 +9,7 @@ package updown
 
 import (
 	"context"
+	"io"
 
 	goa "goa.design/goa/v3/pkg"
 )
@@ -19,22 +20,22 @@ type Endpoints struct {
 	Download goa.Endpoint
 }
 
-// UploadEndpointInput is the input type of "upload" endpoint that holds the
-// method payload and the server stream.
-type UploadEndpointInput struct {
+// UploadRequestData holds both the payload and the HTTP request body reader of
+// the "upload" method.
+type UploadRequestData struct {
 	// Payload is the method payload.
 	Payload *UploadPayload
-	// Stream is the server stream used by the "upload" method to send data.
-	Stream UploadServerStream
+	// Body streams the HTTP request body.
+	Body io.ReadCloser
 }
 
-// DownloadEndpointInput is the input type of "download" endpoint that holds
-// the method payload and the server stream.
-type DownloadEndpointInput struct {
-	// Payload is the method payload.
-	Payload string
-	// Stream is the server stream used by the "download" method to send data.
-	Stream DownloadServerStream
+// DownloadResponseData holds both the result and the HTTP response body reader
+// of the "download" method.
+type DownloadResponseData struct {
+	// Result is the method result.
+	Result *DownloadResult
+	// Body streams the HTTP response body.
+	Body io.ReadCloser
 }
 
 // NewEndpoints wraps the methods of the "updown" service with endpoints.
@@ -55,8 +56,8 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 // "upload" of service "updown".
 func NewUploadEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		ep := req.(*UploadEndpointInput)
-		return nil, s.Upload(ctx, ep.Payload, ep.Stream)
+		ep := req.(*UploadRequestData)
+		return s.Upload(ctx, ep.Payload, ep.Body)
 	}
 }
 
@@ -64,7 +65,11 @@ func NewUploadEndpoint(s Service) goa.Endpoint {
 // "download" of service "updown".
 func NewDownloadEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		ep := req.(*DownloadEndpointInput)
-		return nil, s.Download(ctx, ep.Payload, ep.Stream)
+		p := req.(string)
+		res, body, err := s.Download(ctx, p)
+		if err != nil {
+			return nil, err
+		}
+		return &DownloadResponseData{Result: res, Body: body}, nil
 	}
 }
