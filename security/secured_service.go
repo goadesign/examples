@@ -47,6 +47,9 @@ func (s *securedServicesrvc) BasicAuth(ctx context.Context, user, pass string, s
 	if pass != "rocks" {
 		return ctx, ErrUnauthorized
 	}
+	ctx = contextWithAuthInfo(ctx, authInfo{
+		user: user,
+	})
 	return ctx, nil
 }
 
@@ -77,6 +80,11 @@ func (s *securedServicesrvc) JWTAuth(ctx context.Context, token string, scheme *
 	if err := scheme.Validate(scopesInToken); err != nil {
 		return ctx, securedservice.InvalidScopes(err.Error())
 	}
+
+	// 3. add authInfo to context
+	ctx = contextWithAuthInfo(ctx, authInfo{
+		claims: claims,
+	})
 	return ctx, nil
 }
 
@@ -86,6 +94,9 @@ func (s *securedServicesrvc) APIKeyAuth(ctx context.Context, key string, scheme 
 	if key != "my_awesome_api_key" {
 		return ctx, ErrUnauthorized
 	}
+	ctx = contextWithAuthInfo(ctx, authInfo{
+		key: key,
+	})
 	return ctx, nil
 }
 
@@ -116,6 +127,11 @@ func (s *securedServicesrvc) OAuth2Auth(ctx context.Context, token string, schem
 	if err := scheme.Validate(scopesInToken); err != nil {
 		return ctx, securedservice.InvalidScopes(err.Error())
 	}
+
+	// 3. add authInfo to context
+	ctx = contextWithAuthInfo(ctx, authInfo{
+		claims: claims,
+	})
 	return ctx, nil
 }
 
@@ -146,7 +162,9 @@ func (s *securedServicesrvc) Signin(ctx context.Context, p *securedservice.Signi
 // This action is secured with the jwt scheme
 func (s *securedServicesrvc) Secure(ctx context.Context, p *securedservice.SecurePayload) (res string, err error) {
 	res = fmt.Sprintf("User authorized using JWT token %q", p.Token)
+	authInfo := contextAuthInfo(ctx)
 	s.logger.Printf(res)
+	s.logger.Printf("%v", authInfo)
 	if p.Fail != nil && *p.Fail {
 		s.logger.Printf("Uh oh! `fail` passed in parameter. Auth failed!")
 		return "", securedservice.Unauthorized("forced authentication failure")
@@ -158,7 +176,9 @@ func (s *securedServicesrvc) Secure(ctx context.Context, p *securedservice.Secur
 // query string.
 func (s *securedServicesrvc) DoublySecure(ctx context.Context, p *securedservice.DoublySecurePayload) (res string, err error) {
 	res = fmt.Sprintf("User authorized using JWT token %q and API Key %q", p.Token, p.Key)
+	authInfo := contextAuthInfo(ctx)
 	s.logger.Printf(res)
+	s.logger.Printf("%v", authInfo)
 	return
 }
 
@@ -171,6 +191,8 @@ func (s *securedServicesrvc) AlsoDoublySecure(ctx context.Context, p *securedser
 		return
 	}
 	res = fmt.Sprintf("User authorized using JWT token %q and API Key %q", *p.Token, *p.Key)
+	authInfo := contextAuthInfo(ctx)
 	s.logger.Print(res)
+	s.logger.Printf("%v", authInfo)
 	return
 }
