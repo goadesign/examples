@@ -9,7 +9,6 @@ package client
 
 import (
 	"context"
-	"io"
 	"net/http"
 
 	goahttp "goa.design/goa/v3/http"
@@ -57,13 +56,13 @@ func NewClient(
 
 // Upload returns an endpoint that makes HTTP requests to the updown service
 // upload server.
-func (c *Client) Upload(body io.Reader) goa.Endpoint {
+func (c *Client) Upload() goa.Endpoint {
 	var (
 		encodeRequest  = EncodeUploadRequest(c.encoder)
 		decodeResponse = DecodeUploadResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
-		req, err := c.BuildUploadRequest(ctx, v, body)
+		req, err := c.BuildUploadRequest(ctx, v)
 		if err != nil {
 			return nil, err
 		}
