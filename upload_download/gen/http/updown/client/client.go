@@ -9,10 +9,9 @@ package client
 
 import (
 	"context"
+	"io"
 	"net/http"
-	"time"
 
-	"github.com/gorilla/websocket"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -58,13 +57,13 @@ func NewClient(
 
 // Upload returns an endpoint that makes HTTP requests to the updown service
 // upload server.
-func (c *Client) Upload() goa.Endpoint {
+func (c *Client) Upload(body io.Reader) goa.Endpoint {
 	var (
 		encodeRequest  = EncodeUploadRequest(c.encoder)
 		decodeResponse = DecodeUploadResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
-		req, err := c.BuildUploadRequest(ctx, v)
+		req, err := c.BuildUploadRequest(ctx, v, body)
 		if err != nil {
 			return nil, err
 		}
@@ -72,22 +71,12 @@ func (c *Client) Upload() goa.Endpoint {
 		if err != nil {
 			return nil, err
 		}
-		var cancel context.CancelFunc
-		{
-			ctx, cancel = context.WithCancel(ctx)
-		}
-		conn, resp, err := c.dialer.DialContext(ctx, req.URL.String(), req.Header)
+		resp, err := c.UploadDoer.Do(req)
+
 		if err != nil {
-			if resp != nil {
-				return decodeResponse(resp)
-			}
 			return nil, goahttp.ErrRequestError("updown", "upload", err)
 		}
-		if c.configurer.UploadFn != nil {
-			conn = c.configurer.UploadFn(conn, cancel)
-		}
-		stream := &UploadClientStream{conn: conn}
-		return stream, nil
+		return decodeResponse(resp)
 	}
 }
 
@@ -102,30 +91,11 @@ func (c *Client) Download() goa.Endpoint {
 		if err != nil {
 			return nil, err
 		}
-		var cancel context.CancelFunc
-		{
-			ctx, cancel = context.WithCancel(ctx)
-		}
-		conn, resp, err := c.dialer.DialContext(ctx, req.URL.String(), req.Header)
+		resp, err := c.DownloadDoer.Do(req)
+
 		if err != nil {
-			if resp != nil {
-				return decodeResponse(resp)
-			}
 			return nil, goahttp.ErrRequestError("updown", "download", err)
 		}
-		if c.configurer.DownloadFn != nil {
-			conn = c.configurer.DownloadFn(conn, cancel)
-		}
-		go func() {
-			<-ctx.Done()
-			conn.WriteControl(
-				websocket.CloseMessage,
-				websocket.FormatCloseMessage(websocket.CloseNormalClosure, "client closing connection"),
-				time.Now().Add(time.Second),
-			)
-			conn.Close()
-		}()
-		stream := &DownloadClientStream{conn: conn}
-		return stream, nil
+		return decodeResponse(resp)
 	}
 }

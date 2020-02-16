@@ -139,18 +139,14 @@ func ParseEndpoint(
 
 // updownUsage displays the usage of the updown command and its subcommands.
 func updownUsage() {
-	fmt.Fprintf(os.Stderr, `Service updown exposes both a upload and download methods.
-	
-	This example demonstrates how to implement upload and download of big files in
+	fmt.Fprintf(os.Stderr, `Service updown demonstrates how to implement upload and download of files in
 	Goa without having to load the entire content in memory first.
-	
 	The upload method uses SkipRequestBodyEncodeDecode to delegate reading the HTTP
 	request body to the service logic. This alleviates the need for loading the
 	full body content in memory first to decode it into a data structure. Note that
 	using SkipRequestBodyDecode is incompatible with gRPC and can only be used on
 	methods that only define a HTTP transport mapping. This example implementation
 	leverages package "mime/multipart" to read the request body.
-	
 	Similarly the download method uses SkipResponseBodyEncodeDecode to stream the 
 	file to the client without requiring to load the complete content in memory
 	first. As with SkipRequestBodyDecode using SkipResponseBodyEncodeDecode is

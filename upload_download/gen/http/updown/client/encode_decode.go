@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -22,7 +23,7 @@ import (
 
 // BuildUploadRequest instantiates a HTTP request object with method and path
 // set to call the "updown" service "upload" endpoint
-func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}, body io.Reader) (*http.Request, error) {
 	var (
 		name string
 	)
@@ -33,15 +34,8 @@ func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}) (*http.R
 		}
 		name = p.Name
 	}
-	scheme := c.scheme
-	switch c.scheme {
-	case "http":
-		scheme = "ws"
-	case "https":
-		scheme = "wss"
-	}
-	u := &url.URL{Scheme: scheme, Host: c.host, Path: UploadUpdownPath(name)}
-	req, err := http.NewRequest("POST", u.String(), nil)
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UploadUpdownPath(name)}
+	req, err := http.NewRequest("POST", u.String(), body)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("updown", "upload", u.String(), err)
 	}
@@ -117,14 +111,7 @@ func (c *Client) BuildDownloadRequest(ctx context.Context, v interface{}) (*http
 		}
 		name = p
 	}
-	scheme := c.scheme
-	switch c.scheme {
-	case "http":
-		scheme = "ws"
-	case "https":
-		scheme = "wss"
-	}
-	u := &url.URL{Scheme: scheme, Host: c.host, Path: DownloadUpdownPath(name)}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DownloadUpdownPath(name)}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("updown", "download", u.String(), err)

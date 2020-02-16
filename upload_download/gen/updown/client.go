@@ -9,6 +9,7 @@ package updown
 
 import (
 	"context"
+	"io"
 
 	goa "goa.design/goa/v3/pkg"
 )
@@ -28,21 +29,22 @@ func NewClient(upload, download goa.Endpoint) *Client {
 }
 
 // Upload calls the "upload" endpoint of the "updown" service.
-func (c *Client) Upload(ctx context.Context, p *UploadPayload) (res UploadClientStream, err error) {
+func (c *Client) Upload(ctx context.Context, p *UploadPayload, body io.ReadCloser) (res string, err error) {
 	var ires interface{}
-	ires, err = c.UploadEndpoint(ctx, p)
+	ires, err = c.UploadEndpoint(ctx, &UploadRequestData{Payload: p, Body: body})
 	if err != nil {
 		return
 	}
-	return ires.(UploadClientStream), nil
+	return ires.(string), nil
 }
 
 // Download calls the "download" endpoint of the "updown" service.
-func (c *Client) Download(ctx context.Context, p string) (res DownloadClientStream, err error) {
+func (c *Client) Download(ctx context.Context, p string) (res *DownloadResult, body io.ReadCloser, err error) {
 	var ires interface{}
 	ires, err = c.DownloadEndpoint(ctx, p)
 	if err != nil {
 		return
 	}
-	return ires.(DownloadClientStream), nil
+	o := ires.(*DownloadResponseData)
+	return o.Result, o.Body, nil
 }

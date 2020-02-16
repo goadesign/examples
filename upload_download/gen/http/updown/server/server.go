@@ -9,9 +9,9 @@ package server
 
 import (
 	"context"
+	"io"
 	"net/http"
 
-	"github.com/gorilla/websocket"
 	updown "goa.design/examples/upload_download/gen/updown"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
@@ -60,8 +60,8 @@ func New(
 			{"Upload", "POST", "/{*name}"},
 			{"Download", "GET", "/{*name}"},
 		},
-		Upload:   NewUploadHandler(e.Upload, mux, decoder, encoder, errhandler, formatter, upgrader, configurer.UploadFn),
-		Download: NewDownloadHandler(e.Download, mux, decoder, encoder, errhandler, formatter, upgrader, configurer.DownloadFn),
+		Upload:   NewUploadHandler(e.Upload, mux, decoder, encoder, errhandler, formatter),
+		Download: NewDownloadHandler(e.Download, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -101,12 +101,11 @@ func NewUploadHandler(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(err error) goahttp.Statuser,
-	upgrader goahttp.Upgrader,
-	configurer goahttp.ConnConfigureFunc,
 ) http.Handler {
 	var (
-		decodeRequest = DecodeUploadRequest(mux, decoder)
-		encodeError   = goahttp.ErrorEncoder(encoder, formatter)
+		decodeRequest  = DecodeUploadRequest(mux, decoder)
+		encodeResponse = EncodeUploadResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -119,31 +118,16 @@ func NewUploadHandler(
 			}
 			return
 		}
-
-		var cancel context.CancelFunc
-		{
-			ctx, cancel = context.WithCancel(ctx)
-		}
-		v := &updown.UploadEndpointInput{
-			Stream: &UploadServerStream{
-				upgrader:   upgrader,
-				configurer: configurer,
-				cancel:     cancel,
-				w:          w,
-				r:          r,
-			},
-			Payload: payload.(*updown.UploadPayload),
-		}
-		_, err = endpoint(ctx, v)
-
+		data := &updown.UploadRequestData{Payload: payload.(*updown.UploadPayload), Body: r.Body}
+		res, err := endpoint(ctx, data)
 		if err != nil {
-			if _, ok := err.(websocket.HandshakeError); ok {
-				return
-			}
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
 			}
 			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
 		}
 	})
 }
@@ -169,12 +153,11 @@ func NewDownloadHandler(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(err error) goahttp.Statuser,
-	upgrader goahttp.Upgrader,
-	configurer goahttp.ConnConfigureFunc,
 ) http.Handler {
 	var (
-		decodeRequest = DecodeDownloadRequest(mux, decoder)
-		encodeError   = goahttp.ErrorEncoder(encoder, formatter)
+		decodeRequest  = DecodeDownloadRequest(mux, decoder)
+		encodeResponse = EncodeDownloadResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -187,31 +170,23 @@ func NewDownloadHandler(
 			}
 			return
 		}
-
-		var cancel context.CancelFunc
-		{
-			ctx, cancel = context.WithCancel(ctx)
-		}
-		v := &updown.DownloadEndpointInput{
-			Stream: &DownloadServerStream{
-				upgrader:   upgrader,
-				configurer: configurer,
-				cancel:     cancel,
-				w:          w,
-				r:          r,
-			},
-			Payload: payload.(string),
-		}
-		_, err = endpoint(ctx, v)
-
+		res, err := endpoint(ctx, payload)
 		if err != nil {
-			if _, ok := err.(websocket.HandshakeError); ok {
-				return
-			}
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
 			}
 			return
+		}
+		o := res.(*updown.DownloadResponseData)
+		defer o.Body.Close()
+		if err := encodeResponse(ctx, w, o.Result); err != nil {
+			errhandler(ctx, w, err)
+			return
+		}
+		if _, err := io.Copy(w, o.Body); err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
 		}
 	})
 }
