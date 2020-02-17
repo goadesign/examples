@@ -118,9 +118,7 @@ func NewIntegerDivideHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -171,9 +169,7 @@ func NewDivideHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

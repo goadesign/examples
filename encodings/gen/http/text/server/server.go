@@ -132,9 +132,7 @@ func NewConcatstringsHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -185,9 +183,7 @@ func NewConcatbytesHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -238,9 +234,7 @@ func NewConcatstringfieldHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -291,9 +285,7 @@ func NewConcatbytesfieldHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

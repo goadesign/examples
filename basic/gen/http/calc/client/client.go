@@ -62,7 +62,6 @@ func (c *Client) Add() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.AddDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("calc", "add", err)
 		}
