@@ -25,8 +25,8 @@ type Endpoints struct {
 	History   goa.Endpoint
 }
 
-// EchoerEndpointInput is the input type of "echoer" endpoint that holds the
-// method payload and the server stream.
+// EchoerEndpointInput holds both the payload and the server stream of the
+// "echoer" method.
 type EchoerEndpointInput struct {
 	// Payload is the method payload.
 	Payload *EchoerPayload
@@ -34,8 +34,8 @@ type EchoerEndpointInput struct {
 	Stream EchoerServerStream
 }
 
-// ListenerEndpointInput is the input type of "listener" endpoint that holds
-// the method payload and the server stream.
+// ListenerEndpointInput holds both the payload and the server stream of the
+// "listener" method.
 type ListenerEndpointInput struct {
 	// Payload is the method payload.
 	Payload *ListenerPayload
@@ -43,8 +43,8 @@ type ListenerEndpointInput struct {
 	Stream ListenerServerStream
 }
 
-// SummaryEndpointInput is the input type of "summary" endpoint that holds the
-// method payload and the server stream.
+// SummaryEndpointInput holds both the payload and the server stream of the
+// "summary" method.
 type SummaryEndpointInput struct {
 	// Payload is the method payload.
 	Payload *SummaryPayload
@@ -52,8 +52,8 @@ type SummaryEndpointInput struct {
 	Stream SummaryServerStream
 }
 
-// SubscribeEndpointInput is the input type of "subscribe" endpoint that holds
-// the method payload and the server stream.
+// SubscribeEndpointInput holds both the payload and the server stream of the
+// "subscribe" method.
 type SubscribeEndpointInput struct {
 	// Payload is the method payload.
 	Payload *SubscribePayload
@@ -61,8 +61,8 @@ type SubscribeEndpointInput struct {
 	Stream SubscribeServerStream
 }
 
-// HistoryEndpointInput is the input type of "history" endpoint that holds the
-// method payload and the server stream.
+// HistoryEndpointInput holds both the payload and the server stream of the
+// "history" method.
 type HistoryEndpointInput struct {
 	// Payload is the method payload.
 	Payload *HistoryPayload

@@ -72,7 +72,6 @@ func (c *Client) List() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.ListDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("resume", "list", err)
 		}
@@ -97,7 +96,6 @@ func (c *Client) Add(resumeAddEncoderFn ResumeAddEncoderFunc) goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.AddDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("resume", "add", err)
 		}

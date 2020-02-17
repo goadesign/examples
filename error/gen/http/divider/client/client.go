@@ -67,7 +67,6 @@ func (c *Client) IntegerDivide() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.IntegerDivideDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("divider", "integer_divide", err)
 		}
@@ -87,7 +86,6 @@ func (c *Client) Divide() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.DivideDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("divider", "divide", err)
 		}

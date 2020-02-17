@@ -82,7 +82,6 @@ func (c *Client) Signin() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.SigninDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("secured_service", "signin", err)
 		}
@@ -107,7 +106,6 @@ func (c *Client) Secure() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.SecureDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("secured_service", "secure", err)
 		}
@@ -132,7 +130,6 @@ func (c *Client) DoublySecure() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.DoublySecureDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("secured_service", "doubly_secure", err)
 		}
@@ -157,7 +154,6 @@ func (c *Client) AlsoDoublySecure() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.AlsoDoublySecureDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("secured_service", "also_doubly_secure", err)
 		}

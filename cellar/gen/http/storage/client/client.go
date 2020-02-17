@@ -98,7 +98,6 @@ func (c *Client) List() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.ListDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "list", err)
 		}
@@ -123,7 +122,6 @@ func (c *Client) Show() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.ShowDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "show", err)
 		}
@@ -148,7 +146,6 @@ func (c *Client) Add() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.AddDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "add", err)
 		}
@@ -168,7 +165,6 @@ func (c *Client) Remove() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.RemoveDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "remove", err)
 		}
@@ -193,7 +189,6 @@ func (c *Client) Rate() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.RateDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "rate", err)
 		}
@@ -218,7 +213,6 @@ func (c *Client) MultiAdd(storageMultiAddEncoderFn StorageMultiAddEncoderFunc) g
 			return nil, err
 		}
 		resp, err := c.MultiAddDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "multi_add", err)
 		}
@@ -243,7 +237,6 @@ func (c *Client) MultiUpdate(storageMultiUpdateEncoderFn StorageMultiUpdateEncod
 			return nil, err
 		}
 		resp, err := c.MultiUpdateDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("storage", "multi_update", err)
 		}

@@ -147,9 +147,7 @@ func NewListHandler(
 		ctx = context.WithValue(ctx, goa.MethodKey, "list")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "storage")
 		var err error
-
 		res, err := endpoint(ctx, nil)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -200,9 +198,7 @@ func NewShowHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -253,9 +249,7 @@ func NewAddHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -306,9 +300,7 @@ func NewRemoveHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -359,9 +351,7 @@ func NewRateHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -412,9 +402,7 @@ func NewMultiAddHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -465,9 +453,7 @@ func NewMultiUpdateHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

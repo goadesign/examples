@@ -117,9 +117,7 @@ func NewListHandler(
 		ctx = context.WithValue(ctx, goa.MethodKey, "list")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "resume")
 		var err error
-
 		res, err := endpoint(ctx, nil)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
@@ -170,9 +168,7 @@ func NewAddHandler(
 			}
 			return
 		}
-
 		res, err := endpoint(ctx, payload)
-
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)
