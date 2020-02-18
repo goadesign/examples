@@ -12,11 +12,11 @@ import (
 )
 
 // UploadUpdownPath returns the URL path to the updown service upload HTTP endpoint.
-func UploadUpdownPath(name string) string {
-	return fmt.Sprintf("/%v", name)
+func UploadUpdownPath(dir string) string {
+	return fmt.Sprintf("/upload/%v", dir)
 }
 
 // DownloadUpdownPath returns the URL path to the updown service download HTTP endpoint.
-func DownloadUpdownPath(name string) string {
-	return fmt.Sprintf("/%v", name)
+func DownloadUpdownPath(filename string) string {
+	return fmt.Sprintf("/download/%v", filename)
 }

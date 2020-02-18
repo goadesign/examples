@@ -8,32 +8,25 @@
 package client
 
 import (
-	"fmt"
-	"strconv"
-
 	updown "goa.design/examples/upload_download/gen/updown"
 )
 
 // BuildUploadPayload builds the payload for the updown upload endpoint from
 // CLI flags.
-func BuildUploadPayload(updownUploadName string, updownUploadLength string) (*updown.UploadPayload, error) {
-	var err error
-	var name string
+func BuildUploadPayload(updownUploadDir string, updownUploadContentType string) (*updown.UploadPayload, error) {
+	var dir string
 	{
-		name = updownUploadName
+		dir = updownUploadDir
 	}
-	var length uint
+	var contentType string
 	{
-		var v uint64
-		v, err = strconv.ParseUint(updownUploadLength, 10, 64)
-		length = uint(v)
-		if err != nil {
-			return nil, fmt.Errorf("invalid value for length, must be UINT")
+		if updownUploadContentType != "" {
+			contentType = updownUploadContentType
 		}
 	}
 	payload := &updown.UploadPayload{
-		Name:   name,
-		Length: length,
+		Dir:         dir,
+		ContentType: contentType,
 	}
 	return payload, nil
 }

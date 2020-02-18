@@ -57,8 +57,8 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Upload", "POST", "/{*name}"},
-			{"Download", "GET", "/{*name}"},
+			{"Upload", "POST", "/upload/{*dir}"},
+			{"Download", "GET", "/download/{*filename}"},
 		},
 		Upload:   NewUploadHandler(e.Upload, mux, decoder, encoder, errhandler, formatter),
 		Download: NewDownloadHandler(e.Download, mux, decoder, encoder, errhandler, formatter),
@@ -89,7 +89,7 @@ func MountUploadHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/{*name}", f)
+	mux.Handle("POST", "/upload/{*dir}", f)
 }
 
 // NewUploadHandler creates a HTTP handler which loads the HTTP request and
@@ -105,7 +105,7 @@ func NewUploadHandler(
 	var (
 		decodeRequest  = DecodeUploadRequest(mux, decoder)
 		encodeResponse = EncodeUploadResponse(encoder)
-		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+		encodeError    = EncodeUploadError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
@@ -141,7 +141,7 @@ func MountDownloadHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("GET", "/{*name}", f)
+	mux.Handle("GET", "/download/{*filename}", f)
 }
 
 // NewDownloadHandler creates a HTTP handler which loads the HTTP request and
@@ -157,7 +157,7 @@ func NewDownloadHandler(
 	var (
 		decodeRequest  = DecodeDownloadRequest(mux, decoder)
 		encodeResponse = EncodeDownloadResponse(encoder)
-		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+		encodeError    = EncodeDownloadError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
