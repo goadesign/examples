@@ -29,7 +29,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` updown upload --name "goa.png" --length 4194304 --stream "goa.png"` + "\n" +
+	return os.Args[0] + ` updown upload --dir "upload" --content-type "multipart/form-data; boundary=goa" --stream "goa.png"` + "\n" +
 		""
 }
 
@@ -45,13 +45,13 @@ func ParseEndpoint(
 	var (
 		updownFlags = flag.NewFlagSet("updown", flag.ContinueOnError)
 
-		updownUploadFlags      = flag.NewFlagSet("upload", flag.ExitOnError)
-		updownUploadNameFlag   = updownUploadFlags.String("name", "REQUIRED", "Name is the name of the file being uploaded")
-		updownUploadLengthFlag = updownUploadFlags.String("length", "REQUIRED", "")
-		updownUploadStreamFlag = updownUploadFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
+		updownUploadFlags           = flag.NewFlagSet("upload", flag.ExitOnError)
+		updownUploadDirFlag         = updownUploadFlags.String("dir", "REQUIRED", "Dir is the relative path to the file directory where the uploaded content is saved.")
+		updownUploadContentTypeFlag = updownUploadFlags.String("content-type", "multipart/form-data; boundary=goa", "")
+		updownUploadStreamFlag      = updownUploadFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
 
 		updownDownloadFlags = flag.NewFlagSet("download", flag.ExitOnError)
-		updownDownloadPFlag = updownDownloadFlags.String("p", "REQUIRED", "string is the payload type of the updown service download method.")
+		updownDownloadPFlag = updownDownloadFlags.String("p", "REQUIRED", "Path to downloaded file.")
 	)
 	updownFlags.Usage = updownUsage
 	updownUploadFlags.Usage = updownUploadUsage
@@ -124,7 +124,7 @@ func ParseEndpoint(
 			switch epn {
 			case "upload":
 				endpoint = c.Upload()
-				data, err = updownc.BuildUploadPayload(*updownUploadNameFlag, *updownUploadLengthFlag)
+				data, err = updownc.BuildUploadPayload(*updownUploadDirFlag, *updownUploadContentTypeFlag)
 				if err == nil {
 					data, err = updownc.BuildUploadStreamPayload(data, *updownUploadStreamFlag)
 				}
@@ -167,15 +167,15 @@ Additional help:
 `, os.Args[0], os.Args[0])
 }
 func updownUploadUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] updown upload -name STRING -length UINT -stream STRING
+	fmt.Fprintf(os.Stderr, `%s [flags] updown upload -dir STRING -content-type STRING -stream STRING
 
 Upload implements upload.
-    -name STRING: Name is the name of the file being uploaded
-    -length UINT: 
+    -dir STRING: Dir is the relative path to the file directory where the uploaded content is saved.
+    -content-type STRING: 
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` updown upload --name "goa.png" --length 4194304 --stream "goa.png"
+    `+os.Args[0]+` updown upload --dir "upload" --content-type "multipart/form-data; boundary=goa" --stream "goa.png"
 `, os.Args[0])
 }
 
@@ -183,9 +183,9 @@ func updownDownloadUsage() {
 	fmt.Fprintf(os.Stderr, `%s [flags] updown download -p STRING
 
 Download implements download.
-    -p STRING: string is the payload type of the updown service download method.
+    -p STRING: Path to downloaded file.
 
 Example:
-    `+os.Args[0]+` updown download --p "Hic accusamus delectus voluptatum architecto."
+    `+os.Args[0]+` updown download --p "Soluta fugiat aut."
 `, os.Args[0])
 }

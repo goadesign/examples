@@ -11,6 +11,7 @@ import (
 	"context"
 	"net/http"
 
+	updown "goa.design/examples/upload_download/gen/updown"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -71,7 +72,6 @@ func (c *Client) Upload() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.UploadDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("updown", "upload", err)
 		}
@@ -91,10 +91,14 @@ func (c *Client) Download() goa.Endpoint {
 			return nil, err
 		}
 		resp, err := c.DownloadDoer.Do(req)
-
 		if err != nil {
 			return nil, goahttp.ErrRequestError("updown", "download", err)
 		}
-		return decodeResponse(resp)
+		res, err := decodeResponse(resp)
+		if err != nil {
+			resp.Body.Close()
+			return nil, goahttp.ErrDecodingError("updown", "download", err)
+		}
+		return &updown.DownloadResponseData{Result: res.(*updown.DownloadResult), Body: resp.Body}, nil
 	}
 }

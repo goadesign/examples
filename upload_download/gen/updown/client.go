@@ -29,17 +29,22 @@ func NewClient(upload, download goa.Endpoint) *Client {
 }
 
 // Upload calls the "upload" endpoint of the "updown" service.
-func (c *Client) Upload(ctx context.Context, p *UploadPayload, body io.ReadCloser) (res string, err error) {
-	var ires interface{}
-	ires, err = c.UploadEndpoint(ctx, &UploadRequestData{Payload: p, Body: body})
-	if err != nil {
-		return
-	}
-	return ires.(string), nil
+// Upload may return the following errors:
+//	- "invalid_media_type" (type *goa.ServiceError): Error returned when the Content-Type header does not define a multipart request.
+//	- "invalid_multipart_request" (type *goa.ServiceError): Error returned when the request body is not a valid multipart content.
+//	- "internal_error" (type *goa.ServiceError): Fault while processing upload.
+//	- error: internal error
+func (c *Client) Upload(ctx context.Context, p *UploadPayload, req io.ReadCloser) (err error) {
+	_, err = c.UploadEndpoint(ctx, &UploadRequestData{Payload: p, Body: req})
+	return
 }
 
 // Download calls the "download" endpoint of the "updown" service.
-func (c *Client) Download(ctx context.Context, p string) (res *DownloadResult, body io.ReadCloser, err error) {
+// Download may return the following errors:
+//	- "invalid_file_path" (type *goa.ServiceError): Could not locate file for download
+//	- "internal_error" (type *goa.ServiceError): Fault while processing download.
+//	- error: internal error
+func (c *Client) Download(ctx context.Context, p string) (res *DownloadResult, resp io.ReadCloser, err error) {
 	var ires interface{}
 	ires, err = c.DownloadEndpoint(ctx, p)
 	if err != nil {

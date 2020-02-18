@@ -21,11 +21,8 @@ import (
 // upload endpoint.
 func EncodeUploadResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(string)
-		enc := encoder(ctx, w)
-		body := res
 		w.WriteHeader(http.StatusOK)
-		return enc.Encode(body)
+		return nil
 	}
 }
 
@@ -34,30 +31,78 @@ func EncodeUploadResponse(encoder func(context.Context, http.ResponseWriter) goa
 func DecodeUploadRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			name   string
-			length uint
-			err    error
+			dir         string
+			contentType string
+			err         error
 
 			params = mux.Vars(r)
 		)
-		name = params["name"]
-		{
-			lengthRaw := r.Header.Get("Content-Length")
-			if lengthRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("Content-Length", "header"))
-			}
-			v, err2 := strconv.ParseUint(lengthRaw, 10, strconv.IntSize)
-			if err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("length", lengthRaw, "unsigned integer"))
-			}
-			length = uint(v)
+		dir = params["dir"]
+		contentTypeRaw := r.Header.Get("Content-Type")
+		if contentTypeRaw != "" {
+			contentType = contentTypeRaw
+		} else {
+			contentType = "multipart/form-data; boundary=goa"
 		}
+		err = goa.MergeErrors(err, goa.ValidatePattern("contentType", contentType, "multipart/[^;]+; boundary=.+"))
 		if err != nil {
 			return nil, err
 		}
-		payload := NewUploadPayload(name, length)
+		payload := NewUploadPayload(dir, contentType)
 
 		return payload, nil
+	}
+}
+
+// EncodeUploadError returns an encoder for errors returned by the upload
+// updown endpoint.
+func EncodeUploadError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "invalid_media_type":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewUploadInvalidMediaTypeResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_media_type")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		case "invalid_multipart_request":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewUploadInvalidMultipartRequestResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_multipart_request")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		case "internal_error":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewUploadInternalErrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", "internal_error")
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
 	}
 }
 
@@ -67,7 +112,7 @@ func EncodeDownloadResponse(encoder func(context.Context, http.ResponseWriter) g
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res := v.(*updown.DownloadResult)
 		val := res.Length
-		lengths := strconv.FormatUint(uint64(val), 10)
+		lengths := strconv.FormatInt(val, 10)
 		w.Header().Set("Content-Length", lengths)
 		w.WriteHeader(http.StatusOK)
 		return nil
@@ -79,13 +124,53 @@ func EncodeDownloadResponse(encoder func(context.Context, http.ResponseWriter) g
 func DecodeDownloadRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			name string
+			filename string
 
 			params = mux.Vars(r)
 		)
-		name = params["name"]
-		payload := name
+		filename = params["filename"]
+		payload := filename
 
 		return payload, nil
+	}
+}
+
+// EncodeDownloadError returns an encoder for errors returned by the download
+// updown endpoint.
+func EncodeDownloadError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "invalid_file_path":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewDownloadInvalidFilePathResponseBody(res)
+			}
+			w.Header().Set("goa-error", "invalid_file_path")
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "internal_error":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewDownloadInternalErrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", "internal_error")
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
 	}
 }

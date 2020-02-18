@@ -26,7 +26,7 @@ import (
 // set to call the "updown" service "upload" endpoint
 func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
-		name string
+		dir  string
 		body io.Reader
 	)
 	{
@@ -36,9 +36,9 @@ func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}) (*http.R
 		}
 		p := rd.Payload
 		body = rd.Body
-		name = p.Name
+		dir = p.Dir
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UploadUpdownPath(name)}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UploadUpdownPath(dir)}
 	req, err := http.NewRequest("POST", u.String(), body)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("updown", "upload", u.String(), err)
@@ -54,14 +54,14 @@ func (c *Client) BuildUploadRequest(ctx context.Context, v interface{}) (*http.R
 // upload server.
 func EncodeUploadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*updown.UploadPayload)
+		data, ok := v.(*updown.UploadRequestData)
 		if !ok {
-			return goahttp.ErrInvalidType("updown", "upload", "*updown.UploadPayload", v)
+			return goahttp.ErrInvalidType("updown", "upload", "*updown.UploadRequestData", v)
 		}
+		p := data.Payload
 		{
-			head := p.Length
-			headStr := strconv.FormatUint(uint64(head), 10)
-			req.Header.Set("Content-Length", headStr)
+			head := p.ContentType
+			req.Header.Set("Content-Type", head)
 		}
 		return nil
 	}
@@ -70,6 +70,11 @@ func EncodeUploadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 // DecodeUploadResponse returns a decoder for responses returned by the updown
 // upload endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
+// DecodeUploadResponse may return the following errors:
+//	- "invalid_media_type" (type *goa.ServiceError): http.StatusBadRequest
+//	- "invalid_multipart_request" (type *goa.ServiceError): http.StatusBadRequest
+//	- "internal_error" (type *goa.ServiceError): http.StatusInternalServerError
+//	- error: internal error
 func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -86,15 +91,56 @@ func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
+			return nil, nil
+		case http.StatusBadRequest:
+			en := resp.Header.Get("goa-error")
+			switch en {
+			case "invalid_media_type":
+				var (
+					body UploadInvalidMediaTypeResponseBody
+					err  error
+				)
+				err = decoder(resp).Decode(&body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("updown", "upload", err)
+				}
+				err = ValidateUploadInvalidMediaTypeResponseBody(&body)
+				if err != nil {
+					return nil, goahttp.ErrValidationError("updown", "upload", err)
+				}
+				return nil, NewUploadInvalidMediaType(&body)
+			case "invalid_multipart_request":
+				var (
+					body UploadInvalidMultipartRequestResponseBody
+					err  error
+				)
+				err = decoder(resp).Decode(&body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("updown", "upload", err)
+				}
+				err = ValidateUploadInvalidMultipartRequestResponseBody(&body)
+				if err != nil {
+					return nil, goahttp.ErrValidationError("updown", "upload", err)
+				}
+				return nil, NewUploadInvalidMultipartRequest(&body)
+			default:
+				body, _ := ioutil.ReadAll(resp.Body)
+				return nil, goahttp.ErrInvalidResponse("updown", "upload", resp.StatusCode, string(body))
+			}
+		case http.StatusInternalServerError:
 			var (
-				body string
+				body UploadInternalErrorResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("updown", "upload", err)
 			}
-			return body, nil
+			err = ValidateUploadInternalErrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("updown", "upload", err)
+			}
+			return nil, NewUploadInternalError(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("updown", "upload", resp.StatusCode, string(body))
@@ -119,16 +165,16 @@ func BuildUploadStreamPayload(payload interface{}, fpath string) (*updown.Upload
 // set to call the "updown" service "download" endpoint
 func (c *Client) BuildDownloadRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
-		name string
+		filename string
 	)
 	{
 		p, ok := v.(string)
 		if !ok {
 			return nil, goahttp.ErrInvalidType("updown", "download", "string", v)
 		}
-		name = p
+		filename = p
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DownloadUpdownPath(name)}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DownloadUpdownPath(filename)}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("updown", "download", u.String(), err)
@@ -143,6 +189,10 @@ func (c *Client) BuildDownloadRequest(ctx context.Context, v interface{}) (*http
 // DecodeDownloadResponse returns a decoder for responses returned by the
 // updown download endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
+// DecodeDownloadResponse may return the following errors:
+//	- "invalid_file_path" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal_error" (type *goa.ServiceError): http.StatusInternalServerError
+//	- error: internal error
 func DecodeDownloadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
@@ -154,13 +204,11 @@ func DecodeDownloadResponse(decoder func(*http.Response) goahttp.Decoder, restor
 			defer func() {
 				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 			}()
-		} else {
-			defer resp.Body.Close()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
 			var (
-				length uint
+				length int64
 				err    error
 			)
 			{
@@ -168,17 +216,45 @@ func DecodeDownloadResponse(decoder func(*http.Response) goahttp.Decoder, restor
 				if lengthRaw == "" {
 					return nil, goahttp.ErrValidationError("updown", "download", goa.MissingFieldError("Content-Length", "header"))
 				}
-				v, err2 := strconv.ParseUint(lengthRaw, 10, strconv.IntSize)
+				v, err2 := strconv.ParseInt(lengthRaw, 10, 64)
 				if err2 != nil {
-					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("length", lengthRaw, "unsigned integer"))
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("length", lengthRaw, "integer"))
 				}
-				length = uint(v)
+				length = v
 			}
 			if err != nil {
 				return nil, goahttp.ErrValidationError("updown", "download", err)
 			}
 			res := NewDownloadResultOK(length)
 			return res, nil
+		case http.StatusNotFound:
+			var (
+				body DownloadInvalidFilePathResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("updown", "download", err)
+			}
+			err = ValidateDownloadInvalidFilePathResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("updown", "download", err)
+			}
+			return nil, NewDownloadInvalidFilePath(&body)
+		case http.StatusInternalServerError:
+			var (
+				body DownloadInternalErrorResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("updown", "download", err)
+			}
+			err = ValidateDownloadInternalErrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("updown", "download", err)
+			}
+			return nil, NewDownloadInternalError(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("updown", "download", resp.StatusCode, string(body))

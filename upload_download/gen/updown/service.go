@@ -10,6 +10,8 @@ package updown
 import (
 	"context"
 	"io"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Service updown demonstrates how to implement upload and download of files in
@@ -29,7 +31,7 @@ import (
 // incompatible with gRPC.
 type Service interface {
 	// Upload implements upload.
-	Upload(context.Context, *UploadPayload, io.ReadCloser) (res string, err error)
+	Upload(context.Context, *UploadPayload, io.ReadCloser) (err error)
 	// Download implements download.
 	Download(context.Context, string) (res *DownloadResult, body io.ReadCloser, err error)
 }
@@ -46,14 +48,51 @@ var MethodNames = [2]string{"upload", "download"}
 
 // UploadPayload is the payload type of the updown service upload method.
 type UploadPayload struct {
-	// Length is the upload content length in bytes.
-	Length uint
-	// Name is the name of the file being uploaded
-	Name string
+	// Content-Type header, must define value for multipart boundary.
+	ContentType string
+	// Dir is the relative path to the file directory where the uploaded content is
+	// saved.
+	Dir string
 }
 
 // DownloadResult is the result type of the updown service download method.
 type DownloadResult struct {
 	// Length is the downloaded content length in bytes.
-	Length uint
+	Length int64
+}
+
+// MakeInvalidMediaType builds a goa.ServiceError from an error.
+func MakeInvalidMediaType(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "invalid_media_type",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeInvalidMultipartRequest builds a goa.ServiceError from an error.
+func MakeInvalidMultipartRequest(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "invalid_multipart_request",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeInternalError builds a goa.ServiceError from an error.
+func MakeInternalError(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "internal_error",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeInvalidFilePath builds a goa.ServiceError from an error.
+func MakeInvalidFilePath(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "invalid_file_path",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
 }

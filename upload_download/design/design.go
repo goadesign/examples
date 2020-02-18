@@ -22,47 +22,61 @@ incompatible with gRPC.`)
 
 	Method("upload", func() {
 
-		// The use of Payload here illustrates how HTTP headers and parameters can still be
-		// properly decoded and validated when using SkipRequestBodyDecode. It is not
-		// generally required to implement an upload method.
+		// The payload defines the request headers and parameters. It cannot
+		// define body attributes as the endpoint makes use of
+		// SkipRequestBodyEncodeDecode.
 		Payload(func() {
-			Attribute("length", UInt, "Length is the upload content length in bytes.", func() {
-				Example(4 * 1024 * 1024)
+			Attribute("content_type", String, "Content-Type header, must define value for multipart boundary.", func() {
+				Default("multipart/form-data; boundary=goa")
+				Pattern("multipart/[^;]+; boundary=.+")
+				Example("multipart/form-data; boundary=goa")
 			})
-			Attribute("name", String, "Name is the name of the file being uploaded", func() {
-				Example("goa.png")
+			Attribute("dir", String, "Dir is the relative path to the file directory where the uploaded content is saved.", func() {
+				Default("upload")
+				Example("upload")
 			})
-			Required("length", "name")
 		})
 
-		Result(String)
+		Error("invalid_media_type", ErrorResult, "Error returned when the Content-Type header does not define a multipart request.")
+		Error("invalid_multipart_request", ErrorResult, "Error returned when the request body is not a valid multipart content.")
+		Error("internal_error", ErrorResult, "Fault while processing upload.")
 
 		HTTP(func() {
-			POST("/{*name}")
-			Header("length:Content-Length")
+			POST("/upload/{*dir}")
+			Header("content_type:Content-Type")
 
-			// Bypass request body decoder code generation to alleviate need for loading
-			// the entire request body in memory. The service gets direct access to the
-			// HTTP request body reader.
+			// Bypass request body decoder code generation to alleviate need for
+			// loading the entire request body in memory. The service gets
+			// direct access to the HTTP request body reader.
 			SkipRequestBodyEncodeDecode()
+
+			// Define error HTTP statuses.
+			Response("invalid_media_type", StatusBadRequest)
+			Response("invalid_multipart_request", StatusBadRequest)
+			Response("internal_error", StatusInternalServerError)
 		})
 	})
 
 	Method("download", func() {
-		Payload(String) // Name of downloaded file
+		Payload(String, func() {
+			Description("Path to downloaded file.")
+		})
 
-		// The use of Result here illustrates how HTTP headers can still be properly encoded
-		// and validated when using SkipResponseBodyEncode. It is not generally required to
-		// implement a download method.
+		// The use of Result here illustrates how HTTP headers can still be
+		// properly encoded and validated when using SkipResponseBodyEncode. It
+		// is not generally required to implement a download method.
 		Result(func() {
-			Attribute("length", UInt, "Length is the downloaded content length in bytes.", func() {
+			Attribute("length", Int64, "Length is the downloaded content length in bytes.", func() {
 				Example(4 * 1024 * 1024)
 			})
 			Required("length")
 		})
 
+		Error("invalid_file_path", ErrorResult, "Could not locate file for download")
+		Error("internal_error", ErrorResult, "Fault while processing download.")
+
 		HTTP(func() {
-			GET("/{*name}") // Encode payload in URL path
+			GET("/download/{*filename}") // Encode payload in URL path
 
 			// Bypass response body encoder code generation to alleviate need for
 			// loading the entire response body in memory.
@@ -71,6 +85,10 @@ incompatible with gRPC.`)
 			Response(func() {
 				Header("length:Content-Length")
 			})
+
+			// Define error HTTP statuses
+			Response("invalid_file_path", StatusNotFound)
+			Response("internal_error", StatusInternalServerError)
 		})
 	})
 })

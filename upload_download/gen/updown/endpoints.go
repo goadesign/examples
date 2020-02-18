@@ -57,7 +57,7 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 func NewUploadEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		ep := req.(*UploadRequestData)
-		return s.Upload(ctx, ep.Payload, ep.Body)
+		return nil, s.Upload(ctx, ep.Payload, ep.Body)
 	}
 }
 
