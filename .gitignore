@@ -5,3 +5,5 @@
 go.sum
 upload_download/cmd/upload_download/upload_download
 upload_download/cmd/upload_download-cli/upload_download-cli
+upload_download/upload_download-cli
+upload_download/upload_download

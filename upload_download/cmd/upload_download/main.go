@@ -19,7 +19,7 @@ func main() {
 	// Define command line flags, add any other flag required to configure the
 	// service.
 	var (
-		dirF      = flag.String("dir", "../../public", "Relative path to directory containing files to download and storing uploaded files.")
+		dirF      = flag.String("dir", "public", "Relative path to directory containing files to download and storing uploaded files.")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https)")

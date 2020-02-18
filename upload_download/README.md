@@ -6,7 +6,7 @@ code can stream content without having to load the entire payload in memory.
 
 ## Design
 
-The `upload` service exposes two methods: `upload` which allows clients to
+The `updown` service exposes two methods: `upload` which allows clients to
 stream content to the server and `download` which does the opposite. The key DSL
 functions that enable the streaming are
 [SkipRequestBodyEncodeDecode](https://pkg.go.dev/goa.design/goa/v3/dsl?tab=doc#SkipRequestBodyEncodeDecode)
@@ -19,17 +19,23 @@ Here is an highlight of the key parts of the `upload` method design:
 
 ```go
 Method("upload", func() {
-	Payload(func() {
-		Attribute("length", UInt, "...")
-		Attribute("name", String, "...")
-		Required("length", "name")
-	})
-	Result(String)
-	HTTP(func() {
-		POST("/{*name}")
-		Header("length:Content-Length")
-		SkipRequestBodyEncodeDecode()
-	})
+    // A payload may be defined for methods that use SkipRequestBodyEncodeDecode.
+    // The attributes of the payload must all be mapped to either HTTP headers or parameters.
+    Payload(func() {
+        Attribute("content_type", String, "...")
+        Attribute("dir", String, "...")
+    })
+
+    // The HTTP DSL makes use of SkipRequestBodyEncodeDecode instructing
+    // Goa to bypass the code generation for the request encoder and decoder
+    // and instead make the underlying request body io.Reader available to
+    // the service. The generated code also lets the client provide a
+    // io.Reader that gets streamed to the server.
+    HTTP(func() {
+        POST("/upload/{*dir}")
+        Header("content_type:Content-Type")
+        SkipRequestBodyEncodeDecode()
+    })
 })
 ```
 
@@ -37,17 +43,25 @@ and of the `download` method design:
 
 ```go
 Method("download", func() {
-	Payload(String) // Name of downloaded file
+    Payload(String) // Name of downloaded file
+    
+    // A result may be defined for methods that use SkipResponseBodyEncodeDecode.
+    // The attributes of the result must all be mapped to HTTP headers.
 	Result(func() {
-		Attribute("length", UInt, "...")
+		Attribute("length", Int64, "...")
 		Required("length")
 	})
 
+    // The HTTP DSL makes use of SkipResponseBodyEncodeDecode instructing
+    // Goa to bypass the code generation for the response encode and decoder
+    // and instead make the underlying response body io.Reader available to
+    // the client. The generated code also lets the service provide a
+    // io.Reader that gest streamed to the client.
 	HTTP(func() {
-		GET("/{*name}")
+        GET("/download/{*filename}")
+		SkipResponseBodyEncodeDecode()
 		Response(func() {
 			Header("length:Content-Length")
-			SkipResponseBodyEncodeDecode()
 		})
 	})
 })
@@ -55,20 +69,17 @@ Method("download", func() {
 
 ## Building and Running the Generated Server and Client
 
-The generated example server and client can be built and run as follows
+The generated example server and client can be built and run as follows:
 
 ```
-$ go build ./cmd/upload && go build ./cmd/upload-cli
+$ go build ./cmd/upload_download && go build ./cmd/upload_download-cli 
 
 # Run the server
 
-$ ./upload
+$ ./upload_download
 
 # Run the client
 
-# The generated client tool --file argument makes it possible to upload a file.
-$ ./upload-cli --url="http://localhost:8000" updown upload --file goa.png
-
-$ ./upload-cli --url="http://localhost:8000" updown download --id goa.png
-
+# The generated client tool defines a --stream flag that makes it possible to upload a file.
+$ ./upload_download-cli -url http://localhost:8080  updown upload --stream public/goa.png --dir upload
 ```
