@@ -78,6 +78,7 @@ depend:
 	@cp $(PROTOC_EXEC) $(GOPATH)/bin && \
 		rm -r $(PROTOC) && \
 		echo "`protoc --version`"
+	@echo go mod graph
 
 lint:
 	@echo LINTING CODE...
