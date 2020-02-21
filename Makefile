@@ -60,6 +60,7 @@ depend:
 	@cp $(PROTOC_EXEC) $(GOPATH)/bin && \
 		rm -r $(PROTOC) && \
 		echo "`protoc --version`"
+	@echo go mod graph
 	@echo done installing dependencies
 
 lint:
