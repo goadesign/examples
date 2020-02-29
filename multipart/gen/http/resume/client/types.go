@@ -157,3 +157,22 @@ func ValidateEducationResponse(body *EducationResponse) (err error) {
 	}
 	return
 }
+
+// ValidateResumeRequestBody runs the validations defined on ResumeRequestBody
+func ValidateResumeRequestBody(body *ResumeRequestBody) (err error) {
+	for _, e := range body.Experience {
+		if e != nil {
+			if err2 := ValidateExperienceRequestBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	for _, e := range body.Education {
+		if e != nil {
+			if err2 := ValidateEducationRequestBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
