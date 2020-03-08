@@ -1,6 +1,6 @@
 module goa.design/examples
 
-go 1.13
+go 1.14
 
 require (
 	github.com/boltdb/bolt v1.3.1
