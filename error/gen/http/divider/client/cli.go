@@ -37,11 +37,11 @@ func BuildIntegerDividePayload(dividerIntegerDivideA string, dividerIntegerDivid
 			return nil, fmt.Errorf("invalid value for b, must be INT")
 		}
 	}
-	payload := &divider.IntOperands{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &divider.IntOperands{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }
 
 // BuildDividePayload builds the payload for the divider divide endpoint from
@@ -62,9 +62,9 @@ func BuildDividePayload(dividerDivideA string, dividerDivideB string) (*divider.
 			return nil, fmt.Errorf("invalid value for b, must be FLOAT64")
 		}
 	}
-	payload := &divider.FloatOperands{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &divider.FloatOperands{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }

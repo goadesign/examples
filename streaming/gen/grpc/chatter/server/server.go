@@ -362,7 +362,7 @@ func (s *ListenerServerStream) Recv() (string, error) {
 
 func (s *ListenerServerStream) Close() error {
 	// synchronize stream
-	return s.stream.SendAndClose(nil)
+	return s.stream.SendAndClose(&chatterpb.ListenerResponse{})
 }
 
 // SendAndClose streams instances of "chatterpb.ChatSummaryCollection" to the

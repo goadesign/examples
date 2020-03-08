@@ -596,3 +596,15 @@ func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 		}
 	}
 }
+
+// unmarshalChatSummaryResponseToChatterviewsChatSummaryView builds a value of
+// type *chatterviews.ChatSummaryView from a value of type *ChatSummaryResponse.
+func unmarshalChatSummaryResponseToChatterviewsChatSummaryView(v *ChatSummaryResponse) *chatterviews.ChatSummaryView {
+	res := &chatterviews.ChatSummaryView{
+		Message: v.Message,
+		Length:  v.Length,
+		SentAt:  v.SentAt,
+	}
+
+	return res
+}

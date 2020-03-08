@@ -220,7 +220,7 @@ Listens to the messages sent by the client.
     -token STRING: 
 
 Example:
-    `+os.Args[0]+` chatter listener --token "Ab rerum hic fugit."
+    `+os.Args[0]+` chatter listener --token "Laudantium cupiditate aut tempore quae."
 `, os.Args[0])
 }
 
@@ -231,7 +231,7 @@ Summarizes the chat messages sent by the client.
     -token STRING: 
 
 Example:
-    `+os.Args[0]+` chatter summary --token "Quod eos quibusdam consequatur."
+    `+os.Args[0]+` chatter summary --token "Non fugit et id cum cum quisquam."
 `, os.Args[0])
 }
 
@@ -242,7 +242,7 @@ Subscribe to events sent when new chat messages are added.
     -token STRING: 
 
 Example:
-    `+os.Args[0]+` chatter subscribe --token "Reprehenderit soluta."
+    `+os.Args[0]+` chatter subscribe --token "Cum et deserunt quo molestiae officia ex."
 `, os.Args[0])
 }
 
@@ -254,6 +254,6 @@ Returns the chat messages sent to the server.
     -token STRING: 
 
 Example:
-    `+os.Args[0]+` chatter history --view "Repellat blanditiis quia qui." --token "Facilis quibusdam."
+    `+os.Args[0]+` chatter history --view "Aliquid in." --token "Mollitia debitis unde vero."
 `, os.Args[0])
 }

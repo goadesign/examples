@@ -11,7 +11,6 @@ package server
 import (
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
-	goa "goa.design/goa/v3/pkg"
 )
 
 // ChatSummaryResponseCollection is the type of the "chatter" service "summary"
@@ -105,11 +104,7 @@ type ChatSummaryResponse struct {
 func NewChatSummaryResponseCollection(res chatterviews.ChatSummaryCollectionView) ChatSummaryResponseCollection {
 	body := make([]*ChatSummaryResponse, len(res))
 	for i, val := range res {
-		body[i] = &ChatSummaryResponse{
-			Message: *val.Message,
-			Length:  val.Length,
-			SentAt:  *val.SentAt,
-		}
+		body[i] = marshalChatterviewsChatSummaryViewToChatSummaryResponse(val)
 	}
 	return body
 }
@@ -224,49 +219,48 @@ func NewHistoryUnauthorizedResponseBody(res chatter.Unauthorized) HistoryUnautho
 
 // NewLoginPayload builds a chatter service login endpoint payload.
 func NewLoginPayload() *chatter.LoginPayload {
-	return &chatter.LoginPayload{}
+	v := &chatter.LoginPayload{}
+
+	return v
 }
 
 // NewEchoerPayload builds a chatter service echoer endpoint payload.
 func NewEchoerPayload(token string) *chatter.EchoerPayload {
-	return &chatter.EchoerPayload{
-		Token: token,
-	}
+	v := &chatter.EchoerPayload{}
+	v.Token = token
+
+	return v
 }
 
 // NewListenerPayload builds a chatter service listener endpoint payload.
 func NewListenerPayload(token string) *chatter.ListenerPayload {
-	return &chatter.ListenerPayload{
-		Token: token,
-	}
+	v := &chatter.ListenerPayload{}
+	v.Token = token
+
+	return v
 }
 
 // NewSummaryPayload builds a chatter service summary endpoint payload.
 func NewSummaryPayload(token string) *chatter.SummaryPayload {
-	return &chatter.SummaryPayload{
-		Token: token,
-	}
+	v := &chatter.SummaryPayload{}
+	v.Token = token
+
+	return v
 }
 
 // NewSubscribePayload builds a chatter service subscribe endpoint payload.
 func NewSubscribePayload(token string) *chatter.SubscribePayload {
-	return &chatter.SubscribePayload{
-		Token: token,
-	}
+	v := &chatter.SubscribePayload{}
+	v.Token = token
+
+	return v
 }
 
 // NewHistoryPayload builds a chatter service history endpoint payload.
 func NewHistoryPayload(view *string, token string) *chatter.HistoryPayload {
-	return &chatter.HistoryPayload{
-		View:  view,
-		Token: token,
-	}
-}
+	v := &chatter.HistoryPayload{}
+	v.View = view
+	v.Token = token
 
-// ValidateChatSummaryResponse runs the validations defined on
-// ChatSummaryResponse
-func ValidateChatSummaryResponse(body *ChatSummaryResponse) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("body.sent_at", body.SentAt, goa.FormatDateTime))
-
-	return
+	return v
 }

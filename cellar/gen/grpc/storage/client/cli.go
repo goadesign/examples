@@ -14,6 +14,7 @@ import (
 
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	storage "goa.design/examples/cellar/gen/storage"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildShowPayload builds the payload for the storage show endpoint from CLI
@@ -33,12 +34,21 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 	{
 		if storageShowView != "" {
 			view = &storageShowView
+			if view != nil {
+				if !(*view == "default" || *view == "tiny") {
+					err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []interface{}{"default", "tiny"}))
+				}
+			}
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	v := &storage.ShowPayload{
 		ID: message.Id,
 	}
 	v.View = view
+
 	return v, nil
 }
 
@@ -79,6 +89,7 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 			}
 		}
 	}
+
 	return v, nil
 }
 
@@ -98,6 +109,7 @@ func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, er
 	v := &storage.RemovePayload{
 		ID: message.Id,
 	}
+
 	return v, nil
 }
 
@@ -218,5 +230,6 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 			}
 		}
 	}
+
 	return v, nil
 }

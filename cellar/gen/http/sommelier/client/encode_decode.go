@@ -117,6 +117,28 @@ func DecodePickResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 	}
 }
 
+// unmarshalStoredBottleResponseToSommelierviewsStoredBottleView builds a value
+// of type *sommelierviews.StoredBottleView from a value of type
+// *StoredBottleResponse.
+func unmarshalStoredBottleResponseToSommelierviewsStoredBottleView(v *StoredBottleResponse) *sommelierviews.StoredBottleView {
+	res := &sommelierviews.StoredBottleView{
+		ID:          v.ID,
+		Name:        v.Name,
+		Vintage:     v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	res.Winery = unmarshalWineryResponseToSommelierviewsWineryView(v.Winery)
+	if v.Composition != nil {
+		res.Composition = make([]*sommelierviews.ComponentView, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = unmarshalComponentResponseToSommelierviewsComponentView(val)
+		}
+	}
+
+	return res
+}
+
 // unmarshalWineryResponseToSommelierviewsWineryView builds a value of type
 // *sommelierviews.WineryView from a value of type *WineryResponse.
 func unmarshalWineryResponseToSommelierviewsWineryView(v *WineryResponse) *sommelierviews.WineryView {

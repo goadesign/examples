@@ -36,9 +36,9 @@ func BuildAddPayload(calcAddA string, calcAddB string) (*calc.AddPayload, error)
 			return nil, fmt.Errorf("invalid value for b, must be INT")
 		}
 	}
-	payload := &calc.AddPayload{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &calc.AddPayload{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }

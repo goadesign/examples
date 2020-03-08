@@ -39,10 +39,12 @@ func NewEchoerPayload(token string) *chatter.EchoerPayload {
 	return v
 }
 
+// NewEchoerResponse builds the gRPC response type from the result of the
+// "echoer" endpoint of the "chatter" service.
 func NewEchoerResponse(result string) *chatterpb.EchoerResponse {
-	v := &chatterpb.EchoerResponse{}
-	v.Field = result
-	return v
+	message := &chatterpb.EchoerResponse{}
+	message.Field = result
+	return message
 }
 
 func NewEchoerStreamingRequest(v *chatterpb.EchoerStreamingRequest) string {
@@ -58,6 +60,13 @@ func NewListenerPayload(token string) *chatter.ListenerPayload {
 	return v
 }
 
+// NewListenerResponse builds the gRPC response type from the result of the
+// "listener" endpoint of the "chatter" service.
+func NewListenerResponse() *chatterpb.ListenerResponse {
+	message := &chatterpb.ListenerResponse{}
+	return message
+}
+
 func NewListenerStreamingRequest(v *chatterpb.ListenerStreamingRequest) string {
 	spayload := v.Field
 	return spayload
@@ -71,22 +80,24 @@ func NewSummaryPayload(token string) *chatter.SummaryPayload {
 	return v
 }
 
-func NewChatSummaryCollection(vresult chatterviews.ChatSummaryCollectionView) *chatterpb.ChatSummaryCollection {
-	v := &chatterpb.ChatSummaryCollection{}
-	v.Field = make([]*chatterpb.ChatSummary, len(vresult))
-	for i, val := range vresult {
-		v.Field[i] = &chatterpb.ChatSummary{}
+// NewChatSummaryCollection builds the gRPC response type from the result of
+// the "summary" endpoint of the "chatter" service.
+func NewChatSummaryCollection(result chatterviews.ChatSummaryCollectionView) *chatterpb.ChatSummaryCollection {
+	message := &chatterpb.ChatSummaryCollection{}
+	message.Field = make([]*chatterpb.ChatSummary, len(result))
+	for i, val := range result {
+		message.Field[i] = &chatterpb.ChatSummary{}
 		if val.Message != nil {
-			v.Field[i].Message_ = *val.Message
+			message.Field[i].Message_ = *val.Message
 		}
 		if val.Length != nil {
-			v.Field[i].Length = int32(*val.Length)
+			message.Field[i].Length = int32(*val.Length)
 		}
 		if val.SentAt != nil {
-			v.Field[i].SentAt = *val.SentAt
+			message.Field[i].SentAt = *val.SentAt
 		}
 	}
-	return v
+	return message
 }
 
 func NewSummaryStreamingRequest(v *chatterpb.SummaryStreamingRequest) string {
@@ -102,13 +113,15 @@ func NewSubscribePayload(token string) *chatter.SubscribePayload {
 	return v
 }
 
+// NewSubscribeResponse builds the gRPC response type from the result of the
+// "subscribe" endpoint of the "chatter" service.
 func NewSubscribeResponse(result *chatter.Event) *chatterpb.SubscribeResponse {
-	v := &chatterpb.SubscribeResponse{
+	message := &chatterpb.SubscribeResponse{
 		Message_: result.Message,
 		Action:   result.Action,
 		AddedAt:  result.AddedAt,
 	}
-	return v
+	return message
 }
 
 // NewHistoryPayload builds the payload of the "history" endpoint of the
@@ -120,16 +133,18 @@ func NewHistoryPayload(view *string, token string) *chatter.HistoryPayload {
 	return v
 }
 
-func NewHistoryResponse(vresult *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
-	v := &chatterpb.HistoryResponse{}
-	if vresult.Message != nil {
-		v.Message_ = *vresult.Message
+// NewHistoryResponse builds the gRPC response type from the result of the
+// "history" endpoint of the "chatter" service.
+func NewHistoryResponse(result *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
+	message := &chatterpb.HistoryResponse{}
+	if result.Message != nil {
+		message.Message_ = *result.Message
 	}
-	if vresult.Length != nil {
-		v.Length = int32(*vresult.Length)
+	if result.Length != nil {
+		message.Length = int32(*result.Length)
 	}
-	if vresult.SentAt != nil {
-		v.SentAt = *vresult.SentAt
+	if result.SentAt != nil {
+		message.SentAt = *result.SentAt
 	}
-	return v
+	return message
 }

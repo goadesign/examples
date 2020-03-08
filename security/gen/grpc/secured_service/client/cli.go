@@ -30,6 +30,7 @@ func BuildSigninPayload(securedServiceSigninUsername string, securedServiceSigni
 	v := &securedservice.SigninPayload{}
 	v.Username = username
 	v.Password = password
+
 	return v, nil
 }
 
@@ -54,6 +55,7 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 		Fail: &message.Fail,
 	}
 	v.Token = token
+
 	return v, nil
 }
 
@@ -78,6 +80,7 @@ func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedS
 		Key: message.Key,
 	}
 	v.Token = token
+
 	return v, nil
 }
 
@@ -118,5 +121,6 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage string, 
 	}
 	v.OauthToken = oauthToken
 	v.Token = token
+
 	return v, nil
 }

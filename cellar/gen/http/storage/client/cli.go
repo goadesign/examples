@@ -20,6 +20,7 @@ import (
 // BuildShowPayload builds the payload for the storage show endpoint from CLI
 // flags.
 func BuildShowPayload(storageShowID string, storageShowView string) (*storage.ShowPayload, error) {
+	var err error
 	var id string
 	{
 		id = storageShowID
@@ -28,13 +29,21 @@ func BuildShowPayload(storageShowID string, storageShowView string) (*storage.Sh
 	{
 		if storageShowView != "" {
 			view = &storageShowView
+			if view != nil {
+				if !(*view == "default" || *view == "tiny") {
+					err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []interface{}{"default", "tiny"}))
+				}
+			}
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
-	payload := &storage.ShowPayload{
-		ID:   id,
-		View: view,
-	}
-	return payload, nil
+	v := &storage.ShowPayload{}
+	v.ID = id
+	v.View = view
+
+	return v, nil
 }
 
 // BuildAddPayload builds the payload for the storage add endpoint from CLI
@@ -105,6 +114,7 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 			v.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
 		}
 	}
+
 	return v, nil
 }
 
@@ -115,10 +125,10 @@ func BuildRemovePayload(storageRemoveID string) (*storage.RemovePayload, error) 
 	{
 		id = storageRemoveID
 	}
-	payload := &storage.RemovePayload{
-		ID: id,
-	}
-	return payload, nil
+	v := &storage.RemovePayload{}
+	v.ID = id
+
+	return v, nil
 }
 
 // BuildMultiAddPayload builds the payload for the storage multi_add endpoint
@@ -134,21 +144,7 @@ func BuildMultiAddPayload(storageMultiAddBody string) ([]*storage.Bottle, error)
 	}
 	v := make([]*storage.Bottle, len(body))
 	for i, val := range body {
-		v[i] = &storage.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
-		}
-		if val.Winery != nil {
-			v[i].Winery = marshalWineryRequestBodyToStorageWinery(val.Winery)
-		}
-		if val.Composition != nil {
-			v[i].Composition = make([]*storage.Component, len(val.Composition))
-			for j, val := range val.Composition {
-				v[i].Composition[j] = marshalComponentRequestBodyToStorageComponent(val)
-			}
-		}
+		v[i] = marshalBottleRequestBodyToStorageBottle(val)
 	}
 	return v, nil
 }
@@ -192,5 +188,6 @@ func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateId
 		}
 	}
 	v.Ids = ids
+
 	return v, nil
 }

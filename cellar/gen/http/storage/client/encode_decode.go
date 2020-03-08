@@ -524,6 +524,28 @@ func DecodeMultiUpdateResponse(decoder func(*http.Response) goahttp.Decoder, res
 	}
 }
 
+// unmarshalStoredBottleResponseToStorageviewsStoredBottleView builds a value
+// of type *storageviews.StoredBottleView from a value of type
+// *StoredBottleResponse.
+func unmarshalStoredBottleResponseToStorageviewsStoredBottleView(v *StoredBottleResponse) *storageviews.StoredBottleView {
+	res := &storageviews.StoredBottleView{
+		ID:          v.ID,
+		Name:        v.Name,
+		Vintage:     v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	res.Winery = unmarshalWineryResponseToStorageviewsWineryView(v.Winery)
+	if v.Composition != nil {
+		res.Composition = make([]*storageviews.ComponentView, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = unmarshalComponentResponseToStorageviewsComponentView(val)
+		}
+	}
+
+	return res
+}
+
 // unmarshalWineryResponseToStorageviewsWineryView builds a value of type
 // *storageviews.WineryView from a value of type *WineryResponse.
 func unmarshalWineryResponseToStorageviewsWineryView(v *WineryResponse) *storageviews.WineryView {

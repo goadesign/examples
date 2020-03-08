@@ -23,11 +23,11 @@ func BuildConcatstringsPayload(textConcatstringsA string, textConcatstringsB str
 	{
 		b = textConcatstringsB
 	}
-	payload := &text.ConcatstringsPayload{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &text.ConcatstringsPayload{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }
 
 // BuildConcatbytesPayload builds the payload for the text concatbytes endpoint
@@ -41,11 +41,11 @@ func BuildConcatbytesPayload(textConcatbytesA string, textConcatbytesB string) (
 	{
 		b = textConcatbytesB
 	}
-	payload := &text.ConcatbytesPayload{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &text.ConcatbytesPayload{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }
 
 // BuildConcatstringfieldPayload builds the payload for the text
@@ -59,11 +59,11 @@ func BuildConcatstringfieldPayload(textConcatstringfieldA string, textConcatstri
 	{
 		b = textConcatstringfieldB
 	}
-	payload := &text.ConcatstringfieldPayload{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &text.ConcatstringfieldPayload{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }
 
 // BuildConcatbytesfieldPayload builds the payload for the text
@@ -77,9 +77,9 @@ func BuildConcatbytesfieldPayload(textConcatbytesfieldA string, textConcatbytesf
 	{
 		b = textConcatbytesfieldB
 	}
-	payload := &text.ConcatbytesfieldPayload{
-		A: a,
-		B: b,
-	}
-	return payload, nil
+	v := &text.ConcatbytesfieldPayload{}
+	v.A = a
+	v.B = b
+
+	return v, nil
 }

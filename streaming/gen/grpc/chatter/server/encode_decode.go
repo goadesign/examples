@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	goagrpc "goa.design/goa/v3/grpc"
 	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/metadata"
@@ -59,6 +60,17 @@ func DecodeLoginRequest(ctx context.Context, v interface{}, md metadata.MD) (int
 	return payload, nil
 }
 
+// EncodeEchoerResponse encodes responses from the "chatter" service "echoer"
+// endpoint.
+func EncodeEchoerResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
+	result, ok := v.(string)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("chatter", "echoer", "string", v)
+	}
+	resp := NewEchoerResponse(result)
+	return resp, nil
+}
+
 // DecodeEchoerRequest decodes requests sent to "chatter" service "echoer"
 // endpoint.
 func DecodeEchoerRequest(ctx context.Context, v interface{}, md metadata.MD) (interface{}, error) {
@@ -86,6 +98,13 @@ func DecodeEchoerRequest(ctx context.Context, v interface{}, md metadata.MD) (in
 		}
 	}
 	return payload, nil
+}
+
+// EncodeListenerResponse encodes responses from the "chatter" service
+// "listener" endpoint.
+func EncodeListenerResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
+	resp := NewListenerResponse()
+	return resp, nil
 }
 
 // DecodeListenerRequest decodes requests sent to "chatter" service "listener"
@@ -117,6 +136,19 @@ func DecodeListenerRequest(ctx context.Context, v interface{}, md metadata.MD) (
 	return payload, nil
 }
 
+// EncodeSummaryResponse encodes responses from the "chatter" service "summary"
+// endpoint.
+func EncodeSummaryResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
+	vres, ok := v.(chatterviews.ChatSummaryCollection)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("chatter", "summary", "chatterviews.ChatSummaryCollection", v)
+	}
+	result := vres.Projected
+	(*hdr).Append("goa-view", vres.View)
+	resp := NewChatSummaryCollection(result)
+	return resp, nil
+}
+
 // DecodeSummaryRequest decodes requests sent to "chatter" service "summary"
 // endpoint.
 func DecodeSummaryRequest(ctx context.Context, v interface{}, md metadata.MD) (interface{}, error) {
@@ -146,6 +178,17 @@ func DecodeSummaryRequest(ctx context.Context, v interface{}, md metadata.MD) (i
 	return payload, nil
 }
 
+// EncodeSubscribeResponse encodes responses from the "chatter" service
+// "subscribe" endpoint.
+func EncodeSubscribeResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
+	result, ok := v.(*chatter.Event)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("chatter", "subscribe", "*chatter.Event", v)
+	}
+	resp := NewSubscribeResponse(result)
+	return resp, nil
+}
+
 // DecodeSubscribeRequest decodes requests sent to "chatter" service
 // "subscribe" endpoint.
 func DecodeSubscribeRequest(ctx context.Context, v interface{}, md metadata.MD) (interface{}, error) {
@@ -173,6 +216,19 @@ func DecodeSubscribeRequest(ctx context.Context, v interface{}, md metadata.MD) 
 		}
 	}
 	return payload, nil
+}
+
+// EncodeHistoryResponse encodes responses from the "chatter" service "history"
+// endpoint.
+func EncodeHistoryResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
+	vres, ok := v.(*chatterviews.ChatSummary)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("chatter", "history", "*chatterviews.ChatSummary", v)
+	}
+	result := vres.Projected
+	(*hdr).Append("goa-view", vres.View)
+	resp := NewHistoryResponse(result)
+	return resp, nil
 }
 
 // DecodeHistoryRequest decodes requests sent to "chatter" service "history"

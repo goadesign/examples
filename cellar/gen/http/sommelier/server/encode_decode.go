@@ -92,6 +92,30 @@ func EncodePickError(encoder func(context.Context, http.ResponseWriter) goahttp.
 	}
 }
 
+// marshalSommelierviewsStoredBottleViewToStoredBottleResponse builds a value
+// of type *StoredBottleResponse from a value of type
+// *sommelierviews.StoredBottleView.
+func marshalSommelierviewsStoredBottleViewToStoredBottleResponse(v *sommelierviews.StoredBottleView) *StoredBottleResponse {
+	res := &StoredBottleResponse{
+		ID:          *v.ID,
+		Name:        *v.Name,
+		Vintage:     *v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	if v.Winery != nil {
+		res.Winery = marshalSommelierviewsWineryViewToWineryResponseTiny(v.Winery)
+	}
+	if v.Composition != nil {
+		res.Composition = make([]*ComponentResponse, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = marshalSommelierviewsComponentViewToComponentResponse(val)
+		}
+	}
+
+	return res
+}
+
 // marshalSommelierviewsWineryViewToWineryResponseTiny builds a value of type
 // *WineryResponseTiny from a value of type *sommelierviews.WineryView.
 func marshalSommelierviewsWineryViewToWineryResponseTiny(v *sommelierviews.WineryView) *WineryResponseTiny {

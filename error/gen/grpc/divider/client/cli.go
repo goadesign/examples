@@ -33,6 +33,7 @@ func BuildIntegerDividePayload(dividerIntegerDivideMessage string) (*divider.Int
 		A: int(message.A),
 		B: int(message.B),
 	}
+
 	return v, nil
 }
 
@@ -53,5 +54,6 @@ func BuildDividePayload(dividerDivideMessage string) (*divider.FloatOperands, er
 		A: message.A,
 		B: message.B,
 	}
+
 	return v, nil
 }

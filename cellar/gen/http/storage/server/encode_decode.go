@@ -319,6 +319,21 @@ func NewStorageMultiUpdateDecoder(mux goahttp.Muxer, storageMultiUpdateDecoderFn
 	}
 }
 
+// marshalStorageviewsStoredBottleViewToStoredBottleResponseTiny builds a value
+// of type *StoredBottleResponseTiny from a value of type
+// *storageviews.StoredBottleView.
+func marshalStorageviewsStoredBottleViewToStoredBottleResponseTiny(v *storageviews.StoredBottleView) *StoredBottleResponseTiny {
+	res := &StoredBottleResponseTiny{
+		ID:   *v.ID,
+		Name: *v.Name,
+	}
+	if v.Winery != nil {
+		res.Winery = marshalStorageviewsWineryViewToWineryResponseTiny(v.Winery)
+	}
+
+	return res
+}
+
 // marshalStorageviewsWineryViewToWineryResponseTiny builds a value of type
 // *WineryResponseTiny from a value of type *storageviews.WineryView.
 func marshalStorageviewsWineryViewToWineryResponseTiny(v *storageviews.WineryView) *WineryResponseTiny {
