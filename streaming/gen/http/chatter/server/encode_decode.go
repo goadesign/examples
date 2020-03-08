@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	chatter "goa.design/examples/streaming/gen/chatter"
+	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -407,4 +408,16 @@ func EncodeHistoryError(encoder func(context.Context, http.ResponseWriter) goaht
 			return encodeError(ctx, w, v)
 		}
 	}
+}
+
+// marshalChatterviewsChatSummaryViewToChatSummaryResponse builds a value of
+// type *ChatSummaryResponse from a value of type *chatterviews.ChatSummaryView.
+func marshalChatterviewsChatSummaryViewToChatSummaryResponse(v *chatterviews.ChatSummaryView) *ChatSummaryResponse {
+	res := &ChatSummaryResponse{
+		Message: *v.Message,
+		Length:  v.Length,
+		SentAt:  *v.SentAt,
+	}
+
+	return res
 }

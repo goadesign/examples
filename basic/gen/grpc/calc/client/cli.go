@@ -32,5 +32,6 @@ func BuildAddPayload(calcAddMessage string) (*calc.AddPayload, error) {
 		A: int(message.A),
 		B: int(message.B),
 	}
+
 	return v, nil
 }

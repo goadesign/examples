@@ -176,16 +176,18 @@ func NewDivideTimeoutResponseBody(res *goa.ServiceError) *DivideTimeoutResponseB
 // NewIntegerDivideIntOperands builds a divider service integer_divide endpoint
 // payload.
 func NewIntegerDivideIntOperands(a int, b int) *divider.IntOperands {
-	return &divider.IntOperands{
-		A: a,
-		B: b,
-	}
+	v := &divider.IntOperands{}
+	v.A = a
+	v.B = b
+
+	return v
 }
 
 // NewDivideFloatOperands builds a divider service divide endpoint payload.
 func NewDivideFloatOperands(a float64, b float64) *divider.FloatOperands {
-	return &divider.FloatOperands{
-		A: a,
-		B: b,
-	}
+	v := &divider.FloatOperands{}
+	v.A = a
+	v.B = b
+
+	return v
 }

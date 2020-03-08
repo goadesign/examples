@@ -26,6 +26,7 @@ func BuildLoginPayload(chatterLoginUser string, chatterLoginPassword string) (*c
 	v := &chatter.LoginPayload{}
 	v.User = user
 	v.Password = password
+
 	return v, nil
 }
 
@@ -38,6 +39,7 @@ func BuildEchoerPayload(chatterEchoerToken string) (*chatter.EchoerPayload, erro
 	}
 	v := &chatter.EchoerPayload{}
 	v.Token = token
+
 	return v, nil
 }
 
@@ -50,6 +52,7 @@ func BuildListenerPayload(chatterListenerToken string) (*chatter.ListenerPayload
 	}
 	v := &chatter.ListenerPayload{}
 	v.Token = token
+
 	return v, nil
 }
 
@@ -62,6 +65,7 @@ func BuildSummaryPayload(chatterSummaryToken string) (*chatter.SummaryPayload, e
 	}
 	v := &chatter.SummaryPayload{}
 	v.Token = token
+
 	return v, nil
 }
 
@@ -74,6 +78,7 @@ func BuildSubscribePayload(chatterSubscribeToken string) (*chatter.SubscribePayl
 	}
 	v := &chatter.SubscribePayload{}
 	v.Token = token
+
 	return v, nil
 }
 
@@ -93,5 +98,6 @@ func BuildHistoryPayload(chatterHistoryView string, chatterHistoryToken string) 
 	v := &chatter.HistoryPayload{}
 	v.View = view
 	v.Token = token
+
 	return v, nil
 }

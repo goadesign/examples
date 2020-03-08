@@ -19,6 +19,7 @@ func NewConcatstringfieldMyConcatenationOK(body string) *text.MyConcatenation {
 	res := &text.MyConcatenation{
 		Stringfield: &v,
 	}
+
 	return res
 }
 
@@ -29,5 +30,6 @@ func NewConcatbytesfieldMyConcatenationOK(body []byte) *text.MyConcatenation {
 	res := &text.MyConcatenation{
 		Bytesfield: v,
 	}
+
 	return res
 }

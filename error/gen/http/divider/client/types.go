@@ -113,6 +113,7 @@ func NewIntegerDivideHasRemainder(body *IntegerDivideHasRemainderResponseBody) *
 		Timeout:   *body.Timeout,
 		Fault:     *body.Fault,
 	}
+
 	return v
 }
 
@@ -127,6 +128,7 @@ func NewIntegerDivideDivByZero(body *IntegerDivideDivByZeroResponseBody) *goa.Se
 		Timeout:   *body.Timeout,
 		Fault:     *body.Fault,
 	}
+
 	return v
 }
 
@@ -141,6 +143,7 @@ func NewIntegerDivideTimeout(body *IntegerDivideTimeoutResponseBody) *goa.Servic
 		Timeout:   *body.Timeout,
 		Fault:     *body.Fault,
 	}
+
 	return v
 }
 
@@ -155,6 +158,7 @@ func NewDivideDivByZero(body *DivideDivByZeroResponseBody) *goa.ServiceError {
 		Timeout:   *body.Timeout,
 		Fault:     *body.Fault,
 	}
+
 	return v
 }
 
@@ -168,6 +172,7 @@ func NewDivideTimeout(body *DivideTimeoutResponseBody) *goa.ServiceError {
 		Timeout:   *body.Timeout,
 		Fault:     *body.Fault,
 	}
+
 	return v
 }
 

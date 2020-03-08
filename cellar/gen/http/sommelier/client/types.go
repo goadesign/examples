@@ -98,20 +98,7 @@ func NewPickRequestBody(p *sommelier.Criteria) *PickRequestBody {
 func NewPickStoredBottleCollectionOK(body PickResponseBody) sommelierviews.StoredBottleCollectionView {
 	v := make([]*sommelierviews.StoredBottleView, len(body))
 	for i, val := range body {
-		v[i] = &sommelierviews.StoredBottleView{
-			ID:          val.ID,
-			Name:        val.Name,
-			Vintage:     val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
-		}
-		v[i].Winery = unmarshalWineryResponseToSommelierviewsWineryView(val.Winery)
-		if val.Composition != nil {
-			v[i].Composition = make([]*sommelierviews.ComponentView, len(val.Composition))
-			for j, val := range val.Composition {
-				v[i].Composition[j] = unmarshalComponentResponseToSommelierviewsComponentView(val)
-			}
-		}
+		v[i] = unmarshalStoredBottleResponseToSommelierviewsStoredBottleView(val)
 	}
 	return v
 }

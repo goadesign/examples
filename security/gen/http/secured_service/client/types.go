@@ -64,6 +64,7 @@ func NewSigninCredsOK(body *SigninResponseBody) *securedservice.Creds {
 		APIKey:     *body.APIKey,
 		OauthToken: *body.OauthToken,
 	}
+
 	return v
 }
 

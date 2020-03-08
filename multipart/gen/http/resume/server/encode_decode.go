@@ -73,6 +73,31 @@ func NewResumeAddDecoder(mux goahttp.Muxer, resumeAddDecoderFn ResumeAddDecoderF
 	}
 }
 
+// marshalResumeviewsStoredResumeViewToStoredResumeResponse builds a value of
+// type *StoredResumeResponse from a value of type
+// *resumeviews.StoredResumeView.
+func marshalResumeviewsStoredResumeViewToStoredResumeResponse(v *resumeviews.StoredResumeView) *StoredResumeResponse {
+	res := &StoredResumeResponse{
+		ID:        *v.ID,
+		CreatedAt: *v.CreatedAt,
+		Name:      *v.Name,
+	}
+	if v.Experience != nil {
+		res.Experience = make([]*ExperienceResponse, len(v.Experience))
+		for i, val := range v.Experience {
+			res.Experience[i] = marshalResumeviewsExperienceViewToExperienceResponse(val)
+		}
+	}
+	if v.Education != nil {
+		res.Education = make([]*EducationResponse, len(v.Education))
+		for i, val := range v.Education {
+			res.Education[i] = marshalResumeviewsEducationViewToEducationResponse(val)
+		}
+	}
+
+	return res
+}
+
 // marshalResumeviewsExperienceViewToExperienceResponse builds a value of type
 // *ExperienceResponse from a value of type *resumeviews.ExperienceView.
 func marshalResumeviewsExperienceViewToExperienceResponse(v *resumeviews.ExperienceView) *ExperienceResponse {
@@ -91,6 +116,28 @@ func marshalResumeviewsEducationViewToEducationResponse(v *resumeviews.Education
 	res := &EducationResponse{
 		Institution: *v.Institution,
 		Major:       *v.Major,
+	}
+
+	return res
+}
+
+// unmarshalResumeRequestBodyToResumeResume builds a value of type
+// *resume.Resume from a value of type *ResumeRequestBody.
+func unmarshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resume {
+	res := &resume.Resume{
+		Name: *v.Name,
+	}
+	if v.Experience != nil {
+		res.Experience = make([]*resume.Experience, len(v.Experience))
+		for i, val := range v.Experience {
+			res.Experience[i] = unmarshalExperienceRequestBodyToResumeExperience(val)
+		}
+	}
+	if v.Education != nil {
+		res.Education = make([]*resume.Education, len(v.Education))
+		for i, val := range v.Education {
+			res.Education[i] = unmarshalEducationRequestBodyToResumeEducation(val)
+		}
 	}
 
 	return res

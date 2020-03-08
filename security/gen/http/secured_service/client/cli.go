@@ -26,11 +26,11 @@ func BuildSigninPayload(securedServiceSigninUsername string, securedServiceSigni
 	{
 		password = securedServiceSigninPassword
 	}
-	payload := &securedservice.SigninPayload{
-		Username: username,
-		Password: password,
-	}
-	return payload, nil
+	v := &securedservice.SigninPayload{}
+	v.Username = username
+	v.Password = password
+
+	return v, nil
 }
 
 // BuildSecurePayload builds the payload for the secured_service secure
@@ -52,11 +52,11 @@ func BuildSecurePayload(securedServiceSecureFail string, securedServiceSecureTok
 	{
 		token = securedServiceSecureToken
 	}
-	payload := &securedservice.SecurePayload{
-		Fail:  fail,
-		Token: token,
-	}
-	return payload, nil
+	v := &securedservice.SecurePayload{}
+	v.Fail = fail
+	v.Token = token
+
+	return v, nil
 }
 
 // BuildDoublySecurePayload builds the payload for the secured_service
@@ -70,11 +70,11 @@ func BuildDoublySecurePayload(securedServiceDoublySecureKey string, securedServi
 	{
 		token = securedServiceDoublySecureToken
 	}
-	payload := &securedservice.DoublySecurePayload{
-		Key:   key,
-		Token: token,
-	}
-	return payload, nil
+	v := &securedservice.DoublySecurePayload{}
+	v.Key = key
+	v.Token = token
+
+	return v, nil
 }
 
 // BuildAlsoDoublySecurePayload builds the payload for the secured_service
@@ -110,12 +110,12 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureKey string, secu
 			password = &securedServiceAlsoDoublySecurePassword
 		}
 	}
-	payload := &securedservice.AlsoDoublySecurePayload{
-		Key:        key,
-		OauthToken: oauthToken,
-		Token:      token,
-		Username:   username,
-		Password:   password,
-	}
-	return payload, nil
+	v := &securedservice.AlsoDoublySecurePayload{}
+	v.Key = key
+	v.OauthToken = oauthToken
+	v.Token = token
+	v.Username = username
+	v.Password = password
+
+	return v, nil
 }

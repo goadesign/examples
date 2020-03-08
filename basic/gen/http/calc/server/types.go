@@ -14,8 +14,9 @@ import (
 
 // NewAddPayload builds a calc service add endpoint payload.
 func NewAddPayload(a int, b int) *calc.AddPayload {
-	return &calc.AddPayload{
-		A: a,
-		B: b,
-	}
+	v := &calc.AddPayload{}
+	v.A = a
+	v.B = b
+
+	return v
 }

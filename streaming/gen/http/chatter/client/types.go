@@ -133,11 +133,7 @@ func NewListenerUnauthorized(body ListenerUnauthorizedResponseBody) chatter.Unau
 func NewSummaryChatSummaryCollectionOK(body SummaryResponseBody) chatterviews.ChatSummaryCollectionView {
 	v := make([]*chatterviews.ChatSummaryView, len(body))
 	for i, val := range body {
-		v[i] = &chatterviews.ChatSummaryView{
-			Message: val.Message,
-			Length:  val.Length,
-			SentAt:  val.SentAt,
-		}
+		v[i] = unmarshalChatSummaryResponseToChatterviewsChatSummaryView(val)
 	}
 	return v
 }
@@ -164,6 +160,7 @@ func NewSubscribeEventOK(body *SubscribeResponseBody) *chatter.Event {
 		Action:  *body.Action,
 		AddedAt: *body.AddedAt,
 	}
+
 	return v
 }
 
@@ -189,6 +186,7 @@ func NewHistoryChatSummaryOK(body *HistoryResponseBody) *chatterviews.ChatSummar
 		Length:  body.Length,
 		SentAt:  body.SentAt,
 	}
+
 	return v
 }
 
