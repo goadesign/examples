@@ -143,77 +143,77 @@ func NewHistoryResponseBody(res *chatterviews.ChatSummaryView) *HistoryResponseB
 // NewLoginUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "login" endpoint of the "chatter" service.
 func NewLoginUnauthorizedResponseBody(res chatter.Unauthorized) LoginUnauthorizedResponseBody {
-	body := res
+	body := LoginUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewEchoerInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "echoer" endpoint of the "chatter" service.
 func NewEchoerInvalidScopesResponseBody(res chatter.InvalidScopes) EchoerInvalidScopesResponseBody {
-	body := res
+	body := EchoerInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewEchoerUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "echoer" endpoint of the "chatter" service.
 func NewEchoerUnauthorizedResponseBody(res chatter.Unauthorized) EchoerUnauthorizedResponseBody {
-	body := res
+	body := EchoerUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewListenerInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "listener" endpoint of the "chatter" service.
 func NewListenerInvalidScopesResponseBody(res chatter.InvalidScopes) ListenerInvalidScopesResponseBody {
-	body := res
+	body := ListenerInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewListenerUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "listener" endpoint of the "chatter" service.
 func NewListenerUnauthorizedResponseBody(res chatter.Unauthorized) ListenerUnauthorizedResponseBody {
-	body := res
+	body := ListenerUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewSummaryInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "summary" endpoint of the "chatter" service.
 func NewSummaryInvalidScopesResponseBody(res chatter.InvalidScopes) SummaryInvalidScopesResponseBody {
-	body := res
+	body := SummaryInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewSummaryUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "summary" endpoint of the "chatter" service.
 func NewSummaryUnauthorizedResponseBody(res chatter.Unauthorized) SummaryUnauthorizedResponseBody {
-	body := res
+	body := SummaryUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewSubscribeInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "subscribe" endpoint of the "chatter" service.
 func NewSubscribeInvalidScopesResponseBody(res chatter.InvalidScopes) SubscribeInvalidScopesResponseBody {
-	body := res
+	body := SubscribeInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewSubscribeUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "subscribe" endpoint of the "chatter" service.
 func NewSubscribeUnauthorizedResponseBody(res chatter.Unauthorized) SubscribeUnauthorizedResponseBody {
-	body := res
+	body := SubscribeUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewHistoryInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "history" endpoint of the "chatter" service.
 func NewHistoryInvalidScopesResponseBody(res chatter.InvalidScopes) HistoryInvalidScopesResponseBody {
-	body := res
+	body := HistoryInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewHistoryUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "history" endpoint of the "chatter" service.
 func NewHistoryUnauthorizedResponseBody(res chatter.Unauthorized) HistoryUnauthorizedResponseBody {
-	body := res
+	body := HistoryUnauthorizedResponseBody(res)
 	return body
 }
 

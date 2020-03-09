@@ -71,49 +71,49 @@ func NewSigninCredsOK(body *SigninResponseBody) *securedservice.Creds {
 // NewSigninUnauthorized builds a secured_service service signin endpoint
 // unauthorized error.
 func NewSigninUnauthorized(body SigninUnauthorizedResponseBody) securedservice.Unauthorized {
-	v := body
+	v := securedservice.Unauthorized(body)
 	return v
 }
 
 // NewSecureInvalidScopes builds a secured_service service secure endpoint
 // invalid-scopes error.
 func NewSecureInvalidScopes(body SecureInvalidScopesResponseBody) securedservice.InvalidScopes {
-	v := body
+	v := securedservice.InvalidScopes(body)
 	return v
 }
 
 // NewSecureUnauthorized builds a secured_service service secure endpoint
 // unauthorized error.
 func NewSecureUnauthorized(body SecureUnauthorizedResponseBody) securedservice.Unauthorized {
-	v := body
+	v := securedservice.Unauthorized(body)
 	return v
 }
 
 // NewDoublySecureInvalidScopes builds a secured_service service doubly_secure
 // endpoint invalid-scopes error.
 func NewDoublySecureInvalidScopes(body DoublySecureInvalidScopesResponseBody) securedservice.InvalidScopes {
-	v := body
+	v := securedservice.InvalidScopes(body)
 	return v
 }
 
 // NewDoublySecureUnauthorized builds a secured_service service doubly_secure
 // endpoint unauthorized error.
 func NewDoublySecureUnauthorized(body DoublySecureUnauthorizedResponseBody) securedservice.Unauthorized {
-	v := body
+	v := securedservice.Unauthorized(body)
 	return v
 }
 
 // NewAlsoDoublySecureInvalidScopes builds a secured_service service
 // also_doubly_secure endpoint invalid-scopes error.
 func NewAlsoDoublySecureInvalidScopes(body AlsoDoublySecureInvalidScopesResponseBody) securedservice.InvalidScopes {
-	v := body
+	v := securedservice.InvalidScopes(body)
 	return v
 }
 
 // NewAlsoDoublySecureUnauthorized builds a secured_service service
 // also_doubly_secure endpoint unauthorized error.
 func NewAlsoDoublySecureUnauthorized(body AlsoDoublySecureUnauthorizedResponseBody) securedservice.Unauthorized {
-	v := body
+	v := securedservice.Unauthorized(body)
 	return v
 }
 
