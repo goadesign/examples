@@ -69,35 +69,35 @@ func NewSigninResponseBody(res *securedservice.Creds) *SigninResponseBody {
 // NewSigninUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "signin" endpoint of the "secured_service" service.
 func NewSigninUnauthorizedResponseBody(res securedservice.Unauthorized) SigninUnauthorizedResponseBody {
-	body := res
+	body := SigninUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewSecureInvalidScopesResponseBody builds the HTTP response body from the
 // result of the "secure" endpoint of the "secured_service" service.
 func NewSecureInvalidScopesResponseBody(res securedservice.InvalidScopes) SecureInvalidScopesResponseBody {
-	body := res
+	body := SecureInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewSecureUnauthorizedResponseBody builds the HTTP response body from the
 // result of the "secure" endpoint of the "secured_service" service.
 func NewSecureUnauthorizedResponseBody(res securedservice.Unauthorized) SecureUnauthorizedResponseBody {
-	body := res
+	body := SecureUnauthorizedResponseBody(res)
 	return body
 }
 
 // NewDoublySecureInvalidScopesResponseBody builds the HTTP response body from
 // the result of the "doubly_secure" endpoint of the "secured_service" service.
 func NewDoublySecureInvalidScopesResponseBody(res securedservice.InvalidScopes) DoublySecureInvalidScopesResponseBody {
-	body := res
+	body := DoublySecureInvalidScopesResponseBody(res)
 	return body
 }
 
 // NewDoublySecureUnauthorizedResponseBody builds the HTTP response body from
 // the result of the "doubly_secure" endpoint of the "secured_service" service.
 func NewDoublySecureUnauthorizedResponseBody(res securedservice.Unauthorized) DoublySecureUnauthorizedResponseBody {
-	body := res
+	body := DoublySecureUnauthorizedResponseBody(res)
 	return body
 }
 
@@ -105,7 +105,7 @@ func NewDoublySecureUnauthorizedResponseBody(res securedservice.Unauthorized) Do
 // from the result of the "also_doubly_secure" endpoint of the
 // "secured_service" service.
 func NewAlsoDoublySecureInvalidScopesResponseBody(res securedservice.InvalidScopes) AlsoDoublySecureInvalidScopesResponseBody {
-	body := res
+	body := AlsoDoublySecureInvalidScopesResponseBody(res)
 	return body
 }
 
@@ -113,7 +113,7 @@ func NewAlsoDoublySecureInvalidScopesResponseBody(res securedservice.InvalidScop
 // from the result of the "also_doubly_secure" endpoint of the
 // "secured_service" service.
 func NewAlsoDoublySecureUnauthorizedResponseBody(res securedservice.Unauthorized) AlsoDoublySecureUnauthorizedResponseBody {
-	body := res
+	body := AlsoDoublySecureUnauthorizedResponseBody(res)
 	return body
 }
 

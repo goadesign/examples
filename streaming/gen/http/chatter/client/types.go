@@ -96,35 +96,35 @@ type ChatSummaryResponse struct {
 // NewLoginUnauthorized builds a chatter service login endpoint unauthorized
 // error.
 func NewLoginUnauthorized(body LoginUnauthorizedResponseBody) chatter.Unauthorized {
-	v := body
+	v := chatter.Unauthorized(body)
 	return v
 }
 
 // NewEchoerInvalidScopes builds a chatter service echoer endpoint
 // invalid-scopes error.
 func NewEchoerInvalidScopes(body EchoerInvalidScopesResponseBody) chatter.InvalidScopes {
-	v := body
+	v := chatter.InvalidScopes(body)
 	return v
 }
 
 // NewEchoerUnauthorized builds a chatter service echoer endpoint unauthorized
 // error.
 func NewEchoerUnauthorized(body EchoerUnauthorizedResponseBody) chatter.Unauthorized {
-	v := body
+	v := chatter.Unauthorized(body)
 	return v
 }
 
 // NewListenerInvalidScopes builds a chatter service listener endpoint
 // invalid-scopes error.
 func NewListenerInvalidScopes(body ListenerInvalidScopesResponseBody) chatter.InvalidScopes {
-	v := body
+	v := chatter.InvalidScopes(body)
 	return v
 }
 
 // NewListenerUnauthorized builds a chatter service listener endpoint
 // unauthorized error.
 func NewListenerUnauthorized(body ListenerUnauthorizedResponseBody) chatter.Unauthorized {
-	v := body
+	v := chatter.Unauthorized(body)
 	return v
 }
 
@@ -141,14 +141,14 @@ func NewSummaryChatSummaryCollectionOK(body SummaryResponseBody) chatterviews.Ch
 // NewSummaryInvalidScopes builds a chatter service summary endpoint
 // invalid-scopes error.
 func NewSummaryInvalidScopes(body SummaryInvalidScopesResponseBody) chatter.InvalidScopes {
-	v := body
+	v := chatter.InvalidScopes(body)
 	return v
 }
 
 // NewSummaryUnauthorized builds a chatter service summary endpoint
 // unauthorized error.
 func NewSummaryUnauthorized(body SummaryUnauthorizedResponseBody) chatter.Unauthorized {
-	v := body
+	v := chatter.Unauthorized(body)
 	return v
 }
 
@@ -167,14 +167,14 @@ func NewSubscribeEventOK(body *SubscribeResponseBody) *chatter.Event {
 // NewSubscribeInvalidScopes builds a chatter service subscribe endpoint
 // invalid-scopes error.
 func NewSubscribeInvalidScopes(body SubscribeInvalidScopesResponseBody) chatter.InvalidScopes {
-	v := body
+	v := chatter.InvalidScopes(body)
 	return v
 }
 
 // NewSubscribeUnauthorized builds a chatter service subscribe endpoint
 // unauthorized error.
 func NewSubscribeUnauthorized(body SubscribeUnauthorizedResponseBody) chatter.Unauthorized {
-	v := body
+	v := chatter.Unauthorized(body)
 	return v
 }
 
@@ -193,14 +193,14 @@ func NewHistoryChatSummaryOK(body *HistoryResponseBody) *chatterviews.ChatSummar
 // NewHistoryInvalidScopes builds a chatter service history endpoint
 // invalid-scopes error.
 func NewHistoryInvalidScopes(body HistoryInvalidScopesResponseBody) chatter.InvalidScopes {
-	v := body
+	v := chatter.InvalidScopes(body)
 	return v
 }
 
 // NewHistoryUnauthorized builds a chatter service history endpoint
 // unauthorized error.
 func NewHistoryUnauthorized(body HistoryUnauthorizedResponseBody) chatter.Unauthorized {
-	v := body
+	v := chatter.Unauthorized(body)
 	return v
 }
 
