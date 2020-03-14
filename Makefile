@@ -37,7 +37,7 @@ all: check-goa gen lint test
 travis: depend all check-freshness
 
 # Install protoc
-PROTOC_VERSION=3.6.1
+PROTOC_VERSION=3.11.4
 ifeq ($(GOOS),linux)
 PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
 PROTOC_EXEC=$(PROTOC)/bin/protoc
