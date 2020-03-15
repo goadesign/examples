@@ -10,7 +10,12 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
 	github.com/hashicorp/go-getter v1.4.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+<<<<<<< HEAD
 	goa.design/goa/v3 v3.1.2
+=======
+	github.com/rs/xid v1.2.1
+	goa.design/goa/v3 v3.1.1
+>>>>>>> Update TUS example to take advantage of SkipXXXEncodeDecode
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
