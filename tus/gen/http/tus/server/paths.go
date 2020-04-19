@@ -14,25 +14,25 @@ import (
 
 // HeadTusPath returns the URL path to the tus service head HTTP endpoint.
 func HeadTusPath(id string) string {
-	return fmt.Sprintf("/files/%v", id)
+	return fmt.Sprintf("/upload/%v", id)
 }
 
 // PatchTusPath returns the URL path to the tus service patch HTTP endpoint.
 func PatchTusPath(id string) string {
-	return fmt.Sprintf("/files/%v", id)
+	return fmt.Sprintf("/upload/%v", id)
 }
 
 // OptionsTusPath returns the URL path to the tus service options HTTP endpoint.
 func OptionsTusPath() string {
-	return "/files"
+	return "/upload"
 }
 
 // PostTusPath returns the URL path to the tus service post HTTP endpoint.
 func PostTusPath() string {
-	return "/files"
+	return "/upload"
 }
 
 // DeleteTusPath returns the URL path to the tus service delete HTTP endpoint.
 func DeleteTusPath(id string) string {
-	return fmt.Sprintf("/files/%v", id)
+	return fmt.Sprintf("/upload/%v", id)
 }

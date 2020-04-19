@@ -30,7 +30,9 @@ func (s *tusWrapper) Head(ctx context.Context, p *tus.HeadPayload) (res *tus.Hea
 		return nil, &tus.ErrInvalidTUSResumable{TusVersion: TusResumable}
 	}
 	res, err = s.svc.Head(ctx, p)
-	res.TusResumable = TusResumable
+	if res != nil {
+		res.TusResumable = TusResumable
+	}
 	return
 }
 
@@ -40,7 +42,9 @@ func (s *tusWrapper) Patch(ctx context.Context, p *tus.PatchPayload, r io.ReadCl
 		return nil, &tus.ErrInvalidTUSResumable{TusVersion: TusResumable}
 	}
 	res, err = s.svc.Patch(ctx, p, r)
-	res.TusResumable = TusResumable
+	if res != nil {
+		res.TusResumable = TusResumable
+	}
 	return
 }
 
@@ -48,7 +52,9 @@ func (s *tusWrapper) Patch(ctx context.Context, p *tus.PatchPayload, r io.ReadCl
 // current configuration.
 func (s *tusWrapper) Options(ctx context.Context) (res *tus.OptionsResult, err error) {
 	res, err = s.svc.Options(ctx)
-	res.TusResumable = TusResumable
+	if res != nil {
+		res.TusResumable = TusResumable
+	}
 	return
 }
 
@@ -59,7 +65,9 @@ func (s *tusWrapper) Post(ctx context.Context, p *tus.PostPayload, r io.ReadClos
 		return nil, &tus.ErrInvalidTUSResumable{TusVersion: TusResumable}
 	}
 	res, err = s.svc.Post(ctx, p, r)
-	res.TusResumable = TusResumable
+	if res != nil {
+		res.TusResumable = TusResumable
+	}
 	return
 }
 
@@ -70,6 +78,8 @@ func (s *tusWrapper) Delete(ctx context.Context, p *tus.DeletePayload) (res *tus
 		return nil, &tus.ErrInvalidTUSResumable{TusVersion: TusResumable}
 	}
 	res, err = s.svc.Delete(ctx, p)
-	res.TusResumable = TusResumable
+	if res != nil {
+		res.TusResumable = TusResumable
+	}
 	return
 }

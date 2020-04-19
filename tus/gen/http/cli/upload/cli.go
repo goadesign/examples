@@ -30,7 +30,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` tus head --id "666dfedc1646ac7a507aa76ebaa109b8" --tus-resumable "1.0.0" --upload-offset 3821960643408970241` + "\n" +
+	return os.Args[0] + ` tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0" --upload-offset 3821960643408970241` + "\n" +
 		""
 }
 
@@ -47,12 +47,12 @@ func ParseEndpoint(
 		tusFlags = flag.NewFlagSet("tus", flag.ContinueOnError)
 
 		tusHeadFlags            = flag.NewFlagSet("head", flag.ExitOnError)
-		tusHeadIDFlag           = tusHeadFlags.String("id", "REQUIRED", "id is the unique upload identifier.")
+		tusHeadIDFlag           = tusHeadFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
 		tusHeadTusResumableFlag = tusHeadFlags.String("tus-resumable", "REQUIRED", "")
 		tusHeadUploadOffsetFlag = tusHeadFlags.String("upload-offset", "", "")
 
 		tusPatchFlags              = flag.NewFlagSet("patch", flag.ExitOnError)
-		tusPatchIDFlag             = tusPatchFlags.String("id", "REQUIRED", "id is the unique upload identifier.")
+		tusPatchIDFlag             = tusPatchFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
 		tusPatchTusResumableFlag   = tusPatchFlags.String("tus-resumable", "REQUIRED", "")
 		tusPatchUploadOffsetFlag   = tusPatchFlags.String("upload-offset", "REQUIRED", "")
 		tusPatchUploadChecksumFlag = tusPatchFlags.String("upload-checksum", "", "")
@@ -70,7 +70,7 @@ func ParseEndpoint(
 		tusPostStreamFlag            = tusPostFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
 
 		tusDeleteFlags            = flag.NewFlagSet("delete", flag.ExitOnError)
-		tusDeleteIDFlag           = tusDeleteFlags.String("id", "REQUIRED", "id is the unique upload identifier.")
+		tusDeleteIDFlag           = tusDeleteFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
 		tusDeleteTusResumableFlag = tusDeleteFlags.String("tus-resumable", "REQUIRED", "")
 	)
 	tusFlags.Usage = tusUsage
@@ -206,12 +206,12 @@ func tusHeadUsage() {
 	fmt.Fprintf(os.Stderr, `%s [flags] tus head -id STRING -tus-resumable STRING -upload-offset INT64
 
 Clients use the HEAD request to determine the offset at which the upload should be continued.
-    -id STRING: id is the unique upload identifier.
+    -id STRING: IDs are generated using Xid: https://github.com/rs/xid
     -tus-resumable STRING: 
     -upload-offset INT64: 
 
 Example:
-    `+os.Args[0]+` tus head --id "666dfedc1646ac7a507aa76ebaa109b8" --tus-resumable "1.0.0" --upload-offset 3821960643408970241
+    `+os.Args[0]+` tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0" --upload-offset 3821960643408970241
 `, os.Args[0])
 }
 
@@ -219,14 +219,14 @@ func tusPatchUsage() {
 	fmt.Fprintf(os.Stderr, `%s [flags] tus patch -id STRING -tus-resumable STRING -upload-offset INT64 -upload-checksum STRING -stream STRING
 
 Clients use the PATCH method to start or resume an upload.
-    -id STRING: id is the unique upload identifier.
+    -id STRING: IDs are generated using Xid: https://github.com/rs/xid
     -tus-resumable STRING: 
     -upload-offset INT64: 
     -upload-checksum STRING: 
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` tus patch --id "844e3408e54c83d5b8e764c0c7ca3d11" --tus-resumable "1.0.0" --upload-offset 5978645777195763072 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
+    `+os.Args[0]+` tus patch --id "84ku3kgoul4sojt5r8un" --tus-resumable "1.0.0" --upload-offset 5978645777195763072 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
 `, os.Args[0])
 }
 
@@ -261,10 +261,10 @@ func tusDeleteUsage() {
 	fmt.Fprintf(os.Stderr, `%s [flags] tus delete -id STRING -tus-resumable STRING
 
 Clients use the DELETE method to terminate completed and unfinished uploads allowing the Server to free up used resources.
-    -id STRING: id is the unique upload identifier.
+    -id STRING: IDs are generated using Xid: https://github.com/rs/xid
     -tus-resumable STRING: 
 
 Example:
-    `+os.Args[0]+` tus delete --id "3ef6a40e2eb0adc802e1e090030a8f3f" --tus-resumable "1.0.0"
+    `+os.Args[0]+` tus delete --id "jevmq4gu2ubgadco02uh" --tus-resumable "1.0.0"
 `, os.Args[0])
 }

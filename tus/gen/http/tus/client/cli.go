@@ -22,7 +22,7 @@ func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string, tusHeadUploa
 	var id string
 	{
 		id = tusHeadID
-		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-f]{32}"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
 		if err != nil {
 			return nil, err
 		}
@@ -60,7 +60,7 @@ func BuildPatchPayload(tusPatchID string, tusPatchTusResumable string, tusPatchU
 	var id string
 	{
 		id = tusPatchID
-		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-f]{32}"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
 		if err != nil {
 			return nil, err
 		}
@@ -176,7 +176,7 @@ func BuildDeletePayload(tusDeleteID string, tusDeleteTusResumable string) (*tus.
 	var id string
 	{
 		id = tusDeleteID
-		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-f]{32}"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
 		if err != nil {
 			return nil, err
 		}

@@ -121,6 +121,24 @@ type PatchInternalResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// PostMissingHeaderResponseBody is the type of the "tus" service "post"
+// endpoint HTTP response body for the "MissingHeader" error.
+type PostMissingHeaderResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // PostInvalidDeferLengthResponseBody is the type of the "tus" service "post"
 // endpoint HTTP response body for the "InvalidDeferLength" error.
 type PostInvalidDeferLengthResponseBody struct {
@@ -285,6 +303,20 @@ func NewPatchChecksumMismatchResponseBody(res *goa.ServiceError) *PatchChecksumM
 // of the "patch" endpoint of the "tus" service.
 func NewPatchInternalResponseBody(res *goa.ServiceError) *PatchInternalResponseBody {
 	body := &PatchInternalResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewPostMissingHeaderResponseBody builds the HTTP response body from the
+// result of the "post" endpoint of the "tus" service.
+func NewPostMissingHeaderResponseBody(res *goa.ServiceError) *PostMissingHeaderResponseBody {
+	body := &PostMissingHeaderResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
