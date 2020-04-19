@@ -29,7 +29,7 @@ var _ = Service("tus", func() {
 
 	HTTP(func() {
 		// Base path for all endpoints.
-		Path("/files")
+		Path("/upload")
 		Response("InvalidTusResumable", StatusPreconditionFailed, func() {
 			Header("tusVersion:Tus-Version")
 		})
@@ -58,14 +58,14 @@ var _ = Service("tus", func() {
 
 		HTTP(func() {
 			HEAD("/{id}")
-			Header("tusResumable")
-			Header("uploadOffset")
+			Header("tusResumable:Tus-Resumable")
+			Header("uploadOffset:Upload-Offset")
 			Response(StatusOK, func() {
-				Header("tusResumable")
-				Header("uploadOffset")
-				Header("uploadLength")
-				Header("uploadDeferLength")
-				Header("uploadMetadata")
+				Header("tusResumable:Tus-Resumable")
+				Header("uploadOffset:Upload-Offset")
+				Header("uploadLength:Upload-Length")
+				Header("uploadDeferLength:Upload-Defer-Length")
+				Header("uploadMetadata:Upload-Metadata")
 			})
 		})
 	})
@@ -112,14 +112,14 @@ var _ = Service("tus", func() {
 
 		HTTP(func() {
 			PATCH("/{id}")
-			Header("tusResumable")
-			Header("uploadOffset")
-			Header("uploadChecksum")
+			Header("tusResumable:Tus-Resumable")
+			Header("uploadOffset:Upload-Offset")
+			Header("uploadChecksum:Upload-Checksum")
 			SkipRequestBodyEncodeDecode()
 			Response(StatusNoContent, func() {
-				Header("tusResumable")
-				Header("uploadOffset")
-				Header("uploadExpires")
+				Header("tusResumable:Tus-Resumable")
+				Header("uploadOffset:Upload-Offset")
+				Header("uploadExpires:Upload-Expires")
 			})
 			Response("InvalidContentType", StatusUnsupportedMediaType)
 			Response("InvalidOffset", StatusConflict)
@@ -148,11 +148,11 @@ var _ = Service("tus", func() {
 		HTTP(func() {
 			OPTIONS("/")
 			Response(StatusNoContent, func() {
-				Header("tusResumable")
-				Header("tusVersion")
-				Header("tusExtension")
-				Header("tusMaxSize")
-				Header("tusChecksumAlgorithm")
+				Header("tusResumable:Tus-Resumable")
+				Header("tusVersion:Tus-Version")
+				Header("tusExtension:Tus-Extension")
+				Header("tusMaxSize:Tus-Max-Size")
+				Header("tusChecksumAlgorithm:Tus-Checksum-Algorithm")
 			})
 		})
 	})
@@ -183,6 +183,9 @@ var _ = Service("tus", func() {
 			Required("tusResumable", "uploadOffset", "location")
 		})
 
+		Error("MissingHeader", func() {
+			Description("The request MUST include one of the following headers: a) Upload-Length -or- b) Upload-Defer-Length: 1")
+		})
 		Error("InvalidDeferLength", func() {
 			Description("If the Upload-Defer-Length header contains any other value than 1 the server should return a 400 Bad Request status.")
 		})
@@ -198,19 +201,20 @@ var _ = Service("tus", func() {
 
 		HTTP(func() {
 			POST("/")
-			Header("tusResumable")
-			Header("uploadLength")
-			Header("uploadDeferLength")
-			Header("uploadChecksum")
-			Header("uploadMetadata")
-			Header("tusMaxSize")
+			Header("tusResumable:Tus-Resumable")
+			Header("uploadLength:Upload-Length")
+			Header("uploadDeferLength:Upload-Defer-Length")
+			Header("uploadChecksum:Upload-Checksum")
+			Header("uploadMetadata:Upload-Metadata")
+			Header("tusMaxSize:Tus-Max-Size")
 			SkipRequestBodyEncodeDecode()
 			Response(StatusCreated, func() {
-				Header("location")
-				Header("tusResumable")
-				Header("uploadOffset")
-				Header("uploadExpires")
+				Header("location:Location")
+				Header("tusResumable:Tus-Resumable")
+				Header("uploadOffset:Upload-Offset")
+				Header("uploadExpires:Upload-Expires")
 			})
+			Response("MissingHeader", StatusBadRequest)
 			Response("InvalidDeferLength", StatusBadRequest)
 			Response("MaximumSizeExceeded", StatusRequestEntityTooLarge)
 			Response("InvalidChecksumAlgorithm", StatusBadRequest)
@@ -240,9 +244,9 @@ var _ = Service("tus", func() {
 
 		HTTP(func() {
 			DELETE("/{id}")
-			Header("tusResumable")
+			Header("tusResumable:Tus-Resumable")
 			Response(StatusNoContent, func() {
-				Header("tusResumable")
+				Header("tusResumable:Tus-Resumable")
 			})
 			Response("NotFound", StatusNotFound)
 		})
@@ -307,6 +311,7 @@ var TUSExtensionHeaders = Type("TUSExtensionHeaders", func() {
 // ID is the attribute used to represent upload identifiers.
 func ID() {
 	Attribute("id", String, "id is the unique upload identifier.", func() {
-		Pattern(`[0-9a-f]{32}`)
+		Description("IDs are generated using Xid: https://github.com/rs/xid")
+		Pattern(`[0-9a-v]{20}`)
 	})
 }

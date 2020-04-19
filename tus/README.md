@@ -37,3 +37,9 @@ extensions:
 * `termination`
 
 This example supports version `1.0.0` of the tus protocol.
+
+## Limitations
+
+This implementation keeps the state of ongoing and completed uploads in
+memory. In particular uploads do not resume after the server process
+restarts.

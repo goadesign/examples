@@ -60,11 +60,11 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Head", "HEAD", "/files/{id}"},
-			{"Patch", "PATCH", "/files/{id}"},
-			{"Options", "OPTIONS", "/files"},
-			{"Post", "POST", "/files"},
-			{"Delete", "DELETE", "/files/{id}"},
+			{"Head", "HEAD", "/upload/{id}"},
+			{"Patch", "PATCH", "/upload/{id}"},
+			{"Options", "OPTIONS", "/upload"},
+			{"Post", "POST", "/upload"},
+			{"Delete", "DELETE", "/upload/{id}"},
 		},
 		Head:    NewHeadHandler(e.Head, mux, decoder, encoder, errhandler, formatter),
 		Patch:   NewPatchHandler(e.Patch, mux, decoder, encoder, errhandler, formatter),
@@ -104,7 +104,7 @@ func MountHeadHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("HEAD", "/files/{id}", f)
+	mux.Handle("HEAD", "/upload/{id}", f)
 }
 
 // NewHeadHandler creates a HTTP handler which loads the HTTP request and calls
@@ -155,7 +155,7 @@ func MountPatchHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("PATCH", "/files/{id}", f)
+	mux.Handle("PATCH", "/upload/{id}", f)
 }
 
 // NewPatchHandler creates a HTTP handler which loads the HTTP request and
@@ -207,7 +207,7 @@ func MountOptionsHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("OPTIONS", "/files", f)
+	mux.Handle("OPTIONS", "/upload", f)
 }
 
 // NewOptionsHandler creates a HTTP handler which loads the HTTP request and
@@ -251,7 +251,7 @@ func MountPostHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/files", f)
+	mux.Handle("POST", "/upload", f)
 }
 
 // NewPostHandler creates a HTTP handler which loads the HTTP request and calls
@@ -303,7 +303,7 @@ func MountDeleteHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("DELETE", "/files/{id}", f)
+	mux.Handle("DELETE", "/upload/{id}", f)
 }
 
 // NewDeleteHandler creates a HTTP handler which loads the HTTP request and

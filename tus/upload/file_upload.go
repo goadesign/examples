@@ -25,9 +25,6 @@ type (
 		length    *int64
 		offset    int64
 		writer    io.Writer
-		cb        func(string, State)
-		timer     *time.Timer
-		cancel    chan struct{}
 	}
 
 	// Info contains read-only information for a given upload.
@@ -63,11 +60,16 @@ type (
 	// ErrInvalidOffset is the type of the error returned by Write when the
 	// provided offset does not match the upload internal state.
 	ErrInvalidOffset string
+
+	// ErrTimedOut is the type of the error returned by Write when the
+	// upload has expired
+	ErrTimedOut string
 )
 
 func (e ErrInvalidAlgo) Error() string   { return string(e) }
 func (e ErrBadChecksum) Error() string   { return string(e) }
 func (e ErrInvalidOffset) Error() string { return string(e) }
+func (e ErrTimedOut) Error() string      { return string(e) }
 
 // New instantiates a new upload with the given id that writes to the given
 // writer. length indicates the expected total number of bytes if known. If ttl
@@ -75,29 +77,28 @@ func (e ErrInvalidOffset) Error() string { return string(e) }
 // Started to TimedOut upon expiration. cb - if not nil - is called once when
 // the state of the upload changes from Started to another value. It is given
 // the ID of the upload and the new state as arguments.
-func New(id string, length *int64, metadata *string, writer io.Writer, ttl time.Duration, cb func(string, State)) *Upload {
-	up := Upload{
+func New(id string, length *int64, metadata *string, writer io.Writer, ttl time.Duration) *Upload {
+	startedAt := time.Now()
+	var expiresAt time.Time
+	if ttl > 0 {
+		expiresAt = startedAt.Add(ttl)
+	}
+
+	return Resume(id, length, metadata, startedAt, expiresAt, writer)
+}
+
+// Resume resumes a persisted upload. expiresAt - if not zero - must be after
+// startedAt.
+func Resume(id string, length *int64, metadata *string, startedAt, expiresAt time.Time, writer io.Writer) *Upload {
+	return &Upload{
 		id:        id,
 		metadata:  metadata,
-		startedAt: time.Now(),
+		startedAt: startedAt,
+		expiresAt: expiresAt,
 		length:    length,
 		writer:    writer,
-		cb:        cb,
-		cancel:    make(chan struct{}),
 		m:         &sync.RWMutex{},
 	}
-
-	if ttl > 0 {
-		up.expiresAt = up.startedAt.Add(ttl)
-		up.timer = time.AfterFunc(ttl, func() {
-			up.m.Lock()
-			defer up.m.Unlock()
-
-			up.terminate(TimedOut)
-		})
-	}
-
-	return &up
 }
 
 // Progress returns information on the given upload.
@@ -133,8 +134,19 @@ func (up *Upload) Expiry() time.Time {
 // "sha1 ", "md5 " or "crc32 " and be followed by the Base64 encoded checksum.
 // It is an error to write to an upload whose state is not Started.
 func (up *Upload) Write(offset int64, data io.ReadCloser, checksum *string) (n int64, err error) {
+	// Make sure that upload hasn't expired
+	if !up.expiresAt.IsZero() && up.expiresAt.Before(time.Now()) {
+		up.terminate(TimedOut)
+		return 0, ErrTimedOut(fmt.Sprintf("upload expired %v", up.expiresAt))
+	}
+
 	// make sure we always close the reader
 	defer func() {
+		if err != nil {
+			up.terminate(Failed)
+			data.Close()
+			return
+		}
 		err = data.Close()
 	}()
 
@@ -174,7 +186,6 @@ func (up *Upload) Write(offset int64, data io.ReadCloser, checksum *string) (n i
 	}
 	n, err = io.Copy(w, data)
 	if err != nil {
-		up.terminate(Failed)
 		return 0, err
 	}
 	if h != nil && base64.URLEncoding.EncodeToString(h.Sum(nil)) != chk {
@@ -186,26 +197,19 @@ func (up *Upload) Write(offset int64, data io.ReadCloser, checksum *string) (n i
 }
 
 // Complete completes the upload. It is idempotent.
-func (up *Upload) Complete() {
-	up.m.Lock()
-	defer up.m.Unlock()
-
-	up.terminate(Completed)
-}
+func (up *Upload) Complete() { up.terminate(Completed) }
 
 // Cancel cancels the upload. It is idempotent.
-func (up *Upload) Cancel() {
-	up.m.Lock()
-	defer up.m.Unlock()
-
-	up.terminate(Cancelled)
-}
+func (up *Upload) Cancel() { up.terminate(Cancelled) }
 
 // terminate sets the state of the upload to the given value (which cannot be
 // Started) and calls the termination callback if any. Calling terminate on a
 // upload whose state is not Started does nothing. The caller must acquire a
 // lock on the upload mutex before calling terminate.
 func (up *Upload) terminate(s State) {
+	up.m.Lock()
+	defer up.m.Unlock()
+
 	if s == Started {
 		panic("cannot terminate upload with state Started")
 	}
@@ -214,14 +218,4 @@ func (up *Upload) terminate(s State) {
 		return
 	}
 	up.state = s
-
-	// Stop timer cleanly if set.
-	if up.timer != nil && !up.timer.Stop() {
-		<-up.timer.C
-	}
-
-	// Invoke callback in separate goroutine.
-	if up.cb != nil {
-		go up.cb(up.id, s)
-	}
 }

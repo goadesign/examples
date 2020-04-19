@@ -19,61 +19,14 @@ import (
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
 func handleHTTPServer(ctx context.Context, u *url.URL, tusEndpoints *tus.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
-
-	// Setup goa log adapter.
-	var (
-		adapter middleware.Logger
-	)
-	{
-		adapter = middleware.NewLogger(logger)
+	mux := goahttp.NewMuxer()
+	tusServer := tussvr.New(tusEndpoints, mux, goahttp.RequestDecoder, goahttp.ResponseEncoder, errorHandler(logger), nil)
+	if debug {
+		tusServer.Use(httpmdlwr.Debug(mux, os.Stdout))
 	}
-
-	// Provide the transport specific request decoder and response encoder.
-	// The goa http package has built-in support for JSON, XML and gob.
-	// Other encodings can be used by providing the corresponding functions,
-	// see goa.design/implement/encoding.
-	var (
-		dec = goahttp.RequestDecoder
-		enc = goahttp.ResponseEncoder
-	)
-
-	// Build the service HTTP request multiplexer and configure it to serve
-	// HTTP requests to the service endpoints.
-	var mux goahttp.Muxer
-	{
-		mux = goahttp.NewMuxer()
-	}
-
-	// Wrap the endpoints with the transport specific layers. The generated
-	// server packages contains code generated from the design which maps
-	// the service input and output data structures to HTTP requests and
-	// responses.
-	var (
-		tusServer *tussvr.Server
-	)
-	{
-		eh := errorHandler(logger)
-		tusServer = tussvr.New(tusEndpoints, mux, dec, enc, eh, nil)
-		if debug {
-			servers := goahttp.Servers{
-				tusServer,
-			}
-			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
-		}
-	}
-	// Configure the mux.
 	tussvr.Mount(mux, tusServer)
-
-	// Wrap the multiplexer with additional middlewares. Middlewares mounted
-	// here apply to all the service endpoints.
-	var handler http.Handler = mux
-	{
-		handler = httpmdlwr.Log(adapter)(handler)
-		handler = httpmdlwr.RequestID()(handler)
-	}
-
-	// Start HTTP server using default configuration, change the code to
-	// configure the server as required by your service.
+	handler := httpmdlwr.Log(middleware.NewLogger(logger))(mux)
+	handler = httpmdlwr.RequestID()(handler)
 	srv := &http.Server{Addr: u.Host, Handler: handler}
 	for _, m := range tusServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
@@ -92,8 +45,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, tusEndpoints *tus.Endpoin
 		<-ctx.Done()
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
-		// Shutdown gracefully with a 30s timeout.
-		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		// Shutdown gracefully with a 300s timeout to allow for ongoing downloads to finish.
+		ctx, cancel := context.WithTimeout(ctx, 300*time.Second)
 		defer cancel()
 
 		srv.Shutdown(ctx)

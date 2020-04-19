@@ -58,12 +58,12 @@ func EncodeHeadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 		}
 		{
 			head := p.TusResumable
-			req.Header.Set("tusResumable", head)
+			req.Header.Set("Tus-Resumable", head)
 		}
 		if p.UploadOffset != nil {
 			head := *p.UploadOffset
 			headStr := strconv.FormatInt(head, 10)
-			req.Header.Set("uploadOffset", headStr)
+			req.Header.Set("Upload-Offset", headStr)
 		}
 		return nil
 	}
@@ -99,16 +99,16 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				uploadMetadata    *string
 				err               error
 			)
-			tusResumableRaw := resp.Header.Get("Tusresumable")
+			tusResumableRaw := resp.Header.Get("Tus-Resumable")
 			if tusResumableRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Resumable", "header"))
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 			{
-				uploadOffsetRaw := resp.Header.Get("Uploadoffset")
+				uploadOffsetRaw := resp.Header.Get("Upload-Offset")
 				if uploadOffsetRaw == "" {
-					return nil, goahttp.ErrValidationError("tus", "head", goa.MissingFieldError("uploadOffset", "header"))
+					return nil, goahttp.ErrValidationError("tus", "head", goa.MissingFieldError("Upload-Offset", "header"))
 				}
 				v, err2 := strconv.ParseInt(uploadOffsetRaw, 10, 64)
 				if err2 != nil {
@@ -117,7 +117,7 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				uploadOffset = v
 			}
 			{
-				uploadLengthRaw := resp.Header.Get("Uploadlength")
+				uploadLengthRaw := resp.Header.Get("Upload-Length")
 				if uploadLengthRaw != "" {
 					v, err2 := strconv.ParseInt(uploadLengthRaw, 10, 64)
 					if err2 != nil {
@@ -127,7 +127,7 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				}
 			}
 			{
-				uploadDeferLengthRaw := resp.Header.Get("Uploaddeferlength")
+				uploadDeferLengthRaw := resp.Header.Get("Upload-Defer-Length")
 				if uploadDeferLengthRaw != "" {
 					v, err2 := strconv.ParseInt(uploadDeferLengthRaw, 10, strconv.IntSize)
 					if err2 != nil {
@@ -142,7 +142,7 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 					err = goa.MergeErrors(err, goa.InvalidEnumValueError("uploadDeferLength", *uploadDeferLength, []interface{}{1}))
 				}
 			}
-			uploadMetadataRaw := resp.Header.Get("Uploadmetadata")
+			uploadMetadataRaw := resp.Header.Get("Upload-Metadata")
 			if uploadMetadataRaw != "" {
 				uploadMetadata = &uploadMetadataRaw
 			}
@@ -214,16 +214,16 @@ func EncodePatchRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 		p := data.Payload
 		{
 			head := p.TusResumable
-			req.Header.Set("tusResumable", head)
+			req.Header.Set("Tus-Resumable", head)
 		}
 		{
 			head := p.UploadOffset
 			headStr := strconv.FormatInt(head, 10)
-			req.Header.Set("uploadOffset", headStr)
+			req.Header.Set("Upload-Offset", headStr)
 		}
 		if p.UploadChecksum != nil {
 			head := *p.UploadChecksum
-			req.Header.Set("uploadChecksum", head)
+			req.Header.Set("Upload-Checksum", head)
 		}
 		return nil
 	}
@@ -263,16 +263,16 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 				uploadExpires *string
 				err           error
 			)
-			tusResumableRaw := resp.Header.Get("Tusresumable")
+			tusResumableRaw := resp.Header.Get("Tus-Resumable")
 			if tusResumableRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Resumable", "header"))
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 			{
-				uploadOffsetRaw := resp.Header.Get("Uploadoffset")
+				uploadOffsetRaw := resp.Header.Get("Upload-Offset")
 				if uploadOffsetRaw == "" {
-					return nil, goahttp.ErrValidationError("tus", "patch", goa.MissingFieldError("uploadOffset", "header"))
+					return nil, goahttp.ErrValidationError("tus", "patch", goa.MissingFieldError("Upload-Offset", "header"))
 				}
 				v, err2 := strconv.ParseInt(uploadOffsetRaw, 10, 64)
 				if err2 != nil {
@@ -280,7 +280,7 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 				}
 				uploadOffset = v
 			}
-			uploadExpiresRaw := resp.Header.Get("Uploadexpires")
+			uploadExpiresRaw := resp.Header.Get("Upload-Expires")
 			if uploadExpiresRaw != "" {
 				uploadExpires = &uploadExpiresRaw
 			}
@@ -455,30 +455,30 @@ func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restore
 				tusChecksumAlgorithm string
 				err                  error
 			)
-			tusResumableRaw := resp.Header.Get("Tusresumable")
+			tusResumableRaw := resp.Header.Get("Tus-Resumable")
 			if tusResumableRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Resumable", "header"))
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
-			tusVersionRaw := resp.Header.Get("Tusversion")
+			tusVersionRaw := resp.Header.Get("Tus-Version")
 			if tusVersionRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusVersion", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Version", "header"))
 			}
 			tusVersion = tusVersionRaw
 			if !(tusVersion == "1.0.0") {
 				err = goa.MergeErrors(err, goa.InvalidEnumValueError("tusVersion", tusVersion, []interface{}{"1.0.0"}))
 			}
-			tusExtensionRaw := resp.Header.Get("Tusextension")
+			tusExtensionRaw := resp.Header.Get("Tus-Extension")
 			if tusExtensionRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusExtension", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Extension", "header"))
 			}
 			tusExtension = tusExtensionRaw
 			if !(tusExtension == "creation,creation-with-upload,creation-defer-length,expiration,checksum,termination") {
 				err = goa.MergeErrors(err, goa.InvalidEnumValueError("tusExtension", tusExtension, []interface{}{"creation,creation-with-upload,creation-defer-length,expiration,checksum,termination"}))
 			}
 			{
-				tusMaxSizeRaw := resp.Header.Get("Tusmaxsize")
+				tusMaxSizeRaw := resp.Header.Get("Tus-Max-Size")
 				if tusMaxSizeRaw != "" {
 					v, err2 := strconv.ParseInt(tusMaxSizeRaw, 10, 64)
 					if err2 != nil {
@@ -487,9 +487,9 @@ func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restore
 					tusMaxSize = &v
 				}
 			}
-			tusChecksumAlgorithmRaw := resp.Header.Get("Tuschecksumalgorithm")
+			tusChecksumAlgorithmRaw := resp.Header.Get("Tus-Checksum-Algorithm")
 			if tusChecksumAlgorithmRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusChecksumAlgorithm", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Checksum-Algorithm", "header"))
 			}
 			tusChecksumAlgorithm = tusChecksumAlgorithmRaw
 			if !(tusChecksumAlgorithm == "md5,sha1,crc32") {
@@ -558,30 +558,30 @@ func EncodePostRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 		p := data.Payload
 		{
 			head := p.TusResumable
-			req.Header.Set("tusResumable", head)
+			req.Header.Set("Tus-Resumable", head)
 		}
 		if p.UploadLength != nil {
 			head := *p.UploadLength
 			headStr := strconv.FormatInt(head, 10)
-			req.Header.Set("uploadLength", headStr)
+			req.Header.Set("Upload-Length", headStr)
 		}
 		if p.UploadDeferLength != nil {
 			head := *p.UploadDeferLength
 			headStr := strconv.Itoa(head)
-			req.Header.Set("uploadDeferLength", headStr)
+			req.Header.Set("Upload-Defer-Length", headStr)
 		}
 		if p.UploadChecksum != nil {
 			head := *p.UploadChecksum
-			req.Header.Set("uploadChecksum", head)
+			req.Header.Set("Upload-Checksum", head)
 		}
 		if p.UploadMetadata != nil {
 			head := *p.UploadMetadata
-			req.Header.Set("uploadMetadata", head)
+			req.Header.Set("Upload-Metadata", head)
 		}
 		if p.TusMaxSize != nil {
 			head := *p.TusMaxSize
 			headStr := strconv.FormatInt(head, 10)
-			req.Header.Set("tusMaxSize", headStr)
+			req.Header.Set("Tus-Max-Size", headStr)
 		}
 		return nil
 	}
@@ -591,6 +591,7 @@ func EncodePostRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 // endpoint. restoreBody controls whether the response body should be restored
 // after having been read.
 // DecodePostResponse may return the following errors:
+//	- "MissingHeader" (type *goa.ServiceError): http.StatusBadRequest
 //	- "InvalidDeferLength" (type *goa.ServiceError): http.StatusBadRequest
 //	- "InvalidChecksumAlgorithm" (type *goa.ServiceError): http.StatusBadRequest
 //	- "MaximumSizeExceeded" (type *goa.ServiceError): http.StatusRequestEntityTooLarge
@@ -622,21 +623,21 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			)
 			locationRaw := resp.Header.Get("Location")
 			if locationRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("location", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Location", "header"))
 			}
 			location = locationRaw
 			err = goa.MergeErrors(err, goa.ValidateFormat("location", location, goa.FormatURI))
 
-			tusResumableRaw := resp.Header.Get("Tusresumable")
+			tusResumableRaw := resp.Header.Get("Tus-Resumable")
 			if tusResumableRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Resumable", "header"))
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 			{
-				uploadOffsetRaw := resp.Header.Get("Uploadoffset")
+				uploadOffsetRaw := resp.Header.Get("Upload-Offset")
 				if uploadOffsetRaw == "" {
-					return nil, goahttp.ErrValidationError("tus", "post", goa.MissingFieldError("uploadOffset", "header"))
+					return nil, goahttp.ErrValidationError("tus", "post", goa.MissingFieldError("Upload-Offset", "header"))
 				}
 				v, err2 := strconv.ParseInt(uploadOffsetRaw, 10, 64)
 				if err2 != nil {
@@ -644,7 +645,7 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				}
 				uploadOffset = v
 			}
-			uploadExpiresRaw := resp.Header.Get("Uploadexpires")
+			uploadExpiresRaw := resp.Header.Get("Upload-Expires")
 			if uploadExpiresRaw != "" {
 				uploadExpires = &uploadExpiresRaw
 			}
@@ -656,6 +657,20 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 		case http.StatusBadRequest:
 			en := resp.Header.Get("goa-error")
 			switch en {
+			case "MissingHeader":
+				var (
+					body PostMissingHeaderResponseBody
+					err  error
+				)
+				err = decoder(resp).Decode(&body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("tus", "post", err)
+				}
+				err = ValidatePostMissingHeaderResponseBody(&body)
+				if err != nil {
+					return nil, goahttp.ErrValidationError("tus", "post", err)
+				}
+				return nil, NewPostMissingHeader(&body)
 			case "InvalidDeferLength":
 				var (
 					body PostInvalidDeferLengthResponseBody
@@ -788,7 +803,7 @@ func EncodeDeleteRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 		}
 		{
 			head := p.TusResumable
-			req.Header.Set("tusResumable", head)
+			req.Header.Set("Tus-Resumable", head)
 		}
 		return nil
 	}
@@ -821,9 +836,9 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 				tusResumable string
 				err          error
 			)
-			tusResumableRaw := resp.Header.Get("Tusresumable")
+			tusResumableRaw := resp.Header.Get("Tus-Resumable")
 			if tusResumableRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
+				err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Resumable", "header"))
 			}
 			tusResumable = tusResumableRaw
 			err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))

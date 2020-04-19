@@ -6,26 +6,23 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/rs/xid"
 	"goa.design/examples/tus/gen/http/tus/server"
 	"goa.design/examples/tus/gen/tus"
+	"goa.design/examples/tus/persist"
 	"goa.design/examples/tus/upload"
 	goahttp "goa.design/goa/v3/http"
 )
 
 // upload service
 type tussvc struct {
-	*sync.RWMutex
-	activeUploads map[string]*upload.Upload
-
-	newWriter         func(id string, len *int64) (io.WriteCloser, error)
-	maxSize           int64
-	uploadTimeout     time.Duration
-	retentionDuration time.Duration
-	logger            *log.Logger
+	store         persist.Store
+	newWriter     func(id string, len *int64) (io.WriteCloser, error)
+	maxSize       int64
+	uploadTimeout time.Duration
+	logger        *log.Logger
 }
 
 // New creates a TUS service that accepts uploads up to maxSize bytes and that
@@ -36,16 +33,14 @@ type tussvc struct {
 // The function returns the writer used to write the uploaded bytes. It must be
 // possible to call Write concurrently on two writers returned by different
 // invocation of the function.
-func New(newWriter func(string, *int64) (io.WriteCloser, error), maxSize int64, uploadTimeout, retentionDuration time.Duration, logger *log.Logger) tus.Service {
-	return &tussvc{
-		RWMutex:           &sync.RWMutex{},
-		activeUploads:     map[string]*upload.Upload{},
-		newWriter:         newWriter,
-		maxSize:           maxSize,
-		uploadTimeout:     uploadTimeout,
-		retentionDuration: retentionDuration,
-		logger:            logger,
-	}
+func New(store persist.Store, newWriter func(string, *int64) (io.WriteCloser, error), maxSize int64, uploadTimeout time.Duration, logger *log.Logger) tus.Service {
+	return HandleTUSResumable(&tussvc{
+		store:         store,
+		newWriter:     newWriter,
+		maxSize:       maxSize,
+		uploadTimeout: uploadTimeout,
+		logger:        logger,
+	})
 }
 
 // Clients use the HEAD request to determine the offset at which the upload
@@ -83,7 +78,10 @@ func (s *tussvc) Patch(ctx context.Context, p *tus.PatchPayload, body io.ReadClo
 		return nil, tus.MakeInvalidContentType(fmt.Errorf("Content-Type header must be application/offset+octet-stream"))
 	}
 
-	up := s.getUpload(p.ID)
+	up, err := s.store.Load(p.ID)
+	if err != nil {
+		return nil, tus.MakeInternal(err)
+	}
 
 	// If the server receives a PATCH request against a non-existent resource it
 	// SHOULD return a 404 Not Found status.
@@ -127,22 +125,28 @@ func (s *tussvc) Post(ctx context.Context, p *tus.PostPayload, body io.ReadClose
 	if p.UploadDeferLength != nil && *p.UploadDeferLength != 1 {
 		return nil, tus.MakeInvalidDeferLength(fmt.Errorf("invalid Upload-Defer-Length header, got %v, expected 1", *p.UploadDeferLength))
 	}
+	if p.UploadLength == nil && p.UploadDeferLength == nil {
+		return nil, tus.MakeMissingHeader(fmt.Errorf("missing Upload-Length or Upload-Defer-Length header"))
+	}
 
 	id := xid.New().String()
 	w, err := s.newWriter(id, p.UploadLength)
 	if err != nil {
 		return nil, tus.MakeInternal(err)
 	}
-	up := upload.New(id, p.UploadLength, p.UploadMetadata, w, s.uploadTimeout, s.onTerminate)
+	up := upload.New(id, p.UploadLength, p.UploadMetadata, w, s.uploadTimeout)
 
-	s.Lock()
-	s.activeUploads[id] = up
-	s.Unlock()
+	if err := s.store.Save(up); err != nil {
+		return nil, tus.MakeInternal(err)
+	}
 
 	var offset int64
 	offset, err = s.write(up, 0, body, p.UploadChecksum)
 	if err != nil {
 		return nil, err
+	}
+	if p.UploadLength != nil && offset >= *p.UploadLength {
+		up.Complete()
 	}
 
 	res = &tus.PostResult{
@@ -159,7 +163,10 @@ func (s *tussvc) Post(ctx context.Context, p *tus.PostPayload, body io.ReadClose
 // Clients use the DELETE method to terminate completed and unfinished uploads
 // allowing the Server to free up used resources.
 func (s *tussvc) Delete(ctx context.Context, p *tus.DeletePayload) (res *tus.DeleteResult, err error) {
-	up := s.getUpload(p.ID)
+	up, err := s.store.Load(p.ID)
+	if err != nil {
+		return nil, tus.MakeInternal(err)
+	}
 
 	// If the server receives a PATCH request against a non-existent resource it
 	// SHOULD return a 404 Not Found status.
@@ -168,15 +175,8 @@ func (s *tussvc) Delete(ctx context.Context, p *tus.DeletePayload) (res *tus.Del
 	}
 
 	up.Cancel()
-	res = &tus.DeleteResult{}
-	return
-}
 
-func (s *tussvc) getUpload(id string) *upload.Upload {
-	s.RLock()
-	up, _ := s.activeUploads[id]
-	s.RUnlock()
-	return up
+	return &tus.DeleteResult{}, nil
 }
 
 // write is a help method shared by POST and PATCH that takes care of mapping
@@ -196,14 +196,4 @@ func (s *tussvc) write(up *upload.Upload, offset int64, content io.ReadCloser, c
 		return 0, tus.MakeInternal(fmt.Errorf("failed to write bytes: %s", err.Error()))
 	}
 	return
-}
-
-// onTerminate is called whenever an upload terminates, successfully or not.
-func (s *tussvc) onTerminate(id string, _ upload.State) {
-	// Remove uploads after configured retention time.
-	time.AfterFunc(s.retentionDuration, func() {
-		s.Lock()
-		delete(s.activeUploads, id)
-		s.Unlock()
-	})
 }

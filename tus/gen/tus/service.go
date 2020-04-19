@@ -45,7 +45,7 @@ var MethodNames = [5]string{"head", "patch", "options", "post", "delete"}
 
 // HeadPayload is the payload type of the tus service head method.
 type HeadPayload struct {
-	// id is the unique upload identifier.
+	// IDs are generated using Xid: https://github.com/rs/xid
 	ID string
 	// tusResumable represents a tus protocol version.
 	TusResumable string
@@ -71,7 +71,7 @@ type HeadResult struct {
 
 // PatchPayload is the payload type of the tus service patch method.
 type PatchPayload struct {
-	// id is the unique upload identifier.
+	// IDs are generated using Xid: https://github.com/rs/xid
 	ID string
 	// tusResumable represents a tus protocol version.
 	TusResumable string
@@ -148,7 +148,7 @@ type PostResult struct {
 
 // DeletePayload is the payload type of the tus service delete method.
 type DeletePayload struct {
-	// id is the unique upload identifier.
+	// IDs are generated using Xid: https://github.com/rs/xid
 	ID string
 	// tusResumable represents a tus protocol version.
 	TusResumable string
@@ -226,6 +226,15 @@ func MakeChecksumMismatch(err error) *goa.ServiceError {
 func MakeInternal(err error) *goa.ServiceError {
 	return &goa.ServiceError{
 		Name:    "Internal",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeMissingHeader builds a goa.ServiceError from an error.
+func MakeMissingHeader(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "MissingHeader",
 		ID:      goa.NewErrorID(),
 		Message: err.Error(),
 	}

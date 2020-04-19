@@ -75,6 +75,7 @@ func (c *Client) Options(ctx context.Context) (res *OptionsResult, err error) {
 
 // Post calls the "post" endpoint of the "tus" service.
 // Post may return the following errors:
+//	- "MissingHeader" (type *goa.ServiceError): The request MUST include one of the following headers: a) Upload-Length -or- b) Upload-Defer-Length: 1
 //	- "InvalidDeferLength" (type *goa.ServiceError): If the Upload-Defer-Length header contains any other value than 1 the server should return a 400 Bad Request status.
 //	- "MaximumSizeExceeded" (type *goa.ServiceError): If the length of the upload exceeds the maximum, which MAY be specified using the Tus-Max-Size header, the Server MUST respond with the 413 Request Entity Too Large status.
 //	- "InvalidChecksumAlgorithm" (type *goa.ServiceError): The checksum algorithm is not supported by the server.
