@@ -226,7 +226,7 @@ Clients use the PATCH method to start or resume an upload.
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` tus patch --id "84ku3kgoul4sojt5r8un" --tus-resumable "1.0.0" --upload-offset 5978645777195763072 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
+    `+os.Args[0]+` tus patch --id "84ku3kgoul4sojt5r8un" --tus-resumable "1.0.0" --upload-offset 5444988333832813877 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
 `, os.Args[0])
 }
 
@@ -253,7 +253,7 @@ Clients use the POST method against a known upload creation URL to request a new
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` tus post --tus-resumable "1.0.0" --upload-length 3703912367095950958 --upload-defer-length 1 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --upload-metadata "key1 val1,key2 val2" --tus-max-size 9030369208219462570 --stream "goa.png"
+    `+os.Args[0]+` tus post --tus-resumable "1.0.0" --upload-length 3599706638076534418 --upload-defer-length 1 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --upload-metadata "key1 val1,key2 val2" --tus-max-size 5854104533867554763 --stream "goa.png"
 `, os.Args[0])
 }
 

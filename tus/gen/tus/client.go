@@ -36,6 +36,10 @@ func NewClient(head, patch, options, post, delete_ goa.Endpoint) *Client {
 }
 
 // Head calls the "head" endpoint of the "tus" service.
+// Head may return the following errors:
+//	- "NotFound" (type *goa.ServiceError): If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
+//	- "Gone" (type *goa.ServiceError): If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
+//	- error: internal error
 func (c *Client) Head(ctx context.Context, p *HeadPayload) (res *HeadResult, err error) {
 	var ires interface{}
 	ires, err = c.HeadEndpoint(ctx, p)
@@ -49,7 +53,8 @@ func (c *Client) Head(ctx context.Context, p *HeadPayload) (res *HeadResult, err
 // Patch may return the following errors:
 //	- "InvalidContentType" (type *goa.ServiceError): All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a 415 Unsupported Media Type status.
 //	- "InvalidOffset" (type *goa.ServiceError): If the offsets do not match, the Server MUST respond with the 409 Conflict status without modifying the upload resource.
-//	- "NotFound" (type *goa.ServiceError): If the server receives a PATCH request against a non-existent resource it SHOULD return a 404 Not Found status.
+//	- "NotFound" (type *goa.ServiceError): If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.
+//	- "Gone" (type *goa.ServiceError): If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.
 //	- "InvalidChecksumAlgorithm" (type *goa.ServiceError): The checksum algorithm is not supported by the server.
 //	- "ChecksumMismatch" (type *goa.ServiceError): The checksums mismatch.
 //	- "Internal" (type *goa.ServiceError): Internal error
@@ -92,7 +97,8 @@ func (c *Client) Post(ctx context.Context, p *PostPayload, req io.ReadCloser) (r
 
 // Delete calls the "delete" endpoint of the "tus" service.
 // Delete may return the following errors:
-//	- "NotFound" (type *goa.ServiceError): For all future requests to this URL, the Server SHOULD respond with the 404 Not Found.
+//	- "NotFound" (type *goa.ServiceError): For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status.
+//	- "Gone" (type *goa.ServiceError): For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status.
 //	- error: internal error
 func (c *Client) Delete(ctx context.Context, p *DeletePayload) (res *DeleteResult, err error) {
 	var ires interface{}

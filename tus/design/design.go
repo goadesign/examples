@@ -56,6 +56,13 @@ var _ = Service("tus", func() {
 			Required("tusResumable", "uploadOffset")
 		})
 
+		Error("NotFound", func() {
+			Description("If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.")
+		})
+		Error("Gone", func() {
+			Description("If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.")
+		})
+
 		HTTP(func() {
 			HEAD("/{id}")
 			Header("tusResumable:Tus-Resumable")
@@ -67,6 +74,8 @@ var _ = Service("tus", func() {
 				Header("uploadDeferLength:Upload-Defer-Length")
 				Header("uploadMetadata:Upload-Metadata")
 			})
+			Response("NotFound", StatusNotFound)
+			Response("Gone", StatusGone)
 		})
 	})
 
@@ -98,7 +107,10 @@ var _ = Service("tus", func() {
 			Description("If the offsets do not match, the Server MUST respond with the 409 Conflict status without modifying the upload resource.")
 		})
 		Error("NotFound", func() {
-			Description("If the server receives a PATCH request against a non-existent resource it SHOULD return a 404 Not Found status.")
+			Description("If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.")
+		})
+		Error("Gone", func() {
+			Description("If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.")
 		})
 		Error("InvalidChecksumAlgorithm", func() {
 			Description("The checksum algorithm is not supported by the server.")
@@ -124,6 +136,7 @@ var _ = Service("tus", func() {
 			Response("InvalidContentType", StatusUnsupportedMediaType)
 			Response("InvalidOffset", StatusConflict)
 			Response("NotFound", StatusNotFound)
+			Response("Gone", StatusGone)
 			Response("InvalidChecksumAlgorithm", StatusBadRequest)
 			Response("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
 			Response("Internal", StatusInternalServerError)
@@ -239,7 +252,10 @@ var _ = Service("tus", func() {
 		})
 
 		Error("NotFound", func() {
-			Description("For all future requests to this URL, the Server SHOULD respond with the 404 Not Found.")
+			Description("For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status.")
+		})
+		Error("Gone", func() {
+			Description("For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status.")
 		})
 
 		HTTP(func() {
@@ -249,6 +265,7 @@ var _ = Service("tus", func() {
 				Header("tusResumable:Tus-Resumable")
 			})
 			Response("NotFound", StatusNotFound)
+			Response("Gone", StatusGone)
 		})
 	})
 })
