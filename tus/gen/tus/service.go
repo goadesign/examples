@@ -177,6 +177,24 @@ func (e *ErrInvalidTUSResumable) ErrorName() string {
 	return "InvalidTusResumable"
 }
 
+// MakeNotFound builds a goa.ServiceError from an error.
+func MakeNotFound(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "NotFound",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
+// MakeGone builds a goa.ServiceError from an error.
+func MakeGone(err error) *goa.ServiceError {
+	return &goa.ServiceError{
+		Name:    "Gone",
+		ID:      goa.NewErrorID(),
+		Message: err.Error(),
+	}
+}
+
 // MakeInvalidContentType builds a goa.ServiceError from an error.
 func MakeInvalidContentType(err error) *goa.ServiceError {
 	return &goa.ServiceError{
@@ -190,15 +208,6 @@ func MakeInvalidContentType(err error) *goa.ServiceError {
 func MakeInvalidOffset(err error) *goa.ServiceError {
 	return &goa.ServiceError{
 		Name:    "InvalidOffset",
-		ID:      goa.NewErrorID(),
-		Message: err.Error(),
-	}
-}
-
-// MakeNotFound builds a goa.ServiceError from an error.
-func MakeNotFound(err error) *goa.ServiceError {
-	return &goa.ServiceError{
-		Name:    "NotFound",
 		ID:      goa.NewErrorID(),
 		Message: err.Error(),
 	}

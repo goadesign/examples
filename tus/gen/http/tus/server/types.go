@@ -13,6 +13,42 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
+// HeadNotFoundResponseBody is the type of the "tus" service "head" endpoint
+// HTTP response body for the "NotFound" error.
+type HeadNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// HeadGoneResponseBody is the type of the "tus" service "head" endpoint HTTP
+// response body for the "Gone" error.
+type HeadGoneResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // PatchInvalidContentTypeResponseBody is the type of the "tus" service "patch"
 // endpoint HTTP response body for the "InvalidContentType" error.
 type PatchInvalidContentTypeResponseBody struct {
@@ -52,6 +88,24 @@ type PatchInvalidOffsetResponseBody struct {
 // PatchNotFoundResponseBody is the type of the "tus" service "patch" endpoint
 // HTTP response body for the "NotFound" error.
 type PatchNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// PatchGoneResponseBody is the type of the "tus" service "patch" endpoint HTTP
+// response body for the "Gone" error.
+type PatchGoneResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -229,6 +283,52 @@ type DeleteNotFoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// DeleteGoneResponseBody is the type of the "tus" service "delete" endpoint
+// HTTP response body for the "Gone" error.
+type DeleteGoneResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// NewHeadNotFoundResponseBody builds the HTTP response body from the result of
+// the "head" endpoint of the "tus" service.
+func NewHeadNotFoundResponseBody(res *goa.ServiceError) *HeadNotFoundResponseBody {
+	body := &HeadNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewHeadGoneResponseBody builds the HTTP response body from the result of the
+// "head" endpoint of the "tus" service.
+func NewHeadGoneResponseBody(res *goa.ServiceError) *HeadGoneResponseBody {
+	body := &HeadGoneResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewPatchInvalidContentTypeResponseBody builds the HTTP response body from
 // the result of the "patch" endpoint of the "tus" service.
 func NewPatchInvalidContentTypeResponseBody(res *goa.ServiceError) *PatchInvalidContentTypeResponseBody {
@@ -261,6 +361,20 @@ func NewPatchInvalidOffsetResponseBody(res *goa.ServiceError) *PatchInvalidOffse
 // of the "patch" endpoint of the "tus" service.
 func NewPatchNotFoundResponseBody(res *goa.ServiceError) *PatchNotFoundResponseBody {
 	body := &PatchNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewPatchGoneResponseBody builds the HTTP response body from the result of
+// the "patch" endpoint of the "tus" service.
+func NewPatchGoneResponseBody(res *goa.ServiceError) *PatchGoneResponseBody {
+	body := &PatchGoneResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -387,6 +501,20 @@ func NewPostChecksumMismatchResponseBody(res *goa.ServiceError) *PostChecksumMis
 // of the "delete" endpoint of the "tus" service.
 func NewDeleteNotFoundResponseBody(res *goa.ServiceError) *DeleteNotFoundResponseBody {
 	body := &DeleteNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewDeleteGoneResponseBody builds the HTTP response body from the result of
+// the "delete" endpoint of the "tus" service.
+func NewDeleteGoneResponseBody(res *goa.ServiceError) *DeleteGoneResponseBody {
+	body := &DeleteGoneResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,

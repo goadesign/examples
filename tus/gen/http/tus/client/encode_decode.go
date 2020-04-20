@@ -73,6 +73,8 @@ func EncodeHeadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 // endpoint. restoreBody controls whether the response body should be restored
 // after having been read.
 // DecodeHeadResponse may return the following errors:
+//	- "NotFound" (type *goa.ServiceError): http.StatusNotFound
+//	- "Gone" (type *goa.ServiceError): http.StatusGone
 //	- "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //	- error: internal error
 func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
@@ -151,6 +153,34 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			res := NewHeadResultOK(tusResumable, uploadOffset, uploadLength, uploadDeferLength, uploadMetadata)
 			return res, nil
+		case http.StatusNotFound:
+			var (
+				body HeadNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "head", err)
+			}
+			err = ValidateHeadNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("tus", "head", err)
+			}
+			return nil, NewHeadNotFound(&body)
+		case http.StatusGone:
+			var (
+				body HeadGoneResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "head", err)
+			}
+			err = ValidateHeadGoneResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("tus", "head", err)
+			}
+			return nil, NewHeadGone(&body)
 		case http.StatusPreconditionFailed:
 			var (
 				tusVersion string
@@ -236,6 +266,7 @@ func EncodePatchRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 //	- "InvalidContentType" (type *goa.ServiceError): http.StatusUnsupportedMediaType
 //	- "InvalidOffset" (type *goa.ServiceError): http.StatusConflict
 //	- "NotFound" (type *goa.ServiceError): http.StatusNotFound
+//	- "Gone" (type *goa.ServiceError): http.StatusGone
 //	- "InvalidChecksumAlgorithm" (type *goa.ServiceError): http.StatusBadRequest
 //	- "ChecksumMismatch" (type *goa.ServiceError): 460
 //	- "Internal" (type *goa.ServiceError): http.StatusInternalServerError
@@ -331,6 +362,20 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 				return nil, goahttp.ErrValidationError("tus", "patch", err)
 			}
 			return nil, NewPatchNotFound(&body)
+		case http.StatusGone:
+			var (
+				body PatchGoneResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "patch", err)
+			}
+			err = ValidatePatchGoneResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("tus", "patch", err)
+			}
+			return nil, NewPatchGone(&body)
 		case http.StatusBadRequest:
 			var (
 				body PatchInvalidChecksumAlgorithmResponseBody
@@ -814,6 +859,7 @@ func EncodeDeleteRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 // restored after having been read.
 // DecodeDeleteResponse may return the following errors:
 //	- "NotFound" (type *goa.ServiceError): http.StatusNotFound
+//	- "Gone" (type *goa.ServiceError): http.StatusGone
 //	- "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //	- error: internal error
 func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
@@ -861,6 +907,20 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 				return nil, goahttp.ErrValidationError("tus", "delete", err)
 			}
 			return nil, NewDeleteNotFound(&body)
+		case http.StatusGone:
+			var (
+				body DeleteGoneResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "delete", err)
+			}
+			err = ValidateDeleteGoneResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("tus", "delete", err)
+			}
+			return nil, NewDeleteGone(&body)
 		case http.StatusPreconditionFailed:
 			var (
 				tusVersion string

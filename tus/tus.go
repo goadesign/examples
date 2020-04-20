@@ -12,7 +12,6 @@ import (
 	"goa.design/examples/tus/gen/http/tus/server"
 	"goa.design/examples/tus/gen/tus"
 	"goa.design/examples/tus/persist"
-	"goa.design/examples/tus/upload"
 	goahttp "goa.design/goa/v3/http"
 )
 
@@ -28,13 +27,15 @@ type tussvc struct {
 // New creates a TUS service that accepts uploads up to maxSize bytes and that
 // expire after uploadTimeout. If maxSize is 0 then there is no limit on the
 // size of uploads. If uploadTimeout is 0 then uploads never expire. newWriter
-// is called for each new tus. The unique upload identifier is given as argument
+// is called for each upload. The unique upload identifier is given as argument
 // to the function as well as the length of the upload if known (nil otherwise).
 // The function returns the writer used to write the uploaded bytes. It must be
 // possible to call Write concurrently on two writers returned by different
-// invocation of the function.
+// invocation of the function. The given persist store is used to maintain state
+// of ongoing uploads, it should persist the state so that uploads can be
+// resumed across restarts.
 func New(store persist.Store, newWriter func(string, *int64) (io.WriteCloser, error), maxSize int64, uploadTimeout time.Duration, logger *log.Logger) tus.Service {
-	return HandleTUSResumable(&tussvc{
+	return handleTUSResumable(&tussvc{
 		store:         store,
 		newWriter:     newWriter,
 		maxSize:       maxSize,
@@ -46,25 +47,27 @@ func New(store persist.Store, newWriter func(string, *int64) (io.WriteCloser, er
 // Clients use the HEAD request to determine the offset at which the upload
 // should be continued.
 func (s *tussvc) Head(ctx context.Context, p *tus.HeadPayload) (*tus.HeadResult, error) {
-	up := s.getUpload(p.ID)
+	m, err := s.store.Load(p.ID)
+	if err != nil {
+		return nil, tus.MakeInternal(err)
+	}
 
 	// If the resource is not found, the Server SHOULD return either the 404 Not
 	// Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
-	if up == nil {
+	if m == nil {
 		return nil, tus.MakeNotFound(fmt.Errorf("no ongoing upload with id %q", p.ID))
 	}
 
-	pg := up.Progress()
 	var df *int
-	if pg.Length == 0 {
+	if m.Length == nil {
 		v := 1
 		df = &v
 	}
 	return &tus.HeadResult{
-		UploadOffset:      pg.Offset,
-		UploadLength:      &pg.Length,
+		UploadOffset:      m.Offset,
+		UploadLength:      m.Length,
 		UploadDeferLength: df,
-		UploadMetadata:    &pg.Metadata,
+		UploadMetadata:    &m.Metadata,
 	}, nil
 }
 
@@ -89,14 +92,22 @@ func (s *tussvc) Patch(ctx context.Context, p *tus.PatchPayload, body io.ReadClo
 		return nil, tus.MakeNotFound(fmt.Errorf("no ongoing upload with id %q or upload expired", p.ID))
 	}
 
-	offset, err := s.write(up, p.UploadOffset, body, p.UploadChecksum)
+	w, err := s.newWriter(p.ID, up.Length)
+	if err != nil {
+		return nil, tus.MakeInternal(err)
+	}
+
+	offset, err := Write(body, w, up, p.UploadOffset, p.UploadChecksum)
 	if err != nil {
 		return nil, err
 	}
+	if err := s.store.Save(p.ID, up); err != nil {
+		return nil, tus.MakeInternal(err)
+	}
 
 	res = &tus.PatchResult{UploadOffset: offset}
-	if s.uploadTimeout > 0 {
-		expires := up.Expiry().Format(http.TimeFormat)
+	if !up.ExpiresAt.IsZero() {
+		expires := up.ExpiresAt.Format(http.TimeFormat)
 		res.UploadExpires = &expires
 	}
 	return
@@ -134,27 +145,38 @@ func (s *tussvc) Post(ctx context.Context, p *tus.PostPayload, body io.ReadClose
 	if err != nil {
 		return nil, tus.MakeInternal(err)
 	}
-	up := upload.New(id, p.UploadLength, p.UploadMetadata, w, s.uploadTimeout)
-
-	if err := s.store.Save(up); err != nil {
-		return nil, tus.MakeInternal(err)
+	startedAt := time.Now()
+	var expiresAt time.Time
+	if s.uploadTimeout > 0 {
+		expiresAt = startedAt.Add(s.uploadTimeout)
+	}
+	up := persist.Upload{
+		ID:        id,
+		StartedAt: startedAt,
+		ExpiresAt: expiresAt,
+		Status:    persist.Started,
+		Length:    p.UploadLength,
+		Metadata:  *p.UploadMetadata,
 	}
 
 	var offset int64
-	offset, err = s.write(up, 0, body, p.UploadChecksum)
+	offset, err = Write(body, w, &up, 0, p.UploadChecksum)
 	if err != nil {
 		return nil, err
 	}
 	if p.UploadLength != nil && offset >= *p.UploadLength {
-		up.Complete()
+		up.Status = persist.Completed
+	}
+	if err := s.store.Save(id, &up); err != nil {
+		return nil, tus.MakeInternal(err)
 	}
 
 	res = &tus.PostResult{
 		UploadOffset: offset,
 		Location:     server.HeadTusPath(id),
 	}
-	if s.uploadTimeout > 0 {
-		expires := up.Expiry().Format(http.TimeFormat)
+	if !expiresAt.IsZero() {
+		expires := expiresAt.Format(http.TimeFormat)
 		res.UploadExpires = &expires
 	}
 	return
@@ -168,32 +190,19 @@ func (s *tussvc) Delete(ctx context.Context, p *tus.DeletePayload) (res *tus.Del
 		return nil, tus.MakeInternal(err)
 	}
 
-	// If the server receives a PATCH request against a non-existent resource it
-	// SHOULD return a 404 Not Found status.
+	// For all future requests to this URL, the Server SHOULD respond with the
+	// 404 Not Found or 410 Gone status.
 	if up == nil {
 		return nil, tus.MakeNotFound(fmt.Errorf("no ongoing upload with id %q or upload expired", p.ID))
 	}
+	if !up.Active() {
+		return nil, tus.MakeGone(fmt.Errorf("upload with id %q %s", p.ID, up.Status.String()))
+	}
 
-	up.Cancel()
+	up.Status = persist.Completed
+	if err := s.store.Save(p.ID, up); err != nil {
+		return nil, tus.MakeInternal(err)
+	}
 
 	return &tus.DeleteResult{}, nil
-}
-
-// write is a help method shared by POST and PATCH that takes care of mapping
-// error from the upload package.
-func (s *tussvc) write(up *upload.Upload, offset int64, content io.ReadCloser, checksum *string) (n int64, err error) {
-	n, err = up.Write(offset, content, checksum)
-	if err != nil {
-		if _, ok := err.(upload.ErrBadChecksum); ok {
-			return 0, tus.MakeChecksumMismatch(err)
-		}
-		if _, ok := err.(upload.ErrInvalidAlgo); ok {
-			return 0, tus.MakeInvalidChecksumAlgorithm(err)
-		}
-		if _, ok := err.(upload.ErrInvalidOffset); ok {
-			return 0, tus.MakeInvalidOffset(err)
-		}
-		return 0, tus.MakeInternal(fmt.Errorf("failed to write bytes: %s", err.Error()))
-	}
-	return
 }

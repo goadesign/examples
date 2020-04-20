@@ -93,6 +93,30 @@ func EncodeHeadError(encoder func(context.Context, http.ResponseWriter) goahttp.
 			return encodeError(ctx, w, v)
 		}
 		switch en.ErrorName() {
+		case "NotFound":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewHeadNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", "NotFound")
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "Gone":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewHeadGoneResponseBody(res)
+			}
+			w.Header().Set("goa-error", "Gone")
+			w.WriteHeader(http.StatusGone)
+			return enc.Encode(body)
 		case "InvalidTusResumable":
 			res := v.(*tus.ErrInvalidTUSResumable)
 			w.Header().Set("Tus-Version", res.TusVersion)
@@ -211,6 +235,18 @@ func EncodePatchError(encoder func(context.Context, http.ResponseWriter) goahttp
 			}
 			w.Header().Set("goa-error", "NotFound")
 			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "Gone":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewPatchGoneResponseBody(res)
+			}
+			w.Header().Set("goa-error", "Gone")
+			w.WriteHeader(http.StatusGone)
 			return enc.Encode(body)
 		case "InvalidChecksumAlgorithm":
 			res := v.(*goa.ServiceError)
@@ -531,6 +567,18 @@ func EncodeDeleteError(encoder func(context.Context, http.ResponseWriter) goahtt
 			}
 			w.Header().Set("goa-error", "NotFound")
 			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "Gone":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewDeleteGoneResponseBody(res)
+			}
+			w.Header().Set("goa-error", "Gone")
+			w.WriteHeader(http.StatusGone)
 			return enc.Encode(body)
 		case "InvalidTusResumable":
 			res := v.(*tus.ErrInvalidTUSResumable)
