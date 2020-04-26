@@ -19,7 +19,7 @@ const TusResumable = "1.0.0"
 
 // HandleTUSResumable wraos the given upload service instance and adds
 // Tus-Resumable request and response headers handling.
-func HandleTUSResumable(s *tussvc) tus.Service {
+func handleTUSResumable(s *tussvc) tus.Service {
 	w := tusWrapper{s}
 	return &w
 }
