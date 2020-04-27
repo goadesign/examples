@@ -15,34 +15,6 @@ import (
 	"goa.design/examples/tus/persist"
 )
 
-// New instantiates a new upload with the given id that writes to the given
-// writer. length indicates the expected total number of bytes if known. If ttl
-// is set then a timer is created that changes the state of the upload from
-// Started to TimedOut upon expiration. cb - if not nil - is called once when
-// the state of the upload changes from Started to another value. It is given
-// the ID of the upload and the new state as arguments.
-// func New(id string, length *int64, writer io.Writer, ttl time.Duration) *Uploader {
-// 	startedAt := time.Now()
-// 	var expiresAt time.Time
-// 	if ttl > 0 {
-// 		expiresAt = startedAt.Add(ttl)
-// 	}
-
-// 	metadata := &State{
-// 		ID:        id,
-// 		StartedAt: startedAt,
-// 		ExpiresAt: expiresAt,
-// 		Status:    Started,
-// 		Length:    length,
-// 	}
-
-// 	return &Uploader{
-// 		m:        &sync.RWMutex{},
-// 		metadata: metadata,
-// 		writer:   writer,
-// 	}
-// }
-
 // Write validates the checksum if not nil then writes the data to the given
 // writer, updates the given upload state and returns the updated upload offset
 // value. checksum must start with "sha1 ", "md5 " or "crc32 " and be followed
