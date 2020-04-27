@@ -60,11 +60,6 @@ func EncodeHeadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 			head := p.TusResumable
 			req.Header.Set("Tus-Resumable", head)
 		}
-		if p.UploadOffset != nil {
-			head := *p.UploadOffset
-			headStr := strconv.FormatInt(head, 10)
-			req.Header.Set("Upload-Offset", headStr)
-		}
 		return nil
 	}
 }

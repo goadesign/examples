@@ -49,8 +49,6 @@ type HeadPayload struct {
 	ID string
 	// tusResumable represents a tus protocol version.
 	TusResumable string
-	// uploadOffset represents a byte offset within a resource.
-	UploadOffset *int64
 }
 
 // HeadResult is the result type of the tus service head method.

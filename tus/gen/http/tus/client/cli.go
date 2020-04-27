@@ -17,7 +17,7 @@ import (
 )
 
 // BuildHeadPayload builds the payload for the tus head endpoint from CLI flags.
-func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string, tusHeadUploadOffset string) (*tus.HeadPayload, error) {
+func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string) (*tus.HeadPayload, error) {
 	var err error
 	var id string
 	{
@@ -35,20 +35,9 @@ func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string, tusHeadUploa
 			return nil, err
 		}
 	}
-	var uploadOffset *int64
-	{
-		if tusHeadUploadOffset != "" {
-			val, err := strconv.ParseInt(tusHeadUploadOffset, 10, 64)
-			uploadOffset = &val
-			if err != nil {
-				return nil, fmt.Errorf("invalid value for uploadOffset, must be INT64")
-			}
-		}
-	}
 	v := &tus.HeadPayload{}
 	v.ID = id
 	v.TusResumable = tusResumable
-	v.UploadOffset = uploadOffset
 
 	return v, nil
 }

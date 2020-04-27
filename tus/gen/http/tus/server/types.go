@@ -526,11 +526,10 @@ func NewDeleteGoneResponseBody(res *goa.ServiceError) *DeleteGoneResponseBody {
 }
 
 // NewHeadPayload builds a tus service head endpoint payload.
-func NewHeadPayload(id string, tusResumable string, uploadOffset *int64) *tus.HeadPayload {
+func NewHeadPayload(id string, tusResumable string) *tus.HeadPayload {
 	v := &tus.HeadPayload{}
 	v.ID = id
 	v.TusResumable = tusResumable
-	v.UploadOffset = uploadOffset
 
 	return v
 }

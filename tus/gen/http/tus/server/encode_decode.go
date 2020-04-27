@@ -52,7 +52,6 @@ func DecodeHeadRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.De
 		var (
 			id           string
 			tusResumable string
-			uploadOffset *int64
 			err          error
 
 			params = mux.Vars(r)
@@ -64,20 +63,10 @@ func DecodeHeadRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.De
 			err = goa.MergeErrors(err, goa.MissingFieldError("Tus-Resumable", "header"))
 		}
 		err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
-		{
-			uploadOffsetRaw := r.Header.Get("Upload-Offset")
-			if uploadOffsetRaw != "" {
-				v, err2 := strconv.ParseInt(uploadOffsetRaw, 10, 64)
-				if err2 != nil {
-					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("uploadOffset", uploadOffsetRaw, "integer"))
-				}
-				uploadOffset = &v
-			}
-		}
 		if err != nil {
 			return nil, err
 		}
-		payload := NewHeadPayload(id, tusResumable, uploadOffset)
+		payload := NewHeadPayload(id, tusResumable)
 
 		return payload, nil
 	}
