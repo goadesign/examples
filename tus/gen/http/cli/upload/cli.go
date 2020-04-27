@@ -30,7 +30,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0" --upload-offset 3821960643408970241` + "\n" +
+	return os.Args[0] + ` tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0"` + "\n" +
 		""
 }
 
@@ -49,7 +49,6 @@ func ParseEndpoint(
 		tusHeadFlags            = flag.NewFlagSet("head", flag.ExitOnError)
 		tusHeadIDFlag           = tusHeadFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
 		tusHeadTusResumableFlag = tusHeadFlags.String("tus-resumable", "REQUIRED", "")
-		tusHeadUploadOffsetFlag = tusHeadFlags.String("upload-offset", "", "")
 
 		tusPatchFlags              = flag.NewFlagSet("patch", flag.ExitOnError)
 		tusPatchIDFlag             = tusPatchFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
@@ -156,7 +155,7 @@ func ParseEndpoint(
 			switch epn {
 			case "head":
 				endpoint = c.Head()
-				data, err = tusc.BuildHeadPayload(*tusHeadIDFlag, *tusHeadTusResumableFlag, *tusHeadUploadOffsetFlag)
+				data, err = tusc.BuildHeadPayload(*tusHeadIDFlag, *tusHeadTusResumableFlag)
 			case "patch":
 				endpoint = c.Patch()
 				data, err = tusc.BuildPatchPayload(*tusPatchIDFlag, *tusPatchTusResumableFlag, *tusPatchUploadOffsetFlag, *tusPatchUploadChecksumFlag)
@@ -203,15 +202,14 @@ Additional help:
 `, os.Args[0], os.Args[0])
 }
 func tusHeadUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] tus head -id STRING -tus-resumable STRING -upload-offset INT64
+	fmt.Fprintf(os.Stderr, `%s [flags] tus head -id STRING -tus-resumable STRING
 
 Clients use the HEAD request to determine the offset at which the upload should be continued.
     -id STRING: IDs are generated using Xid: https://github.com/rs/xid
     -tus-resumable STRING: 
-    -upload-offset INT64: 
 
 Example:
-    `+os.Args[0]+` tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0" --upload-offset 3821960643408970241
+    `+os.Args[0]+` tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0"
 `, os.Args[0])
 }
 
@@ -226,7 +224,7 @@ Clients use the PATCH method to start or resume an upload.
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` tus patch --id "84ku3kgoul4sojt5r8un" --tus-resumable "1.0.0" --upload-offset 5444988333832813877 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
+    `+os.Args[0]+` tus patch --id "84ku3kgoul4sojt5r8un" --tus-resumable "1.0.0" --upload-offset 1193138456861487416 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
 `, os.Args[0])
 }
 
@@ -253,7 +251,7 @@ Clients use the POST method against a known upload creation URL to request a new
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    `+os.Args[0]+` tus post --tus-resumable "1.0.0" --upload-length 3599706638076534418 --upload-defer-length 1 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --upload-metadata "key1 val1,key2 val2" --tus-max-size 5854104533867554763 --stream "goa.png"
+    `+os.Args[0]+` tus post --tus-resumable "1.0.0" --upload-length 450977037804531642 --upload-defer-length 1 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --upload-metadata "key1 val1,key2 val2" --tus-max-size 3599706638076534418 --stream "goa.png"
 `, os.Args[0])
 }
 

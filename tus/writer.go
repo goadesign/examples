@@ -68,7 +68,7 @@ func Write(r io.ReadCloser, w io.Writer, u *persist.Upload, offset int64, checks
 			h = crc32.New(crc32.IEEETable)
 			chk = (*checksum)[6:]
 		default:
-			return 0, tus.MakeInvalidChecksumAlgorithm(fmt.Errorf("invalid checksum algorithm %q, supported algorithms are sha1, md5 and crc32"))
+			return 0, tus.MakeInvalidChecksumAlgorithm(fmt.Errorf("invalid checksum algorithm %q, supported algorithms are sha1, md5 and crc32", *checksum))
 		}
 	}
 	if h != nil {

@@ -17,7 +17,7 @@ type tusWrapper struct {
 // TusResumable is the version of tus implemented by this service.
 const TusResumable = "1.0.0"
 
-// HandleTUSResumable wraos the given upload service instance and adds
+// handleTUSResumable wraos the given upload service instance and adds
 // Tus-Resumable request and response headers handling.
 func handleTUSResumable(s *tussvc) tus.Service {
 	w := tusWrapper{s}

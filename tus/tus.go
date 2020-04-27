@@ -150,13 +150,17 @@ func (s *tussvc) Post(ctx context.Context, p *tus.PostPayload, body io.ReadClose
 	if s.uploadTimeout > 0 {
 		expiresAt = startedAt.Add(s.uploadTimeout)
 	}
+	var mdata string
+	if p.UploadMetadata != nil {
+		mdata = *p.UploadMetadata
+	}
 	up := persist.Upload{
 		ID:        id,
 		StartedAt: startedAt,
 		ExpiresAt: expiresAt,
 		Status:    persist.Started,
 		Length:    p.UploadLength,
-		Metadata:  *p.UploadMetadata,
+		Metadata:  mdata,
 	}
 
 	var offset int64

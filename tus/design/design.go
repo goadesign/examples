@@ -41,7 +41,6 @@ var _ = Service("tus", func() {
 			Reference(TUSCoreHeaders)
 			ID()
 			Attribute("tusResumable")
-			Attribute("uploadOffset")
 			Required("id", "tusResumable")
 		})
 
@@ -66,7 +65,6 @@ var _ = Service("tus", func() {
 		HTTP(func() {
 			HEAD("/{id}")
 			Header("tusResumable:Tus-Resumable")
-			Header("uploadOffset:Upload-Offset")
 			Response(StatusOK, func() {
 				Header("tusResumable:Tus-Resumable")
 				Header("uploadOffset:Upload-Offset")

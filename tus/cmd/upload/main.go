@@ -15,6 +15,7 @@ import (
 
 	tussvc "goa.design/examples/tus"
 	"goa.design/examples/tus/gen/tus"
+	"goa.design/examples/tus/persist"
 )
 
 func main() {
@@ -22,7 +23,6 @@ func main() {
 		uploadDir = flag.String("dir", ".", "Upload target directory")
 		maxSize   = flag.Int64("max-size", 1024*1024*20, "Maximum allowed upload size in bytes")
 		timeout   = flag.Int64("timeout", 0, "Maximum number of seconds before an upload is aborted (default is 0 which never aborts)")
-		retention = flag.Int64("retention", 0, "Maximum number of seconds after upload completes that results should be kept in memory")
 		httpPortF = flag.String("port", "8080", "HTTP listen port")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
 	)
@@ -30,11 +30,10 @@ func main() {
 
 	logger := log.New(os.Stderr, "[tus] ", log.Ltime)
 	svc := tussvc.New(
+		persist.NewInMemory(),
 		newFileWriterFunc(*uploadDir),
-		*uploadDir,
 		*maxSize,
 		(time.Duration(*timeout))*time.Second,
-		(time.Duration(*retention))*time.Second,
 		logger,
 	)
 	endpoints := tus.NewEndpoints(svc)
