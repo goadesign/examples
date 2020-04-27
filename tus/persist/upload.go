@@ -30,9 +30,14 @@ type (
 )
 
 const (
+	// Started is the status for active uploads.
 	Started Status = iota
+	// Completed is the status of uploads that completed successfully.
 	Completed
+	// TimedOut is the status for uploads that took longer than the allotted
+	// time.
 	TimedOut
+	// Failed is the status for uploads that failed due to an unexpected error.
 	Failed
 )
 

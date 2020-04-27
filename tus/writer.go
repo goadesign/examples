@@ -42,7 +42,7 @@ func Write(r io.ReadCloser, w io.Writer, u *persist.Upload, offset int64, checks
 		if err != nil {
 			u.Status = persist.Failed
 			if err := r.Close(); err != nil {
-				// log err
+				fmt.Printf("failed to close reader: %s", err)
 			}
 			err = tus.MakeInternal(err)
 		}
