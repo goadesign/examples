@@ -1,0 +1,1089 @@
+swagger: "2.0"
+info:
+  title: File Upload Service
+  description: HTTP service for uploading files using the tus protocol (https://tus.io)
+  version: ""
+host: localhost:8000
+consumes:
+- application/json
+- application/xml
+- application/gob
+produces:
+- application/json
+- application/xml
+- application/gob
+paths:
+  /upload:
+    post:
+      tags:
+      - tus
+      summary: post tus
+      description: Clients use the POST method against a known upload creation URL
+        to request a new upload resource.
+      operationId: tus#post
+      parameters:
+      - name: Tus-Resumable
+        in: header
+        description: tusResumable represents a tus protocol version.
+        required: true
+        type: string
+        pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+      - name: Upload-Length
+        in: header
+        description: uploadLength represents the size of the entire upload in bytes.
+        required: false
+        type: integer
+        format: int64
+      - name: Upload-Defer-Length
+        in: header
+        description: The Upload-Defer-Length request and response header indicates
+          that the size of the upload is not known currently and will be transferred
+          later.
+        required: false
+        type: integer
+        enum:
+        - 1
+      - name: Upload-Checksum
+        in: header
+        description: A Client MAY include the Upload-Checksum header in a PATCH request.
+          Once the entire request has been received, the Server MUST verify the uploaded
+          chunk against the provided checksum using the specified algorithm.
+        required: false
+        type: string
+      - name: Upload-Metadata
+        in: header
+        description: The Client MAY supply the Upload-Metadata header to add additional
+          metadata to the upload creation request.
+        required: false
+        type: string
+      - name: Tus-Max-Size
+        in: header
+        description: Length of the upload
+        required: false
+        type: integer
+        format: int64
+      responses:
+        "201":
+          description: Created response.
+          headers:
+            Location:
+              description: URL of created resource
+              type: string
+              format: uri
+            Tus-Resumable:
+              description: tusResumable represents a tus protocol version.
+              type: string
+              pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+            Upload-Expires:
+              description: The Upload-Expires response header indicates the time after
+                which the unfinished upload expires.
+              type: string
+            Upload-Offset:
+              description: uploadOffset represents a byte offset within a resource.
+              type: int64
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/TusPostInvalidChecksumAlgorithmResponseBody'
+        "412":
+          description: Precondition Failed response.
+          headers:
+            Tus-Version:
+              description: Comma separated list of supported versions.
+              type: string
+              enum:
+              - 1.0.0
+        "413":
+          description: Request Entity Too Large response.
+          schema:
+            $ref: '#/definitions/TusPostMaximumSizeExceededResponseBody'
+        "460":
+          description: ' response.'
+          schema:
+            $ref: '#/definitions/TusPostChecksumMismatchResponseBody'
+      schemes:
+      - http
+    options:
+      tags:
+      - tus
+      summary: options tus
+      description: Clients use the OPTIONS method to gather information about the
+        Server’s current configuration.
+      operationId: tus#options
+      responses:
+        "204":
+          description: No Content response.
+          headers:
+            Tus-Checksum-Algorithm:
+              description: A Client MAY include the Upload-Checksum header in a PATCH
+                request. Once the entire request has been received, the Server MUST
+                verify the uploaded chunk against the provided checksum using the
+                specified algorithm.
+              type: string
+              enum:
+              - md5,sha1,crc32
+            Tus-Extension:
+              description: tusExtension is a comma separated list of extensions supported
+                by the server. This implementation supports the creation, creation-with-upload,
+                expiration, checksum and termination extensions
+              type: string
+              enum:
+              - creation,creation-with-upload,creation-defer-length,expiration,checksum,termination
+            Tus-Max-Size:
+              description: tusMaxSize represents the maximum allowed size of an entire
+                upload in bytes.
+              type: int64
+            Tus-Resumable:
+              description: tusResumable represents a tus protocol version.
+              type: string
+              pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+            Tus-Version:
+              description: tusVersion is a comma separated list of protocol versions
+                supported by the server. This implementation only supports 1.0.0.
+              type: string
+              enum:
+              - 1.0.0
+        "412":
+          description: Precondition Failed response.
+          headers:
+            Tus-Version:
+              description: Comma separated list of supported versions.
+              type: string
+              enum:
+              - 1.0.0
+      schemes:
+      - http
+  /upload/{id}:
+    delete:
+      tags:
+      - tus
+      summary: delete tus
+      description: Clients use the DELETE method to terminate completed and unfinished
+        uploads allowing the Server to free up used resources.
+      operationId: tus#delete
+      parameters:
+      - name: id
+        in: path
+        description: 'IDs are generated using Xid: https://github.com/rs/xid'
+        required: true
+        type: string
+        pattern: '[0-9a-v]{20}'
+      - name: Tus-Resumable
+        in: header
+        description: tusResumable represents a tus protocol version.
+        required: true
+        type: string
+        pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+      responses:
+        "204":
+          description: No Content response.
+          headers:
+            Tus-Resumable:
+              description: tusResumable represents a tus protocol version.
+              type: string
+              pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/TusDeleteNotFoundResponseBody'
+        "410":
+          description: Gone response.
+          schema:
+            $ref: '#/definitions/TusDeleteGoneResponseBody'
+        "412":
+          description: Precondition Failed response.
+          headers:
+            Tus-Version:
+              description: Comma separated list of supported versions.
+              type: string
+              enum:
+              - 1.0.0
+      schemes:
+      - http
+    head:
+      tags:
+      - tus
+      summary: head tus
+      description: Clients use the HEAD request to determine the offset at which the
+        upload should be continued.
+      operationId: tus#head
+      parameters:
+      - name: id
+        in: path
+        description: 'IDs are generated using Xid: https://github.com/rs/xid'
+        required: true
+        type: string
+        pattern: '[0-9a-v]{20}'
+      - name: Tus-Resumable
+        in: header
+        description: tusResumable represents a tus protocol version.
+        required: true
+        type: string
+        pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+      responses:
+        "200":
+          description: OK response.
+          headers:
+            Tus-Resumable:
+              description: tusResumable represents a tus protocol version.
+              type: string
+              pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+            Upload-Defer-Length:
+              description: The Upload-Defer-Length request and response header indicates
+                that the size of the upload is not known currently and will be transferred
+                later.
+              type: int
+              enum:
+              - 1
+            Upload-Length:
+              description: uploadLength represents the size of the entire upload in
+                bytes.
+              type: int64
+            Upload-Metadata:
+              description: The Client MAY supply the Upload-Metadata header to add
+                additional metadata to the upload creation request.
+              type: string
+            Upload-Offset:
+              description: uploadOffset represents a byte offset within a resource.
+              type: int64
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/TusHeadNotFoundResponseBody'
+        "410":
+          description: Gone response.
+          schema:
+            $ref: '#/definitions/TusHeadGoneResponseBody'
+        "412":
+          description: Precondition Failed response.
+          headers:
+            Tus-Version:
+              description: Comma separated list of supported versions.
+              type: string
+              enum:
+              - 1.0.0
+      schemes:
+      - http
+    patch:
+      tags:
+      - tus
+      summary: patch tus
+      description: Clients use the PATCH method to start or resume an upload.
+      operationId: tus#patch
+      parameters:
+      - name: id
+        in: path
+        description: 'IDs are generated using Xid: https://github.com/rs/xid'
+        required: true
+        type: string
+        pattern: '[0-9a-v]{20}'
+      - name: Tus-Resumable
+        in: header
+        description: tusResumable represents a tus protocol version.
+        required: true
+        type: string
+        pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+      - name: Upload-Offset
+        in: header
+        description: uploadOffset represents a byte offset within a resource.
+        required: true
+        type: integer
+        format: int64
+      - name: Upload-Checksum
+        in: header
+        description: A Client MAY include the Upload-Checksum header in a PATCH request.
+          Once the entire request has been received, the Server MUST verify the uploaded
+          chunk against the provided checksum using the specified algorithm.
+        required: false
+        type: string
+      responses:
+        "204":
+          description: No Content response.
+          headers:
+            Tus-Resumable:
+              description: tusResumable represents a tus protocol version.
+              type: string
+              pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+            Upload-Expires:
+              description: The Upload-Expires response header indicates the time after
+                which the unfinished upload expires.
+              type: string
+            Upload-Offset:
+              description: uploadOffset represents a byte offset within a resource.
+              type: int64
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/TusPatchInvalidChecksumAlgorithmResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/TusPatchNotFoundResponseBody'
+        "409":
+          description: Conflict response.
+          schema:
+            $ref: '#/definitions/TusPatchInvalidOffsetResponseBody'
+        "410":
+          description: Gone response.
+          schema:
+            $ref: '#/definitions/TusPatchGoneResponseBody'
+        "412":
+          description: Precondition Failed response.
+          headers:
+            Tus-Version:
+              description: Comma separated list of supported versions.
+              type: string
+              enum:
+              - 1.0.0
+        "415":
+          description: Unsupported Media Type response.
+          schema:
+            $ref: '#/definitions/TusPatchInvalidContentTypeResponseBody'
+        "460":
+          description: ' response.'
+          schema:
+            $ref: '#/definitions/TusPatchChecksumMismatchResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/TusPatchInternalResponseBody'
+      schemes:
+      - http
+definitions:
+  TusDeleteGoneResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: For all future requests to this URL, the Server SHOULD respond with
+      the 404 Not Found or 410 Gone status. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusDeleteNotFoundResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: For all future requests to this URL, the Server SHOULD respond with
+      the 404 Not Found or 410 Gone status. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusHeadGoneResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: If the resource is not found, the Server SHOULD return either the
+      404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
+      (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusHeadNotFoundResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: If the resource is not found, the Server SHOULD return either the
+      404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
+      (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchChecksumMismatchResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: The checksums mismatch. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchGoneResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: If a Client does attempt to resume an upload which has since been
+      removed by the Server, the Server SHOULD respond with the404 Not Found or 410
+      Gone status. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchInternalResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: Internal error (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchInvalidChecksumAlgorithmResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: The checksum algorithm is not supported by the server. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchInvalidContentTypeResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: 'All PATCH requests MUST use Content-Type: application/offset+octet-stream,
+      otherwise the server SHOULD return a 415 Unsupported Media Type status. (default
+      view)'
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchInvalidOffsetResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: If the offsets do not match, the Server MUST respond with the 409
+      Conflict status without modifying the upload resource. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPatchNotFoundResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: If a Client does attempt to resume an upload which has since been
+      removed by the Server, the Server SHOULD respond with the404 Not Found or 410
+      Gone status. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPostChecksumMismatchResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: The checksums mismatch. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPostInvalidChecksumAlgorithmResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: The checksum algorithm is not supported by the server. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPostInvalidDeferLengthResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: If the Upload-Defer-Length header contains any other value than 1
+      the server should return a 400 Bad Request status. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPostMaximumSizeExceededResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: If the length of the upload exceeds the maximum, which MAY be specified
+      using the Tus-Max-Size header, the Server MUST respond with the 413 Request
+      Entity Too Large status. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  TusPostMissingHeaderResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: 'The request MUST include one of the following headers: a) Upload-Length
+      -or- b) Upload-Defer-Length: 1 (default view)'
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
