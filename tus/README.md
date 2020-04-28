@@ -42,9 +42,9 @@ This example supports version `1.0.0` of the tus protocol.
 
 This example implementation can be adapted for "real production" scenarios by
 doing two modifications:
-1. Modifying [the function](https://github.com/goadesign/examples/blob/tus/tus/cmd/upload/main.go#L71-L77)
+1. Modifying [the function](https://github.com/goadesign/examples/blob/master/tus/cmd/upload/main.go#L71-L77)
    that creates the writer used to write incoming bytes. The default implementation writes to local disk.
-2. Providing an implementation of the [metadata store](https://github.com/goadesign/examples/blob/tus/tus/persist/store.go)
+2. Providing an implementation of the [metadata store](https://github.com/goadesign/examples/blob/master/tus/persist/store.go)
    interface that persists the data instead of simply using an in-memory map.
    This data is what makes is possible to resume uploads and thus must be shared
    by all application servers that participate to the production cluster.
