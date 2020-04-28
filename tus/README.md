@@ -54,3 +54,58 @@ doing two modifications:
 This implementation does not support the [Concatenation](https://tus.io/protocols/resumable-upload.html#concatenation)
 extension. There is no fundamental reason why it couldn't (other than time!)
 and would make a great addition!
+
+## Example
+
+Build and start the upload server:
+```bash
+cd $GOPATH/src/goa.design/examples/tus/cmd/upload
+go build; and ./upload
+[tus] 17:19:14 HTTP "Head" mounted on HEAD /upload/{id}
+[tus] 17:19:14 HTTP "Patch" mounted on PATCH /upload/{id}
+[tus] 17:19:14 HTTP "Options" mounted on OPTIONS /upload
+[tus] 17:19:14 HTTP "Post" mounted on POST /upload
+[tus] 17:19:14 HTTP "Delete" mounted on DELETE /upload/{id}
+[tus] 17:19:14 HTTP server listening on "localhost:8080"
+```
+
+Build the client and show usage:
+```bash
+cd $GOPATH/src/goa.design/examples/tus/cmd/upload-cli
+go build
+./upload-cli --help
+./upload-cli is a command line client for the tus upload API.
+
+Usage:
+    ./upload-cli [-host HOST][-url URL][-timeout SECONDS][-verbose|-v] SERVICE ENDPOINT [flags]
+
+    -host HOST:  server host (development). valid values: development
+    -url URL:    specify service URL overriding host URL (http://localhost:8080)
+    -timeout:    maximum number of seconds to wait for response (30)
+    -verbose|-v: print request and response details (false)
+
+Commands:
+    tus (head|patch|options|post|delete)
+
+Additional help:
+    ./upload-cli SERVICE [ENDPOINT] --help
+
+Example:
+    ./upload-cli tus head --id "6m6dfuts16k6ac7a5gna" --tus-resumable "1.0.0"
+```
+
+Perform an upload of the file `images/goa.png`:
+```bash
+./upload-cli --url http://localhost:8080 tus post --tus-resumable "1.0.0" --stream ../../images/goa.png --upload-defer-length 1
+```
+*note:* here we are uploading the file in a single chunk. If the image was big we would cut it in chunks and upload each one individually using a series of POST requests and specifying the offset each time.
+
+Retrieve the status of the upload (**replace `bqjnf2cl42v556c7du4g` with the value you got above**):
+```bash
+./upload-cli --url http://localhost:8080 tus head --tus-resumable "1.0.0" --id bqjnf2cl42v556c7du4g
+```
+
+Complete the upload (again replacing the id with the proper value):
+```bash
+./upload-cli --url http://localhost:8080 tus delete --tus-resumable "1.0.0" --id bqjnf2cl42v556c7du4g
+```
