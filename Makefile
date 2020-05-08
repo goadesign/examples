@@ -41,6 +41,17 @@ PROTOC_VERSION=3.11.4
 ifeq ($(GOOS),linux)
 PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
 PROTOC_EXEC=$(PROTOC)/bin/protoc
+else
+	ifeq ($(GOOS),darwin)
+PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
+PROTOC_EXEC=$(PROTOC)/bin/protoc
+	else
+		ifeq ($(GOOS),windows)
+PROTOC=protoc-$(PROTOC_VERSION)-win32
+PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
+GOPATH:=$(subst \,/,$(GOPATH))
+		endif
+	endif
 endif
 
 check-goa:
