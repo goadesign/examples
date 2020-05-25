@@ -13,7 +13,7 @@ produces:
 - application/xml
 - application/gob
 paths:
-  /sommelier/:
+  /sommelier:
     post:
       tags:
       - sommelier
@@ -40,7 +40,7 @@ paths:
             $ref: '#/definitions/SommelierPickNoMatchResponseBody'
       schemes:
       - http
-  /storage/:
+  /storage:
     get:
       tags:
       - storage

@@ -12,7 +12,7 @@ produces:
 - application/xml
 - application/gob
 paths:
-  /resumes/:
+  /resumes:
     get:
       tags:
       - resume
