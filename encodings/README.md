@@ -49,7 +49,7 @@ func ResponseDecoder(resp *http.Response) Decoder
 
 The `cbor` example top level `encoding.go` file implements these 4 functions
 leveraging the [https://github.com/fxamacker/cbor] package. The
-[server](https://github.com/goadesign/examples/tree/master/encodings/cbor/cmd/cbor/http.go#L32)
+[server](https://github.com/goadesign/examples/tree/master/encodings/cbor/cmd/concat/http.go#L32)
 and
-[client](https://github.com/goadesign/examples/tree/master/encodings/cbor/cmd/cbor-cli/http.go#L28)
+[client](https://github.com/goadesign/examples/tree/master/encodings/cbor/cmd/concat-cli/http.go#L28)
 main packages leverage these functions to create the HTTP server and client.
