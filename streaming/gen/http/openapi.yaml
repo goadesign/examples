@@ -223,22 +223,22 @@ definitions:
       length:
         type: integer
         description: Length of the message sent
-        example: 3756131783218505890
+        example: 5259090068341979935
         format: int64
       message:
         type: string
         description: Message sent to the server
-        example: Veritatis veritatis soluta qui at et eius.
+        example: Repellendus quis sunt quis nam vero.
       sent_at:
         type: string
         description: Time at which the message was sent
-        example: "1976-12-29T13:56:34Z"
+        example: "1990-10-19T18:39:03Z"
         format: date-time
     description: ChatSummaryResponse result type (default view)
     example:
-      length: 2056634801561563523
-      message: Magni doloribus at nam ipsum soluta.
-      sent_at: "1998-03-22T14:13:38Z"
+      length: 7447099060303942779
+      message: Vitae voluptatum.
+      sent_at: "1982-08-31T21:33:29Z"
     required:
     - message
     - sent_at
@@ -259,15 +259,15 @@ definitions:
   ChatterEchoerInvalidScopesResponseBody:
     title: ChatterEchoerInvalidScopesResponseBody
     type: string
-    example: Earum omnis incidunt sequi accusantium illum.
+    example: Saepe consequuntur rerum ut.
   ChatterEchoerUnauthorizedResponseBody:
     title: ChatterEchoerUnauthorizedResponseBody
     type: string
-    example: Tempora repudiandae ipsa aut.
+    example: Incidunt sequi accusantium illum in suscipit.
   ChatterHistoryInvalidScopesResponseBody:
     title: ChatterHistoryInvalidScopesResponseBody
     type: string
-    example: Sit id.
+    example: Id amet ex vero necessitatibus ullam.
   ChatterHistoryResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.summary; view=default'
     type: object
@@ -275,46 +275,46 @@ definitions:
       length:
         type: integer
         description: Length of the message sent
-        example: 632493872526913854
+        example: 2093602564195892378
         format: int64
       message:
         type: string
         description: Message sent to the server
-        example: Qui veritatis illo ea non voluptatum.
+        example: Molestias optio et occaecati voluptatibus veniam.
       sent_at:
         type: string
         description: Time at which the message was sent
-        example: "2013-02-14T14:12:04Z"
+        example: "1999-08-10T07:59:44Z"
         format: date-time
     description: HistoryResponseBody result type (default view)
     example:
-      length: 5024516386033482824
-      message: Qui illo porro quia.
-      sent_at: "1982-12-04T07:28:35Z"
+      length: 7217918484766225724
+      message: Eos enim accusamus accusantium.
+      sent_at: "1988-06-11T11:51:55Z"
     required:
     - message
     - sent_at
   ChatterHistoryUnauthorizedResponseBody:
     title: ChatterHistoryUnauthorizedResponseBody
     type: string
-    example: Aut quae quis et natus et.
+    example: Natus et ratione.
   ChatterListenerInvalidScopesResponseBody:
     title: ChatterListenerInvalidScopesResponseBody
     type: string
-    example: Consequatur rerum.
+    example: Veritatis veritatis soluta qui at et eius.
   ChatterListenerUnauthorizedResponseBody:
     title: ChatterListenerUnauthorizedResponseBody
     type: string
-    example: Suscipit ut saepe consequuntur rerum ut et.
+    example: Velit consequatur rerum.
   ChatterLoginUnauthorizedResponseBody:
     title: ChatterLoginUnauthorizedResponseBody
     type: string
     description: Credentials are invalid
-    example: Suscipit officiis odit dolor dolorum reprehenderit dolorum.
+    example: Aut quaerat earum.
   ChatterSubscribeInvalidScopesResponseBody:
     title: ChatterSubscribeInvalidScopesResponseBody
     type: string
-    example: Iure aperiam modi.
+    example: Rerum qui veritatis illo ea non.
   ChatterSubscribeResponseBody:
     title: ChatterSubscribeResponseBody
     type: object
@@ -327,16 +327,16 @@ definitions:
       added_at:
         type: string
         description: Time at which the message was added
-        example: "2014-04-06T02:17:21Z"
+        example: "1981-05-28T21:50:07Z"
         format: date-time
       message:
         type: string
         description: Message sent to the server
-        example: Necessitatibus dolorem.
+        example: Nisi unde.
     example:
       action: added
-      added_at: "1985-05-22T04:05:28Z"
-      message: Nisi ut autem nobis ad.
+      added_at: "1994-11-30T06:40:10Z"
+      message: Nobis ad non id.
     required:
     - message
     - action
@@ -344,15 +344,15 @@ definitions:
   ChatterSubscribeUnauthorizedResponseBody:
     title: ChatterSubscribeUnauthorizedResponseBody
     type: string
-    example: Dolore commodi eos omnis est qui.
+    example: Omnis est qui beatae iure aperiam.
   ChatterSummaryInvalidScopesResponseBody:
     title: ChatterSummaryInvalidScopesResponseBody
     type: string
-    example: Aut velit.
+    example: Necessitatibus dolorem.
   ChatterSummaryUnauthorizedResponseBody:
     title: ChatterSummaryUnauthorizedResponseBody
     type: string
-    example: Veritatis temporibus.
+    example: Aut velit.
 securityDefinitions:
   basic_header_Authorization:
     type: basic
