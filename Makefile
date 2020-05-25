@@ -90,7 +90,7 @@ gen:
 	@echo GENERATING CODE...
 	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd"             && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli"  && \
-	rm -rf "$(GOPATH)/src/goa.design/examples/encodings/cmd"          && \
+	rm -rf "$(GOPATH)/src/goa.design/examples/encodings/text/cmd"     && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd"              && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/multipart/cmd"          && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/security/cmd"           && \
@@ -98,8 +98,10 @@ gen:
 	goa example goa.design/examples/basic/design     -o "$(GOPATH)/src/goa.design/examples/basic"     && \
 	goa gen     goa.design/examples/cellar/design    -o "$(GOPATH)/src/goa.design/examples/cellar"    && \
 	goa example goa.design/examples/cellar/design    -o "$(GOPATH)/src/goa.design/examples/cellar"    && \
-	goa gen     goa.design/examples/encodings/design -o "$(GOPATH)/src/goa.design/examples/encodings" && \
-	goa example goa.design/examples/encodings/design -o "$(GOPATH)/src/goa.design/examples/encodings" && \
+	goa gen     goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
+	goa example goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
+	goa gen     goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text" && \
+	goa example goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text" && \
 	goa gen     goa.design/examples/error/design     -o "$(GOPATH)/src/goa.design/examples/error"     && \
 	goa example goa.design/examples/error/design     -o "$(GOPATH)/src/goa.design/examples/error"     && \
 	goa gen     goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart" && \
@@ -114,8 +116,10 @@ build:
 		go build ./cmd/calc && go build ./cmd/calc-cli
 	@cd "$(GOPATH)/src/goa.design/examples/cellar" && \
 		go build ./cmd/cellar && go build ./cmd/cellar-cli
-	@cd "$(GOPATH)/src/goa.design/examples/encodings" && \
-		go build ./cmd/encodings && go build ./cmd/encodings-cli
+	@cd "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
+		go build ./cmd/cbor && go build ./cmd/cbor-cli
+	@cd "$(GOPATH)/src/goa.design/examples/encodings/text" && \
+		go build ./cmd/text && go build ./cmd/text-cli
 	@cd "$(GOPATH)/src/goa.design/examples/error" && \
 		go build ./cmd/divider && go build ./cmd/divider-cli
 	@cd "$(GOPATH)/src/goa.design/examples/multipart" && \
@@ -132,8 +136,10 @@ clean:
 		rm -f calc calc-cli
 	@cd "$(GOPATH)/src/goa.design/examples/cellar" && \
 		 rm -f cellar cellar-cli
-	@cd "$(GOPATH)/src/goa.design/examples/encodings" && \
-		 rm -f encodings encodings-cli
+	@cd "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
+		 rm -f cbor cbor-cli
+	@cd "$(GOPATH)/src/goa.design/examples/encodings/text" && \
+		 rm -f text text-cli
 	@cd "$(GOPATH)/src/goa.design/examples/error" && \
 		 rm -f divider divider-cli
 	@cd "$(GOPATH)/src/goa.design/examples/multipart" && \
