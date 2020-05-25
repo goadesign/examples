@@ -1,0 +1,38 @@
+swagger: "2.0"
+info:
+  title: ""
+  version: ""
+host: localhost:80
+consumes:
+- application/json
+- application/xml
+- application/gob
+produces:
+- application/json
+- application/xml
+- application/gob
+paths:
+  /concat/{a}/{b}:
+    get:
+      tags:
+      - concat
+      summary: concat concat
+      operationId: concat#concat
+      parameters:
+      - name: a
+        in: path
+        description: Left operand
+        required: true
+        type: string
+      - name: b
+        in: path
+        description: Right operand
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            type: string
+      schemes:
+      - http
