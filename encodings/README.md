@@ -9,7 +9,7 @@ makes it possible to implement arbitrary content type negotation algorithms
 (that is inferring the proper encoding to be used in the response given the
 request). The default response encoder factory
 [function](https://github.com/goadesign/goa/blob/v3/http/encoding.go#L99)
-implements a basic content type negotatiaion that simply matches the request
+implements a basic content type negotatiation that simply matches the request
 `Accept` header with a set of predefined supported mime types.
 
 The `text` example illustrates how to specify the response content type in
