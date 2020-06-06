@@ -1,2 +1,4 @@
 tus/cmd/upload-cli/upload-cli
 tus/cmd/upload/upload
+cookies/cmd/session-cli/session-cli
+cookies/cmd/session/session
