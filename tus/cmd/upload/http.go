@@ -46,7 +46,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, tusEndpoints *tus.Endpoin
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
 		// Shutdown gracefully with a 300s timeout to allow for ongoing downloads to finish.
-		ctx, cancel := context.WithTimeout(ctx, 300*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
 		defer cancel()
 
 		srv.Shutdown(ctx)
