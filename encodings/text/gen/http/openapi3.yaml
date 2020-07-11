@@ -1,8 +1,7 @@
 openapi: 3.0.3
 info:
   title: Encodings Service
-  description: Encoding example service demonstrating the use of different content
-    types
+  description: Encoding example service demonstrating the use of different content types
   version: "1.0"
 servers:
 - url: localhost:80
