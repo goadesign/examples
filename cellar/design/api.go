@@ -97,17 +97,17 @@ var Winery = ResultType("Winery", func() {
 			Meta("rpc:tag", "1")
 		})
 		Attribute("region", String, "Region of winery", func() {
-			Pattern(`(?i)[a-z '\.]+`)
+			Pattern(`[a-zA-Z '\.]+`)
 			Example("Central Coast, California")
 			Meta("rpc:tag", "2")
 		})
 		Attribute("country", String, "Country of winery", func() {
-			Pattern(`(?i)[a-z '\.]+`)
+			Pattern(`[a-zA-Z '\.]+`)
 			Example("USA")
 			Meta("rpc:tag", "3")
 		})
 		Attribute("url", String, "Winery website URL", func() {
-			Pattern(`(?i)^(https?|ftp)://[^\s/$.?#].[^\s]*$`)
+			Pattern(`^(https?|ftp)://[^\s/$.?#].[^\s]*$`)
 			Example("http://www.longoriawine.com/")
 			Meta("rpc:tag", "4")
 		})

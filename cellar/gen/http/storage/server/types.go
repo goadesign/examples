@@ -345,13 +345,13 @@ func ValidateWineryRequestBody(body *WineryRequestBody) (err error) {
 		err = goa.MergeErrors(err, goa.MissingFieldError("country", "body"))
 	}
 	if body.Region != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("body.region", *body.Region, "(?i)[a-z '\\.]+"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("body.region", *body.Region, "[a-zA-Z '\\.]+"))
 	}
 	if body.Country != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("body.country", *body.Country, "(?i)[a-z '\\.]+"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("body.country", *body.Country, "[a-zA-Z '\\.]+"))
 	}
 	if body.URL != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("body.url", *body.URL, "(?i)^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("body.url", *body.URL, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
 	}
 	return
 }

@@ -850,7 +850,7 @@ definitions:
         type: string
         description: Country of winery
         example: USA
-        pattern: (?i)[a-z '\.]+
+        pattern: '[a-zA-Z ''\.]+'
       name:
         type: string
         description: Name of winery
@@ -859,12 +859,12 @@ definitions:
         type: string
         description: Region of winery
         example: Central Coast, California
-        pattern: (?i)[a-z '\.]+
+        pattern: '[a-zA-Z ''\.]+'
       url:
         type: string
         description: Winery website URL
         example: http://www.longoriawine.com/
-        pattern: (?i)^(https?|ftp)://[^\s/$.?#].[^\s]*$
+        pattern: ^(https?|ftp)://[^\s/$.?#].[^\s]*$
     description: WineryRequestBody result type (default view)
     example:
       country: USA
