@@ -94,20 +94,28 @@ gen:
 	rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd"              && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/multipart/cmd"          && \
 	rm -rf "$(GOPATH)/src/goa.design/examples/security/cmd"           && \
+	echo "1/8 basic"                                                                                  && \
 	goa gen     goa.design/examples/basic/design     -o "$(GOPATH)/src/goa.design/examples/basic"     && \
 	goa example goa.design/examples/basic/design     -o "$(GOPATH)/src/goa.design/examples/basic"     && \
+	echo "2/8 cellar"                                                                                 && \
 	goa gen     goa.design/examples/cellar/design    -o "$(GOPATH)/src/goa.design/examples/cellar"    && \
 	goa example goa.design/examples/cellar/design    -o "$(GOPATH)/src/goa.design/examples/cellar"    && \
+	echo "3/8 encodings/cbor"                                                                         && \
 	goa gen     goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
 	goa example goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
+	echo "4/8 encodings/text"                                                                         && \
 	goa gen     goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text" && \
 	goa example goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text" && \
+	echo "5/8 error"                                                                                  && \
 	goa gen     goa.design/examples/error/design     -o "$(GOPATH)/src/goa.design/examples/error"     && \
 	goa example goa.design/examples/error/design     -o "$(GOPATH)/src/goa.design/examples/error"     && \
+	echo "6/8 multipart"                                                                              && \
 	goa gen     goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart" && \
 	goa example goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart" && \
+	echo "7/8 security"                                                                               && \
 	goa gen     goa.design/examples/security/design  -o "$(GOPATH)/src/goa.design/examples/security"  && \
 	goa example goa.design/examples/security/design  -o "$(GOPATH)/src/goa.design/examples/security"  && \
+	echo "8/8 streaming"                                                                              && \
 	goa gen     goa.design/examples/streaming/design -o "$(GOPATH)/src/goa.design/examples/streaming" && \
 	goa example goa.design/examples/streaming/design -o "$(GOPATH)/src/goa.design/examples/streaming"
 

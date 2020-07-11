@@ -286,9 +286,9 @@ func NewMultiUpdateResponse() *storagepb.MultiUpdateResponse {
 
 // ValidateWinery runs the validations defined on Winery.
 func ValidateWinery(message *storagepb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.region", message.Region, "(?i)[a-z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.country", message.Country, "(?i)[a-z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("message.url", message.Url, "(?i)^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+	err = goa.MergeErrors(err, goa.ValidatePattern("message.region", message.Region, "[a-zA-Z '\\.]+"))
+	err = goa.MergeErrors(err, goa.ValidatePattern("message.country", message.Country, "[a-zA-Z '\\.]+"))
+	err = goa.MergeErrors(err, goa.ValidatePattern("message.url", message.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
 	return
 }
 

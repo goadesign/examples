@@ -267,13 +267,13 @@ func ValidateWineryView(result *WineryView) (err error) {
 		err = goa.MergeErrors(err, goa.MissingFieldError("country", "result"))
 	}
 	if result.Region != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("result.region", *result.Region, "(?i)[a-z '\\.]+"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("result.region", *result.Region, "[a-zA-Z '\\.]+"))
 	}
 	if result.Country != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("result.country", *result.Country, "(?i)[a-z '\\.]+"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("result.country", *result.Country, "[a-zA-Z '\\.]+"))
 	}
 	if result.URL != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("result.url", *result.URL, "(?i)^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+		err = goa.MergeErrors(err, goa.ValidatePattern("result.url", *result.URL, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
 	}
 	return
 }

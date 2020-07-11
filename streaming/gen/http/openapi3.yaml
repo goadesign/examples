@@ -1,0 +1,342 @@
+openapi: 3.0.3
+info:
+  title: Chatter service describing the streaming features of goa v2.
+  version: "1.0"
+servers:
+- url: localhost:80
+  description: Default server for chatter
+paths:
+  /echoer:
+    get:
+      tags:
+      - chatter
+      summary: echoer chatter
+      description: Echoes the message sent by the client.
+      operationId: chatter#echoer
+      responses:
+        "101":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Ullam repellendus eius quis quos inventore.
+              example: Soluta incidunt reiciendis et autem ut.
+        "401":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Sequi tenetur.
+        "403":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Deleniti ea in.
+      security:
+      - jwt_header_Authorization:
+        - stream:read
+        - stream:write
+  /history:
+    get:
+      tags:
+      - chatter
+      summary: history chatter
+      description: Returns the chat messages sent to the server.
+      operationId: chatter#history
+      parameters:
+      - name: view
+        in: query
+        description: View to use to render the result
+        allowEmptyValue: true
+        schema:
+          type: string
+          description: View to use to render the result
+          example: Quo eaque suscipit necessitatibus facilis.
+        example: Ut aut numquam dolore libero pariatur est.
+      responses:
+        "101":
+          description: ""
+          content:
+            application/json:
+              schema:
+                description: 'Response body may alternatively be #/components/schemas/HistoryResponseBodyTiny'
+                $ref: '#/components/schemas/ChatSummary'
+              example:
+                length: 3358802890094362607
+                message: Qui voluptas accusantium est sequi vel nihil.
+                sent_at: "2004-08-08T02:35:50Z"
+        "401":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Qui excepturi quia.
+        "403":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Error nostrum minima.
+      security:
+      - jwt_header_Authorization:
+        - stream:read
+        - stream:write
+  /listener:
+    get:
+      tags:
+      - chatter
+      summary: listener chatter
+      description: Listens to the messages sent by the client.
+      operationId: chatter#listener
+      responses:
+        "101":
+          description: ""
+          content:
+            application/json:
+              example: {}
+        "401":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Totam porro quis.
+        "403":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Sit rerum sit et hic.
+      security:
+      - jwt_header_Authorization:
+        - stream:read
+        - stream:write
+  /login:
+    post:
+      tags:
+      - chatter
+      summary: login chatter
+      description: Creates a valid JWT token for auth to chat.
+      operationId: chatter#login
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+                description: New JWT token
+                example: Maiores nobis iusto sint.
+              example: Voluptatem ut.
+        "401":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Accusamus facere praesentium omnis voluptatem dolorum.
+      security:
+      - basic_header_Authorization: []
+  /subscribe:
+    get:
+      tags:
+      - chatter
+      summary: subscribe chatter
+      description: Subscribe to events sent when new chat messages are added.
+      operationId: chatter#subscribe
+      responses:
+        "101":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+              example:
+                action: added
+                added_at: "2007-10-25T23:17:05Z"
+                message: Et quidem et neque accusantium provident.
+        "401":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Est est.
+        "403":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Blanditiis amet quis quisquam.
+      security:
+      - jwt_header_Authorization:
+        - stream:read
+        - stream:write
+  /summary:
+    get:
+      tags:
+      - chatter
+      summary: summary chatter
+      description: Summarizes the chat messages sent by the client.
+      operationId: chatter#summary
+      responses:
+        "101":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSummaryResponseCollection'
+              example:
+              - length: 4832953061930875130
+                message: Molestiae autem voluptatem voluptate autem incidunt.
+                sent_at: "1970-05-07T05:21:01Z"
+              - length: 4832953061930875130
+                message: Molestiae autem voluptatem voluptate autem incidunt.
+                sent_at: "1970-05-07T05:21:01Z"
+              - length: 4832953061930875130
+                message: Molestiae autem voluptatem voluptate autem incidunt.
+                sent_at: "1970-05-07T05:21:01Z"
+              - length: 4832953061930875130
+                message: Molestiae autem voluptatem voluptate autem incidunt.
+                sent_at: "1970-05-07T05:21:01Z"
+        "401":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Aspernatur consequatur ut.
+        "403":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+              example: Et vel in.
+      security:
+      - jwt_header_Authorization:
+        - stream:read
+        - stream:write
+components:
+  schemas:
+    ChatSummary:
+      type: object
+      properties:
+        length:
+          type: integer
+          description: Length of the message sent
+          example: 5862532893616606163
+          format: int64
+        message:
+          type: string
+          description: Message sent to the server
+          example: Expedita porro.
+        sent_at:
+          type: string
+          description: Time at which the message was sent
+          example: "1984-08-20T15:36:58Z"
+          format: date-time
+      example:
+        length: 3319212102923706927
+        message: Quibusdam sed minima dolor necessitatibus debitis qui.
+        sent_at: "1991-06-21T01:42:41Z"
+      required:
+      - message
+      - sent_at
+    ChatSummaryResponse:
+      type: object
+      properties:
+        length:
+          type: integer
+          description: Length of the message sent
+          example: 7469039031279743034
+          format: int64
+        message:
+          type: string
+          description: Message sent to the server
+          example: Repellat quaerat.
+        sent_at:
+          type: string
+          description: Time at which the message was sent
+          example: "1997-02-13T18:36:49Z"
+          format: date-time
+      description: ChatSummaryResponse result type (default view)
+      example:
+        length: 827819250742119287
+        message: Vero quas aliquam laudantium ullam.
+        sent_at: "1979-07-12T06:19:19Z"
+      required:
+      - message
+      - sent_at
+    ChatSummaryResponseCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/ChatSummaryResponse'
+      description: SummaryResponseBody is the result type for an array of ChatSummaryResponse
+        (default view)
+      example:
+      - length: 4832953061930875130
+        message: Molestiae autem voluptatem voluptate autem incidunt.
+        sent_at: "1970-05-07T05:21:01Z"
+      - length: 4832953061930875130
+        message: Molestiae autem voluptatem voluptate autem incidunt.
+        sent_at: "1970-05-07T05:21:01Z"
+    Event:
+      type: object
+      properties:
+        action:
+          type: string
+          example: added
+          enum:
+          - added
+        added_at:
+          type: string
+          description: Time at which the message was added
+          example: "1998-03-09T12:38:57Z"
+          format: date-time
+        message:
+          type: string
+          description: Message sent to the server
+          example: In temporibus cupiditate mollitia quo voluptates in.
+      example:
+        action: added
+        added_at: "2001-11-10T17:10:58Z"
+        message: Quaerat facilis est minima officia inventore laboriosam.
+      required:
+      - message
+      - action
+      - added_at
+    HistoryResponseBodyTiny:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message sent to the server
+          example: Quasi ipsa cupiditate itaque reprehenderit et.
+      description: HistoryResponseBody result type (tiny view)
+      example:
+        message: Aut facere.
+      required:
+      - message
+    Unauthorized:
+      type: string
+      description: Credentials are invalid
+      example: Vitae quis perferendis assumenda.
+  securitySchemes:
+    basic_header_Authorization:
+      type: http
+      description: Secures the login endpoint.
+      scheme: basic
+    jwt_header_Authorization:
+      type: http
+      description: Secures endpoint by requiring a valid JWT token. Supports scopes
+        "stream:read" and "stream:write".
+      scheme: bearer
