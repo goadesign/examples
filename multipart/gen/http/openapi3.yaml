@@ -109,9 +109,7 @@ paths:
       tags:
       - resume
       summary: add resume
-      description: Add n number of resumes and return their IDs. This is a multipart
-        request and each part has field name 'resume' and contains the encoded resume
-        to be added.
+      description: Add n number of resumes and return their IDs. This is a multipart request and each part has field name 'resume' and contains the encoded resume to be added.
       operationId: resume#add
       requestBody:
         required: true

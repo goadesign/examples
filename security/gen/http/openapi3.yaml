@@ -55,8 +55,7 @@ paths:
       tags:
       - secured_service
       summary: also_doubly_secure secured_service
-      description: This action is secured with the jwt scheme and also requires an
-        API key header.
+      description: This action is secured with the jwt scheme and also requires an API key header.
       operationId: secured_service#also_doubly_secure
       parameters:
       - name: k
@@ -120,8 +119,7 @@ paths:
       tags:
       - secured_service
       summary: doubly_secure secured_service
-      description: This action is secured with the jwt scheme and also requires an
-        API key query string.
+      description: This action is secured with the jwt scheme and also requires an API key query string.
       operationId: secured_service#doubly_secure
       parameters:
       - name: k
@@ -226,23 +224,19 @@ components:
       in: query
     basic_header_Authorization:
       type: http
-      description: Basic authentication used to authenticate security principal during
-        signin
+      description: Basic authentication used to authenticate security principal during signin
       scheme: basic
     jwt_header_Authorization:
       type: http
-      description: Secures endpoint by requiring a valid JWT token retrieved via the
-        signin endpoint. Supports scopes "api:read" and "api:write".
+      description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
       scheme: bearer
     jwt_header_X-Authorization:
       type: http
-      description: Secures endpoint by requiring a valid JWT token retrieved via the
-        signin endpoint. Supports scopes "api:read" and "api:write".
+      description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
       scheme: bearer
     oauth2_query_oauth:
       type: oauth2
-      description: Secures endpoint by requiring a valid OAuth2 token retrieved via
-        the signin endpoint. Supports scopes "api:read" and "api:write".
+      description: Secures endpoint by requiring a valid OAuth2 token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
       flows:
         authorizationCode:
           authorizationUrl: http://goa.design/authorization
