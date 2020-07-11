@@ -24,10 +24,8 @@ export GO111MODULE=on
 DEPEND=\
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
-	github.com/golang/protobuf/protoc-gen-go \
-	github.com/golang/protobuf/proto \
 	honnef.co/go/tools/cmd/staticcheck \
-	github.com/hashicorp/go-getter/cmd/go-getter
+	github.com/golang/protobuf/protoc-gen-go
 
 .phony: all depend lint test build clean
 
@@ -37,7 +35,7 @@ all: check-goa gen lint test
 travis: depend all check-freshness
 
 # Install protoc
-PROTOC_VERSION=3.11.4
+PROTOC_VERSION=3.12.3
 ifeq ($(GOOS),linux)
 PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
 PROTOC_EXEC=$(PROTOC)/bin/protoc
