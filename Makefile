@@ -39,14 +39,17 @@ PROTOC_VERSION=3.12.3
 ifeq ($(GOOS),linux)
 PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
 PROTOC_EXEC=$(PROTOC)/bin/protoc
+UNZIP=unzip
 else
 	ifeq ($(GOOS),darwin)
 PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
 PROTOC_EXEC=$(PROTOC)/bin/protoc
+UNZIP=unzip
 	else
 		ifeq ($(GOOS),windows)
 PROTOC=protoc-$(PROTOC_VERSION)-win32
 PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
+UNZIP="tar -xf"
 GOPATH:=$(subst \,/,$(GOPATH))
 		endif
 	endif
@@ -56,20 +59,25 @@ check-goa:
 ifdef GOA
 	@echo $(GOA)
 else
-	go get -u goa.design/goa/v3
-	go get -u goa.design/goa/v3/...
+	go get -u goa.design/goa/v3@v3
+	go get -u goa.design/goa/v3/...@v3
+	@echo $(GOA)
 endif
 
+# Note: the steps below rely on curl and tar which are available
+# on both Linux and Windows 10 (build>=17603).
 depend:
 	@echo INSTALLING DEPENDENCIES...
 	@go mod download
 	@env go get -v $(DEPEND)
-	@echo installing protoc
-	go-getter https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip $(PROTOC)
+	@echo INSTALLING PROTOC...
+	@mkdir $(PROTOC)
+	@cd $(PROTOC); \
+	curl -O -L https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip; \
+	$(UNZIP) $(PROTOC).zip
 	@cp $(PROTOC_EXEC) $(GOPATH)/bin && \
 		rm -r $(PROTOC) && \
 		echo "`protoc --version`"
-	@echo done installing dependencies
 
 lint:
 	@echo LINTING CODE...
