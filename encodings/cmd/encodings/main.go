@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
 
 	encodings "goa.design/examples/encodings"
 	text "goa.design/examples/encodings/gen/text"
@@ -60,7 +61,7 @@ func main() {
 	// that SIGINT and SIGTERM signals cause the services to stop gracefully.
 	go func() {
 		c := make(chan os.Signal, 1)
-		signal.Notify(c, os.Interrupt)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 

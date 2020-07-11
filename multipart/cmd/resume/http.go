@@ -94,7 +94,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, resumeEndpoints *resume.E
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
 		// Shutdown gracefully with a 30s timeout.
-		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
 		srv.Shutdown(ctx)
