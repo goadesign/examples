@@ -4,9 +4,9 @@ info:
   description: HTTP service for adding numbers, a goa teaser
   version: "1.0"
 servers:
-- url: localhost:8000
+- url: http://localhost:8000/calc
   description: calc hosts the Calculator Service.
-- url: v1.goa.design
+- url: https://v1.goa.design/calc
   description: calc hosts the Calculator Service.
   variables:
     version:
