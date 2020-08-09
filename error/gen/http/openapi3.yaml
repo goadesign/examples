@@ -4,7 +4,7 @@ info:
   description: An example illustrating error handling in goa. See docs/ErrorHandling.md.
   version: "1.0"
 servers:
-- url: localhost:80
+- url: http://localhost:80
   description: Default server for divider
 paths:
   /div/{a}/{b}:

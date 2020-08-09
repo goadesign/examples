@@ -4,7 +4,7 @@ info:
   description: This API demonstrates the use of the goa security DSL
   version: "1.0"
 servers:
-- url: localhost:80
+- url: http://localhost:80
   description: Default server for multi_auth
 paths:
   /secure:
