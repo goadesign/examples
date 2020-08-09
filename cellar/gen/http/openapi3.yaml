@@ -4,9 +4,9 @@ info:
   description: HTTP service for managing your wine cellar
   version: "1.0"
 servers:
-- url: localhost:8000
+- url: http://localhost:8000/cellar
   description: cellar hosts the storage, sommelier and swagger services.
-- url: goa.design
+- url: https://goa.design/cellar
   description: cellar hosts the storage, sommelier and swagger services.
 paths:
   /sommelier:

@@ -5,7 +5,7 @@ info:
     types
   version: "1.0"
 servers:
-- url: localhost:80
+- url: http://localhost:80
 paths:
   /concatbytes/{a}/{b}:
     get:
