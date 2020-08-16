@@ -8,17 +8,18 @@ import (
 	"sync"
 
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	chattersvc "goa.design/examples/streaming/gen/chatter"
+	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
-	chattersvcsvr "goa.design/examples/streaming/gen/grpc/chatter/server"
+	chattersvr "goa.design/examples/streaming/gen/grpc/chatter/server"
 	grpcmdlwr "goa.design/goa/v3/grpc/middleware"
 	"goa.design/goa/v3/middleware"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 // handleGRPCServer starts configures and starts a gRPC server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chattersvc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -33,10 +34,10 @@ func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 	// the service input and output data structures to gRPC requests and
 	// responses.
 	var (
-		chatterServer *chattersvcsvr.Server
+		chatterServer *chattersvr.Server
 	)
 	{
-		chatterServer = chattersvcsvr.New(chatterEndpoints, nil, nil)
+		chatterServer = chattersvr.New(chatterEndpoints, nil, nil)
 	}
 
 	// Initialize gRPC server with the middleware.
@@ -46,7 +47,6 @@ func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 			grpcmdlwr.UnaryServerLog(adapter),
 		),
 		grpcmiddleware.WithStreamServerChain(
-			grpcmdlwr.StreamCanceler(ctx),
 			grpcmdlwr.StreamRequestID(),
 			grpcmdlwr.StreamServerLog(adapter),
 		),
@@ -60,6 +60,10 @@ func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 			logger.Printf("serving gRPC method %s", svc+"/"+m.Name)
 		}
 	}
+
+	// Register the server reflection service on the server.
+	// See https://grpc.github.io/grpc/core/md_doc_server-reflection.html.
+	reflection.Register(srv)
 
 	(*wg).Add(1)
 	go func() {
@@ -77,6 +81,6 @@ func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 
 		<-ctx.Done()
 		logger.Printf("shutting down gRPC server at %q", u.Host)
-		srv.GracefulStop()
+		srv.Stop()
 	}()
 }

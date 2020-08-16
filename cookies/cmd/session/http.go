@@ -93,10 +93,10 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sessionEndpoints *session
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
 		// Shutdown gracefully with a 30s timeout.
-		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		srv.Shutdown(ctx)
+		_ = srv.Shutdown(ctx)
 	}()
 }
 
@@ -106,7 +106,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sessionEndpoints *session
 func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
-		w.Write([]byte("[" + id + "] encoding: " + err.Error()))
+		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Printf("[%s] ERROR: %s", id, err.Error())
 	}
 }
