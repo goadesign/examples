@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	concatapi "goa.design/examples/encodings/cbor"
 	concat "goa.design/examples/encodings/cbor/gen/concat"
 	concatsvr "goa.design/examples/encodings/cbor/gen/http/concat/server"
 	goahttp "goa.design/goa/v3/http"
@@ -30,11 +29,12 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 	}
 
 	// Provide the transport specific request decoder and response encoder.
-	// Use the CBOR request decoder and response encoder implemented in the
-	// concatapi package.
+	// The goa http package has built-in support for JSON, XML and gob.
+	// Other encodings can be used by providing the corresponding functions,
+	// see goa.design/implement/encoding.
 	var (
-		dec = concatapi.RequestDecoder
-		enc = concatapi.ResponseEncoder
+		dec = goahttp.RequestDecoder
+		enc = goahttp.ResponseEncoder
 	)
 
 	// Build the service HTTP request multiplexer and configure it to serve
@@ -93,10 +93,10 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
 		// Shutdown gracefully with a 30s timeout.
-		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		srv.Shutdown(ctx)
+		_ = srv.Shutdown(ctx)
 	}()
 }
 
@@ -106,7 +106,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
-		w.Write([]byte("[" + id + "] encoding: " + err.Error()))
+		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Printf("[%s] ERROR: %s", id, err.Error())
 	}
 }

@@ -18,8 +18,7 @@ paths:
       tags:
       - tus
       summary: post tus
-      description: Clients use the POST method against a known upload creation URL
-        to request a new upload resource.
+      description: Clients use the POST method against a known upload creation URL to request a new upload resource.
       operationId: tus#post
       parameters:
       - name: Tus-Resumable
@@ -36,24 +35,19 @@ paths:
         format: int64
       - name: Upload-Defer-Length
         in: header
-        description: The Upload-Defer-Length request and response header indicates
-          that the size of the upload is not known currently and will be transferred
-          later.
+        description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
         required: false
         type: integer
         enum:
         - 1
       - name: Upload-Checksum
         in: header
-        description: A Client MAY include the Upload-Checksum header in a PATCH request.
-          Once the entire request has been received, the Server MUST verify the uploaded
-          chunk against the provided checksum using the specified algorithm.
+        description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
         required: false
         type: string
       - name: Upload-Metadata
         in: header
-        description: The Client MAY supply the Upload-Metadata header to add additional
-          metadata to the upload creation request.
+        description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
         required: false
         type: string
       - name: Tus-Max-Size
@@ -75,8 +69,7 @@ paths:
               type: string
               pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
             Upload-Expires:
-              description: The Upload-Expires response header indicates the time after
-                which the unfinished upload expires.
+              description: The Upload-Expires response header indicates the time after which the unfinished upload expires.
               type: string
             Upload-Offset:
               description: uploadOffset represents a byte offset within a resource.
@@ -107,39 +100,31 @@ paths:
       tags:
       - tus
       summary: options tus
-      description: Clients use the OPTIONS method to gather information about the
-        Server’s current configuration.
+      description: Clients use the OPTIONS method to gather information about the Server’s current configuration.
       operationId: tus#options
       responses:
         "204":
           description: No Content response.
           headers:
             Tus-Checksum-Algorithm:
-              description: A Client MAY include the Upload-Checksum header in a PATCH
-                request. Once the entire request has been received, the Server MUST
-                verify the uploaded chunk against the provided checksum using the
-                specified algorithm.
+              description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
               type: string
               enum:
               - md5,sha1,crc32
             Tus-Extension:
-              description: tusExtension is a comma separated list of extensions supported
-                by the server. This implementation supports the creation, creation-with-upload,
-                expiration, checksum and termination extensions
+              description: tusExtension is a comma separated list of extensions supported by the server. This implementation supports the creation, creation-with-upload, expiration, checksum and termination extensions
               type: string
               enum:
               - creation,creation-with-upload,creation-defer-length,expiration,checksum,termination
             Tus-Max-Size:
-              description: tusMaxSize represents the maximum allowed size of an entire
-                upload in bytes.
+              description: tusMaxSize represents the maximum allowed size of an entire upload in bytes.
               type: int64
             Tus-Resumable:
               description: tusResumable represents a tus protocol version.
               type: string
               pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
             Tus-Version:
-              description: tusVersion is a comma separated list of protocol versions
-                supported by the server. This implementation only supports 1.0.0.
+              description: tusVersion is a comma separated list of protocol versions supported by the server. This implementation only supports 1.0.0.
               type: string
               enum:
               - 1.0.0
@@ -158,8 +143,7 @@ paths:
       tags:
       - tus
       summary: delete tus
-      description: Clients use the DELETE method to terminate completed and unfinished
-        uploads allowing the Server to free up used resources.
+      description: Clients use the DELETE method to terminate completed and unfinished uploads allowing the Server to free up used resources.
       operationId: tus#delete
       parameters:
       - name: id
@@ -204,8 +188,7 @@ paths:
       tags:
       - tus
       summary: head tus
-      description: Clients use the HEAD request to determine the offset at which the
-        upload should be continued.
+      description: Clients use the HEAD request to determine the offset at which the upload should be continued.
       operationId: tus#head
       parameters:
       - name: id
@@ -229,19 +212,15 @@ paths:
               type: string
               pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
             Upload-Defer-Length:
-              description: The Upload-Defer-Length request and response header indicates
-                that the size of the upload is not known currently and will be transferred
-                later.
+              description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
               type: int
               enum:
               - 1
             Upload-Length:
-              description: uploadLength represents the size of the entire upload in
-                bytes.
+              description: uploadLength represents the size of the entire upload in bytes.
               type: int64
             Upload-Metadata:
-              description: The Client MAY supply the Upload-Metadata header to add
-                additional metadata to the upload creation request.
+              description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
               type: string
             Upload-Offset:
               description: uploadOffset represents a byte offset within a resource.
@@ -291,9 +270,7 @@ paths:
         format: int64
       - name: Upload-Checksum
         in: header
-        description: A Client MAY include the Upload-Checksum header in a PATCH request.
-          Once the entire request has been received, the Server MUST verify the uploaded
-          chunk against the provided checksum using the specified algorithm.
+        description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
         required: false
         type: string
       responses:
@@ -305,8 +282,7 @@ paths:
               type: string
               pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
             Upload-Expires:
-              description: The Upload-Expires response header indicates the time after
-                which the unfinished upload expires.
+              description: The Upload-Expires response header indicates the time after which the unfinished upload expires.
               type: string
             Upload-Offset:
               description: uploadOffset represents a byte offset within a resource.
@@ -360,13 +336,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -380,8 +354,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: For all future requests to this URL, the Server SHOULD respond with
-      the 404 Not Found or 410 Gone status. (default view)
+    description: For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status. (default view)
     example:
       fault: false
       id: 123abc
@@ -406,13 +379,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -426,8 +397,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: For all future requests to this URL, the Server SHOULD respond with
-      the 404 Not Found or 410 Gone status. (default view)
+    description: For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status. (default view)
     example:
       fault: true
       id: 123abc
@@ -452,13 +422,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -472,9 +440,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: If the resource is not found, the Server SHOULD return either the
-      404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
-      (default view)
+    description: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header. (default view)
     example:
       fault: true
       id: 123abc
@@ -499,13 +465,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -519,9 +483,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: If the resource is not found, the Server SHOULD return either the
-      404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
-      (default view)
+    description: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header. (default view)
     example:
       fault: true
       id: 123abc
@@ -546,13 +508,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -591,13 +551,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -611,9 +569,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: If a Client does attempt to resume an upload which has since been
-      removed by the Server, the Server SHOULD respond with the404 Not Found or 410
-      Gone status. (default view)
+    description: If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status. (default view)
     example:
       fault: false
       id: 123abc
@@ -638,13 +594,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -683,13 +637,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -728,13 +680,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -748,9 +698,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: 'All PATCH requests MUST use Content-Type: application/offset+octet-stream,
-      otherwise the server SHOULD return a 415 Unsupported Media Type status. (default
-      view)'
+    description: 'All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a 415 Unsupported Media Type status. (default view)'
     example:
       fault: false
       id: 123abc
@@ -775,13 +723,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -795,8 +741,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: If the offsets do not match, the Server MUST respond with the 409
-      Conflict status without modifying the upload resource. (default view)
+    description: If the offsets do not match, the Server MUST respond with the 409 Conflict status without modifying the upload resource. (default view)
     example:
       fault: true
       id: 123abc
@@ -821,13 +766,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -841,9 +784,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: If a Client does attempt to resume an upload which has since been
-      removed by the Server, the Server SHOULD respond with the404 Not Found or 410
-      Gone status. (default view)
+    description: If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status. (default view)
     example:
       fault: false
       id: 123abc
@@ -868,13 +809,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -913,13 +852,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -958,13 +895,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -978,8 +913,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: If the Upload-Defer-Length header contains any other value than 1
-      the server should return a 400 Bad Request status. (default view)
+    description: If the Upload-Defer-Length header contains any other value than 1 the server should return a 400 Bad Request status. (default view)
     example:
       fault: false
       id: 123abc
@@ -1004,13 +938,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -1024,9 +956,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: If the length of the upload exceeds the maximum, which MAY be specified
-      using the Tus-Max-Size header, the Server MUST respond with the 413 Request
-      Entity Too Large status. (default view)
+    description: If the length of the upload exceeds the maximum, which MAY be specified using the Tus-Max-Size header, the Server MUST respond with the 413 Request Entity Too Large status. (default view)
     example:
       fault: false
       id: 123abc
@@ -1051,13 +981,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -1071,8 +999,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: 'The request MUST include one of the following headers: a) Upload-Length
-      -or- b) Upload-Defer-Length: 1 (default view)'
+    description: 'The request MUST include one of the following headers: a) Upload-Length -or- b) Upload-Defer-Length: 1 (default view)'
     example:
       fault: true
       id: 123abc

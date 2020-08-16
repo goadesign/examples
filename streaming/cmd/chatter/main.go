@@ -10,9 +10,10 @@ import (
 	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
 
-	chatter "goa.design/examples/streaming"
-	chattersvc "goa.design/examples/streaming/gen/chatter"
+	chatterapi "goa.design/examples/streaming"
+	chatter "goa.design/examples/streaming/gen/chatter"
 )
 
 func main() {
@@ -33,24 +34,24 @@ func main() {
 		logger *log.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[chatter] ", log.Ltime)
+		logger = log.New(os.Stderr, "[chatterapi] ", log.Ltime)
 	}
 
 	// Initialize the services.
 	var (
-		chatterSvc chattersvc.Service
+		chatterSvc chatter.Service
 	)
 	{
-		chatterSvc = chatter.NewChatter(logger)
+		chatterSvc = chatterapi.NewChatter(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		chatterEndpoints *chattersvc.Endpoints
+		chatterEndpoints *chatter.Endpoints
 	)
 	{
-		chatterEndpoints = chattersvc.NewEndpoints(chatterSvc)
+		chatterEndpoints = chatter.NewEndpoints(chatterSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -61,7 +62,7 @@ func main() {
 	// that SIGINT and SIGTERM signals cause the services to stop gracefully.
 	go func() {
 		c := make(chan os.Signal, 1)
-		signal.Notify(c, os.Interrupt)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 
@@ -75,7 +76,7 @@ func main() {
 			addr := "http://localhost:80"
 			u, err := url.Parse(addr)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s", addr, err)
+				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
 				os.Exit(1)
 			}
 			if *secureF {
@@ -97,7 +98,7 @@ func main() {
 			addr := "grpc://localhost:8080"
 			u, err := url.Parse(addr)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s", addr, err)
+				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
 				os.Exit(1)
 			}
 			if *secureF {
@@ -116,7 +117,7 @@ func main() {
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)", *hostF)
+		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)\n", *hostF)
 	}
 
 	// Wait for signal.
