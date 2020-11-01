@@ -21,9 +21,9 @@ paths:
         schema:
           type: number
           description: Left operand
-          example: 0.789075649868927
+          example: 0.5286530789660119
           format: double
-        example: 0.5111166900916506
+        example: 0.8201805920455113
       - name: b
         in: path
         description: Right operand
@@ -31,9 +31,9 @@ paths:
         schema:
           type: number
           description: Right operand
-          example: 0.7057874505310562
+          example: 0.2097150078861952
           format: double
-        example: 0.39685847459472906
+        example: 0.841081188964521
       responses:
         "200":
           description: ""
@@ -41,9 +41,9 @@ paths:
             application/json:
               schema:
                 type: number
-                example: 0.6217568753915087
+                example: 0.8096382349832494
                 format: double
-              example: 0.16566737152718328
+              example: 0.04845026310987674
         "400":
           description: ""
           content:
@@ -51,12 +51,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
         "504":
           description: ""
           content:
@@ -64,12 +61,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
   /idiv/{a}/{b}:
     get:
       tags:
@@ -84,9 +78,9 @@ paths:
         schema:
           type: integer
           description: Left operand
-          example: 393318831510271335
+          example: 1507115647399647933
           format: int64
-        example: 5453550585455534152
+        example: 6789275876984930452
       - name: b
         in: path
         description: Right operand
@@ -94,9 +88,9 @@ paths:
         schema:
           type: integer
           description: Right operand
-          example: 3216794369390999806
+          example: 445260288755784518
           format: int64
-        example: 7239368640568786456
+        example: 3219628185476174303
       responses:
         "200":
           description: ""
@@ -104,9 +98,9 @@ paths:
             application/json:
               schema:
                 type: integer
-                example: 6378977159087295045
+                example: 7567882148725513218
                 format: int64
-              example: 7945609215329634748
+              example: 3100890898189865870
         "400":
           description: ""
           content:
@@ -114,12 +108,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
         "417":
           description: ""
           content:
@@ -127,12 +118,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
         "504":
           description: ""
           content:
@@ -140,12 +128,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
 components:
   schemas:
     Error:
@@ -154,7 +139,7 @@ components:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: true
+          example: false
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of the problem.
@@ -170,19 +155,16 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: false
+          example: true
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       description: integer division has remainder
       example:
-        fault: false
-        id: 123abc
-        message: parameter 'p' must be an integer
+        id: 3F1FKVRR
+        message: Value of ID must be an integer
         name: bad_request
-        temporary: false
-        timeout: true
       required:
       - name
       - id

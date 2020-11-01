@@ -43,9 +43,9 @@ paths:
               schema:
                 type: integer
                 description: tusMaxSize represents the maximum allowed size of an entire upload in bytes.
-                example: 8826818837706880
+                example: 7736993761776115318
                 format: int64
-              example: 7763914550509985284
+              example: 2186147772722787067
             Tus-Resumable:
               description: tusResumable represents a tus protocol version.
               required: true
@@ -109,9 +109,9 @@ paths:
         schema:
           type: integer
           description: uploadLength represents the size of the entire upload in bytes.
-          example: 479317460011377657
+          example: 4833799241353945308
           format: int64
-        example: 7585706898538598738
+        example: 1835688792563813091
       - name: Upload-Defer-Length
         in: header
         description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
@@ -148,9 +148,9 @@ paths:
         schema:
           type: integer
           description: Length of the upload
-          example: 372598282905132216
+          example: 7695622195691640609
           format: int64
-        example: 477506491488379127
+        example: 7267554011524460006
       responses:
         "201":
           description: ""
@@ -186,9 +186,9 @@ paths:
               schema:
                 type: integer
                 description: uploadOffset represents a byte offset within a resource.
-                example: 4112570914862829890
+                example: 1867975458457142423
                 format: int64
-              example: 7138406606232779808
+              example: 6460434301675760960
           content:
             application/json:
               example: {}
@@ -199,12 +199,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
         "412":
           description: ""
           headers:
@@ -228,12 +225,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
         "460":
           description: ""
           content:
@@ -241,12 +235,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
   /upload/{id}:
     delete:
       tags:
@@ -299,12 +290,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
         "410":
           description: ""
           content:
@@ -312,12 +300,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
         "412":
           description: ""
           headers:
@@ -389,9 +374,9 @@ paths:
               schema:
                 type: integer
                 description: uploadLength represents the size of the entire upload in bytes.
-                example: 518079758982137479
+                example: 7081237826977381629
                 format: int64
-              example: 4999229605321017948
+              example: 9169029798839790708
             Upload-Metadata:
               description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
               schema:
@@ -405,9 +390,9 @@ paths:
               schema:
                 type: integer
                 description: uploadOffset represents a byte offset within a resource.
-                example: 5028804486247352317
+                example: 3120396208044830135
                 format: int64
-              example: 3304173154312827797
+              example: 8455368972674475364
           content:
             application/json:
               example: {}
@@ -418,12 +403,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
         "410":
           description: ""
           content:
@@ -431,12 +413,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
         "412":
           description: ""
           headers:
@@ -489,9 +468,9 @@ paths:
         schema:
           type: integer
           description: uploadOffset represents a byte offset within a resource.
-          example: 6785548980349758944
+          example: 4929543537337821846
           format: int64
-        example: 8533053218528786631
+        example: 5190020578830668647
       - name: Upload-Checksum
         in: header
         description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
@@ -527,9 +506,9 @@ paths:
               schema:
                 type: integer
                 description: uploadOffset represents a byte offset within a resource.
-                example: 6674965573629583913
+                example: 7252918215101017449
                 format: int64
-              example: 423322217614941725
+              example: 7346632388024852144
           content:
             application/json:
               example: {}
@@ -540,12 +519,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
         "404":
           description: ""
           content:
@@ -553,12 +529,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
         "409":
           description: ""
           content:
@@ -566,12 +539,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
         "410":
           description: ""
           content:
@@ -579,12 +549,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
         "412":
           description: ""
           headers:
@@ -608,12 +575,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
         "460":
           description: ""
           content:
@@ -621,12 +585,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
         "500":
           description: ""
           content:
@@ -634,12 +595,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
 components:
   schemas:
     Error:
@@ -664,19 +622,16 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: false
+          example: true
         timeout:
           type: boolean
           description: Is the error a timeout?
           example: false
       description: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.
       example:
-        fault: false
-        id: 123abc
-        message: parameter 'p' must be an integer
+        id: 3F1FKVRR
+        message: Value of ID must be an integer
         name: bad_request
-        temporary: false
-        timeout: false
       required:
       - name
       - id
