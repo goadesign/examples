@@ -21,8 +21,8 @@ paths:
         schema:
           type: string
           description: Path to downloaded file.
-          example: Esse atque consequatur quis et.
-        example: Odit architecto eos id dolores.
+          example: Autem aliquam.
+        example: Itaque necessitatibus.
       responses:
         "200":
           description: ""
@@ -46,12 +46,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
         "500":
           description: ""
           content:
@@ -59,12 +56,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
   /upload/{dir}:
     post:
       tags:
@@ -106,12 +100,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
         "500":
           description: ""
           content:
@@ -119,12 +110,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
 components:
   schemas:
     Error:
@@ -149,19 +137,16 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: true
+          example: false
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       description: Error returned when the Content-Type header does not define a multipart request.
       example:
-        fault: true
-        id: 123abc
-        message: parameter 'p' must be an integer
+        id: 3F1FKVRR
+        message: Value of ID must be an integer
         name: bad_request
-        temporary: true
-        timeout: false
       required:
       - name
       - id
