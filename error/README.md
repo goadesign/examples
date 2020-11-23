@@ -45,7 +45,7 @@ leveraged by the service implementation to handle exceeded deadlines:
 The `DivByZero` struct can be used to return division by zero errors:
 
 ```go
-	if p.Divisor == 0 {
+    if p.Divisor == 0 {
         return nil, &calc.DivByZero{Message: "divide by zero"}
     }
 ```
