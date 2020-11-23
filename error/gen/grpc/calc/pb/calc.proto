@@ -1,0 +1,34 @@
+// Code generated with goa v3.2.5, DO NOT EDIT.
+//
+// calc protocol buffer definition
+//
+// Command:
+// $ goa gen goa.design/examples/error/design -o
+// $(GOPATH)/src/goa.design/examples/error
+
+syntax = "proto3";
+
+package calc;
+
+option go_package = "calcpb";
+
+// Service is the calc service interface.
+service Calc {
+	// Divide implements divide.
+	rpc Divide (DivideRequest) returns (DivideResponse);
+}
+
+message DivideDivByZeroError {
+	// division by zero leads to infinity.
+	string message_ = 1;
+}
+
+message DivideRequest {
+	sint32 dividend = 1;
+	sint32 divisor = 2;
+}
+
+message DivideResponse {
+	sint32 quotient = 1;
+	sint32 reminder = 2;
+}
