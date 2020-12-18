@@ -15,7 +15,7 @@ paths:
       operationId: chatter#echoer
       responses:
         "101":
-          description: ""
+          description: Switching Protocols response.
           content:
             application/json:
               schema:
@@ -23,14 +23,14 @@ paths:
                 example: Ullam repellendus eius quis quos inventore.
               example: Soluta incidunt reiciendis et autem ut.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Sequi tenetur.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -59,7 +59,7 @@ paths:
         example: Ut aut numquam dolore libero pariatur est.
       responses:
         "101":
-          description: ""
+          description: Switching Protocols response.
           content:
             application/json:
               schema:
@@ -70,14 +70,14 @@ paths:
                 message: Qui voluptas accusantium est sequi vel nihil.
                 sent_at: "2004-08-08T02:35:50Z"
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Qui excepturi quia.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -96,19 +96,16 @@ paths:
       operationId: chatter#listener
       responses:
         "101":
-          description: ""
-          content:
-            application/json:
-              example: {}
+          description: Switching Protocols response.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Totam porro quis.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -127,7 +124,7 @@ paths:
       operationId: chatter#login
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -136,7 +133,7 @@ paths:
                 example: Maiores nobis iusto sint.
               example: Voluptatem ut.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
@@ -153,7 +150,7 @@ paths:
       operationId: chatter#subscribe
       responses:
         "101":
-          description: ""
+          description: Switching Protocols response.
           content:
             application/json:
               schema:
@@ -163,14 +160,14 @@ paths:
                 added_at: "2007-10-25T23:17:05Z"
                 message: Et quidem et neque accusantium provident.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Est est.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -189,7 +186,7 @@ paths:
       operationId: chatter#summary
       responses:
         "101":
-          description: ""
+          description: Switching Protocols response.
           content:
             application/json:
               schema:
@@ -208,14 +205,14 @@ paths:
                 message: Molestiae autem voluptatem voluptate autem incidunt.
                 sent_at: "1970-05-07T05:21:01Z"
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Aspernatur consequatur ut.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:

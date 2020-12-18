@@ -23,7 +23,7 @@ paths:
               divisor: 3793862871819669726
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:

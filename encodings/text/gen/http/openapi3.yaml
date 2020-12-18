@@ -33,7 +33,7 @@ paths:
         example: Velit aliquid magni.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             text/html:
               schema:
@@ -135,7 +135,7 @@ paths:
         example: Odit et ut repellendus.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             text/html:
               schema:
@@ -265,7 +265,7 @@ paths:
         example: Saepe inventore et.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             text/html:
               schema:
@@ -299,7 +299,7 @@ paths:
         example: Eum veritatis harum.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             text/html:
               schema:

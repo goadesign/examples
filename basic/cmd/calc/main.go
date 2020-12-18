@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"net/url"
 	"os"
 	"os/signal"
@@ -87,10 +88,14 @@ func main() {
 				u.Host = *domainF
 			}
 			if *httpPortF != "" {
-				h := strings.Split(u.Host, ":")[0]
-				u.Host = h + ":" + *httpPortF
+				h, _, err := net.SplitHostPort(u.Host)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", u.Host, err)
+					os.Exit(1)
+				}
+				u.Host = net.JoinHostPort(h, *httpPortF)
 			} else if u.Port() == "" {
-				u.Host += ":80"
+				u.Host = net.JoinHostPort(u.Host, ":80")
 			}
 			handleHTTPServer(ctx, u, calcEndpoints, &wg, errc, logger, *dbgF)
 		}
@@ -109,10 +114,14 @@ func main() {
 				u.Host = *domainF
 			}
 			if *grpcPortF != "" {
-				h := strings.Split(u.Host, ":")[0]
-				u.Host = h + ":" + *grpcPortF
+				h, _, err := net.SplitHostPort(u.Host)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", u.Host, err)
+					os.Exit(1)
+				}
+				u.Host = net.JoinHostPort(h, *grpcPortF)
 			} else if u.Port() == "" {
-				u.Host += ":8080"
+				u.Host = net.JoinHostPort(u.Host, ":8080")
 			}
 			handleGRPCServer(ctx, u, calcEndpoints, &wg, errc, logger, *dbgF)
 		}
@@ -133,10 +142,14 @@ func main() {
 				u.Host = *domainF
 			}
 			if *httpPortF != "" {
-				h := strings.Split(u.Host, ":")[0]
-				u.Host = h + ":" + *httpPortF
+				h, _, err := net.SplitHostPort(u.Host)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", u.Host, err)
+					os.Exit(1)
+				}
+				u.Host = net.JoinHostPort(h, *httpPortF)
 			} else if u.Port() == "" {
-				u.Host += ":443"
+				u.Host = net.JoinHostPort(u.Host, ":443")
 			}
 			handleHTTPServer(ctx, u, calcEndpoints, &wg, errc, logger, *dbgF)
 		}
@@ -156,10 +169,14 @@ func main() {
 				u.Host = *domainF
 			}
 			if *grpcPortF != "" {
-				h := strings.Split(u.Host, ":")[0]
-				u.Host = h + ":" + *grpcPortF
+				h, _, err := net.SplitHostPort(u.Host)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", u.Host, err)
+					os.Exit(1)
+				}
+				u.Host = net.JoinHostPort(h, *grpcPortF)
 			} else if u.Port() == "" {
-				u.Host += ":8443"
+				u.Host = net.JoinHostPort(u.Host, ":8443")
 			}
 			handleGRPCServer(ctx, u, calcEndpoints, &wg, errc, logger, *dbgF)
 		}

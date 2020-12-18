@@ -25,7 +25,7 @@ paths:
         example: Itaque necessitatibus.
       responses:
         "200":
-          description: ""
+          description: OK response.
           headers:
             Content-Length:
               description: Length is the downloaded content length in bytes.
@@ -36,11 +36,8 @@ paths:
                 example: 4194304
                 format: int64
               example: 4194304
-          content:
-            application/json:
-              example: {}
         "404":
-          description: ""
+          description: Not Found response.
           content:
             application/vnd.goa.error:
               schema:
@@ -50,7 +47,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "500":
-          description: ""
+          description: Internal Server Error response.
           content:
             application/vnd.goa.error:
               schema:
@@ -89,12 +86,9 @@ paths:
         example: multipart/form-data; boundary=goa
       responses:
         "204":
-          description: ""
-          content:
-            application/json:
-              example: {}
+          description: No Content response.
         "400":
-          description: ""
+          description: Bad Request response.
           content:
             application/vnd.goa.error:
               schema:
@@ -104,7 +98,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "500":
-          description: ""
+          description: Internal Server Error response.
           content:
             application/vnd.goa.error:
               schema:

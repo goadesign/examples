@@ -33,7 +33,7 @@ paths:
         example: Quia dolor non dolorem quia.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:

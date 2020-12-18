@@ -26,7 +26,7 @@ paths:
         example: At mollitia itaque facere voluptas.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -48,7 +48,7 @@ paths:
               name: Ut quas sit at illum tempore ad.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:

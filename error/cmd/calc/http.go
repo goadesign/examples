@@ -14,31 +14,7 @@ import (
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
-	goa "goa.design/goa/v3/pkg"
 )
-
-// missingFieldError is the type used to serialize missing required field
-// errors. It overrides the default provided by Goa.
-type missingFieldError string
-
-// StatusCode returns 400 (BadRequest).
-func (missingFieldError) StatusCode() int { return http.StatusBadRequest }
-
-// FormatError is the error formatter used to format error responses returned by
-// the calc server.
-func FormatError(err error) goahttp.Statuser {
-	if serr, ok := err.(*goa.ServiceError); ok {
-		switch serr.Name {
-		case "missing_field":
-			return missingFieldError(serr.Message)
-		default:
-			// Use Goa default
-			return goahttp.NewErrorResponse(err)
-		}
-	}
-	// Use Goa default for all other error types
-	return goahttp.NewErrorResponse(err)
-}
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
@@ -77,7 +53,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpo
 	)
 	{
 		eh := errorHandler(logger)
-		calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh, FormatError)
+		calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{
 				calcServer,
