@@ -27,7 +27,7 @@ func (s *calcsrvc) Divide(ctx context.Context, p *calc.DividePayload) (res *calc
 	}
 
 	// Set a timeout in the context.
-	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+	ctx, cancel := context.WithTimeout(ctx, 50*time.Millisecond)
 	defer cancel()
 
 	// Use a channel to wait for either timeout or completion of division
