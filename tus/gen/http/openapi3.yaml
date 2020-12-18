@@ -16,7 +16,7 @@ paths:
       operationId: tus#options
       responses:
         "204":
-          description: ""
+          description: No Content response.
           headers:
             Tus-Checksum-Algorithm:
               description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
@@ -65,11 +65,8 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
         "412":
-          description: ""
+          description: Precondition Failed response.
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -81,9 +78,6 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
     post:
       tags:
       - tus
@@ -153,7 +147,7 @@ paths:
         example: 7267554011524460006
       responses:
         "201":
-          description: ""
+          description: Created response.
           headers:
             Location:
               description: URL of created resource
@@ -189,11 +183,8 @@ paths:
                 example: 1867975458457142423
                 format: int64
               example: 6460434301675760960
-          content:
-            application/json:
-              example: {}
         "400":
-          description: ""
+          description: Bad Request response.
           content:
             application/vnd.goa.error:
               schema:
@@ -203,7 +194,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "412":
-          description: ""
+          description: Precondition Failed response.
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -215,11 +206,8 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
         "413":
-          description: ""
+          description: Request Entity Too Large response.
           content:
             application/vnd.goa.error:
               schema:
@@ -229,7 +217,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "460":
-          description: ""
+          description: ' response.'
           content:
             application/vnd.goa.error:
               schema:
@@ -269,7 +257,7 @@ paths:
         example: 1.0.0
       responses:
         "204":
-          description: ""
+          description: No Content response.
           headers:
             Tus-Resumable:
               description: tusResumable represents a tus protocol version.
@@ -280,11 +268,8 @@ paths:
                 example: 1.0.0
                 pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
         "404":
-          description: ""
+          description: Not Found response.
           content:
             application/vnd.goa.error:
               schema:
@@ -294,7 +279,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "410":
-          description: ""
+          description: Gone response.
           content:
             application/vnd.goa.error:
               schema:
@@ -304,7 +289,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "412":
-          description: ""
+          description: Precondition Failed response.
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -316,9 +301,6 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
     head:
       tags:
       - tus
@@ -349,7 +331,7 @@ paths:
         example: 1.0.0
       responses:
         "200":
-          description: ""
+          description: OK response.
           headers:
             Tus-Resumable:
               description: tusResumable represents a tus protocol version.
@@ -393,11 +375,8 @@ paths:
                 example: 3120396208044830135
                 format: int64
               example: 8455368972674475364
-          content:
-            application/json:
-              example: {}
         "404":
-          description: ""
+          description: Not Found response.
           content:
             application/vnd.goa.error:
               schema:
@@ -407,7 +386,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "410":
-          description: ""
+          description: Gone response.
           content:
             application/vnd.goa.error:
               schema:
@@ -417,7 +396,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "412":
-          description: ""
+          description: Precondition Failed response.
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -429,9 +408,6 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
     patch:
       tags:
       - tus
@@ -482,7 +458,7 @@ paths:
         example: sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=
       responses:
         "204":
-          description: ""
+          description: No Content response.
           headers:
             Tus-Resumable:
               description: tusResumable represents a tus protocol version.
@@ -509,11 +485,8 @@ paths:
                 example: 7252918215101017449
                 format: int64
               example: 7346632388024852144
-          content:
-            application/json:
-              example: {}
         "400":
-          description: ""
+          description: Bad Request response.
           content:
             application/vnd.goa.error:
               schema:
@@ -523,7 +496,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "404":
-          description: ""
+          description: Not Found response.
           content:
             application/vnd.goa.error:
               schema:
@@ -533,7 +506,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "409":
-          description: ""
+          description: Conflict response.
           content:
             application/vnd.goa.error:
               schema:
@@ -543,7 +516,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "410":
-          description: ""
+          description: Gone response.
           content:
             application/vnd.goa.error:
               schema:
@@ -553,7 +526,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "412":
-          description: ""
+          description: Precondition Failed response.
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -565,11 +538,8 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
-          content:
-            application/json:
-              example: {}
         "415":
-          description: ""
+          description: Unsupported Media Type response.
           content:
             application/vnd.goa.error:
               schema:
@@ -579,7 +549,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "460":
-          description: ""
+          description: ' response.'
           content:
             application/vnd.goa.error:
               schema:
@@ -589,7 +559,7 @@ paths:
                 message: Value of ID must be an integer
                 name: bad_request
         "500":
-          description: ""
+          description: Internal Server Error response.
           content:
             application/vnd.goa.error:
               schema:

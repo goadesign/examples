@@ -26,7 +26,7 @@ paths:
         example: false
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -34,14 +34,14 @@ paths:
                 example: Aut expedita optio.
               example: Unde vero dicta minus.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Maxime ipsam esse et.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -85,7 +85,7 @@ paths:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -93,14 +93,14 @@ paths:
                 example: Maiores porro alias.
               example: Sed ipsam at hic optio dolores aut.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Est quod consequatur enim.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -134,7 +134,7 @@ paths:
         example: abcdef12345
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -142,14 +142,14 @@ paths:
                 example: Quos ut est ipsum consequatur fugiat at.
               example: Deleniti tenetur et eaque nesciunt.
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Unauthorized'
               example: Nesciunt quae vero aut iste.
         "403":
-          description: ""
+          description: Forbidden response.
           content:
             application/json:
               schema:
@@ -169,7 +169,7 @@ paths:
       operationId: secured_service#signin
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -179,7 +179,7 @@ paths:
                 jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
                 oauth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
         "401":
-          description: ""
+          description: Unauthorized response.
           content:
             application/json:
               schema:

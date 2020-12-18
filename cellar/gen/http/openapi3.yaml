@@ -30,7 +30,7 @@ paths:
               winery: longoria
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -93,14 +93,14 @@ paths:
                 winery:
                   name: Longoria
         "400":
-          description: ""
+          description: Bad Request response.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NoCriteria'
               example: Nemo omnis quae suscipit laudantium quis sapiente.
         "404":
-          description: ""
+          description: Not Found response.
           content:
             application/json:
               schema:
@@ -115,7 +115,7 @@ paths:
       operationId: storage#list
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -170,7 +170,7 @@ paths:
                 url: http://www.longoriawine.com/
       responses:
         "201":
-          description: ""
+          description: Created response.
           content:
             application/json:
               schema:
@@ -196,10 +196,7 @@ paths:
         example: Sed itaque iste quibusdam eius officia.
       responses:
         "204":
-          description: ""
-          content:
-            application/json:
-              example: {}
+          description: No Content response.
     get:
       tags:
       - storage
@@ -230,7 +227,7 @@ paths:
         example: Reprehenderit doloremque.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -255,7 +252,7 @@ paths:
                   region: Central Coast, California
                   url: http://www.longoriawine.com/
         "404":
-          description: ""
+          description: Not Found response.
           content:
             application/json:
               schema:
@@ -366,7 +363,7 @@ paths:
                 url: http://www.longoriawine.com/
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -478,10 +475,7 @@ paths:
                   url: http://www.longoriawine.com/
       responses:
         "204":
-          description: ""
-          content:
-            application/json:
-              example: {}
+          description: No Content response.
   /storage/rate:
     post:
       tags:
@@ -491,10 +485,7 @@ paths:
       operationId: storage#rate
       responses:
         "200":
-          description: ""
-          content:
-            application/json:
-              example: {}
+          description: OK response.
   /swagger/swagger.json:
     get:
       tags:

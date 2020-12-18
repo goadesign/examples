@@ -15,7 +15,7 @@ paths:
       operationId: resume#list
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
@@ -199,7 +199,7 @@ paths:
               name: In qui dolorum adipisci itaque.
       responses:
         "200":
-          description: ""
+          description: OK response.
           content:
             application/json:
               schema:
