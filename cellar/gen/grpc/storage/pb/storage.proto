@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.6, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // storage protocol buffer definition
 //
@@ -10,7 +10,7 @@ syntax = "proto3";
 
 package storage;
 
-option go_package = "storagepb";
+option go_package = "/storagepb";
 
 // The storage service makes it possible to view, add or remove wine bottles.
 service Storage {

@@ -282,7 +282,8 @@ securityDefinitions:
     in: header
   oauth2_query_oauth:
     type: oauth2
-    description: Secures endpoint by requiring a valid OAuth2 token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+    description: Secures endpoint by requiring a valid OAuth2 token retrieved via
+      the signin endpoint. Supports scopes "api:read" and "api:write".
     flow: accessCode
     authorizationUrl: http://goa.design/authorization
     tokenUrl: http://goa.design/token

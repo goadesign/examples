@@ -247,7 +247,8 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/ChatSummaryResponse'
-    description: SummaryResponseBody is the result type for an array of ChatSummaryResponse (default view)
+    description: SummaryResponseBody is the result type for an array of ChatSummaryResponse
+      (default view)
     example:
     - length: 4832953061930875130
       message: Molestiae autem voluptatem voluptate autem incidunt.

@@ -30,7 +30,9 @@ paths:
       tags:
       - resume
       summary: add resume
-      description: Add n number of resumes and return their IDs. This is a multipart request and each part has field name 'resume' and contains the encoded resume to be added.
+      description: Add n number of resumes and return their IDs. This is a multipart
+        request and each part has field name 'resume' and contains the encoded resume
+        to be added.
       operationId: resume#add
       consumes:
       - multipart/form-data
@@ -197,7 +199,8 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/StoredResumeResponse'
-    description: ListResponseBody is the result type for an array of StoredResumeResponse (default view)
+    description: ListResponseBody is the result type for an array of StoredResumeResponse
+      (default view)
     example:
     - created_at: Tempore quidem animi nihil.
       education:

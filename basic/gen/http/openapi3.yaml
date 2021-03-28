@@ -6,7 +6,7 @@ info:
 servers:
 - url: http://localhost:8000/calc
   description: calc hosts the Calculator Service.
-- url: https://v1.goa.design/calc
+- url: https://{version}.goa.design/calc
   description: calc hosts the Calculator Service.
   variables:
     version:

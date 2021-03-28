@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.6, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // secured_service protocol buffer definition
 //
@@ -10,7 +10,7 @@ syntax = "proto3";
 
 package secured_service;
 
-option go_package = "secured_servicepb";
+option go_package = "/secured_servicepb";
 
 // The secured service exposes endpoints that require valid authorization
 // credentials.

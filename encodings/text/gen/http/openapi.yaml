@@ -1,7 +1,8 @@
 swagger: "2.0"
 info:
   title: Encodings Service
-  description: Encoding example service demonstrating the use of different content types
+  description: Encoding example service demonstrating the use of different content
+    types
   version: ""
 host: localhost:80
 consumes:
