@@ -16,6 +16,7 @@
 GO_FILES=$(shell find . -type f -name '*.go')
 GOA:=$(shell goa version 2> /dev/null)
 GOOS=$(shell go env GOOS)
+GOPATH=$(shell go env GOPATH)
 
 export GO111MODULE=on
 
@@ -24,8 +25,9 @@ export GO111MODULE=on
 DEPEND=\
 	golang.org/x/lint/golint \
 	golang.org/x/tools/cmd/goimports \
-	honnef.co/go/tools/cmd/staticcheck \
-	github.com/golang/protobuf/protoc-gen-go
+	google.golang.org/protobuf/cmd/protoc-gen-go \
+        google.golang.org/grpc/cmd/protoc-gen-go-grpc \
+	honnef.co/go/tools/cmd/staticcheck
 
 .phony: all depend lint test build clean
 
@@ -35,32 +37,30 @@ all: check-goa gen lint test
 travis: depend all check-freshness
 
 # Install protoc
-PROTOC_VERSION=3.12.3
+PROTOC_VERSION=3.14.0
+UNZIP=unzip
 ifeq ($(GOOS),linux)
-PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
-PROTOC_EXEC=$(PROTOC)/bin/protoc
-UNZIP=unzip
-else
-	ifeq ($(GOOS),darwin)
-PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
-PROTOC_EXEC=$(PROTOC)/bin/protoc
-UNZIP=unzip
-	else
-		ifeq ($(GOOS),windows)
-PROTOC=protoc-$(PROTOC_VERSION)-win32
-PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
-UNZIP="tar -xf"
-GOPATH:=$(subst \,/,$(GOPATH))
-		endif
-	endif
+	PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
+	PROTOC_EXEC=$(PROTOC)/bin/protoc
+endif
+ifeq ($(GOOS),darwin)
+	PROTOC=protoc-$(PROTOC_VERSION)-osx-x86_64
+	PROTOC_EXEC=$(PROTOC)/bin/protoc
+endif
+ifeq ($(GOOS),windows)
+	PROTOC=protoc-$(PROTOC_VERSION)-win32
+	PROTOC_EXEC="$(PROTOC)\bin\protoc.exe"
+	GOPATH:=$(subst \,/,$(GOPATH))
 endif
 
 check-goa:
 ifdef GOA
+	go mod download
 	@echo $(GOA)
 else
 	go get -u goa.design/goa/v3@v3
 	go get -u goa.design/goa/v3/...@v3
+	go mod download
 	@echo $(GOA)
 endif
 
