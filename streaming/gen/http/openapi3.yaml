@@ -277,7 +277,8 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ChatSummaryResponse'
-      description: SummaryResponseBody is the result type for an array of ChatSummaryResponse (default view)
+      description: SummaryResponseBody is the result type for an array of ChatSummaryResponse
+        (default view)
       example:
       - length: 4832953061930875130
         message: Molestiae autem voluptatem voluptate autem incidunt.
@@ -333,5 +334,6 @@ components:
       scheme: basic
     jwt_header_Authorization:
       type: http
-      description: Secures endpoint by requiring a valid JWT token. Supports scopes "stream:read" and "stream:write".
+      description: Secures endpoint by requiring a valid JWT token. Supports scopes
+        "stream:read" and "stream:write".
       scheme: bearer

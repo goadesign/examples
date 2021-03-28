@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.6, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // sommelier protocol buffer definition
 //
@@ -10,7 +10,7 @@ syntax = "proto3";
 
 package sommelier;
 
-option go_package = "sommelierpb";
+option go_package = "/sommelierpb";
 
 // The sommelier service retrieves bottles given a set of criteria.
 service Sommelier {

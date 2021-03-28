@@ -43,7 +43,8 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
                 name: Blue's Cuvee
                 rating: 3
@@ -57,7 +58,8 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
                 name: Blue's Cuvee
                 rating: 3
@@ -71,7 +73,8 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
                 name: Blue's Cuvee
                 rating: 3
@@ -85,7 +88,8 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
                 name: Blue's Cuvee
                 rating: 3
@@ -159,7 +163,8 @@ paths:
                 varietal: Syrah
               - percentage: 92
                 varietal: Syrah
-              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape
+                and including other Bordeaux grape varietals and some Syrah
               name: Blue's Cuvee
               rating: 1
               vintage: 1941
@@ -241,7 +246,8 @@ paths:
                   varietal: Syrah
                 - percentage: 99
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
                 name: Blue's Cuvee
                 rating: 4
@@ -265,7 +271,9 @@ paths:
       tags:
       - storage
       summary: multi_add storage
-      description: Add n number of bottles and return their IDs. This is a multipart request and each part has field name 'bottle' and contains the encoded bottle info to be added.
+      description: Add n number of bottles and return their IDs. This is a multipart
+        request and each part has field name 'bottle' and contains the encoded bottle
+        info to be added.
       operationId: storage#multi_add
       requestBody:
         required: true
@@ -281,7 +289,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -295,7 +304,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -309,7 +319,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -324,7 +335,8 @@ paths:
                 varietal: Syrah
               - percentage: 92
                 varietal: Syrah
-              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape
+                and including other Bordeaux grape varietals and some Syrah
               name: Blue's Cuvee
               rating: 1
               vintage: 1984
@@ -338,7 +350,8 @@ paths:
                 varietal: Syrah
               - percentage: 92
                 varietal: Syrah
-              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape
+                and including other Bordeaux grape varietals and some Syrah
               name: Blue's Cuvee
               rating: 1
               vintage: 1984
@@ -352,7 +365,8 @@ paths:
                 varietal: Syrah
               - percentage: 92
                 varietal: Syrah
-              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape
+                and including other Bordeaux grape varietals and some Syrah
               name: Blue's Cuvee
               rating: 1
               vintage: 1984
@@ -386,7 +400,10 @@ paths:
       tags:
       - storage
       summary: multi_update storage
-      description: Update bottles with the given IDs. This is a multipart request and each part has field name 'bottle' and contains the encoded bottle info to be updated. The IDs in the query parameter is mapped to each part in the request.
+      description: Update bottles with the given IDs. This is a multipart request
+        and each part has field name 'bottle' and contains the encoded bottle info
+        to be updated. The IDs in the query parameter is mapped to each part in the
+        request.
       operationId: storage#multi_update
       parameters:
       - name: ids
@@ -422,7 +439,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -436,7 +454,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -450,7 +469,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -464,7 +484,8 @@ paths:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
                 rating: 1
                 vintage: 1984
@@ -516,7 +537,8 @@ components:
         description:
           type: string
           description: Description of bottle
-          example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+          example: Red wine blend with an emphasis on the Cabernet Franc grape and
+            including other Bordeaux grape varietals and some Syrah
           maxLength: 2000
         name:
           type: string
@@ -545,7 +567,8 @@ components:
           varietal: Syrah
         - percentage: 92
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         name: Blue's Cuvee
         rating: 4
         vintage: 1925
@@ -592,7 +615,8 @@ components:
               varietal: Syrah
             - percentage: 92
               varietal: Syrah
-            description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+            description: Red wine blend with an emphasis on the Cabernet Franc grape
+              and including other Bordeaux grape varietals and some Syrah
             name: Blue's Cuvee
             rating: 1
             vintage: 1984
@@ -606,7 +630,8 @@ components:
               varietal: Syrah
             - percentage: 92
               varietal: Syrah
-            description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+            description: Red wine blend with an emphasis on the Cabernet Franc grape
+              and including other Bordeaux grape varietals and some Syrah
             name: Blue's Cuvee
             rating: 1
             vintage: 1984
@@ -622,7 +647,8 @@ components:
             varietal: Syrah
           - percentage: 92
             varietal: Syrah
-          description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+          description: Red wine blend with an emphasis on the Cabernet Franc grape
+            and including other Bordeaux grape varietals and some Syrah
           name: Blue's Cuvee
           rating: 1
           vintage: 1984
@@ -636,7 +662,8 @@ components:
             varietal: Syrah
           - percentage: 92
             varietal: Syrah
-          description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+          description: Red wine blend with an emphasis on the Cabernet Franc grape
+            and including other Bordeaux grape varietals and some Syrah
           name: Blue's Cuvee
           rating: 1
           vintage: 1984
@@ -650,7 +677,8 @@ components:
             varietal: Syrah
           - percentage: 92
             varietal: Syrah
-          description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+          description: Red wine blend with an emphasis on the Cabernet Franc grape
+            and including other Bordeaux grape varietals and some Syrah
           name: Blue's Cuvee
           rating: 1
           vintage: 1984
@@ -731,7 +759,8 @@ components:
         description:
           type: string
           description: Description of bottle
-          example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+          example: Red wine blend with an emphasis on the Cabernet Franc grape and
+            including other Bordeaux grape varietals and some Syrah
           maxLength: 2000
         id:
           type: string
@@ -764,7 +793,8 @@ components:
           varietal: Syrah
         - percentage: 99
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
         rating: 3
@@ -797,7 +827,8 @@ components:
         description:
           type: string
           description: Description of bottle
-          example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+          example: Red wine blend with an emphasis on the Cabernet Franc grape and
+            including other Bordeaux grape varietals and some Syrah
           maxLength: 2000
         id:
           type: string
@@ -822,7 +853,8 @@ components:
           maximum: 2020
         winery:
           $ref: '#/components/schemas/Winery'
-      description: A StoredBottle describes a bottle retrieved by the storage service. (default view)
+      description: A StoredBottle describes a bottle retrieved by the storage service.
+        (default view)
       example:
         composition:
         - percentage: 82
@@ -833,7 +865,8 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
         rating: 4
@@ -849,7 +882,8 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/StoredBottleResponse'
-      description: PickResponseBody is the result type for an array of StoredBottleResponse (default view)
+      description: PickResponseBody is the result type for an array of StoredBottleResponse
+        (default view)
       example:
       - composition:
         - percentage: 82
@@ -858,7 +892,8 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
         rating: 3
@@ -872,7 +907,8 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
         rating: 3
@@ -886,7 +922,8 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
         rating: 3
@@ -900,7 +937,8 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
         rating: 3
@@ -921,7 +959,8 @@ components:
           maxLength: 100
         winery:
           $ref: '#/components/schemas/Winery'
-      description: A StoredBottle describes a bottle retrieved by the storage service. (tiny view)
+      description: A StoredBottle describes a bottle retrieved by the storage service.
+        (tiny view)
       example:
         id: 123abc
         name: Blue's Cuvee
@@ -935,7 +974,8 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/StoredBottleResponseTiny'
-      description: ListResponseBody is the result type for an array of StoredBottleResponse (tiny view)
+      description: ListResponseBody is the result type for an array of StoredBottleResponse
+        (tiny view)
       example:
       - id: 123abc
         name: Blue's Cuvee

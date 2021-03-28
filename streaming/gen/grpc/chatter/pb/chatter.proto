@@ -1,4 +1,4 @@
-// Code generated with goa v3.2.6, DO NOT EDIT.
+// Code generated with goa v3.3.1, DO NOT EDIT.
 //
 // chatter protocol buffer definition
 //
@@ -10,7 +10,7 @@ syntax = "proto3";
 
 package chatter;
 
-option go_package = "chatterpb";
+option go_package = "/chatterpb";
 
 // The chatter service implements a simple client and server chat.
 service Chatter {
