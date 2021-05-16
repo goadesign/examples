@@ -54,6 +54,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, resumeEndpoints *resume.E
 	)
 	{
 		eh := errorHandler(logger)
+		// YA
+		//
 		resumeServer = resumesvr.New(resumeEndpoints, mux, dec, enc, eh, nil, resumeapi.ResumeAddDecoderFunc)
 		if debug {
 			servers := goahttp.Servers{

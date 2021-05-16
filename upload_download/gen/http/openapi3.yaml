@@ -153,3 +153,16 @@ components:
       - temporary
       - timeout
       - fault
+tags:
+- name: updown
+  description: "Service updown demonstrates how to implement upload and download of
+    files in\nGoa without having to load the entire content in memory first.\nThe
+    upload method uses SkipRequestBodyEncodeDecode to delegate reading the HTTP\nrequest
+    body to the service logic. This alleviates the need for loading the\nfull body
+    content in memory first to decode it into a data structure. Note that\nusing SkipRequestBodyDecode
+    is incompatible with gRPC and can only be used on\nmethods that only define a
+    HTTP transport mapping. This example implementation\nleverages package \"mime/multipart\"
+    to read the request body.\nSimilarly the download method uses SkipResponseBodyEncodeDecode
+    to stream the \nfile to the client without requiring to load the complete content
+    in memory\nfirst. As with SkipRequestBodyDecode using SkipResponseBodyEncodeDecode
+    is\nincompatible with gRPC."

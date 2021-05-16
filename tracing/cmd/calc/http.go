@@ -54,7 +54,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calcsvc.En
 	)
 	{
 		eh := errorHandler(logger)
-		calcServer = calcsvcsvr.New(calcEndpoints, mux, dec, enc, eh, nil)
+		calcServer = calcsvcsvr.New(calcEndpoints, mux, dec, enc, eh, nil, nil)
 	}
 	// Configure the mux.
 	calcsvcsvr.Mount(mux, calcServer)

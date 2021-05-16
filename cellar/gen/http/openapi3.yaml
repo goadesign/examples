@@ -1033,3 +1033,10 @@ components:
       - name
       - region
       - country
+tags:
+- name: sommelier
+  description: The sommelier service retrieves bottles given a set of criteria.
+- name: storage
+  description: The storage service makes it possible to view, add or remove wine bottles.
+- name: swagger
+  description: The swagger service serves the API swagger definition.

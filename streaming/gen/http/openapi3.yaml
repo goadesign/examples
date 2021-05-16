@@ -337,3 +337,6 @@ components:
       description: Secures endpoint by requiring a valid JWT token. Supports scopes
         "stream:read" and "stream:write".
       scheme: bearer
+tags:
+- name: chatter
+  description: The chatter service implements a simple client and server chat.
