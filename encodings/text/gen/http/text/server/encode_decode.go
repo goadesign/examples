@@ -20,7 +20,7 @@ import (
 // text concatstrings endpoint.
 func EncodeConcatstringsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(string)
+		res := v.(string)
 		ctx = context.WithValue(ctx, goahttp.ContentTypeKey, "text/html")
 		enc := encoder(ctx, w)
 		body := res
@@ -51,7 +51,7 @@ func DecodeConcatstringsRequest(mux goahttp.Muxer, decoder func(*http.Request) g
 // text concatbytes endpoint.
 func EncodeConcatbytesResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.([]byte)
+		res := v.([]byte)
 		ctx = context.WithValue(ctx, goahttp.ContentTypeKey, "text/html")
 		enc := encoder(ctx, w)
 		body := res
@@ -82,7 +82,7 @@ func DecodeConcatbytesRequest(mux goahttp.Muxer, decoder func(*http.Request) goa
 // the text concatstringfield endpoint.
 func EncodeConcatstringfieldResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*text.MyConcatenation)
+		res := v.(*text.MyConcatenation)
 		ctx = context.WithValue(ctx, goahttp.ContentTypeKey, "text/html")
 		enc := encoder(ctx, w)
 		body := res.Stringfield
@@ -113,7 +113,7 @@ func DecodeConcatstringfieldRequest(mux goahttp.Muxer, decoder func(*http.Reques
 // the text concatbytesfield endpoint.
 func EncodeConcatbytesfieldResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*text.MyConcatenation)
+		res := v.(*text.MyConcatenation)
 		ctx = context.WithValue(ctx, goahttp.ContentTypeKey, "text/html")
 		enc := encoder(ctx, w)
 		body := res.Bytesfield
