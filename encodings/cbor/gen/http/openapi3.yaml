@@ -41,3 +41,10 @@ paths:
                 example: Consequatur omnis.
               example: Totam maxime cumque placeat facere.
 components: {}
+tags:
+- name: concat
+  description: |
+    The concat service performs operations on strings.
+
+    The service uses the CBOR binary serialization standard to encode responses.
+    It supports reading requests encoded with CBOR, JSON, XML or GOB.

@@ -22,7 +22,7 @@ import (
 // session create_session endpoint.
 func EncodeCreateSessionResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(*session.CreateSessionResult)
+		res, _ := v.(*session.CreateSessionResult)
 		enc := encoder(ctx, w)
 		body := NewCreateSessionResponseBody(res)
 		sessionID := res.SessionID
@@ -65,7 +65,7 @@ func DecodeCreateSessionRequest(mux goahttp.Muxer, decoder func(*http.Request) g
 // session use_session endpoint.
 func EncodeUseSessionResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(*session.UseSessionResult)
+		res, _ := v.(*session.UseSessionResult)
 		enc := encoder(ctx, w)
 		body := NewUseSessionResponseBody(res)
 		w.WriteHeader(http.StatusOK)

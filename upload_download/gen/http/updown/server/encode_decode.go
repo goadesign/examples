@@ -111,7 +111,7 @@ func EncodeUploadError(encoder func(context.Context, http.ResponseWriter) goahtt
 // updown download endpoint.
 func EncodeDownloadResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(*updown.DownloadResult)
+		res, _ := v.(*updown.DownloadResult)
 		val := res.Length
 		lengths := strconv.FormatInt(val, 10)
 		w.Header().Set("Content-Length", lengths)
