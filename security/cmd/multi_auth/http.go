@@ -53,6 +53,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, securedServiceEndpoints *
 	)
 	{
 		eh := errorHandler(logger)
+		// YA
+		//
 		securedServiceServer = securedservicesvr.New(securedServiceEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{

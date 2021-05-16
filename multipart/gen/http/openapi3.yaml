@@ -470,3 +470,6 @@ components:
           role: Ut quia exercitationem autem non nisi.
         id: 6715916505894079249
         name: Possimus autem est.
+tags:
+- name: resume
+  description: The storage service makes it possible to add resumes using multipart.

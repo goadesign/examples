@@ -657,3 +657,6 @@ components:
       - temporary
       - timeout
       - fault
+tags:
+- name: tus
+  description: The tus service exposes the methods required to implement the tus protocol
