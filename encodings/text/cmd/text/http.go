@@ -53,8 +53,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, textEndpoints *text.Endpo
 	)
 	{
 		eh := errorHandler(logger)
-		// YA
-		//  WHoo
 		textServer = textsvr.New(textEndpoints, mux, dec, enc, eh, nil, nil)
 		if debug {
 			servers := goahttp.Servers{
