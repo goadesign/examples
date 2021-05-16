@@ -137,3 +137,5 @@ components:
       - temporary
       - timeout
       - fault
+tags:
+- name: calc

@@ -317,3 +317,6 @@ paths:
         "200":
           description: File downloaded
 components: {}
+tags:
+- name: text
+  description: The text service performs operations on strings

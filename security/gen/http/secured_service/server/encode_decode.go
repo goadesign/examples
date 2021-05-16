@@ -23,7 +23,7 @@ import (
 // secured_service signin endpoint.
 func EncodeSigninResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(*securedservice.Creds)
+		res, _ := v.(*securedservice.Creds)
 		enc := encoder(ctx, w)
 		body := NewSigninResponseBody(res)
 		w.WriteHeader(http.StatusOK)
@@ -79,7 +79,7 @@ func EncodeSigninError(encoder func(context.Context, http.ResponseWriter) goahtt
 // secured_service secure endpoint.
 func EncodeSecureResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(string)
+		res, _ := v.(string)
 		enc := encoder(ctx, w)
 		body := res
 		w.WriteHeader(http.StatusOK)
@@ -168,7 +168,7 @@ func EncodeSecureError(encoder func(context.Context, http.ResponseWriter) goahtt
 // secured_service doubly_secure endpoint.
 func EncodeDoublySecureResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(string)
+		res, _ := v.(string)
 		enc := encoder(ctx, w)
 		body := res
 		w.WriteHeader(http.StatusOK)
@@ -251,7 +251,7 @@ func EncodeDoublySecureError(encoder func(context.Context, http.ResponseWriter) 
 // the secured_service also_doubly_secure endpoint.
 func EncodeAlsoDoublySecureResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res := v.(string)
+		res, _ := v.(string)
 		enc := encoder(ctx, w)
 		body := res
 		w.WriteHeader(http.StatusOK)
