@@ -138,6 +138,7 @@ gen:
 	@echo "upload_download [11/11]" 
 	@goa gen goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download" 
 	@goa example goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download"
+	@go mod tidy
 
 build:
 	@cd "$(GOPATH)/src/goa.design/examples/basic" && \
@@ -183,7 +184,7 @@ clean:
 	@cd "$(GOPATH)/src/goa.design/examples/security" && \
 		 rm -f multi_auth multi_auth-cli
 	@cd "$(GOPATH)/src/goa.design/examples/streaming" && \
-		 rm -f chatter chatter-cli
+		 rm -f chatter chatter-cli !(main.go)
 	@cd "$(GOPATH)/src/goa.design/examples/tracing" && \
 		 rm -f calc calc-cli
 	@cd "$(GOPATH)/src/goa.design/examples/tus" && \
