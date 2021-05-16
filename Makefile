@@ -102,7 +102,7 @@ gen:
 	@rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd" 
 	@rm -rf "$(GOPATH)/src/goa.design/examples/multipart/cmd" 
 	@rm -rf "$(GOPATH)/src/goa.design/examples/security/cmd" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/streaming/cmd" 
+	@rm -rf "$(GOPATH)/src/goa.design/examples/streaming/cmd/chatter"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/tus/cmd/upload-cli" 
 	@rm -rf "$(GOPATH)/src/goa.design/examples/upload_download/cmd/upload_download-cli" 
 	@echo "basic [1/11]" 
@@ -165,32 +165,6 @@ build:
 		go build ./cmd/upload && go build ./cmd/upload-cli
 	@cd "$(GOPATH)/src/goa.design/examples/upload_download" && \
 		go build ./cmd/upload_download && go build ./cmd/upload_download-cli
-
-clean:
-	@cd "$(GOPATH)/src/goa.design/examples/basic" && \
-		rm -f calc calc-cli
-	@cd "$(GOPATH)/src/goa.design/examples/cellar" && \
-		 rm -f cellar cellar-cli
-	@cd "$(GOPATH)/src/goa.design/examples/cookies" && \
-		 rm -f session session-cli
-	@cd "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
-		 rm -f cbor cbor-cli
-	@cd "$(GOPATH)/src/goa.design/examples/encodings/text" && \
-		 rm -f text text-cli
-	@cd "$(GOPATH)/src/goa.design/examples/error" && \
-		 rm -f divider divider-cli
-	@cd "$(GOPATH)/src/goa.design/examples/multipart" && \
-		 rm -f resume resume-cli
-	@cd "$(GOPATH)/src/goa.design/examples/security" && \
-		 rm -f multi_auth multi_auth-cli
-	@cd "$(GOPATH)/src/goa.design/examples/streaming" && \
-		 rm -f chatter chatter-cli !(main.go)
-	@cd "$(GOPATH)/src/goa.design/examples/tracing" && \
-		 rm -f calc calc-cli
-	@cd "$(GOPATH)/src/goa.design/examples/tus" && \
-		 rm -f upload upload-cli
-	@cd "$(GOPATH)/src/goa.design/examples/upload_download" && \
-		 rm -f upload_download upload_download-cli
 
 test:
 	@echo TESTING...
