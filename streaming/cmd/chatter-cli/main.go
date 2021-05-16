@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"net/url"
 	"os"
 	"strings"
 
+	chattercli "goa.design/examples/streaming"
 	goa "goa.design/goa/v3/pkg"
 )
 
@@ -87,10 +87,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if data != nil {
-		m, _ := json.MarshalIndent(data, "", "    ")
-		fmt.Println(string(m))
-	}
+	chattercli.InteractWithStreams(data)
 }
 
 func usage() {
