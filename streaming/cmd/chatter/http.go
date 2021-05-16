@@ -55,8 +55,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 	{
 		eh := errorHandler(logger)
 		upgrader := &websocket.Upgrader{}
-		// YA
-		//
 		chatterServer = chattersvr.New(chatterEndpoints, mux, dec, enc, eh, nil, upgrader, nil)
 		if debug {
 			servers := goahttp.Servers{

@@ -53,8 +53,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sessionEndpoints *session
 	)
 	{
 		eh := errorHandler(logger)
-		// YA
-		//
 		sessionServer = sessionsvr.New(sessionEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{

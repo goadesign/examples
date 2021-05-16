@@ -53,8 +53,6 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 	)
 	{
 		eh := errorHandler(logger)
-		// YA
-		//
 		concatServer = concatsvr.New(concatEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{
