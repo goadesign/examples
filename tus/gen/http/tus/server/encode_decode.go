@@ -22,7 +22,7 @@ import (
 // endpoint.
 func EncodeHeadResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*tus.HeadResult)
+		res := v.(*tus.HeadResult)
 		w.Header().Set("Tus-Resumable", res.TusResumable)
 		val := res.UploadOffset
 		uploadOffsets := strconv.FormatInt(val, 10)
@@ -122,7 +122,7 @@ func EncodeHeadError(encoder func(context.Context, http.ResponseWriter) goahttp.
 // patch endpoint.
 func EncodePatchResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*tus.PatchResult)
+		res := v.(*tus.PatchResult)
 		w.Header().Set("Tus-Resumable", res.TusResumable)
 		val := res.UploadOffset
 		uploadOffsets := strconv.FormatInt(val, 10)
@@ -289,7 +289,7 @@ func EncodePatchError(encoder func(context.Context, http.ResponseWriter) goahttp
 // options endpoint.
 func EncodeOptionsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*tus.OptionsResult)
+		res := v.(*tus.OptionsResult)
 		w.Header().Set("Tus-Resumable", res.TusResumable)
 		w.Header().Set("Tus-Version", res.TusVersion)
 		w.Header().Set("Tus-Extension", res.TusExtension)
@@ -330,7 +330,7 @@ func EncodeOptionsError(encoder func(context.Context, http.ResponseWriter) goaht
 // endpoint.
 func EncodePostResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*tus.PostResult)
+		res := v.(*tus.PostResult)
 		w.Header().Set("Location", res.Location)
 		w.Header().Set("Tus-Resumable", res.TusResumable)
 		val := res.UploadOffset
@@ -501,7 +501,7 @@ func EncodePostError(encoder func(context.Context, http.ResponseWriter) goahttp.
 // delete endpoint.
 func EncodeDeleteResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*tus.DeleteResult)
+		res := v.(*tus.DeleteResult)
 		w.Header().Set("Tus-Resumable", res.TusResumable)
 		w.WriteHeader(http.StatusNoContent)
 		return nil

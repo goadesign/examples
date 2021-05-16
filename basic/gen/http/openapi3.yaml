@@ -59,6 +59,3 @@ paths:
         "200":
           description: File downloaded
 components: {}
-tags:
-- name: calc
-  description: The calc service performs operations on numbers

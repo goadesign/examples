@@ -79,6 +79,3 @@ components:
         message: Aliquid illum dolore quasi voluptates mollitia deserunt.
       required:
       - message
-tags:
-- name: session
-  description: The session service illustrates managing user sessions with cookies.

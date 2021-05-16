@@ -251,7 +251,3 @@ components:
           scopes:
             api:read: Read-only access
             api:write: Read and write access
-tags:
-- name: secured_service
-  description: The secured service exposes endpoints that require valid authorization
-    credentials.
