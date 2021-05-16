@@ -2,7 +2,6 @@ package multiauth
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -15,13 +14,13 @@ type authInfo struct {
 
 func (auth authInfo) String() string {
 	if auth.user != "" {
-		return fmt.Sprintf("AuthInfo: Username + Password")
+		return "AuthInfo: Username + Password"
 	} else if auth.claims != nil {
-		return fmt.Sprintf("AuthInfo: JWT/OAuth")
+		return "AuthInfo: JWT/OAuth"
 	} else if auth.key != "" {
-		return fmt.Sprintf("AuthInfo: API")
+		return "AuthInfo: API"
 	} else {
-		return fmt.Sprintf("AuthInfo: none")
+		return "AuthInfo: none"
 	}
 }
 
