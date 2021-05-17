@@ -13,41 +13,9 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// HeadNotFoundResponseBody is the type of the "tus" service "head" endpoint
-// HTTP response body for the "NotFound" error.
-type HeadNotFoundResponseBody struct {
-	// Name is the name of this class of errors.
-	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	// ID is a unique identifier for this particular occurrence of the problem.
-	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	// Message is a human-readable explanation specific to this occurrence of the
-	// problem.
-	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	// Is the error temporary?
-	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
-	// Is the error a timeout?
-	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
-	// Is the error a server-side fault?
-	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
-}
-
-// HeadGoneResponseBody is the type of the "tus" service "head" endpoint HTTP
-// response body for the "Gone" error.
-type HeadGoneResponseBody struct {
-	// Name is the name of this class of errors.
-	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	// ID is a unique identifier for this particular occurrence of the problem.
-	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	// Message is a human-readable explanation specific to this occurrence of the
-	// problem.
-	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	// Is the error temporary?
-	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
-	// Is the error a timeout?
-	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
-	// Is the error a server-side fault?
-	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
-}
+// TusheadResponseBody is the type of the "tus" service "head" endpoint HTTP
+// response body for the "NotFound" error.
+type TusheadResponseBody Empty
 
 // PatchInvalidContentTypeResponseBody is the type of the "tus" service "patch"
 // endpoint HTTP response body for the "InvalidContentType" error.
@@ -315,36 +283,22 @@ func NewHeadResultOK(tusResumable string, uploadOffset int64, uploadLength *int6
 }
 
 // NewHeadNotFound builds a tus service head endpoint NotFound error.
-func NewHeadNotFound(body *HeadNotFoundResponseBody) *goa.ServiceError {
-	v := &goa.ServiceError{
-		Name:      *body.Name,
-		ID:        *body.ID,
-		Message:   *body.Message,
-		Temporary: *body.Temporary,
-		Timeout:   *body.Timeout,
-		Fault:     *body.Fault,
-	}
+func NewHeadNotFound(body *TusheadResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{}
 
 	return v
 }
 
 // NewHeadGone builds a tus service head endpoint Gone error.
-func NewHeadGone(body *HeadGoneResponseBody) *goa.ServiceError {
-	v := &goa.ServiceError{
-		Name:      *body.Name,
-		ID:        *body.ID,
-		Message:   *body.Message,
-		Temporary: *body.Temporary,
-		Timeout:   *body.Timeout,
-		Fault:     *body.Fault,
-	}
+func NewHeadGone(body *TusheadResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{}
 
 	return v
 }
 
 // NewHeadInvalidTusResumable builds a tus service head endpoint
 // InvalidTusResumable error.
-func NewHeadInvalidTusResumable(tusVersion string) *tus.ErrInvalidTUSResumable {
+func NewHeadInvalidTusResumable(body *TusheadResponseBody, tusVersion string) *tus.ErrInvalidTUSResumable {
 	v := &tus.ErrInvalidTUSResumable{}
 	v.TusVersion = tusVersion
 
@@ -634,54 +588,6 @@ func NewDeleteInvalidTusResumable(tusVersion string) *tus.ErrInvalidTUSResumable
 	v.TusVersion = tusVersion
 
 	return v
-}
-
-// ValidateHeadNotFoundResponseBody runs the validations defined on
-// head_NotFound_response_body
-func ValidateHeadNotFoundResponseBody(body *HeadNotFoundResponseBody) (err error) {
-	if body.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
-	}
-	if body.ID == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
-	}
-	if body.Message == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
-	}
-	if body.Temporary == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
-	}
-	if body.Timeout == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
-	}
-	if body.Fault == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
-	}
-	return
-}
-
-// ValidateHeadGoneResponseBody runs the validations defined on
-// head_Gone_response_body
-func ValidateHeadGoneResponseBody(body *HeadGoneResponseBody) (err error) {
-	if body.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
-	}
-	if body.ID == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
-	}
-	if body.Message == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
-	}
-	if body.Temporary == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
-	}
-	if body.Timeout == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
-	}
-	if body.Fault == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
-	}
-	return
 }
 
 // ValidatePatchInvalidContentTypeResponseBody runs the validations defined on

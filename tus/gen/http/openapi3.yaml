@@ -56,9 +56,9 @@ paths:
                 type: integer
                 description: tusMaxSize represents the maximum allowed size of an
                   entire upload in bytes.
-                example: 7736993761776115318
+                example: 5189595775608579981
                 format: int64
-              example: 2186147772722787067
+              example: 4929543537337821846
             Tus-Resumable:
               description: tusResumable represents a tus protocol version.
               required: true
@@ -119,9 +119,9 @@ paths:
         schema:
           type: integer
           description: uploadLength represents the size of the entire upload in bytes.
-          example: 4833799241353945308
+          example: 1448254334375839161
           format: int64
-        example: 1835688792563813091
+        example: 2638599534930000558
       - name: Upload-Defer-Length
         in: header
         description: The Upload-Defer-Length request and response header indicates
@@ -168,9 +168,9 @@ paths:
         schema:
           type: integer
           description: Length of the upload
-          example: 7695622195691640609
+          example: 7579991661561837721
           format: int64
-        example: 7267554011524460006
+        example: 7736993761776115318
       responses:
         "201":
           description: Created response.
@@ -208,9 +208,9 @@ paths:
               schema:
                 type: integer
                 description: uploadOffset represents a byte offset within a resource.
-                example: 1867975458457142423
+                example: 2186147772722787067
                 format: int64
-              example: 6460434301675760960
+              example: 3761818512715452409
         "400":
           description: Bad Request response.
           content:
@@ -392,9 +392,9 @@ paths:
                 type: integer
                 description: uploadLength represents the size of the entire upload
                   in bytes.
-                example: 7081237826977381629
+                example: 8930493402521825048
                 format: int64
-              example: 9169029798839790708
+              example: 3038612409379910283
             Upload-Metadata:
               description: The Client MAY supply the Upload-Metadata header to add
                 additional metadata to the upload creation request.
@@ -410,29 +410,23 @@ paths:
               schema:
                 type: integer
                 description: uploadOffset represents a byte offset within a resource.
-                example: 3120396208044830135
+                example: 4886890255360832677
                 format: int64
-              example: 8455368972674475364
+              example: 5498894256965821745
         "404":
           description: Not Found response.
           content:
-            application/vnd.goa.error:
+            application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
+                $ref: '#/components/schemas/TusheadResponseBody'
+              example: {}
         "410":
           description: Gone response.
           content:
-            application/vnd.goa.error:
+            application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
+                $ref: '#/components/schemas/TusheadResponseBody'
+              example: {}
         "412":
           description: Precondition Failed response.
           headers:
@@ -446,6 +440,11 @@ paths:
                 enum:
                 - 1.0.0
               example: 1.0.0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TusheadResponseBody'
+              example: {}
     patch:
       tags:
       - tus
@@ -482,9 +481,9 @@ paths:
         schema:
           type: integer
           description: uploadOffset represents a byte offset within a resource.
-          example: 4929543537337821846
+          example: 5128883553528072720
           format: int64
-        example: 5190020578830668647
+        example: 9100604480607801993
       - name: Upload-Checksum
         in: header
         description: A Client MAY include the Upload-Checksum header in a PATCH request.
@@ -526,9 +525,9 @@ paths:
               schema:
                 type: integer
                 description: uploadOffset represents a byte offset within a resource.
-                example: 7252918215101017449
+                example: 6645337381640055720
                 format: int64
-              example: 7346632388024852144
+              example: 3120396208044830135
         "400":
           description: Bad Request response.
           content:
@@ -638,14 +637,13 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: true
+          example: false
         timeout:
           type: boolean
           description: Is the error a timeout?
           example: false
-      description: If the resource is not found, the Server SHOULD return either the
-        404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset
-        header.
+      description: 'All PATCH requests MUST use Content-Type: application/offset+octet-stream,
+        otherwise the server SHOULD return a 415 Unsupported Media Type status.'
       example:
         id: 3F1FKVRR
         message: Value of ID must be an integer
@@ -657,6 +655,7 @@ components:
       - temporary
       - timeout
       - fault
+    TusheadResponseBody: null
 tags:
 - name: tus
   description: The tus service exposes the methods required to implement the tus protocol

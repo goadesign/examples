@@ -89,7 +89,7 @@ func EncodeHeadError(encoder func(context.Context, http.ResponseWriter) goahttp.
 			if formatter != nil {
 				body = formatter(res)
 			} else {
-				body = NewHeadNotFoundResponseBody(res)
+				body = NewTusheadResponseBody(res)
 			}
 			w.Header().Set("goa-error", "NotFound")
 			w.WriteHeader(http.StatusNotFound)
@@ -101,17 +101,24 @@ func EncodeHeadError(encoder func(context.Context, http.ResponseWriter) goahttp.
 			if formatter != nil {
 				body = formatter(res)
 			} else {
-				body = NewHeadGoneResponseBody(res)
+				body = NewTusheadResponseBody(res)
 			}
 			w.Header().Set("goa-error", "Gone")
 			w.WriteHeader(http.StatusGone)
 			return enc.Encode(body)
 		case "InvalidTusResumable":
 			res := v.(*tus.ErrInvalidTUSResumable)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewTusheadResponseBody(res)
+			}
 			w.Header().Set("Tus-Version", res.TusVersion)
 			w.Header().Set("goa-error", "InvalidTusResumable")
 			w.WriteHeader(http.StatusPreconditionFailed)
-			return nil
+			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
 		}

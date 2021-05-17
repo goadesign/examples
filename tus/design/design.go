@@ -30,9 +30,6 @@ var _ = Service("tus", func() {
 	HTTP(func() {
 		// Base path for all endpoints.
 		Path("/upload")
-		Response("InvalidTusResumable", StatusPreconditionFailed, func() {
-			Header("tusVersion:Tus-Version")
-		})
 	})
 
 	Method("head", func() {
@@ -72,8 +69,16 @@ var _ = Service("tus", func() {
 				Header("uploadDeferLength:Upload-Defer-Length")
 				Header("uploadMetadata:Upload-Metadata")
 			})
-			Response("NotFound", StatusNotFound)
-			Response("Gone", StatusGone)
+			Response("NotFound", StatusNotFound, func() {
+				Body(Empty)
+			})
+			Response("Gone", StatusGone, func() {
+				Body(Empty)
+			})
+			Response("InvalidTusResumable", StatusPreconditionFailed, func() {
+				Header("tusVersion:Tus-Version")
+				Body(Empty)
+			})
 		})
 	})
 
@@ -138,6 +143,9 @@ var _ = Service("tus", func() {
 			Response("InvalidChecksumAlgorithm", StatusBadRequest)
 			Response("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
 			Response("Internal", StatusInternalServerError)
+			Response("InvalidTusResumable", StatusPreconditionFailed, func() {
+				Header("tusVersion:Tus-Version")
+			})
 		})
 	})
 
@@ -164,6 +172,9 @@ var _ = Service("tus", func() {
 				Header("tusExtension:Tus-Extension")
 				Header("tusMaxSize:Tus-Max-Size")
 				Header("tusChecksumAlgorithm:Tus-Checksum-Algorithm")
+			})
+			Response("InvalidTusResumable", StatusPreconditionFailed, func() {
+				Header("tusVersion:Tus-Version")
 			})
 		})
 	})
@@ -230,6 +241,9 @@ var _ = Service("tus", func() {
 			Response("MaximumSizeExceeded", StatusRequestEntityTooLarge)
 			Response("InvalidChecksumAlgorithm", StatusBadRequest)
 			Response("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
+			Response("InvalidTusResumable", StatusPreconditionFailed, func() {
+				Header("tusVersion:Tus-Version")
+			})
 		})
 	})
 
@@ -264,6 +278,9 @@ var _ = Service("tus", func() {
 			})
 			Response("NotFound", StatusNotFound)
 			Response("Gone", StatusGone)
+			Response("InvalidTusResumable", StatusPreconditionFailed, func() {
+				Header("tusVersion:Tus-Version")
+			})
 		})
 	})
 })

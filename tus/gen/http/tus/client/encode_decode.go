@@ -150,36 +150,35 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			return res, nil
 		case http.StatusNotFound:
 			var (
-				body HeadNotFoundResponseBody
+				body TusheadResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("tus", "head", err)
-			}
-			err = ValidateHeadNotFoundResponseBody(&body)
-			if err != nil {
-				return nil, goahttp.ErrValidationError("tus", "head", err)
 			}
 			return nil, NewHeadNotFound(&body)
 		case http.StatusGone:
 			var (
-				body HeadGoneResponseBody
+				body TusheadResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("tus", "head", err)
 			}
-			err = ValidateHeadGoneResponseBody(&body)
-			if err != nil {
-				return nil, goahttp.ErrValidationError("tus", "head", err)
-			}
 			return nil, NewHeadGone(&body)
 		case http.StatusPreconditionFailed:
 			var (
+				body TusheadResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "head", err)
+			}
+			var (
 				tusVersion string
-				err        error
 			)
 			tusVersionRaw := resp.Header.Get("Tus-Version")
 			if tusVersionRaw == "" {
@@ -192,7 +191,7 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			if err != nil {
 				return nil, goahttp.ErrValidationError("tus", "head", err)
 			}
-			return nil, NewHeadInvalidTusResumable(tusVersion)
+			return nil, NewHeadInvalidTusResumable(&body, tusVersion)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("tus", "head", resp.StatusCode, string(body))

@@ -13,41 +13,17 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// HeadNotFoundResponseBody is the type of the "tus" service "head" endpoint
-// HTTP response body for the "NotFound" error.
-type HeadNotFoundResponseBody struct {
-	// Name is the name of this class of errors.
-	Name string `form:"name" json:"name" xml:"name"`
-	// ID is a unique identifier for this particular occurrence of the problem.
-	ID string `form:"id" json:"id" xml:"id"`
-	// Message is a human-readable explanation specific to this occurrence of the
-	// problem.
-	Message string `form:"message" json:"message" xml:"message"`
-	// Is the error temporary?
-	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
-	// Is the error a timeout?
-	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
-	// Is the error a server-side fault?
-	Fault bool `form:"fault" json:"fault" xml:"fault"`
-}
+// TusheadResponseBody is the type of the "tus" service "head" endpoint HTTP
+// response body for the "NotFound" error.
+type TusheadResponseBody Empty
 
-// HeadGoneResponseBody is the type of the "tus" service "head" endpoint HTTP
+// TusheadResponseBody is the type of the "tus" service "head" endpoint HTTP
 // response body for the "Gone" error.
-type HeadGoneResponseBody struct {
-	// Name is the name of this class of errors.
-	Name string `form:"name" json:"name" xml:"name"`
-	// ID is a unique identifier for this particular occurrence of the problem.
-	ID string `form:"id" json:"id" xml:"id"`
-	// Message is a human-readable explanation specific to this occurrence of the
-	// problem.
-	Message string `form:"message" json:"message" xml:"message"`
-	// Is the error temporary?
-	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
-	// Is the error a timeout?
-	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
-	// Is the error a server-side fault?
-	Fault bool `form:"fault" json:"fault" xml:"fault"`
-}
+type TusheadResponseBody Empty
+
+// TusheadResponseBody is the type of the "tus" service "head" endpoint HTTP
+// response body for the "InvalidTusResumable" error.
+type TusheadResponseBody Empty
 
 // PatchInvalidContentTypeResponseBody is the type of the "tus" service "patch"
 // endpoint HTTP response body for the "InvalidContentType" error.
@@ -301,31 +277,24 @@ type DeleteGoneResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// NewHeadNotFoundResponseBody builds the HTTP response body from the result of
-// the "head" endpoint of the "tus" service.
-func NewHeadNotFoundResponseBody(res *goa.ServiceError) *HeadNotFoundResponseBody {
-	body := &HeadNotFoundResponseBody{
-		Name:      res.Name,
-		ID:        res.ID,
-		Message:   res.Message,
-		Temporary: res.Temporary,
-		Timeout:   res.Timeout,
-		Fault:     res.Fault,
-	}
+// NewTusheadResponseBody builds the HTTP response body from the result of the
+// "head" endpoint of the "tus" service.
+func NewTusheadResponseBody(res *goa.ServiceError) *TusheadResponseBody {
+	body := &TusheadResponseBody{}
 	return body
 }
 
-// NewHeadGoneResponseBody builds the HTTP response body from the result of the
+// NewTusheadResponseBody builds the HTTP response body from the result of the
 // "head" endpoint of the "tus" service.
-func NewHeadGoneResponseBody(res *goa.ServiceError) *HeadGoneResponseBody {
-	body := &HeadGoneResponseBody{
-		Name:      res.Name,
-		ID:        res.ID,
-		Message:   res.Message,
-		Temporary: res.Temporary,
-		Timeout:   res.Timeout,
-		Fault:     res.Fault,
-	}
+func NewTusheadResponseBody(res *goa.ServiceError) *TusheadResponseBody {
+	body := &TusheadResponseBody{}
+	return body
+}
+
+// NewTusheadResponseBody builds the HTTP response body from the result of the
+// "head" endpoint of the "tus" service.
+func NewTusheadResponseBody(res *tus.ErrInvalidTUSResumable) *TusheadResponseBody {
+	body := &TusheadResponseBody{}
 	return body
 }
 
