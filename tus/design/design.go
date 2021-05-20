@@ -4,6 +4,16 @@ import (
 	. "goa.design/goa/v3/dsl"
 )
 
+// ErrorResponse defines a response with an empty body.
+func ErrorResponse(name string, code int, fn ...func()) {
+	Response(name, code, func() {
+		Body(Empty)
+		if len(fn) > 0 {
+			fn[0]()
+		}
+	})
+}
+
 var _ = API("tus upload", func() {
 	Title("File Upload Service")
 	Description("HTTP service for uploading files using the tus protocol (https://tus.io)")
@@ -30,9 +40,6 @@ var _ = Service("tus", func() {
 	HTTP(func() {
 		// Base path for all endpoints.
 		Path("/upload")
-		Response("InvalidTusResumable", StatusPreconditionFailed, func() {
-			Header("tusVersion:Tus-Version")
-		})
 	})
 
 	Method("head", func() {
@@ -72,8 +79,9 @@ var _ = Service("tus", func() {
 				Header("uploadDeferLength:Upload-Defer-Length")
 				Header("uploadMetadata:Upload-Metadata")
 			})
-			Response("NotFound", StatusNotFound)
-			Response("Gone", StatusGone)
+			ErrorResponse("InvalidTusResumable", StatusPreconditionFailed, func() { Header("tusVersion:Tus-Version") })
+			ErrorResponse("NotFound", StatusNotFound)
+			ErrorResponse("Gone", StatusGone)
 		})
 	})
 
@@ -131,13 +139,14 @@ var _ = Service("tus", func() {
 				Header("uploadOffset:Upload-Offset")
 				Header("uploadExpires:Upload-Expires")
 			})
-			Response("InvalidContentType", StatusUnsupportedMediaType)
-			Response("InvalidOffset", StatusConflict)
-			Response("NotFound", StatusNotFound)
-			Response("Gone", StatusGone)
-			Response("InvalidChecksumAlgorithm", StatusBadRequest)
-			Response("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
-			Response("Internal", StatusInternalServerError)
+			ErrorResponse("InvalidTusResumable", StatusPreconditionFailed, func() { Header("tusVersion:Tus-Version") })
+			ErrorResponse("InvalidContentType", StatusUnsupportedMediaType)
+			ErrorResponse("InvalidOffset", StatusConflict)
+			ErrorResponse("NotFound", StatusNotFound)
+			ErrorResponse("Gone", StatusGone)
+			ErrorResponse("InvalidChecksumAlgorithm", StatusBadRequest)
+			ErrorResponse("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
+			ErrorResponse("Internal", StatusInternalServerError)
 		})
 	})
 
@@ -165,6 +174,7 @@ var _ = Service("tus", func() {
 				Header("tusMaxSize:Tus-Max-Size")
 				Header("tusChecksumAlgorithm:Tus-Checksum-Algorithm")
 			})
+			ErrorResponse("InvalidTusResumable", StatusPreconditionFailed, func() { Header("tusVersion:Tus-Version") })
 		})
 	})
 
@@ -225,11 +235,12 @@ var _ = Service("tus", func() {
 				Header("uploadOffset:Upload-Offset")
 				Header("uploadExpires:Upload-Expires")
 			})
-			Response("MissingHeader", StatusBadRequest)
-			Response("InvalidDeferLength", StatusBadRequest)
-			Response("MaximumSizeExceeded", StatusRequestEntityTooLarge)
-			Response("InvalidChecksumAlgorithm", StatusBadRequest)
-			Response("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
+			ErrorResponse("InvalidTusResumable", StatusPreconditionFailed, func() { Header("tusVersion:Tus-Version") })
+			ErrorResponse("MissingHeader", StatusBadRequest)
+			ErrorResponse("InvalidDeferLength", StatusBadRequest)
+			ErrorResponse("MaximumSizeExceeded", StatusRequestEntityTooLarge)
+			ErrorResponse("InvalidChecksumAlgorithm", StatusBadRequest)
+			ErrorResponse("ChecksumMismatch", 460 /*StatusChecksumMismatch*/)
 		})
 	})
 
@@ -262,8 +273,9 @@ var _ = Service("tus", func() {
 			Response(StatusNoContent, func() {
 				Header("tusResumable:Tus-Resumable")
 			})
-			Response("NotFound", StatusNotFound)
-			Response("Gone", StatusGone)
+			ErrorResponse("InvalidTusResumable", StatusPreconditionFailed, func() { Header("tusVersion:Tus-Version") })
+			ErrorResponse("NotFound", StatusNotFound)
+			ErrorResponse("Gone", StatusGone)
 		})
 	})
 })
