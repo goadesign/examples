@@ -150,11 +150,11 @@ build:
 	@cd "$(GOPATH)/src/goa.design/examples/cookies" && \
 		go build ./cmd/session && go build ./cmd/session-cli
 	@cd "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
-		go build ./cmd/cbor && go build ./cmd/cbor-cli
+		go build ./cmd/concat && go build ./cmd/concat-cli
 	@cd "$(GOPATH)/src/goa.design/examples/encodings/text" && \
 		go build ./cmd/text && go build ./cmd/text-cli
 	@cd "$(GOPATH)/src/goa.design/examples/error" && \
-		go build ./cmd/divider && go build ./cmd/divider-cli
+		go build ./cmd/calc && go build ./cmd/calc-cli
 	@cd "$(GOPATH)/src/goa.design/examples/multipart" && \
 		go build ./cmd/resume && go build ./cmd/resume-cli
 	@cd "$(GOPATH)/src/goa.design/examples/security" && \
