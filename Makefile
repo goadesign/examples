@@ -179,7 +179,7 @@ test:
 	@go test ./... > /dev/null
 
 check-freshness:
-	@if [ "`git diff -- . ':(exclude)go.mod' ':(exclude)go.sum' | wc -l`" -gt "0" ]; then \
+	@if [ "`git diff -- . ':(exclude)go.mod' ':(exclude)go.sum' ':(exclude)files/cmd/openapi/http.go' | wc -l`" -gt "0" ]; then \
 	        echo "[ERROR] generated code not in-sync with design:"; \
 	        echo; \
 	        git status -s; \
