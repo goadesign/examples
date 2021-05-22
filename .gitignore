@@ -3,6 +3,7 @@ tus/cmd/upload/upload
 cookies/cmd/session-cli/session-cli
 cookies/cmd/session/session
 error/cmd/calc/calc
+files/cmd/openapi/openapi
 
 # Output of make build
 basic/calc
@@ -17,6 +18,8 @@ encodings/text/text
 encodings/text/text-cli
 error/calc
 error/calc-cli
+files/openapi
+files/openapi-cli
 multipart/resume
 multipart/resume-cli
 security/multi_auth
