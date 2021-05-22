@@ -1,7 +1,7 @@
 language: go
 dist: xenial
 go:
-- "1.14.x"
+- "1.16.x"
 
 script:
 - export PATH=${PATH}:${HOME}/bin:${HOME}/gopath/bin
