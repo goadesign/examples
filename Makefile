@@ -96,49 +96,53 @@ gen:
 	@# NOTE: not all command line tools are generated
 	@echo GENERATING CODE...
 	@goa version
-	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/cookies/cmd/" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/cbor/cmd" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/text/cmd" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/multipart/cmd" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/security/cmd" 
+	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/cookies/cmd/"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/cbor/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/text/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/files/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/multipart/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/security/cmd"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/streaming/cmd/chatter"
-	@rm -rf "$(GOPATH)/src/goa.design/examples/tus/cmd/upload-cli" 
-	@rm -rf "$(GOPATH)/src/goa.design/examples/upload_download/cmd/upload_download-cli" 
-	@echo "basic [1/11]" 
-	@goa gen goa.design/examples/basic/design -o "$(GOPATH)/src/goa.design/examples/basic" 
-	@goa example goa.design/examples/basic/design -o "$(GOPATH)/src/goa.design/examples/basic" 
-	@echo "cellar [2/11]" 
-	@goa gen goa.design/examples/cellar/design -o "$(GOPATH)/src/goa.design/examples/cellar" 
-	@goa example goa.design/examples/cellar/design -o "$(GOPATH)/src/goa.design/examples/cellar" 
-	@echo "cookies [3/11]" 
-	@goa gen goa.design/examples/cookies/design -o "$(GOPATH)/src/goa.design/examples/cookies" 
-	@goa example goa.design/examples/cookies/design -o "$(GOPATH)/src/goa.design/examples/cookies" 
-	@echo "encodings/cbor [4/11]" 
-	@goa gen goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor" 
-	@goa example goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor" 
-	@echo "encodings/text [5/11]" 
-	@goa gen goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text" 
-	@goa example goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text" 
-	@echo "error [6/11]" 
-	@goa gen goa.design/examples/error/design -o "$(GOPATH)/src/goa.design/examples/error" 
-	@goa example goa.design/examples/error/design -o "$(GOPATH)/src/goa.design/examples/error" 
-	@echo "multipart [7/11]" 
-	@goa gen goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart" 
-	@goa example goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart" 
-	@echo "security [8/11]" 
-	@goa gen goa.design/examples/security/design -o "$(GOPATH)/src/goa.design/examples/security" 
-	@goa example goa.design/examples/security/design -o "$(GOPATH)/src/goa.design/examples/security" 
-	@echo "streaming [9/11]" 
-	@goa gen goa.design/examples/streaming/design -o "$(GOPATH)/src/goa.design/examples/streaming" 
+	@rm -rf "$(GOPATH)/src/goa.design/examples/tus/cmd/upload-cli"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/upload_download/cmd/upload_download-cli"
+	@echo "basic [1/12]"
+	@goa gen goa.design/examples/basic/design -o "$(GOPATH)/src/goa.design/examples/basic"
+	@goa example goa.design/examples/basic/design -o "$(GOPATH)/src/goa.design/examples/basic"
+	@echo "cellar [2/12]"
+	@goa gen goa.design/examples/cellar/design -o "$(GOPATH)/src/goa.design/examples/cellar"
+	@goa example goa.design/examples/cellar/design -o "$(GOPATH)/src/goa.design/examples/cellar"
+	@echo "cookies [3/12]"
+	@goa gen goa.design/examples/cookies/design -o "$(GOPATH)/src/goa.design/examples/cookies"
+	@goa example goa.design/examples/cookies/design -o "$(GOPATH)/src/goa.design/examples/cookies"
+	@echo "encodings/cbor [4/12]"
+	@goa gen goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor"
+	@goa example goa.design/examples/encodings/cbor/design -o "$(GOPATH)/src/goa.design/examples/encodings/cbor"
+	@echo "encodings/text [5/12]"
+	@goa gen goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text"
+	@goa example goa.design/examples/encodings/text/design -o "$(GOPATH)/src/goa.design/examples/encodings/text"
+	@echo "error [6/12]"
+	@goa gen goa.design/examples/error/design -o "$(GOPATH)/src/goa.design/examples/error"
+	@goa example goa.design/examples/error/design -o "$(GOPATH)/src/goa.design/examples/error"
+	@echo "files [7/12]"
+	@goa gen goa.design/examples/files/design -o "$(GOPATH)/src/goa.design/examples/files"
+	@goa example goa.design/examples/files/design -o "$(GOPATH)/src/goa.design/examples/files"
+	@echo "multipart [8/12]"
+	@goa gen goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart"
+	@goa example goa.design/examples/multipart/design -o "$(GOPATH)/src/goa.design/examples/multipart"
+	@echo "security [9/12]"
+	@goa gen goa.design/examples/security/design -o "$(GOPATH)/src/goa.design/examples/security"
+	@goa example goa.design/examples/security/design -o "$(GOPATH)/src/goa.design/examples/security"
+	@echo "streaming [10/12]"
+	@goa gen goa.design/examples/streaming/design -o "$(GOPATH)/src/goa.design/examples/streaming"
 	@goa example goa.design/examples/streaming/design -o "$(GOPATH)/src/goa.design/examples/streaming"
-	@echo "tus [10/11]" 
-	@goa gen goa.design/examples/tus/design -o "$(GOPATH)/src/goa.design/examples/tus" 
+	@echo "tus [11/12]"
+	@goa gen goa.design/examples/tus/design -o "$(GOPATH)/src/goa.design/examples/tus"
 	@goa example goa.design/examples/tus/design -o "$(GOPATH)/src/goa.design/examples/tus"
-	@echo "upload_download [11/11]" 
-	@goa gen goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download" 
+	@echo "upload_download [12/12]"
+	@goa gen goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download"
 	@goa example goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download"
 	@go mod tidy
 
@@ -150,11 +154,13 @@ build:
 	@cd "$(GOPATH)/src/goa.design/examples/cookies" && \
 		go build ./cmd/session && go build ./cmd/session-cli
 	@cd "$(GOPATH)/src/goa.design/examples/encodings/cbor" && \
-		go build ./cmd/cbor && go build ./cmd/cbor-cli
+		go build ./cmd/concat && go build ./cmd/concat-cli
 	@cd "$(GOPATH)/src/goa.design/examples/encodings/text" && \
 		go build ./cmd/text && go build ./cmd/text-cli
 	@cd "$(GOPATH)/src/goa.design/examples/error" && \
-		go build ./cmd/divider && go build ./cmd/divider-cli
+		go build ./cmd/calc && go build ./cmd/calc-cli
+	@cd "$(GOPATH)/src/goa.design/examples/files" && \
+		go build ./cmd/openapi && go build ./cmd/openapi-cli
 	@cd "$(GOPATH)/src/goa.design/examples/multipart" && \
 		go build ./cmd/resume && go build ./cmd/resume-cli
 	@cd "$(GOPATH)/src/goa.design/examples/security" && \
@@ -173,7 +179,7 @@ test:
 	@go test ./... > /dev/null
 
 check-freshness:
-	@if [ "`git diff -- . ':(exclude)go.mod' ':(exclude)go.sum' | wc -l`" -gt "0" ]; then \
+	@if [ "`git diff -- . ':(exclude)go.mod' ':(exclude)go.sum' ':(exclude)files/cmd/openapi/http.go' | wc -l`" -gt "0" ]; then \
 	        echo "[ERROR] generated code not in-sync with design:"; \
 	        echo; \
 	        git status -s; \
