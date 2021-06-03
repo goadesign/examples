@@ -83,6 +83,27 @@ paths:
               type: int64
         "400":
           description: Bad Request response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "412":
           description: Precondition Failed response.
           headers:
@@ -93,8 +114,50 @@ paths:
               - 1.0.0
         "413":
           description: Request Entity Too Large response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "460":
           description: ' response.'
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
       schemes:
       - http
     options:
@@ -178,8 +241,50 @@ paths:
               pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
         "404":
           description: Not Found response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "410":
           description: Gone response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "412":
           description: Precondition Failed response.
           headers:
@@ -238,8 +343,50 @@ paths:
               type: int64
         "404":
           description: Not Found response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "410":
           description: Gone response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "412":
           description: Precondition Failed response.
           headers:
@@ -299,12 +446,96 @@ paths:
               type: int64
         "400":
           description: Bad Request response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "404":
           description: Not Found response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "409":
           description: Conflict response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "410":
           description: Gone response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "412":
           description: Precondition Failed response.
           headers:
@@ -315,9 +546,72 @@ paths:
               - 1.0.0
         "415":
           description: Unsupported Media Type response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "460":
           description: ' response.'
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
         "500":
           description: Internal Server Error response.
+          headers:
+            goa-attribute-fault:
+              description: Is the error a server-side fault?
+              type: boolean
+            goa-attribute-id:
+              description: ID is a unique identifier for this particular occurrence
+                of the problem.
+              type: string
+            goa-attribute-message:
+              description: Message is a human-readable explanation specific to this
+                occurrence of the problem.
+              type: string
+            goa-attribute-name:
+              description: Name is the name of this class of errors.
+              type: string
+            goa-attribute-temporary:
+              description: Is the error temporary?
+              type: boolean
+            goa-attribute-timeout:
+              description: Is the error a timeout?
+              type: boolean
       schemes:
       - http
