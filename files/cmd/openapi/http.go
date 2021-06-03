@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	openapiapi "goa.design/examples/files"
 	openapisvr "goa.design/examples/files/gen/http/openapi/server"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
@@ -53,21 +52,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, wg *sync.WaitGroup, errc 
 	)
 	{
 		eh := errorHandler(logger)
-		oapi3 := http.FS(openapiapi.OpenAPI3)
-		openapiServer = openapisvr.New(nil, mux, dec, enc, eh, nil,
-			// http.FileSystem system for openapi.json.
-			// http.Dir(".") will be used if nil.
-			nil,
-
-			// http.FileSystem for openapi.yaml.
-			// It's converted from embed.FS using http.FS().
-			http.FS(openapiapi.OpenAPI),
-
-			// http.FileSystem for openapi3.json and openapi3.yaml.
-			// A file system can be used for multiple file servers.
-			oapi3,
-			oapi3,
-		)
+		openapiServer = openapisvr.New(nil, mux, dec, enc, eh, nil, nil, nil, nil, nil)
 		if debug {
 			servers := goahttp.Servers{
 				openapiServer,

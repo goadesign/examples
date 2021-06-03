@@ -9,7 +9,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/rs/xid v1.3.0
-	goa.design/goa/v3 v3.4.2
-	google.golang.org/grpc v1.37.1
+	goa.design/goa/v3 v3.4.3
+	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0
 )
