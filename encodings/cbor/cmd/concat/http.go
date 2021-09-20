@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	concatapi "goa.design/examples/encodings/cbor"
 	concat "goa.design/examples/encodings/cbor/gen/concat"
 	concatsvr "goa.design/examples/encodings/cbor/gen/http/concat/server"
 	goahttp "goa.design/goa/v3/http"
@@ -33,8 +34,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 	// Other encodings can be used by providing the corresponding functions,
 	// see goa.design/implement/encoding.
 	var (
-		dec = goahttp.RequestDecoder
-		enc = goahttp.ResponseEncoder
+		dec = concatapi.RequestDecoder
+		enc = concatapi.ResponseEncoder
 	)
 
 	// Build the service HTTP request multiplexer and configure it to serve
