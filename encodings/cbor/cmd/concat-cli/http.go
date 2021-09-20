@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	concatapi "goa.design/examples/encodings/cbor"
 	cli "goa.design/examples/encodings/cbor/gen/http/cli/concat"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
@@ -24,8 +25,8 @@ func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interfa
 		scheme,
 		host,
 		doer,
-		goahttp.RequestEncoder,
-		goahttp.ResponseDecoder,
+		concatapi.RequestEncoder,
+		concatapi.ResponseDecoder,
 		debug,
 	)
 }
