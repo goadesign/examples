@@ -99,7 +99,6 @@ gen:
 	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/cookies/cmd/"
-	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/cbor/cmd"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/text/cmd"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/error/cmd"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/files/cmd"
