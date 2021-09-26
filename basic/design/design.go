@@ -82,7 +82,7 @@ var _ = Service("calc", func() {
 		})
 	})
 
-	// Serve the file with relative path ../../gen/http/openapi.json for
-	// requests sent to /swagger.json.
-	Files("/swagger.json", "../../gen/http/openapi.json")
+	// Serve the file gen/http/openapi3.json for requests sent to
+	// /openapi.json.
+	Files("/openapi.json", "openapi3.json")
 })

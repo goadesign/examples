@@ -19,9 +19,9 @@ import (
 
 // Server lists the calc service endpoint HTTP handlers.
 type Server struct {
-	Mounts             []*MountPoint
-	Add                http.Handler
-	GenHTTPOpenapiJSON http.Handler
+	Mounts       []*MountPoint
+	Add          http.Handler
+	Openapi3JSON http.Handler
 }
 
 // ErrorNamer is an interface implemented by generated error structs that
@@ -54,18 +54,18 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(err error) goahttp.Statuser,
-	fileSystemGenHTTPOpenapiJSON http.FileSystem,
+	fileSystemOpenapi3JSON http.FileSystem,
 ) *Server {
-	if fileSystemGenHTTPOpenapiJSON == nil {
-		fileSystemGenHTTPOpenapiJSON = http.Dir(".")
+	if fileSystemOpenapi3JSON == nil {
+		fileSystemOpenapi3JSON = http.Dir(".")
 	}
 	return &Server{
 		Mounts: []*MountPoint{
 			{"Add", "GET", "/add/{a}/{b}"},
-			{"../../gen/http/openapi.json", "GET", "/swagger.json"},
+			{"openapi3.json", "GET", "/openapi.json"},
 		},
-		Add:                NewAddHandler(e.Add, mux, decoder, encoder, errhandler, formatter),
-		GenHTTPOpenapiJSON: http.FileServer(fileSystemGenHTTPOpenapiJSON),
+		Add:          NewAddHandler(e.Add, mux, decoder, encoder, errhandler, formatter),
+		Openapi3JSON: http.FileServer(fileSystemOpenapi3JSON),
 	}
 }
 
@@ -80,7 +80,7 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 // Mount configures the mux to serve the calc endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountAddHandler(mux, h.Add)
-	MountGenHTTPOpenapiJSON(mux, goahttp.Replace("", "/../../gen/http/openapi.json", h.GenHTTPOpenapiJSON))
+	MountOpenapi3JSON(mux, goahttp.Replace("", "/openapi3.json", h.Openapi3JSON))
 }
 
 // MountAddHandler configures the mux to serve the "calc" service "add"
@@ -134,8 +134,8 @@ func NewAddHandler(
 	})
 }
 
-// MountGenHTTPOpenapiJSON configures the mux to serve GET request made to
-// "/swagger.json".
-func MountGenHTTPOpenapiJSON(mux goahttp.Muxer, h http.Handler) {
-	mux.Handle("GET", "/swagger.json", h.ServeHTTP)
+// MountOpenapi3JSON configures the mux to serve GET request made to
+// "/openapi.json".
+func MountOpenapi3JSON(mux goahttp.Muxer, h http.Handler) {
+	mux.Handle("GET", "/openapi.json", h.ServeHTTP)
 }
