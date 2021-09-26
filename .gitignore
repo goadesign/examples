@@ -32,3 +32,4 @@ tus/upload
 tus/upload-cli
 upload_download/upload_download
 upload_download/upload_download-cli
+basic/cmd/calc/calc

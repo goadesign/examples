@@ -53,7 +53,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpo
 	)
 	{
 		eh := errorHandler(logger)
-		calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh, nil, nil)
+		calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh, nil, http.Dir("../../gen/http"))
 		if debug {
 			servers := goahttp.Servers{
 				calcServer,

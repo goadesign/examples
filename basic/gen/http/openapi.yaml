@@ -38,12 +38,12 @@ paths:
             format: int64
       schemes:
       - http
-  /swagger.json:
+  /openapi.json:
     get:
       tags:
       - calc
-      summary: Download ../../gen/http/openapi.json
-      operationId: calc#/swagger.json
+      summary: Download openapi3.json
+      operationId: calc#/openapi.json
       responses:
         "200":
           description: File downloaded

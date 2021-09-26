@@ -96,7 +96,7 @@ gen:
 	@# NOTE: not all command line tools are generated
 	@echo GENERATING CODE...
 	@goa version
-	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd"
+	@rm -rf "$(GOPATH)/src/goa.design/examples/basic/cmd/calc-cli"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/cellar/cmd/cellar-cli"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/cookies/cmd/"
 	@rm -rf "$(GOPATH)/src/goa.design/examples/encodings/text/cmd"
