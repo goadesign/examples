@@ -1,6 +1,5 @@
 # Goa Examples
 
-[![Build Status](https://travis-ci.org/goadesign/examples.svg?branch=master)](https://travis-ci.org/goadesign/examples)
 [![Slack](https://img.shields.io/badge/slack-gophers-orange.svg?style=flat)](https://gophers.slack.com/messages/goa/)
 
 _Looking for Goa v1 examples? find them [here](https://github.com/goadesign/examples/tree/v1)._
