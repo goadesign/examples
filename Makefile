@@ -34,7 +34,7 @@ DEPEND=\
 all: check-goa gen lint test
 	@echo DONE!
 
-travis: depend all check-freshness
+travis: depend all
 
 # Install protoc
 PROTOC_VERSION=3.14.0
@@ -176,13 +176,3 @@ build:
 test:
 	@echo TESTING...
 	@go test ./... > /dev/null
-
-check-freshness:
-	@if [ "`git diff -- . ':(exclude)go.mod' ':(exclude)go.sum' ':(exclude)files/cmd/openapi/http.go' | wc -l`" -gt "0" ]; then \
-	        echo "[ERROR] generated code not in-sync with design:"; \
-	        echo; \
-	        git status -s; \
-	        git --no-pager diff; \
-	        echo; \
-	        exit 1; \
-	fi
