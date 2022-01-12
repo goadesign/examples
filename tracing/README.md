@@ -1,11 +1,11 @@
 # Tracing Example
 
 This example illustrates how to use the tracing and AWS X-Ray middleware in
-goa v2.
+Goa v3.
 
 ## Server Tracing Setup
 
-Tracing middleware can be mounted on the `net/http` `Handler` for HTTP
+The tracing middleware can be mounted on the `net/http` `Handler` for HTTP
 transport or when initializing a gRPC server for gRPC transport. The ordering
 of mounting the tracing and X-Ray middleware is important as shown below.
 
@@ -41,9 +41,8 @@ of mounting the tracing and X-Ray middleware is important as shown below.
 
 ## Client Tracing Setup
 
-Tracing middleware can be wrapped around a HTTP client for HTTP transport or
-when initializing a gRPC client connection for gRPC transport. The order of
-mounting the tracing and X-Ray middleware is important as shown below.
+The tracing middleware can be wrapped around a HTTP client for HTTP transport or
+when initializing a gRPC client connection for gRPC transport.
 
 ```
   // HTTP
