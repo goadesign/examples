@@ -34,7 +34,7 @@ DEPEND=\
 all: check-goa gen lint test
 	@echo DONE!
 
-travis: depend all
+ci: depend all
 
 # Install protoc
 PROTOC_VERSION=3.14.0
