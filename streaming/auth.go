@@ -3,7 +3,7 @@ package chatter
 import (
 	"context"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 	chattersvc "goa.design/examples/streaming/gen/chatter"
 	"goa.design/goa/v3/security"
 )

@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 	securedservice "goa.design/examples/security/gen/secured_service"
 	"goa.design/goa/v3/security"
 )

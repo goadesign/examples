@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 	chattersvc "goa.design/examples/streaming/gen/chatter"
 )
 
