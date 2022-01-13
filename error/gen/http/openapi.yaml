@@ -103,16 +103,18 @@ definitions:
     properties:
       fault:
         type: boolean
-        description: Is the error temporary?
+        description: Is the error a server-side fault?
         example: false
       id:
         type: string
-        description: Name is the name of this class of errors.
-        example: bad_request
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
       message:
         type: string
-        description: Name is the name of this class of errors.
-        example: bad_request
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
       name:
         type: string
         description: Name is the name of this class of errors.
@@ -123,13 +125,13 @@ definitions:
         example: true
       timeout:
         type: boolean
-        description: Is the error temporary?
+        description: Is the error a timeout?
         example: true
     description: divide_timeout_response_body result type (default view)
     example:
       fault: true
-      id: bad_request
-      message: bad_request
+      id: 123abc
+      message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
       timeout: false
