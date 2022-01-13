@@ -143,7 +143,7 @@ gen:
 	@echo "upload_download [12/12]"
 	@goa gen goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download"
 	@goa example goa.design/examples/upload_download/design -o "$(GOPATH)/src/goa.design/examples/upload_download"
-	@go mod tidy
+	@go mod tidy -compat=1.17
 
 build:
 	@cd "$(GOPATH)/src/goa.design/examples/basic" && \
