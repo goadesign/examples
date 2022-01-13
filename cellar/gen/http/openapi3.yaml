@@ -43,10 +43,11 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: 123abc
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
-                name: 123abc
-                rating: 2002
+                name: Blue's Cuvee
+                rating: 3
                 vintage: 1941
                 winery:
                   name: Longoria
@@ -57,10 +58,11 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: 123abc
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
-                name: 123abc
-                rating: 2002
+                name: Blue's Cuvee
+                rating: 3
                 vintage: 1941
                 winery:
                   name: Longoria
@@ -71,10 +73,11 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: 123abc
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
-                name: 123abc
-                rating: 2002
+                name: Blue's Cuvee
+                rating: 3
                 vintage: 1941
                 winery:
                   name: Longoria
@@ -85,10 +88,11 @@ paths:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                description: 123abc
+                description: Red wine blend with an emphasis on the Cabernet Franc
+                  grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
-                name: 123abc
-                rating: 2002
+                name: Blue's Cuvee
+                rating: 3
                 vintage: 1941
                 winery:
                   name: Longoria
@@ -122,19 +126,19 @@ paths:
                 $ref: '#/components/schemas/StoredBottleResponseTinyCollection'
               example:
               - id: 123abc
-                name: 123abc
+                name: Blue's Cuvee
                 winery:
                   name: Longoria
               - id: 123abc
-                name: 123abc
+                name: Blue's Cuvee
                 winery:
                   name: Longoria
               - id: 123abc
-                name: 123abc
+                name: Blue's Cuvee
                 winery:
                   name: Longoria
               - id: 123abc
-                name: 123abc
+                name: Blue's Cuvee
                 winery:
                   name: Longoria
     post:
@@ -822,22 +826,25 @@ components:
             varietal: Syrah
         description:
           type: string
-          description: ID is the unique id of the bottle.
-          example: 123abc
+          description: Description of bottle
+          example: Red wine blend with an emphasis on the Cabernet Franc grape and
+            including other Bordeaux grape varietals and some Syrah
+          maxLength: 2000
         id:
           type: string
           description: ID is the unique id of the bottle.
           example: 123abc
         name:
           type: string
-          description: ID is the unique id of the bottle.
-          example: 123abc
+          description: Name of bottle
+          example: Blue's Cuvee
+          maxLength: 100
         rating:
           type: integer
-          description: Vintage of bottle
-          example: 1906
-          minimum: 1900
-          maximum: 2020
+          description: Rating of bottle from 1 (worst) to 5 (best)
+          example: 3
+          minimum: 1
+          maximum: 5
         vintage:
           type: integer
           description: Vintage of bottle
@@ -858,10 +865,11 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: 123abc
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
-        name: 123abc
-        rating: 2019
+        name: Blue's Cuvee
+        rating: 4
         vintage: 1930
         winery:
           name: Longoria
@@ -884,10 +892,11 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: 123abc
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
-        name: 123abc
-        rating: 2002
+        name: Blue's Cuvee
+        rating: 3
         vintage: 1941
         winery:
           name: Longoria
@@ -898,10 +907,11 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: 123abc
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
-        name: 123abc
-        rating: 2002
+        name: Blue's Cuvee
+        rating: 3
         vintage: 1941
         winery:
           name: Longoria
@@ -912,10 +922,11 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: 123abc
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
-        name: 123abc
-        rating: 2002
+        name: Blue's Cuvee
+        rating: 3
         vintage: 1941
         winery:
           name: Longoria
@@ -926,10 +937,11 @@ components:
           varietal: Syrah
         - percentage: 82
           varietal: Syrah
-        description: 123abc
+        description: Red wine blend with an emphasis on the Cabernet Franc grape and
+          including other Bordeaux grape varietals and some Syrah
         id: 123abc
-        name: 123abc
-        rating: 2002
+        name: Blue's Cuvee
+        rating: 3
         vintage: 1941
         winery:
           name: Longoria
@@ -942,15 +954,16 @@ components:
           example: 123abc
         name:
           type: string
-          description: ID is the unique id of the bottle.
-          example: 123abc
+          description: Name of bottle
+          example: Blue's Cuvee
+          maxLength: 100
         winery:
           $ref: '#/components/schemas/WineryResponseTiny'
       description: A StoredBottle describes a bottle retrieved by the storage service.
         (tiny view)
       example:
         id: 123abc
-        name: 123abc
+        name: Blue's Cuvee
         winery:
           name: Longoria
       required:
@@ -965,15 +978,15 @@ components:
         (tiny view)
       example:
       - id: 123abc
-        name: 123abc
+        name: Blue's Cuvee
         winery:
           name: Longoria
       - id: 123abc
-        name: 123abc
+        name: Blue's Cuvee
         winery:
           name: Longoria
       - id: 123abc
-        name: 123abc
+        name: Blue's Cuvee
         winery:
           name: Longoria
     Winery:

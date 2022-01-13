@@ -1,4 +1,4 @@
-// Code generated with goa v3.5.3, DO NOT EDIT.
+// Code generated with goa v3.5.4, DO NOT EDIT.
 //
 // calc protocol buffer definition
 //

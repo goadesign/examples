@@ -403,10 +403,11 @@ definitions:
         varietal: Syrah
       - percentage: 82
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 2002
+      name: Blue's Cuvee
+      rating: 3
       vintage: 1941
       winery:
         name: Longoria
@@ -417,10 +418,11 @@ definitions:
         varietal: Syrah
       - percentage: 82
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 2002
+      name: Blue's Cuvee
+      rating: 3
       vintage: 1941
       winery:
         name: Longoria
@@ -643,22 +645,25 @@ definitions:
           varietal: Syrah
       description:
         type: string
-        description: ID is the unique id of the bottle.
-        example: 123abc
+        description: Description of bottle
+        example: Red wine blend with an emphasis on the Cabernet Franc grape and including
+          other Bordeaux grape varietals and some Syrah
+        maxLength: 2000
       id:
         type: string
         description: ID is the unique id of the bottle.
         example: 123abc
       name:
         type: string
-        description: ID is the unique id of the bottle.
-        example: 123abc
+        description: Name of bottle
+        example: Blue's Cuvee
+        maxLength: 100
       rating:
         type: integer
-        description: Vintage of bottle
-        example: 1941
-        minimum: 1900
-        maximum: 2020
+        description: Rating of bottle from 1 (worst) to 5 (best)
+        example: 2
+        minimum: 1
+        maximum: 5
       vintage:
         type: integer
         description: Vintage of bottle
@@ -676,10 +681,11 @@ definitions:
         varietal: Syrah
       - percentage: 99
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 1924
+      name: Blue's Cuvee
+      rating: 1
       vintage: 1987
       winery:
         name: Longoria
@@ -704,10 +710,11 @@ definitions:
         varietal: Syrah
       - percentage: 82
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 2002
+      name: Blue's Cuvee
+      rating: 3
       vintage: 1941
       winery:
         name: Longoria
@@ -718,10 +725,11 @@ definitions:
         varietal: Syrah
       - percentage: 82
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 2002
+      name: Blue's Cuvee
+      rating: 3
       vintage: 1941
       winery:
         name: Longoria
@@ -732,10 +740,11 @@ definitions:
         varietal: Syrah
       - percentage: 82
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 2002
+      name: Blue's Cuvee
+      rating: 3
       vintage: 1941
       winery:
         name: Longoria
@@ -755,22 +764,25 @@ definitions:
           varietal: Syrah
       description:
         type: string
-        description: ID is the unique id of the bottle.
-        example: 123abc
+        description: Description of bottle
+        example: Red wine blend with an emphasis on the Cabernet Franc grape and including
+          other Bordeaux grape varietals and some Syrah
+        maxLength: 2000
       id:
         type: string
         description: ID is the unique id of the bottle.
         example: 123abc
       name:
         type: string
-        description: ID is the unique id of the bottle.
-        example: 123abc
+        description: Name of bottle
+        example: Blue's Cuvee
+        maxLength: 100
       rating:
         type: integer
-        description: Vintage of bottle
-        example: 1902
-        minimum: 1900
-        maximum: 2020
+        description: Rating of bottle from 1 (worst) to 5 (best)
+        example: 3
+        minimum: 1
+        maximum: 5
       vintage:
         type: integer
         description: Vintage of bottle
@@ -791,10 +803,11 @@ definitions:
         varietal: Syrah
       - percentage: 82
         varietal: Syrah
-      description: 123abc
+      description: Red wine blend with an emphasis on the Cabernet Franc grape and
+        including other Bordeaux grape varietals and some Syrah
       id: 123abc
-      name: 123abc
-      rating: 1905
+      name: Blue's Cuvee
+      rating: 2
       vintage: 1933
       winery:
         name: Longoria
@@ -813,15 +826,16 @@ definitions:
         example: 123abc
       name:
         type: string
-        description: ID is the unique id of the bottle.
-        example: 123abc
+        description: Name of bottle
+        example: Blue's Cuvee
+        maxLength: 100
       winery:
         $ref: '#/definitions/WineryResponseTiny'
     description: A StoredBottle describes a bottle retrieved by the storage service.
       (tiny view) (default view)
     example:
       id: 123abc
-      name: 123abc
+      name: Blue's Cuvee
       winery:
         name: Longoria
     required:
@@ -834,26 +848,29 @@ definitions:
     properties:
       country:
         type: string
-        description: Name of winery
-        example: Longoria
+        description: Country of winery
+        example: USA
+        pattern: '[a-zA-Z ''\.]+'
       name:
         type: string
         description: Name of winery
         example: Longoria
       region:
         type: string
-        description: Name of winery
-        example: Longoria
+        description: Region of winery
+        example: Central Coast, California
+        pattern: '[a-zA-Z ''\.]+'
       url:
         type: string
-        description: Name of winery
-        example: Longoria
+        description: Winery website URL
+        example: http://www.longoriawine.com/
+        pattern: ^(https?|ftp)://[^\s/$.?#].[^\s]*$
     description: WineryRequestBody result type (default view)
     example:
-      country: Longoria
+      country: USA
       name: Longoria
-      region: Longoria
-      url: Longoria
+      region: Central Coast, California
+      url: http://www.longoriawine.com/
     required:
     - name
     - region
