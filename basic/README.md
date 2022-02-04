@@ -1,7 +1,7 @@
 # Calc Service
 
 This example provides a basic overview of Goa. It consists of a single
-service that implements an endpoints that adds two integers and returns
+service that implements an endpoints that multiplies two integers and returns
 the result (exciting I know).
 
 The example shows how to generate server and client code that supports
@@ -9,14 +9,14 @@ both the HTTP and gRPC transports.
 
 ## Design
 
-The `calc` service provides a single method `add` which takes the integer
+The `calc` service provides a single method `multiply` which takes the integer
 operands as the payload and returns the integer sum as the result.
 
 ```
 // design/design.go
 
 var _ = Service("calc", func() {
-  Method("add", func() {
+  Method("multiply", func() {
     Payload(func() {
       Attribute("a", Int, "Left operand", func() {
         Meta("rpc:tag", "1")
@@ -29,13 +29,13 @@ var _ = Service("calc", func() {
 })
 ```
 
-The design then describes how the `add` method must be served via HTTP and gRPC
+The design then describes how the `multiply` method must be served via HTTP and gRPC
 transports.
 
 ```
     // HTTP describes the HTTP tranport mapping.
     HTTP(func() {
-      GET("/add/{a}/{b}")
+      GET("/multiply/{a}/{b}")
       Response(StatusOK)
     })
 
@@ -54,7 +54,7 @@ specification using the HTTP file server.
 
 ## Generating Code
 
-`goa gen` command generates the boilerplate code needed to serve the `add`
+`goa gen` command generates the boilerplate code needed to serve the `multiply`
 method via HTTP and gRPC transports.
 
 ```
@@ -147,7 +147,7 @@ $ goa example goa.design/examples/basic/design -o $GOPATH/src/goa.design/example
 logic.
 
 ```
-func (s *calcSvc) Add(ctx context.Context, p *calcsvc.AddPayload) (int, error) {
+func (s *calcSvc) Multiply(ctx context.Context, p *calcsvc.MultiplyPayload) (int, error) {
   return p.A + p.B, nil
 }
 ```
@@ -165,20 +165,20 @@ $ go build ./cmd/calc && go build ./cmd/calc-cli
 # Run the server
 
 $ ./calc
-[calc] 12:27:57 HTTP "Add" mounted on GET /add/{a}/{b}
+[calc] 12:27:57 HTTP "Multiply" mounted on GET /multiply/{a}/{b}
 [calc] 12:27:57 HTTP "../../gen/http/openapi.json" mounted on GET /swagger.json
-[calc] 12:27:57 serving gRPC method calc.Calc/Add
+[calc] 12:27:57 serving gRPC method calc.Calc/Multiply
 [calc] 12:27:57 HTTP server listening on "localhost:8000"
 [calc] 12:27:57 gRPC server listening on "localhost:8080"
 
 # Run the client
 
 # Contact HTTP server
-$ ./calc-cli --url="http://localhost:8000" calc add --a 1 --b 2
+$ ./calc-cli --url="http://localhost:8000" calc multiply --a 1 --b 2
 3
 
 # Contact gRPC server
-$ ./calc-cli --url="grpc://localhost:8080" calc add --message '{"a": 1, "b": 2}'
+$ ./calc-cli --url="grpc://localhost:8080" calc multiply --message '{"a": 1, "b": 2}'
 3
 ```
 

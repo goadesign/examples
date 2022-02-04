@@ -18,35 +18,35 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// BuildAddFunc builds the remote method to invoke for "calc" service "add"
-// endpoint.
-func BuildAddFunc(grpccli calcpb.CalcClient, cliopts ...grpc.CallOption) goagrpc.RemoteFunc {
+// BuildMultiplyFunc builds the remote method to invoke for "calc" service
+// "multiply" endpoint.
+func BuildMultiplyFunc(grpccli calcpb.CalcClient, cliopts ...grpc.CallOption) goagrpc.RemoteFunc {
 	return func(ctx context.Context, reqpb interface{}, opts ...grpc.CallOption) (interface{}, error) {
 		for _, opt := range cliopts {
 			opts = append(opts, opt)
 		}
 		if reqpb != nil {
-			return grpccli.Add(ctx, reqpb.(*calcpb.AddRequest), opts...)
+			return grpccli.Multiply(ctx, reqpb.(*calcpb.MultiplyRequest), opts...)
 		}
-		return grpccli.Add(ctx, &calcpb.AddRequest{}, opts...)
+		return grpccli.Multiply(ctx, &calcpb.MultiplyRequest{}, opts...)
 	}
 }
 
-// EncodeAddRequest encodes requests sent to calc add endpoint.
-func EncodeAddRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
-	payload, ok := v.(*calc.AddPayload)
+// EncodeMultiplyRequest encodes requests sent to calc multiply endpoint.
+func EncodeMultiplyRequest(ctx context.Context, v interface{}, md *metadata.MD) (interface{}, error) {
+	payload, ok := v.(*calc.MultiplyPayload)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("calc", "add", "*calc.AddPayload", v)
+		return nil, goagrpc.ErrInvalidType("calc", "multiply", "*calc.MultiplyPayload", v)
 	}
-	return NewAddRequest(payload), nil
+	return NewMultiplyRequest(payload), nil
 }
 
-// DecodeAddResponse decodes responses from the calc add endpoint.
-func DecodeAddResponse(ctx context.Context, v interface{}, hdr, trlr metadata.MD) (interface{}, error) {
-	message, ok := v.(*calcpb.AddResponse)
+// DecodeMultiplyResponse decodes responses from the calc multiply endpoint.
+func DecodeMultiplyResponse(ctx context.Context, v interface{}, hdr, trlr metadata.MD) (interface{}, error) {
+	message, ok := v.(*calcpb.MultiplyResponse)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("calc", "add", "*calcpb.AddResponse", v)
+		return nil, goagrpc.ErrInvalidType("calc", "multiply", "*calcpb.MultiplyResponse", v)
 	}
-	res := NewAddResult(message)
+	res := NewMultiplyResult(message)
 	return res, nil
 }

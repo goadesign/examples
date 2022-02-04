@@ -18,7 +18,7 @@ func NewCalc(logger *log.Logger) calcsvc.Service {
 	return &calcSvc{logger}
 }
 
-// Add implements add.
-func (s *calcSvc) Add(ctx context.Context, p *calcsvc.AddPayload) (int, error) {
-	return p.A + p.B, nil
+// Multiply implements multiply.
+func (s *calcSvc) Multiply(ctx context.Context, p *calcsvc.MultiplyPayload) (int, error) {
+	return p.A * p.B, nil
 }
