@@ -17,9 +17,9 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// EncodeAddResponse returns an encoder for responses returned by the calc add
-// endpoint.
-func EncodeAddResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+// EncodeMultiplyResponse returns an encoder for responses returned by the calc
+// multiply endpoint.
+func EncodeMultiplyResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res, _ := v.(int)
 		enc := encoder(ctx, w)
@@ -29,9 +29,9 @@ func EncodeAddResponse(encoder func(context.Context, http.ResponseWriter) goahtt
 	}
 }
 
-// DecodeAddRequest returns a decoder for requests sent to the calc add
-// endpoint.
-func DecodeAddRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+// DecodeMultiplyRequest returns a decoder for requests sent to the calc
+// multiply endpoint.
+func DecodeMultiplyRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
 			a   int
@@ -59,7 +59,7 @@ func DecodeAddRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Dec
 		if err != nil {
 			return nil, err
 		}
-		payload := NewAddPayload(a, b)
+		payload := NewMultiplyPayload(a, b)
 
 		return payload, nil
 	}

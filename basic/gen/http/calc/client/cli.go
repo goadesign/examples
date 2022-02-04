@@ -15,13 +15,14 @@ import (
 	calc "goa.design/examples/basic/gen/calc"
 )
 
-// BuildAddPayload builds the payload for the calc add endpoint from CLI flags.
-func BuildAddPayload(calcAddA string, calcAddB string) (*calc.AddPayload, error) {
+// BuildMultiplyPayload builds the payload for the calc multiply endpoint from
+// CLI flags.
+func BuildMultiplyPayload(calcMultiplyA string, calcMultiplyB string) (*calc.MultiplyPayload, error) {
 	var err error
 	var a int
 	{
 		var v int64
-		v, err = strconv.ParseInt(calcAddA, 10, 64)
+		v, err = strconv.ParseInt(calcMultiplyA, 10, 64)
 		a = int(v)
 		if err != nil {
 			return nil, fmt.Errorf("invalid value for a, must be INT")
@@ -30,13 +31,13 @@ func BuildAddPayload(calcAddA string, calcAddB string) (*calc.AddPayload, error)
 	var b int
 	{
 		var v int64
-		v, err = strconv.ParseInt(calcAddB, 10, 64)
+		v, err = strconv.ParseInt(calcMultiplyB, 10, 64)
 		b = int(v)
 		if err != nil {
 			return nil, fmt.Errorf("invalid value for b, must be INT")
 		}
 	}
-	v := &calc.AddPayload{}
+	v := &calc.MultiplyPayload{}
 	v.A = a
 	v.B = b
 

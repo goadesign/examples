@@ -16,20 +16,20 @@ import (
 
 // Client is the "calc" service client.
 type Client struct {
-	AddEndpoint goa.Endpoint
+	MultiplyEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "calc" service client given the endpoints.
-func NewClient(add goa.Endpoint) *Client {
+func NewClient(multiply goa.Endpoint) *Client {
 	return &Client{
-		AddEndpoint: add,
+		MultiplyEndpoint: multiply,
 	}
 }
 
-// Add calls the "add" endpoint of the "calc" service.
-func (c *Client) Add(ctx context.Context, p *AddPayload) (res int, err error) {
+// Multiply calls the "multiply" endpoint of the "calc" service.
+func (c *Client) Multiply(ctx context.Context, p *MultiplyPayload) (res int, err error) {
 	var ires interface{}
-	ires, err = c.AddEndpoint(ctx, p)
+	ires, err = c.MultiplyEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

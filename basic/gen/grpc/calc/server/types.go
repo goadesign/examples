@@ -13,20 +13,20 @@ import (
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 )
 
-// NewAddPayload builds the payload of the "add" endpoint of the "calc" service
-// from the gRPC request type.
-func NewAddPayload(message *calcpb.AddRequest) *calc.AddPayload {
-	v := &calc.AddPayload{
+// NewMultiplyPayload builds the payload of the "multiply" endpoint of the
+// "calc" service from the gRPC request type.
+func NewMultiplyPayload(message *calcpb.MultiplyRequest) *calc.MultiplyPayload {
+	v := &calc.MultiplyPayload{
 		A: int(message.A),
 		B: int(message.B),
 	}
 	return v
 }
 
-// NewAddResponse builds the gRPC response type from the result of the "add"
-// endpoint of the "calc" service.
-func NewAddResponse(result int) *calcpb.AddResponse {
-	message := &calcpb.AddResponse{}
+// NewMultiplyResponse builds the gRPC response type from the result of the
+// "multiply" endpoint of the "calc" service.
+func NewMultiplyResponse(result int) *calcpb.MultiplyResponse {
+	message := &calcpb.MultiplyResponse{}
 	message.Field = int32(result)
 	return message
 }

@@ -24,13 +24,13 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `calc add
+	return `calc multiply
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` calc add --a 5952269320165453119 --b 1828520165265779840` + "\n" +
+	return os.Args[0] + ` calc multiply --a 5952269320165453119 --b 1828520165265779840` + "\n" +
 		""
 }
 
@@ -46,12 +46,12 @@ func ParseEndpoint(
 	var (
 		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
 
-		calcAddFlags = flag.NewFlagSet("add", flag.ExitOnError)
-		calcAddAFlag = calcAddFlags.String("a", "REQUIRED", "Left operand")
-		calcAddBFlag = calcAddFlags.String("b", "REQUIRED", "Right operand")
+		calcMultiplyFlags = flag.NewFlagSet("multiply", flag.ExitOnError)
+		calcMultiplyAFlag = calcMultiplyFlags.String("a", "REQUIRED", "Left operand")
+		calcMultiplyBFlag = calcMultiplyFlags.String("b", "REQUIRED", "Right operand")
 	)
 	calcFlags.Usage = calcUsage
-	calcAddFlags.Usage = calcAddUsage
+	calcMultiplyFlags.Usage = calcMultiplyUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -87,8 +87,8 @@ func ParseEndpoint(
 		switch svcn {
 		case "calc":
 			switch epn {
-			case "add":
-				epf = calcAddFlags
+			case "multiply":
+				epf = calcMultiplyFlags
 
 			}
 
@@ -115,9 +115,9 @@ func ParseEndpoint(
 		case "calc":
 			c := calcc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
-			case "add":
-				endpoint = c.Add()
-				data, err = calcc.BuildAddPayload(*calcAddAFlag, *calcAddBFlag)
+			case "multiply":
+				endpoint = c.Multiply()
+				data, err = calcc.BuildMultiplyPayload(*calcMultiplyAFlag, *calcMultiplyBFlag)
 			}
 		}
 	}
@@ -135,20 +135,20 @@ Usage:
     %[1]s [globalflags] calc COMMAND [flags]
 
 COMMAND:
-    add: Add implements add.
+    multiply: Multiply implements multiply.
 
 Additional help:
     %[1]s calc COMMAND --help
 `, os.Args[0])
 }
-func calcAddUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] calc add -a INT -b INT
+func calcMultiplyUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] calc multiply -a INT -b INT
 
-Add implements add.
+Multiply implements multiply.
     -a INT: Left operand
     -b INT: Right operand
 
 Example:
-    %[1]s calc add --a 5952269320165453119 --b 1828520165265779840
+    %[1]s calc multiply --a 5952269320165453119 --b 1828520165265779840
 `, os.Args[0])
 }
