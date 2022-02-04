@@ -7,7 +7,7 @@ import (
 // API describes the global properties of the API server.
 var _ = API("calc", func() {
 	Title("Calculator Service")
-	Description("HTTP service for adding numbers, a goa teaser")
+	Description("HTTP service for multiplying numbers, a goa teaser")
 
 	// Server describes a single process listening for client requests. The DSL
 	// defines the set of services that the server hosts as well as hosts details.
