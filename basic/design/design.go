@@ -48,7 +48,7 @@ var _ = Service("calc", func() {
 	Description("The calc service performs operations on numbers")
 
 	// Method describes a service method (endpoint)
-	Method("add", func() {
+	Method("multiply", func() {
 		// Payload describes the method payload.
 		// Here the payload is an object that consists of two fields.
 		Payload(func() {
@@ -68,7 +68,7 @@ var _ = Service("calc", func() {
 		HTTP(func() {
 			// Requests to the service consist of HTTP GET requests.
 			// The payload fields are encoded as path parameters.
-			GET("/add/{a}/{b}")
+			GET("/multiply/{a}/{b}")
 			// Responses use a "200 OK" HTTP status.
 			// The result is encoded in the response body.
 			Response(StatusOK)

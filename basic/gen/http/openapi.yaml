@@ -13,12 +13,12 @@ produces:
 - application/xml
 - application/gob
 paths:
-  /add/{a}/{b}:
+  /multiply/{a}/{b}:
     get:
       tags:
       - calc
-      summary: add calc
-      operationId: calc#add
+      summary: multiply calc
+      operationId: calc#multiply
       parameters:
       - name: a
         in: path

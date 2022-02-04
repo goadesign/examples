@@ -12,7 +12,7 @@ import (
 	"fmt"
 )
 
-// AddCalcPath returns the URL path to the calc service add HTTP endpoint.
-func AddCalcPath(a int, b int) string {
-	return fmt.Sprintf("/add/%v/%v", a, b)
+// MultiplyCalcPath returns the URL path to the calc service multiply HTTP endpoint.
+func MultiplyCalcPath(a int, b int) string {
+	return fmt.Sprintf("/multiply/%v/%v", a, b)
 }

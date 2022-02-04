@@ -16,26 +16,26 @@ import (
 
 // Endpoints wraps the "calc" service endpoints.
 type Endpoints struct {
-	Add goa.Endpoint
+	Multiply goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "calc" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		Add: NewAddEndpoint(s),
+		Multiply: NewMultiplyEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "calc" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
-	e.Add = m(e.Add)
+	e.Multiply = m(e.Multiply)
 }
 
-// NewAddEndpoint returns an endpoint function that calls the method "add" of
-// service "calc".
-func NewAddEndpoint(s Service) goa.Endpoint {
+// NewMultiplyEndpoint returns an endpoint function that calls the method
+// "multiply" of service "calc".
+func NewMultiplyEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		p := req.(*AddPayload)
-		return s.Add(ctx, p)
+		p := req.(*MultiplyPayload)
+		return s.Multiply(ctx, p)
 	}
 }

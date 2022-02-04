@@ -12,9 +12,9 @@ import (
 	calc "goa.design/examples/basic/gen/calc"
 )
 
-// NewAddPayload builds a calc service add endpoint payload.
-func NewAddPayload(a int, b int) *calc.AddPayload {
-	v := &calc.AddPayload{}
+// NewMultiplyPayload builds a calc service multiply endpoint payload.
+func NewMultiplyPayload(a int, b int) *calc.MultiplyPayload {
+	v := &calc.MultiplyPayload{}
 	v.A = a
 	v.B = b
 

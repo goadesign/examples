@@ -23,13 +23,13 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `calc add
+	return `calc multiply
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` calc add --message '{
+	return os.Args[0] + ` calc multiply --message '{
       "a": 8399553735696626949,
       "b": 360622074634248926
    }'` + "\n" +
@@ -42,11 +42,11 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 	var (
 		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
 
-		calcAddFlags       = flag.NewFlagSet("add", flag.ExitOnError)
-		calcAddMessageFlag = calcAddFlags.String("message", "", "")
+		calcMultiplyFlags       = flag.NewFlagSet("multiply", flag.ExitOnError)
+		calcMultiplyMessageFlag = calcMultiplyFlags.String("message", "", "")
 	)
 	calcFlags.Usage = calcUsage
-	calcAddFlags.Usage = calcAddUsage
+	calcMultiplyFlags.Usage = calcMultiplyUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -82,8 +82,8 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 		switch svcn {
 		case "calc":
 			switch epn {
-			case "add":
-				epf = calcAddFlags
+			case "multiply":
+				epf = calcMultiplyFlags
 
 			}
 
@@ -110,9 +110,9 @@ func ParseEndpoint(cc *grpc.ClientConn, opts ...grpc.CallOption) (goa.Endpoint, 
 		case "calc":
 			c := calcc.NewClient(cc, opts...)
 			switch epn {
-			case "add":
-				endpoint = c.Add()
-				data, err = calcc.BuildAddPayload(*calcAddMessageFlag)
+			case "multiply":
+				endpoint = c.Multiply()
+				data, err = calcc.BuildMultiplyPayload(*calcMultiplyMessageFlag)
 			}
 		}
 	}
@@ -130,20 +130,20 @@ Usage:
     %[1]s [globalflags] calc COMMAND [flags]
 
 COMMAND:
-    add: Add implements add.
+    multiply: Multiply implements multiply.
 
 Additional help:
     %[1]s calc COMMAND --help
 `, os.Args[0])
 }
-func calcAddUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] calc add -message JSON
+func calcMultiplyUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] calc multiply -message JSON
 
-Add implements add.
+Multiply implements multiply.
     -message JSON: 
 
 Example:
-    %[1]s calc add --message '{
+    %[1]s calc multiply --message '{
       "a": 8399553735696626949,
       "b": 360622074634248926
    }'

@@ -16,19 +16,20 @@ import (
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 )
 
-// BuildAddPayload builds the payload for the calc add endpoint from CLI flags.
-func BuildAddPayload(calcAddMessage string) (*calc.AddPayload, error) {
+// BuildMultiplyPayload builds the payload for the calc multiply endpoint from
+// CLI flags.
+func BuildMultiplyPayload(calcMultiplyMessage string) (*calc.MultiplyPayload, error) {
 	var err error
-	var message calcpb.AddRequest
+	var message calcpb.MultiplyRequest
 	{
-		if calcAddMessage != "" {
-			err = json.Unmarshal([]byte(calcAddMessage), &message)
+		if calcMultiplyMessage != "" {
+			err = json.Unmarshal([]byte(calcMultiplyMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 8399553735696626949,\n      \"b\": 360622074634248926\n   }'")
 			}
 		}
 	}
-	v := &calc.AddPayload{
+	v := &calc.MultiplyPayload{
 		A: int(message.A),
 		B: int(message.B),
 	}

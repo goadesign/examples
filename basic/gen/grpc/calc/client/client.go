@@ -31,13 +31,13 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 	}
 }
 
-// Add calls the "Add" function in calcpb.CalcClient interface.
-func (c *Client) Add() goa.Endpoint {
+// Multiply calls the "Multiply" function in calcpb.CalcClient interface.
+func (c *Client) Multiply() goa.Endpoint {
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
 		inv := goagrpc.NewInvoker(
-			BuildAddFunc(c.grpccli, c.opts...),
-			EncodeAddRequest,
-			DecodeAddResponse)
+			BuildMultiplyFunc(c.grpccli, c.opts...),
+			EncodeMultiplyRequest,
+			DecodeMultiplyResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
 			return nil, goa.Fault(err.Error())

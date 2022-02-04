@@ -19,7 +19,7 @@ import (
 
 // Server implements the calcpb.CalcServer interface.
 type Server struct {
-	AddH goagrpc.UnaryHandler
+	MultiplyH goagrpc.UnaryHandler
 	calcpb.UnimplementedCalcServer
 }
 
@@ -32,26 +32,26 @@ type ErrorNamer interface {
 // New instantiates the server struct with the calc service endpoints.
 func New(e *calc.Endpoints, uh goagrpc.UnaryHandler) *Server {
 	return &Server{
-		AddH: NewAddHandler(e.Add, uh),
+		MultiplyH: NewMultiplyHandler(e.Multiply, uh),
 	}
 }
 
-// NewAddHandler creates a gRPC handler which serves the "calc" service "add"
-// endpoint.
-func NewAddHandler(endpoint goa.Endpoint, h goagrpc.UnaryHandler) goagrpc.UnaryHandler {
+// NewMultiplyHandler creates a gRPC handler which serves the "calc" service
+// "multiply" endpoint.
+func NewMultiplyHandler(endpoint goa.Endpoint, h goagrpc.UnaryHandler) goagrpc.UnaryHandler {
 	if h == nil {
-		h = goagrpc.NewUnaryHandler(endpoint, DecodeAddRequest, EncodeAddResponse)
+		h = goagrpc.NewUnaryHandler(endpoint, DecodeMultiplyRequest, EncodeMultiplyResponse)
 	}
 	return h
 }
 
-// Add implements the "Add" method in calcpb.CalcServer interface.
-func (s *Server) Add(ctx context.Context, message *calcpb.AddRequest) (*calcpb.AddResponse, error) {
-	ctx = context.WithValue(ctx, goa.MethodKey, "add")
+// Multiply implements the "Multiply" method in calcpb.CalcServer interface.
+func (s *Server) Multiply(ctx context.Context, message *calcpb.MultiplyRequest) (*calcpb.MultiplyResponse, error) {
+	ctx = context.WithValue(ctx, goa.MethodKey, "multiply")
 	ctx = context.WithValue(ctx, goa.ServiceKey, "calc")
-	resp, err := s.AddH.Handle(ctx, message)
+	resp, err := s.MultiplyH.Handle(ctx, message)
 	if err != nil {
 		return nil, goagrpc.EncodeError(err)
 	}
-	return resp.(*calcpb.AddResponse), nil
+	return resp.(*calcpb.MultiplyResponse), nil
 }
