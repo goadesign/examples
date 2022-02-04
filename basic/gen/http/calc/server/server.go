@@ -20,7 +20,7 @@ import (
 // Server lists the calc service endpoint HTTP handlers.
 type Server struct {
 	Mounts       []*MountPoint
-	Add          http.Handler
+	Multiply     http.Handler
 	Openapi3JSON http.Handler
 }
 
@@ -61,10 +61,10 @@ func New(
 	}
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Add", "GET", "/add/{a}/{b}"},
+			{"Multiply", "GET", "/multiply/{a}/{b}"},
 			{"openapi3.json", "GET", "/openapi.json"},
 		},
-		Add:          NewAddHandler(e.Add, mux, decoder, encoder, errhandler, formatter),
+		Multiply:     NewMultiplyHandler(e.Multiply, mux, decoder, encoder, errhandler, formatter),
 		Openapi3JSON: http.FileServer(fileSystemOpenapi3JSON),
 	}
 }
@@ -74,12 +74,12 @@ func (s *Server) Service() string { return "calc" }
 
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
-	s.Add = m(s.Add)
+	s.Multiply = m(s.Multiply)
 }
 
 // Mount configures the mux to serve the calc endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
-	MountAddHandler(mux, h.Add)
+	MountMultiplyHandler(mux, h.Multiply)
 	MountOpenapi3JSON(mux, goahttp.Replace("", "/openapi3.json", h.Openapi3JSON))
 }
 
@@ -88,21 +88,21 @@ func (s *Server) Mount(mux goahttp.Muxer) {
 	Mount(mux, s)
 }
 
-// MountAddHandler configures the mux to serve the "calc" service "add"
-// endpoint.
-func MountAddHandler(mux goahttp.Muxer, h http.Handler) {
+// MountMultiplyHandler configures the mux to serve the "calc" service
+// "multiply" endpoint.
+func MountMultiplyHandler(mux goahttp.Muxer, h http.Handler) {
 	f, ok := h.(http.HandlerFunc)
 	if !ok {
 		f = func(w http.ResponseWriter, r *http.Request) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("GET", "/add/{a}/{b}", f)
+	mux.Handle("GET", "/multiply/{a}/{b}", f)
 }
 
-// NewAddHandler creates a HTTP handler which loads the HTTP request and calls
-// the "calc" service "add" endpoint.
-func NewAddHandler(
+// NewMultiplyHandler creates a HTTP handler which loads the HTTP request and
+// calls the "calc" service "multiply" endpoint.
+func NewMultiplyHandler(
 	endpoint goa.Endpoint,
 	mux goahttp.Muxer,
 	decoder func(*http.Request) goahttp.Decoder,
@@ -111,13 +111,13 @@ func NewAddHandler(
 	formatter func(err error) goahttp.Statuser,
 ) http.Handler {
 	var (
-		decodeRequest  = DecodeAddRequest(mux, decoder)
-		encodeResponse = EncodeAddResponse(encoder)
+		decodeRequest  = DecodeMultiplyRequest(mux, decoder)
+		encodeResponse = EncodeMultiplyResponse(encoder)
 		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
-		ctx = context.WithValue(ctx, goa.MethodKey, "add")
+		ctx = context.WithValue(ctx, goa.MethodKey, "multiply")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "calc")
 		payload, err := decodeRequest(r)
 		if err != nil {

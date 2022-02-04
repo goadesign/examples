@@ -17,30 +17,32 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// EncodeAddResponse encodes responses from the "calc" service "add" endpoint.
-func EncodeAddResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
+// EncodeMultiplyResponse encodes responses from the "calc" service "multiply"
+// endpoint.
+func EncodeMultiplyResponse(ctx context.Context, v interface{}, hdr, trlr *metadata.MD) (interface{}, error) {
 	result, ok := v.(int)
 	if !ok {
-		return nil, goagrpc.ErrInvalidType("calc", "add", "int", v)
+		return nil, goagrpc.ErrInvalidType("calc", "multiply", "int", v)
 	}
-	resp := NewAddResponse(result)
+	resp := NewMultiplyResponse(result)
 	return resp, nil
 }
 
-// DecodeAddRequest decodes requests sent to "calc" service "add" endpoint.
-func DecodeAddRequest(ctx context.Context, v interface{}, md metadata.MD) (interface{}, error) {
+// DecodeMultiplyRequest decodes requests sent to "calc" service "multiply"
+// endpoint.
+func DecodeMultiplyRequest(ctx context.Context, v interface{}, md metadata.MD) (interface{}, error) {
 	var (
-		message *calcpb.AddRequest
+		message *calcpb.MultiplyRequest
 		ok      bool
 	)
 	{
-		if message, ok = v.(*calcpb.AddRequest); !ok {
-			return nil, goagrpc.ErrInvalidType("calc", "add", "*calcpb.AddRequest", v)
+		if message, ok = v.(*calcpb.MultiplyRequest); !ok {
+			return nil, goagrpc.ErrInvalidType("calc", "multiply", "*calcpb.MultiplyRequest", v)
 		}
 	}
-	var payload *calc.AddPayload
+	var payload *calc.MultiplyPayload
 	{
-		payload = NewAddPayload(message)
+		payload = NewMultiplyPayload(message)
 	}
 	return payload, nil
 }
