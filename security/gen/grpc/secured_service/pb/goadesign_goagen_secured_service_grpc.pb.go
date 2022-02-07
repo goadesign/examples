@@ -217,5 +217,5 @@ var SecuredService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "secured_service.proto",
+	Metadata: "goadesign_goagen_secured_service.proto",
 }

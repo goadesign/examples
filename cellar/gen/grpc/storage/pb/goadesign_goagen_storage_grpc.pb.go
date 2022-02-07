@@ -335,5 +335,5 @@ var Storage_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "storage.proto",
+	Metadata: "goadesign_goagen_storage.proto",
 }
