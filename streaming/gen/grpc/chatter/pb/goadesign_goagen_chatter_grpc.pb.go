@@ -444,5 +444,5 @@ var Chatter_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "chatter.proto",
+	Metadata: "goadesign_goagen_chatter.proto",
 }

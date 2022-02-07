@@ -18,8 +18,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CalcClient interface {
-	// Divide implements divide.
-	Divide(ctx context.Context, in *DivideRequest, opts ...grpc.CallOption) (*DivideResponse, error)
+	// Multiply implements multiply.
+	Multiply(ctx context.Context, in *MultiplyRequest, opts ...grpc.CallOption) (*MultiplyResponse, error)
 }
 
 type calcClient struct {
@@ -30,9 +30,9 @@ func NewCalcClient(cc grpc.ClientConnInterface) CalcClient {
 	return &calcClient{cc}
 }
 
-func (c *calcClient) Divide(ctx context.Context, in *DivideRequest, opts ...grpc.CallOption) (*DivideResponse, error) {
-	out := new(DivideResponse)
-	err := c.cc.Invoke(ctx, "/calc.Calc/Divide", in, out, opts...)
+func (c *calcClient) Multiply(ctx context.Context, in *MultiplyRequest, opts ...grpc.CallOption) (*MultiplyResponse, error) {
+	out := new(MultiplyResponse)
+	err := c.cc.Invoke(ctx, "/calc.Calc/Multiply", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +43,8 @@ func (c *calcClient) Divide(ctx context.Context, in *DivideRequest, opts ...grpc
 // All implementations must embed UnimplementedCalcServer
 // for forward compatibility
 type CalcServer interface {
-	// Divide implements divide.
-	Divide(context.Context, *DivideRequest) (*DivideResponse, error)
+	// Multiply implements multiply.
+	Multiply(context.Context, *MultiplyRequest) (*MultiplyResponse, error)
 	mustEmbedUnimplementedCalcServer()
 }
 
@@ -52,8 +52,8 @@ type CalcServer interface {
 type UnimplementedCalcServer struct {
 }
 
-func (UnimplementedCalcServer) Divide(context.Context, *DivideRequest) (*DivideResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Divide not implemented")
+func (UnimplementedCalcServer) Multiply(context.Context, *MultiplyRequest) (*MultiplyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Multiply not implemented")
 }
 func (UnimplementedCalcServer) mustEmbedUnimplementedCalcServer() {}
 
@@ -68,20 +68,20 @@ func RegisterCalcServer(s grpc.ServiceRegistrar, srv CalcServer) {
 	s.RegisterService(&Calc_ServiceDesc, srv)
 }
 
-func _Calc_Divide_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DivideRequest)
+func _Calc_Multiply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MultiplyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CalcServer).Divide(ctx, in)
+		return srv.(CalcServer).Multiply(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/calc.Calc/Divide",
+		FullMethod: "/calc.Calc/Multiply",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalcServer).Divide(ctx, req.(*DivideRequest))
+		return srv.(CalcServer).Multiply(ctx, req.(*MultiplyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -94,10 +94,10 @@ var Calc_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CalcServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Divide",
-			Handler:    _Calc_Divide_Handler,
+			MethodName: "Multiply",
+			Handler:    _Calc_Multiply_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "calc.proto",
+	Metadata: "goadesign_goagen_calc.proto",
 }

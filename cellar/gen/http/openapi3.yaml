@@ -101,14 +101,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoCriteria'
+                type: string
+                example: Nemo omnis quae suscipit laudantium quis sapiente.
               example: Nemo omnis quae suscipit laudantium quis sapiente.
         "404":
           description: Not Found response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoCriteria'
+                type: string
+                example: Ea est.
               example: Ea est.
   /storage:
     get:
@@ -180,8 +182,8 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Modi laudantium corrupti et et.
-              example: Dignissimos consequatur ad officia.
+                example: Cumque consequuntur dolorum eos.
+              example: Aut enim eaque repellat quidem.
   /storage/{id}:
     delete:
       tags:
@@ -197,8 +199,8 @@ paths:
         schema:
           type: string
           description: ID of bottle to remove
-          example: Ea voluptates sequi nam temporibus exercitationem nulla.
-        example: Sed itaque iste quibusdam eius officia.
+          example: Eaque dignissimos qui ea sit aut.
+        example: Pariatur aut qui quia deleniti aut consequatur.
       responses:
         "204":
           description: No Content response.
@@ -216,7 +218,7 @@ paths:
         schema:
           type: string
           description: View to render
-          example: default
+          example: tiny
           enum:
           - default
           - tiny
@@ -228,8 +230,8 @@ paths:
         schema:
           type: string
           description: ID of bottle to show
-          example: Deleniti aut.
-        example: Reprehenderit doloremque.
+          example: Aperiam amet eum officiis eligendi.
+        example: Facere quaerat dicta corporis.
       responses:
         "200":
           description: OK response.
@@ -375,6 +377,21 @@ paths:
                 name: Longoria
                 region: Central Coast, California
                 url: http://www.longoriawine.com/
+            - composition:
+              - percentage: 92
+                varietal: Syrah
+              - percentage: 92
+                varietal: Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape
+                and including other Bordeaux grape varietals and some Syrah
+              name: Blue's Cuvee
+              rating: 1
+              vintage: 1984
+              winery:
+                country: USA
+                name: Longoria
+                region: Central Coast, California
+                url: http://www.longoriawine.com/
       responses:
         "200":
           description: OK response.
@@ -384,17 +401,15 @@ paths:
                 type: array
                 items:
                   type: string
-                  example: Sed et nulla.
+                  example: Eius voluptatem.
                 example:
-                - Aperiam amet eum officiis eligendi.
-                - Facere quaerat dicta corporis.
-                - Aut enim eaque repellat quidem.
-                - Eaque dignissimos qui ea sit aut.
+                - Laudantium corrupti et.
+                - Odit modi.
               example:
-              - Nihil doloremque magnam qui aut sed.
-              - Sunt earum hic aperiam.
-              - Dolorum et non.
-              - A pariatur.
+              - Dignissimos consequatur ad officia.
+              - Ea voluptates sequi nam temporibus exercitationem nulla.
+              - Sed itaque iste quibusdam eius officia.
+              - Dolor fugit nihil.
   /storage/multi_update:
     put:
       tags:
@@ -415,17 +430,16 @@ paths:
           type: array
           items:
             type: string
-            example: Autem adipisci ut laboriosam porro.
+            example: Magnam qui aut sed distinctio sunt.
           description: IDs of the bottles to be updated
           example:
-          - Ducimus et culpa et.
-          - Eum quis dolor mollitia est.
-          - Rerum dignissimos est non est ipsam.
-          - Hic qui iusto nobis dolores voluptate odit.
+          - Aperiam quaerat dolorum et.
+          - Aspernatur a pariatur nesciunt autem adipisci ut.
+          - Porro soluta sapiente ducimus et.
         example:
-        - Sit necessitatibus velit numquam dolor esse.
-        - Nisi temporibus architecto voluptas.
-        - Harum perferendis est saepe.
+        - Fugiat eum.
+        - Dolor mollitia est vel.
+        - Dignissimos est non.
       requestBody:
         required: true
         content:
@@ -554,7 +568,7 @@ components:
         vintage:
           type: integer
           description: Vintage of bottle
-          example: 1981
+          example: 1980
           minimum: 1900
           maximum: 2020
         winery:
@@ -567,11 +581,13 @@ components:
           varietal: Syrah
         - percentage: 92
           varietal: Syrah
+        - percentage: 92
+          varietal: Syrah
         description: Red wine blend with an emphasis on the Cabernet Franc grape and
           including other Bordeaux grape varietals and some Syrah
         name: Blue's Cuvee
-        rating: 4
-        vintage: 1925
+        rating: 1
+        vintage: 1909
         winery:
           country: USA
           name: Longoria
@@ -610,6 +626,36 @@ components:
             $ref: '#/components/schemas/AddRequestBody'
           description: Array of bottle info that matches the ids attribute
           example:
+          - composition:
+            - percentage: 92
+              varietal: Syrah
+            - percentage: 92
+              varietal: Syrah
+            description: Red wine blend with an emphasis on the Cabernet Franc grape
+              and including other Bordeaux grape varietals and some Syrah
+            name: Blue's Cuvee
+            rating: 1
+            vintage: 1984
+            winery:
+              country: USA
+              name: Longoria
+              region: Central Coast, California
+              url: http://www.longoriawine.com/
+          - composition:
+            - percentage: 92
+              varietal: Syrah
+            - percentage: 92
+              varietal: Syrah
+            description: Red wine blend with an emphasis on the Cabernet Franc grape
+              and including other Bordeaux grape varietals and some Syrah
+            name: Blue's Cuvee
+            rating: 1
+            vintage: 1984
+            winery:
+              country: USA
+              name: Longoria
+              region: Central Coast, California
+              url: http://www.longoriawine.com/
           - composition:
             - percentage: 92
               varietal: Syrah
@@ -689,24 +735,20 @@ components:
             url: http://www.longoriawine.com/
       required:
       - bottles
-    NoCriteria:
-      type: string
-      description: Missing criteria
-      example: Et molestiae eaque et et iusto.
     NotFound:
       type: object
       properties:
         id:
           type: string
           description: ID of missing bottle
-          example: Officiis tempora nobis quia dolorum eius.
+          example: Recusandae et vitae libero quis.
         message:
           type: string
           description: Message of error
           example: bottle 1 not found
       description: Bottle not found
       example:
-        id: Fugit ab iusto ad cumque consequuntur.
+        id: Soluta officiis tempora nobis quia.
         message: bottle 1 not found
       required:
       - message
@@ -752,10 +794,6 @@ components:
             varietal: Syrah
           - percentage: 99
             varietal: Syrah
-          - percentage: 99
-            varietal: Syrah
-          - percentage: 99
-            varietal: Syrah
         description:
           type: string
           description: Description of bottle
@@ -774,13 +812,13 @@ components:
         rating:
           type: integer
           description: Rating of bottle from 1 (worst) to 5 (best)
-          example: 2
+          example: 4
           minimum: 1
           maximum: 5
         vintage:
           type: integer
           description: Vintage of bottle
-          example: 1909
+          example: 1975
           minimum: 1900
           maximum: 2020
         winery:
@@ -791,14 +829,12 @@ components:
           varietal: Syrah
         - percentage: 99
           varietal: Syrah
-        - percentage: 99
-          varietal: Syrah
         description: Red wine blend with an emphasis on the Cabernet Franc grape and
           including other Bordeaux grape varietals and some Syrah
         id: 123abc
         name: Blue's Cuvee
-        rating: 3
-        vintage: 1962
+        rating: 4
+        vintage: 1927
         winery:
           country: USA
           name: Longoria

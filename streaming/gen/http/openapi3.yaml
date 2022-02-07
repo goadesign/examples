@@ -20,21 +20,23 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Ullam repellendus eius quis quos inventore.
-              example: Soluta incidunt reiciendis et autem ut.
+                example: Ut fugiat facilis sed molestiae voluptas ut.
+              example: Iste voluptatem ut.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Sequi tenetur.
               example: Sequi tenetur.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Deleniti ea in.
               example: Deleniti ea in.
       security:
       - jwt_header_Authorization:
@@ -55,8 +57,8 @@ paths:
         schema:
           type: string
           description: View to use to render the result
-          example: Quo eaque suscipit necessitatibus facilis.
-        example: Ut aut numquam dolore libero pariatur est.
+          example: Soluta incidunt reiciendis et autem ut.
+        example: Quo eaque suscipit necessitatibus facilis.
       responses:
         "101":
           description: Switching Protocols response.
@@ -74,14 +76,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Qui excepturi quia.
               example: Qui excepturi quia.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Error nostrum minima.
               example: Error nostrum minima.
       security:
       - jwt_header_Authorization:
@@ -102,14 +106,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Totam porro quis.
               example: Totam porro quis.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Sit rerum sit et hic.
               example: Sit rerum sit et hic.
       security:
       - jwt_header_Authorization:
@@ -131,13 +137,14 @@ paths:
                 type: string
                 description: New JWT token
                 example: Maiores nobis iusto sint.
-              example: Voluptatem ut.
+              example: Et saepe aut.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Accusamus facere praesentium omnis voluptatem dolorum.
               example: Accusamus facere praesentium omnis voluptatem dolorum.
       security:
       - basic_header_Authorization: []
@@ -164,14 +171,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Est est.
               example: Est est.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Blanditiis amet quis quisquam.
               example: Blanditiis amet quis quisquam.
       security:
       - jwt_header_Authorization:
@@ -209,14 +218,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Aspernatur consequatur ut.
               example: Aspernatur consequatur ut.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Et vel in.
               example: Et vel in.
       security:
       - jwt_header_Authorization:
@@ -230,21 +241,21 @@ components:
         length:
           type: integer
           description: Length of the message sent
-          example: 5862532893616606163
+          example: 7989922620706249567
           format: int64
         message:
           type: string
           description: Message sent to the server
-          example: Expedita porro.
+          example: Accusamus est et ipsa ipsa et.
         sent_at:
           type: string
           description: Time at which the message was sent
-          example: "1984-08-20T15:36:58Z"
+          example: "1995-03-19T13:53:01Z"
           format: date-time
       example:
-        length: 3319212102923706927
-        message: Quibusdam sed minima dolor necessitatibus debitis qui.
-        sent_at: "1991-06-21T01:42:41Z"
+        length: 690981510320022082
+        message: Non explicabo vero.
+        sent_at: "2007-08-29T03:39:51Z"
       required:
       - message
       - sent_at
@@ -254,22 +265,22 @@ components:
         length:
           type: integer
           description: Length of the message sent
-          example: 7469039031279743034
+          example: 2740118441049891837
           format: int64
         message:
           type: string
           description: Message sent to the server
-          example: Repellat quaerat.
+          example: Perspiciatis tenetur aut natus occaecati suscipit sapiente.
         sent_at:
           type: string
           description: Time at which the message was sent
-          example: "1997-02-13T18:36:49Z"
+          example: "1996-01-07T07:24:07Z"
           format: date-time
       description: ChatSummaryResponse result type (default view)
       example:
-        length: 827819250742119287
-        message: Vero quas aliquam laudantium ullam.
-        sent_at: "1979-07-12T06:19:19Z"
+        length: 971226565362518647
+        message: Dicta sit modi consequatur.
+        sent_at: "2005-02-15T08:37:42Z"
       required:
       - message
       - sent_at
@@ -280,6 +291,9 @@ components:
       description: SummaryResponseBody is the result type for an array of ChatSummaryResponse
         (default view)
       example:
+      - length: 4832953061930875130
+        message: Molestiae autem voluptatem voluptate autem incidunt.
+        sent_at: "1970-05-07T05:21:01Z"
       - length: 4832953061930875130
         message: Molestiae autem voluptatem voluptate autem incidunt.
         sent_at: "1970-05-07T05:21:01Z"
@@ -297,16 +311,16 @@ components:
         added_at:
           type: string
           description: Time at which the message was added
-          example: "1998-03-09T12:38:57Z"
+          example: "1983-01-01T21:21:33Z"
           format: date-time
         message:
           type: string
           description: Message sent to the server
-          example: In temporibus cupiditate mollitia quo voluptates in.
+          example: Provident tempore debitis.
       example:
         action: added
-        added_at: "2001-11-10T17:10:58Z"
-        message: Quaerat facilis est minima officia inventore laboriosam.
+        added_at: "1970-02-16T00:44:00Z"
+        message: Porro a voluptatibus ut earum nisi.
       required:
       - message
       - action
@@ -317,16 +331,12 @@ components:
         message:
           type: string
           description: Message sent to the server
-          example: Quasi ipsa cupiditate itaque reprehenderit et.
+          example: Non temporibus possimus qui hic.
       description: HistoryResponseBody result type (tiny view)
       example:
-        message: Aut facere.
+        message: Modi quasi ipsa cupiditate itaque.
       required:
       - message
-    Unauthorized:
-      type: string
-      description: Credentials are invalid
-      example: Vitae quis perferendis assumenda.
   securitySchemes:
     basic_header_Authorization:
       type: http

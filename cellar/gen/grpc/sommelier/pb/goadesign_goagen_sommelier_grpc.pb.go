@@ -99,5 +99,5 @@ var Sommelier_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "sommelier.proto",
+	Metadata: "goadesign_goagen_sommelier.proto",
 }

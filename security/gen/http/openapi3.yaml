@@ -31,21 +31,23 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Aut expedita optio.
-              example: Unde vero dicta minus.
+                example: Dolores sunt nihil ut dolore et.
+              example: Alias ea atque.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Maxime ipsam esse et.
               example: Maxime ipsam esse et.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Voluptates a non itaque accusamus enim.
               example: Voluptates a non itaque accusamus enim.
       security:
       - jwt_header_Authorization:
@@ -73,8 +75,8 @@ paths:
         allowEmptyValue: true
         schema:
           type: string
-          example: Repudiandae qui sed optio odit dignissimos.
-        example: Non nisi error ut inventore sequi.
+          example: Deleniti tenetur et eaque nesciunt.
+        example: Repudiandae qui sed optio odit dignissimos.
       - name: X-Authorization
         in: header
         description: JWT used for authentication
@@ -91,21 +93,23 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Maiores porro alias.
-              example: Sed ipsam at hic optio dolores aut.
+                example: Quos ut est ipsum consequatur fugiat at.
+              example: Non nisi error ut inventore sequi.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Est quod consequatur enim.
               example: Est quod consequatur enim.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Quia consequuntur assumenda magnam nostrum sed optio.
               example: Quia consequuntur assumenda magnam nostrum sed optio.
       security:
       - api_key_query_k: []
@@ -141,21 +145,23 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Quos ut est ipsum consequatur fugiat at.
-              example: Deleniti tenetur et eaque nesciunt.
+                example: Aut expedita optio.
+              example: Unde vero dicta minus.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Nesciunt quae vero aut iste.
               example: Nesciunt quae vero aut iste.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Sint officia provident qui.
               example: Sint officia provident qui.
       security:
       - api_key_query_k: []
@@ -185,7 +191,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Unauthorized'
+                type: string
+                example: Reiciendis itaque enim quibusdam praesentium minus possimus.
               example: Reiciendis itaque enim quibusdam praesentium minus possimus.
       security:
       - basic_header_Authorization: []
@@ -214,10 +221,6 @@ components:
       - jwt
       - api_key
       - oauth_token
-    Unauthorized:
-      type: string
-      description: Credentials are invalid
-      example: Dolores sunt nihil ut dolore et.
   securitySchemes:
     api_key_query_k:
       type: apiKey
