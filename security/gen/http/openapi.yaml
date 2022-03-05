@@ -43,11 +43,11 @@ paths:
         "401":
           description: Unauthorized response.
           schema:
-            $ref: '#/definitions/SecuredServiceSecureUnauthorizedResponseBody'
+            type: string
         "403":
           description: Forbidden response.
           schema:
-            $ref: '#/definitions/SecuredServiceSecureInvalidScopesResponseBody'
+            type: string
       schemes:
       - http
       security:
@@ -86,11 +86,11 @@ paths:
         "401":
           description: Unauthorized response.
           schema:
-            $ref: '#/definitions/SecuredServiceDoublySecureUnauthorizedResponseBody'
+            type: string
         "403":
           description: Forbidden response.
           schema:
-            $ref: '#/definitions/SecuredServiceDoublySecureInvalidScopesResponseBody'
+            type: string
       schemes:
       - http
       security:
@@ -143,11 +143,11 @@ paths:
         "401":
           description: Unauthorized response.
           schema:
-            $ref: '#/definitions/SecuredServiceAlsoDoublySecureUnauthorizedResponseBody'
+            type: string
         "403":
           description: Forbidden response.
           schema:
-            $ref: '#/definitions/SecuredServiceAlsoDoublySecureInvalidScopesResponseBody'
+            type: string
       schemes:
       - http
       security:
@@ -182,42 +182,12 @@ paths:
         "401":
           description: Unauthorized response.
           schema:
-            $ref: '#/definitions/SecuredServiceSigninUnauthorizedResponseBody'
+            type: string
       schemes:
       - http
       security:
       - basic_header_Authorization: []
 definitions:
-  SecuredServiceAlsoDoublySecureInvalidScopesResponseBody:
-    title: SecuredServiceAlsoDoublySecureInvalidScopesResponseBody
-    type: string
-    description: Token scopes are invalid
-    example: Ut voluptatem magni perferendis unde.
-  SecuredServiceAlsoDoublySecureUnauthorizedResponseBody:
-    title: SecuredServiceAlsoDoublySecureUnauthorizedResponseBody
-    type: string
-    description: Credentials are invalid
-    example: Nam non consequuntur numquam voluptatum temporibus aut.
-  SecuredServiceDoublySecureInvalidScopesResponseBody:
-    title: SecuredServiceDoublySecureInvalidScopesResponseBody
-    type: string
-    description: Token scopes are invalid
-    example: Accusantium deserunt consequatur ut modi.
-  SecuredServiceDoublySecureUnauthorizedResponseBody:
-    title: SecuredServiceDoublySecureUnauthorizedResponseBody
-    type: string
-    description: Credentials are invalid
-    example: Qui eligendi ut.
-  SecuredServiceSecureInvalidScopesResponseBody:
-    title: SecuredServiceSecureInvalidScopesResponseBody
-    type: string
-    description: Token scopes are invalid
-    example: Modi asperiores nihil aspernatur.
-  SecuredServiceSecureUnauthorizedResponseBody:
-    title: SecuredServiceSecureUnauthorizedResponseBody
-    type: string
-    description: Credentials are invalid
-    example: Voluptatem ducimus est et alias numquam.
   SecuredServiceSigninResponseBody:
     title: SecuredServiceSigninResponseBody
     type: object
@@ -242,11 +212,6 @@ definitions:
     - jwt
     - api_key
     - oauth_token
-  SecuredServiceSigninUnauthorizedResponseBody:
-    title: SecuredServiceSigninUnauthorizedResponseBody
-    type: string
-    description: Credentials are invalid
-    example: Veniam quis nulla officiis id rerum.
 securityDefinitions:
   api_key_query_k:
     type: apiKey
