@@ -23,7 +23,7 @@ paths:
           type: boolean
           description: Whether to force auth failure even with a valid JWT
           example: false
-        example: false
+        example: true
       responses:
         "200":
           description: OK response.
@@ -31,24 +31,25 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Dolores sunt nihil ut dolore et.
-              example: Alias ea atque.
+                example: Non consequuntur numquam voluptatum temporibus.
+              example: Incidunt minima eos amet voluptas quia fuga.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
                 type: string
-                example: Maxime ipsam esse et.
-              example: Maxime ipsam esse et.
+                example: Aut expedita optio.
+              example: Provident veritatis tempora nesciunt molestiae consequuntur
+                libero.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
                 type: string
-                example: Voluptates a non itaque accusamus enim.
-              example: Voluptates a non itaque accusamus enim.
+                example: Facilis dolores sunt nihil ut dolore et.
+              example: Id facere est.
       security:
       - jwt_header_Authorization:
         - api:read
@@ -75,8 +76,8 @@ paths:
         allowEmptyValue: true
         schema:
           type: string
-          example: Deleniti tenetur et eaque nesciunt.
-        example: Repudiandae qui sed optio odit dignissimos.
+          example: Alias architecto quasi.
+        example: Ipsum modi saepe.
       - name: X-Authorization
         in: header
         description: JWT used for authentication
@@ -93,24 +94,24 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Quos ut est ipsum consequatur fugiat at.
-              example: Non nisi error ut inventore sequi.
+                example: Tenetur et eaque nesciunt.
+              example: Eaque pariatur eos laborum.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
                 type: string
-                example: Est quod consequatur enim.
-              example: Est quod consequatur enim.
+                example: Non nisi error ut inventore sequi.
+              example: Ad explicabo sed.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
                 type: string
-                example: Quia consequuntur assumenda magnam nostrum sed optio.
-              example: Quia consequuntur assumenda magnam nostrum sed optio.
+                example: Repudiandae qui sed optio odit dignissimos.
+              example: Consequatur blanditiis consectetur quis.
       security:
       - api_key_query_k: []
         jwt_header_X-Authorization:
@@ -145,24 +146,24 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Aut expedita optio.
-              example: Unde vero dicta minus.
+                example: Quos ut est ipsum consequatur fugiat at.
+              example: Error dolorem deserunt similique ex.
         "401":
           description: Unauthorized response.
           content:
             application/json:
               schema:
                 type: string
-                example: Nesciunt quae vero aut iste.
-              example: Nesciunt quae vero aut iste.
+                example: Atque eum unde vero dicta minus minima.
+              example: Error et et officiis unde.
         "403":
           description: Forbidden response.
           content:
             application/json:
               schema:
                 type: string
-                example: Sint officia provident qui.
-              example: Sint officia provident qui.
+                example: Maiores porro alias.
+              example: Delectus ratione voluptas sit quo.
       security:
       - api_key_query_k: []
         jwt_header_Authorization:
@@ -192,8 +193,8 @@ paths:
             application/json:
               schema:
                 type: string
-                example: Reiciendis itaque enim quibusdam praesentium minus possimus.
-              example: Reiciendis itaque enim quibusdam praesentium minus possimus.
+                example: Magni perferendis unde itaque.
+              example: Sed ipsam at hic optio dolores aut.
       security:
       - basic_header_Authorization: []
 components:
