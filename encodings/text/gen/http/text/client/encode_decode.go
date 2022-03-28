@@ -3,8 +3,7 @@
 // text HTTP client encoders and decoders
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/text/design -o
-// $(GOPATH)/src/goa.design/examples/encodings/text
+// $ goa gen goa.design/examples/encodings/text/design -o encodings/text
 
 package client
 

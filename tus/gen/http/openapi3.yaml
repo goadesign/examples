@@ -81,7 +81,9 @@ paths:
                 - 1.0.0
               example: 1.0.0
         "412":
-          description: Precondition Failed response.
+          description: 'InvalidTusResumable: If the version specified by the Client
+            is not supported by the Server, it MUST respond with the 412 Precondition
+            Failed status.'
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -212,7 +214,8 @@ paths:
                 format: int64
               example: 372598282905132216
         "400":
-          description: Bad Request response.
+          description: 'InvalidChecksumAlgorithm: The checksum algorithm is not supported
+            by the server.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -267,7 +270,9 @@ paths:
                 example: true
               example: false
         "412":
-          description: Precondition Failed response.
+          description: 'InvalidTusResumable: If the version specified by the Client
+            is not supported by the Server, it MUST respond with the 412 Precondition
+            Failed status.'
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -280,7 +285,9 @@ paths:
                 - 1.0.0
               example: 1.0.0
         "413":
-          description: Request Entity Too Large response.
+          description: 'MaximumSizeExceeded: If the length of the upload exceeds the
+            maximum, which MAY be specified using the Tus-Max-Size header, the Server
+            MUST respond with the 413 Request Entity Too Large status.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -335,7 +342,7 @@ paths:
                 example: true
               example: false
         "460":
-          description: ' response.'
+          description: 'ChecksumMismatch: The checksums mismatch.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -433,7 +440,8 @@ paths:
                 pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
               example: 1.0.0
         "404":
-          description: Not Found response.
+          description: 'NotFound: For all future requests to this URL, the Server
+            SHOULD respond with the 404 Not Found or 410 Gone status.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -488,7 +496,8 @@ paths:
                 example: false
               example: true
         "410":
-          description: Gone response.
+          description: 'Gone: For all future requests to this URL, the Server SHOULD
+            respond with the 404 Not Found or 410 Gone status.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -543,7 +552,9 @@ paths:
                 example: false
               example: true
         "412":
-          description: Precondition Failed response.
+          description: 'InvalidTusResumable: If the version specified by the Client
+            is not supported by the Server, it MUST respond with the 412 Precondition
+            Failed status.'
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -639,7 +650,9 @@ paths:
                 format: int64
               example: 9100604480607801993
         "404":
-          description: Not Found response.
+          description: 'NotFound: If the resource is not found, the Server SHOULD
+            return either the 404 Not Found, 410 Gone or 403 Forbidden status without
+            the Upload-Offset header.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -694,7 +707,9 @@ paths:
                 example: false
               example: true
         "410":
-          description: Gone response.
+          description: 'Gone: If the resource is not found, the Server SHOULD return
+            either the 404 Not Found, 410 Gone or 403 Forbidden status without the
+            Upload-Offset header.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -749,7 +764,9 @@ paths:
                 example: false
               example: true
         "412":
-          description: Precondition Failed response.
+          description: 'InvalidTusResumable: If the version specified by the Client
+            is not supported by the Server, it MUST respond with the 412 Precondition
+            Failed status.'
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -845,7 +862,8 @@ paths:
                 format: int64
               example: 3761818512715452409
         "400":
-          description: Bad Request response.
+          description: 'InvalidChecksumAlgorithm: The checksum algorithm is not supported
+            by the server.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -900,7 +918,9 @@ paths:
                 example: false
               example: true
         "404":
-          description: Not Found response.
+          description: 'NotFound: If a Client does attempt to resume an upload which
+            has since been removed by the Server, the Server SHOULD respond with the404
+            Not Found or 410 Gone status.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -955,7 +975,8 @@ paths:
                 example: false
               example: false
         "409":
-          description: Conflict response.
+          description: 'InvalidOffset: If the offsets do not match, the Server MUST
+            respond with the 409 Conflict status without modifying the upload resource.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -1010,7 +1031,9 @@ paths:
                 example: true
               example: false
         "410":
-          description: Gone response.
+          description: 'Gone: If a Client does attempt to resume an upload which has
+            since been removed by the Server, the Server SHOULD respond with the404
+            Not Found or 410 Gone status.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -1065,7 +1088,9 @@ paths:
                 example: false
               example: false
         "412":
-          description: Precondition Failed response.
+          description: 'InvalidTusResumable: If the version specified by the Client
+            is not supported by the Server, it MUST respond with the 412 Precondition
+            Failed status.'
           headers:
             Tus-Version:
               description: Comma separated list of supported versions.
@@ -1078,7 +1103,9 @@ paths:
                 - 1.0.0
               example: 1.0.0
         "415":
-          description: Unsupported Media Type response.
+          description: 'InvalidContentType: All PATCH requests MUST use Content-Type:
+            application/offset+octet-stream, otherwise the server SHOULD return a
+            415 Unsupported Media Type status.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -1133,7 +1160,7 @@ paths:
                 example: false
               example: false
         "460":
-          description: ' response.'
+          description: 'ChecksumMismatch: The checksums mismatch.'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?
@@ -1188,7 +1215,7 @@ paths:
                 example: false
               example: false
         "500":
-          description: Internal Server Error response.
+          description: 'Internal: Internal error'
           headers:
             goa-attribute-fault:
               description: Is the error a server-side fault?

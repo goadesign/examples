@@ -3,7 +3,6 @@
 // openapi HTTP client types
 //
 // Command:
-// $ goa gen goa.design/examples/files/design -o
-// $(GOPATH)/src/goa.design/examples/files
+// $ goa gen goa.design/examples/files/design -o files
 
 package client
