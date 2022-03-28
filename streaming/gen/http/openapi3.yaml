@@ -23,21 +23,19 @@ paths:
                 example: Excepturi ullam repellendus eius quis quos inventore.
               example: Et exercitationem nulla qui dicta.
         "401":
-          description: Unauthorized response.
+          description: 'unauthorized: Unauthorized response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Amet facere nihil molestias.
-              example: Libero commodi vero.
         "403":
-          description: Forbidden response.
+          description: 'invalid-scopes: Forbidden response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Perspiciatis tenetur aut natus occaecati suscipit sapiente.
-              example: Ducimus velit ipsam sequi beatae provident dolorum.
       security:
       - jwt_header_Authorization:
         - stream:read
@@ -72,21 +70,19 @@ paths:
                 message: Ullam quia neque quis qui quia optio.
                 sent_at: "1971-06-24T22:05:58Z"
         "401":
-          description: Unauthorized response.
+          description: 'unauthorized: Unauthorized response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Voluptatem reprehenderit amet sit ex corrupti.
-              example: Itaque tempore earum quae fugiat enim.
         "403":
-          description: Forbidden response.
+          description: 'invalid-scopes: Forbidden response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Laborum dolorum officiis dignissimos hic est culpa.
-              example: Et architecto est numquam commodi rerum est.
       security:
       - jwt_header_Authorization:
         - stream:read
@@ -102,21 +98,19 @@ paths:
         "101":
           description: Switching Protocols response.
         "401":
-          description: Unauthorized response.
+          description: 'unauthorized: Unauthorized response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Aliquid voluptatem vitae error eveniet dolores sapiente.
-              example: Voluptatibus enim aliquid sunt suscipit.
         "403":
-          description: Forbidden response.
+          description: 'invalid-scopes: Forbidden response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Amet voluptatem.
-              example: Ducimus sed qui veritatis.
       security:
       - jwt_header_Authorization:
         - stream:read
@@ -139,13 +133,12 @@ paths:
                 example: Vero necessitatibus ullam sed maiores nobis.
               example: Rerum maiores et aut.
         "401":
-          description: Unauthorized response.
+          description: 'unauthorized: Unauthorized response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Sint sapiente vitae quis perferendis.
-              example: Sit inventore est recusandae accusantium.
       security:
       - basic_header_Authorization: []
   /subscribe:
@@ -167,21 +160,19 @@ paths:
                 added_at: "2000-04-23T17:24:02Z"
                 message: Vel quidem error explicabo.
         "401":
-          description: Unauthorized response.
+          description: 'unauthorized: Unauthorized response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Quo omnis quasi nihil quasi cumque.
-              example: Assumenda et voluptas dolor aperiam.
         "403":
-          description: Forbidden response.
+          description: 'invalid-scopes: Forbidden response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Esse non.
-              example: Quo neque rerum.
       security:
       - jwt_header_Authorization:
         - stream:read
@@ -208,21 +199,19 @@ paths:
                 message: Similique tempora nesciunt repellendus ipsum quis.
                 sent_at: "1997-01-14T09:46:38Z"
         "401":
-          description: Unauthorized response.
+          description: 'unauthorized: Unauthorized response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Expedita in velit harum excepturi est iusto.
-              example: Suscipit adipisci voluptas quia eligendi et.
         "403":
-          description: Forbidden response.
+          description: 'invalid-scopes: Forbidden response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Fugiat consectetur commodi nihil autem.
-              example: Quo molestiae.
       security:
       - jwt_header_Authorization:
         - stream:read

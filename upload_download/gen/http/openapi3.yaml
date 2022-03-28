@@ -37,25 +37,17 @@ paths:
                 format: int64
               example: 4194304
         "404":
-          description: Not Found response.
+          description: 'invalid_file_path: Could not locate file for download'
           content:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "500":
-          description: Internal Server Error response.
+          description: 'internal_error: Fault while processing download.'
           content:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
   /upload/{dir}:
     post:
       tags:
@@ -90,25 +82,18 @@ paths:
         "204":
           description: No Content response.
         "400":
-          description: Bad Request response.
+          description: 'invalid_multipart_request: Error returned when the request
+            body is not a valid multipart content.'
           content:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "500":
-          description: Internal Server Error response.
+          description: 'internal_error: Fault while processing upload.'
           content:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
 components:
   schemas:
     Error:

@@ -3,8 +3,7 @@
 // HTTP request path constructors for the resume service.
 //
 // Command:
-// $ goa gen goa.design/examples/multipart/design -o
-// $(GOPATH)/src/goa.design/examples/multipart
+// $ goa gen goa.design/examples/multipart/design -o multipart
 
 package client
 

@@ -97,21 +97,19 @@ paths:
                 winery:
                   name: Longoria
         "400":
-          description: Bad Request response.
+          description: 'no_criteria: Bad Request response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Accusamus ut rerum dicta quo.
-              example: Quod aliquam aperiam amet eum.
         "404":
-          description: Not Found response.
+          description: 'no_match: Not Found response.'
           content:
             application/json:
               schema:
                 type: string
                 example: Optio aspernatur modi.
-              example: Eligendi consectetur facere.
   /storage:
     get:
       tags:
@@ -260,14 +258,11 @@ paths:
                   region: Central Coast, California
                   url: http://www.longoriawine.com/
         "404":
-          description: Not Found response.
+          description: 'not_found: Bottle not found'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
-              example:
-                id: Consequatur nostrum dolore.
-                message: bottle 1 not found
   /storage/multi_add:
     post:
       tags:
