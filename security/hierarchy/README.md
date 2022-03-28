@@ -3,7 +3,7 @@
 ## Security Schemes
 
 Security schemes are global constucts in a Goa design that can be used to secure
-entire APIs, services or individual methods. The schemes are defines using one
+entire APIs, services or individual methods. The schemes are defined using one
 of the security DSLs:
 
 * [APIKeySecurity](https://pkg.go.dev/goa.design/goa/v3/dsl#APIKeySecurity) defines a
