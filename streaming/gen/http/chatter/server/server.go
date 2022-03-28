@@ -3,8 +3,7 @@
 // chatter HTTP server
 //
 // Command:
-// $ goa gen goa.design/examples/streaming/design -o
-// $(GOPATH)/src/goa.design/examples/streaming
+// $ goa gen goa.design/examples/streaming/design -o streaming
 
 package server
 

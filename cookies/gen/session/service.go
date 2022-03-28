@@ -3,8 +3,7 @@
 // session service
 //
 // Command:
-// $ goa gen goa.design/examples/cookies/design -o
-// $(GOPATH)/src/goa.design/examples/cookies
+// $ goa gen goa.design/examples/cookies/design -o cookies
 
 package session
 

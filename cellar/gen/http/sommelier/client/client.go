@@ -3,8 +3,7 @@
 // sommelier client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/cellar/design -o
-// $(GOPATH)/src/goa.design/examples/cellar
+// $ goa gen goa.design/examples/cellar/design -o cellar
 
 package client
 

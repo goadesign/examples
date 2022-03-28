@@ -3,8 +3,7 @@
 // updown HTTP client types
 //
 // Command:
-// $ goa gen goa.design/examples/upload_download/design -o
-// $(GOPATH)/src/goa.design/examples/upload_download
+// $ goa gen goa.design/examples/upload_download/design -o upload_download
 
 package client
 

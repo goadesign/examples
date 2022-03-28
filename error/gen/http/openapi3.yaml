@@ -32,23 +32,17 @@ paths:
                 quotient: 8399553735696626949
                 reminder: 360622074634248926
         "400":
-          description: Response used for division by zero errors
+          description: 'div_by_zero: Response used for division by zero errors'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DivByZero'
-              example:
-                message: Minima error ullam eius odio minima ipsam.
         "504":
-          description: Operation timed out
+          description: 'timeout: Operation timed out'
           content:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
 components:
   schemas:
     DivByZero:

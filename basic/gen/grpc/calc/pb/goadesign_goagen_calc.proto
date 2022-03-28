@@ -3,8 +3,7 @@
 // calc protocol buffer definition
 //
 // Command:
-// $ goa gen goa.design/examples/basic/design -o
-// $(GOPATH)/src/goa.design/examples/basic
+// $ goa gen goa.design/examples/basic/design -o basic
 
 syntax = "proto3";
 

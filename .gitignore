@@ -22,8 +22,10 @@ files/openapi
 files/openapi-cli
 multipart/resume
 multipart/resume-cli
-security/multi_auth
-security/multi_auth-cli
+security/hierarchy/hierarchy
+security/hierarchy/hierarchy-cli
+security/multiauth/multi_auth
+security/multiauth/multi_auth-cli
 streaming/chatter
 streaming/chatter-cli
 tracing/calc

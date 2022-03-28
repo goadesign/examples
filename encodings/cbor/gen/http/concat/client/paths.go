@@ -3,8 +3,7 @@
 // HTTP request path constructors for the concat service.
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/cbor/design -o
-// $(GOPATH)/src/goa.design/examples/encodings/cbor
+// $ goa gen goa.design/examples/encodings/cbor/design -o encodings/cbor
 
 package client
 

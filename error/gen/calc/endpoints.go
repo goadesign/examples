@@ -3,8 +3,7 @@
 // calc endpoints
 //
 // Command:
-// $ goa gen goa.design/examples/error/design -o
-// $(GOPATH)/src/goa.design/examples/error
+// $ goa gen goa.design/examples/error/design -o error
 
 package calc
 
