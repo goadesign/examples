@@ -101,8 +101,8 @@ security scheme.
 ## NoSecurity
 
 The [NoSecurity](https://pkg.go.dev/goa.design/goa/v3/dsl#NoSecurity) function
-can be used to explicitly remove any security scheme applied to a service or a
-specific endpoint:
+can be used to explicitly remove any security scheme applied to a specific
+endpoint:
 
 ```go
 var _ = Service("svc", func() {
