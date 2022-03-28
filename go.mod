@@ -11,7 +11,7 @@ require (
 	github.com/rs/xid v1.4.0
 	goa.design/goa/v3 v3.7.1-0.20220328005531-e4294d0fff50
 	google.golang.org/grpc v1.45.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
