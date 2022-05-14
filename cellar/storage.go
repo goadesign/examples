@@ -2,7 +2,6 @@ package cellar
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -156,6 +155,6 @@ func (s *storageSvc) MultiUpdate(ctx context.Context, p *storage.MultiUpdatePayl
 			}
 		}
 	}
-	s.logger.Print(fmt.Sprintf("Updated bottles: %s", strings.Join(p.Ids, ", ")))
+	s.logger.Printf("Updated bottles: %s", strings.Join(p.Ids, ", "))
 	return nil
 }
