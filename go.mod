@@ -36,5 +36,3 @@ require (
 	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace goa.design/goa/v3 => /home/raphael/src/goa
