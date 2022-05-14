@@ -9,7 +9,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/rs/xid v1.4.0
-	goa.design/goa/v3 v3.7.3
+	goa.design/goa/v3 v3.7.4
 	google.golang.org/grpc v1.46.0
 	google.golang.org/protobuf v1.28.0
 )
@@ -36,3 +36,5 @@ require (
 	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
+
+replace goa.design/goa/v3 => /home/raphael/src/goa
