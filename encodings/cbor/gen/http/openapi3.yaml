@@ -1,50 +1,50 @@
 openapi: 3.0.3
 info:
-  title: Goa API
-  version: "1.0"
+    title: Goa API
+    version: "1.0"
 servers:
-- url: http://localhost:80
-  description: Default server for concat
+    - url: http://localhost:80
+      description: Default server for concat
 paths:
-  /concat/{a}/{b}:
-    get:
-      tags:
-      - concat
-      summary: concat concat
-      operationId: concat#concat
-      parameters:
-      - name: a
-        in: path
-        description: Left operand
-        required: true
-        schema:
-          type: string
-          description: Left operand
-          example: Recusandae quo qui.
-        example: Similique animi sapiente quas ea sunt iure.
-      - name: b
-        in: path
-        description: Right operand
-        required: true
-        schema:
-          type: string
-          description: Right operand
-          example: Totam aliquid dolores consequatur et exercitationem harum.
-        example: Quia dolor non dolorem quia.
-      responses:
-        "200":
-          description: OK response.
-          content:
-            application/json:
-              schema:
-                type: string
-                example: Consequatur omnis.
-              example: Totam maxime cumque placeat facere.
+    /concat/{a}/{b}:
+        get:
+            tags:
+                - concat
+            summary: concat concat
+            operationId: concat#concat
+            parameters:
+                - name: a
+                  in: path
+                  description: Left operand
+                  required: true
+                  schema:
+                    type: string
+                    description: Left operand
+                    example: Recusandae quo qui.
+                  example: Similique animi sapiente quas ea sunt iure.
+                - name: b
+                  in: path
+                  description: Right operand
+                  required: true
+                  schema:
+                    type: string
+                    description: Right operand
+                    example: Totam aliquid dolores consequatur et exercitationem harum.
+                  example: Quia dolor non dolorem quia.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Consequatur omnis.
+                            example: Totam maxime cumque placeat facere.
 components: {}
 tags:
-- name: concat
-  description: |
-    The concat service performs operations on strings.
+    - name: concat
+      description: |
+        The concat service performs operations on strings.
 
-    The service uses the CBOR binary serialization standard to encode responses.
-    It supports reading requests encoded with CBOR, JSON, XML or GOB.
+        The service uses the CBOR binary serialization standard to encode responses.
+        It supports reading requests encoded with CBOR, JSON, XML or GOB.
