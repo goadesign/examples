@@ -1,475 +1,473 @@
 openapi: 3.0.3
 info:
-  title: Goa API
-  version: "1.0"
+    title: Goa API
+    version: "1.0"
 servers:
-- url: http://localhost:80
-  description: Default server for resume
+    - url: http://localhost:80
+      description: Default server for resume
 paths:
-  /resumes:
-    get:
-      tags:
-      - resume
-      summary: list resume
-      description: List all stored resumes
-      operationId: resume#list
-      responses:
-        "200":
-          description: OK response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StoredResumeCollection'
-              example:
-              - created_at: Ab molestiae et.
-                education:
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                experience:
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                id: 6715916505894079249
-                name: Possimus autem est.
-              - created_at: Ab molestiae et.
-                education:
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                experience:
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                id: 6715916505894079249
-                name: Possimus autem est.
-              - created_at: Ab molestiae et.
-                education:
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                experience:
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                id: 6715916505894079249
-                name: Possimus autem est.
-              - created_at: Ab molestiae et.
-                education:
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                - institution: Possimus voluptas eum.
-                  major: Sint eos.
-                experience:
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                - company: Eligendi alias.
-                  duration: 894629370113642138
-                  role: Ut quia exercitationem autem non nisi.
-                id: 6715916505894079249
-                name: Possimus autem est.
-    post:
-      tags:
-      - resume
-      summary: add resume
-      description: Add n number of resumes and return their IDs. This is a multipart
-        request and each part has field name 'resume' and contains the encoded resume
-        to be added.
-      operationId: resume#add
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Resume'
-              example:
-              - education:
-                - institution: Nihil voluptate dolorem ut ipsam fuga.
-                  major: Ex sequi.
-                - institution: Nihil voluptate dolorem ut ipsam fuga.
-                  major: Ex sequi.
-                experience:
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                name: In qui dolorum adipisci itaque.
-              - education:
-                - institution: Nihil voluptate dolorem ut ipsam fuga.
-                  major: Ex sequi.
-                - institution: Nihil voluptate dolorem ut ipsam fuga.
-                  major: Ex sequi.
-                experience:
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                - company: Saepe similique libero sunt.
-                  duration: 4538661945567210561
-                  role: Cum maiores quo at ducimus sit.
-                name: In qui dolorum adipisci itaque.
-            example:
-            - education:
-              - institution: Nihil voluptate dolorem ut ipsam fuga.
-                major: Ex sequi.
-              - institution: Nihil voluptate dolorem ut ipsam fuga.
-                major: Ex sequi.
-              experience:
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              name: In qui dolorum adipisci itaque.
-            - education:
-              - institution: Nihil voluptate dolorem ut ipsam fuga.
-                major: Ex sequi.
-              - institution: Nihil voluptate dolorem ut ipsam fuga.
-                major: Ex sequi.
-              experience:
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              - company: Saepe similique libero sunt.
-                duration: 4538661945567210561
-                role: Cum maiores quo at ducimus sit.
-              name: In qui dolorum adipisci itaque.
-      responses:
-        "200":
-          description: OK response.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: integer
-                  example: 8654034813812498472
-                  format: int64
-                example:
-                - 7932586565778881094
-                - 3145395682804505380
-                - 9189848162660805270
-              example:
-              - 5196963459622271595
-              - 22858139299107284
+    /resumes:
+        get:
+            tags:
+                - resume
+            summary: list resume
+            description: List all stored resumes
+            operationId: resume#list
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StoredResumeCollection'
+                            example:
+                                - created_at: Ab molestiae et.
+                                  education:
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                  experience:
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                  id: 6715916505894079249
+                                  name: Possimus autem est.
+                                - created_at: Ab molestiae et.
+                                  education:
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                  experience:
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                  id: 6715916505894079249
+                                  name: Possimus autem est.
+                                - created_at: Ab molestiae et.
+                                  education:
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                  experience:
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                  id: 6715916505894079249
+                                  name: Possimus autem est.
+                                - created_at: Ab molestiae et.
+                                  education:
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                    - institution: Possimus voluptas eum.
+                                      major: Sint eos.
+                                  experience:
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                    - company: Eligendi alias.
+                                      duration: 894629370113642138
+                                      role: Ut quia exercitationem autem non nisi.
+                                  id: 6715916505894079249
+                                  name: Possimus autem est.
+        post:
+            tags:
+                - resume
+            summary: add resume
+            description: Add n number of resumes and return their IDs. This is a multipart request and each part has field name 'resume' and contains the encoded resume to be added.
+            operationId: resume#add
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Resume'
+                            example:
+                                - education:
+                                    - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                      major: Ex sequi.
+                                    - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                      major: Ex sequi.
+                                  experience:
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                  name: In qui dolorum adipisci itaque.
+                                - education:
+                                    - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                      major: Ex sequi.
+                                    - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                      major: Ex sequi.
+                                  experience:
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                    - company: Saepe similique libero sunt.
+                                      duration: 4538661945567210561
+                                      role: Cum maiores quo at ducimus sit.
+                                  name: In qui dolorum adipisci itaque.
+                        example:
+                            - education:
+                                - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                  major: Ex sequi.
+                                - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                  major: Ex sequi.
+                              experience:
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                              name: In qui dolorum adipisci itaque.
+                            - education:
+                                - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                  major: Ex sequi.
+                                - institution: Nihil voluptate dolorem ut ipsam fuga.
+                                  major: Ex sequi.
+                              experience:
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                                - company: Saepe similique libero sunt.
+                                  duration: 4538661945567210561
+                                  role: Cum maiores quo at ducimus sit.
+                              name: In qui dolorum adipisci itaque.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: integer
+                                    example: 8654034813812498472
+                                    format: int64
+                                example:
+                                    - 7932586565778881094
+                                    - 3145395682804505380
+                                    - 9189848162660805270
+                            example:
+                                - 5196963459622271595
+                                - 22858139299107284
 components:
-  schemas:
-    Education:
-      type: object
-      properties:
-        institution:
-          type: string
-          description: Name of the institution
-          example: Dicta eveniet exercitationem.
-        major:
-          type: string
-          description: Major name
-          example: Minima a officia sapiente cum laboriosam.
-      example:
-        institution: Nesciunt aliquid rerum ut non quod.
-        major: Quasi pariatur numquam quibusdam.
-      required:
-      - institution
-      - major
-    Experience:
-      type: object
-      properties:
-        company:
-          type: string
-          description: Name of the company
-          example: Quaerat labore et hic itaque quis.
-        duration:
-          type: integer
-          description: Duration (in years) in the company
-          example: 2703826316788748058
-          format: int64
-        role:
-          type: string
-          description: Name of the role in the company
-          example: Ducimus est illum voluptatem.
-      example:
-        company: Consequatur ad fugiat et ipsa animi.
-        duration: 3563129926077109962
-        role: Officiis consectetur quidem quod sapiente quia.
-      required:
-      - company
-      - role
-      - duration
-    GoaResume:
-      type: object
-      properties:
-        created_at:
-          type: string
-          description: Time when resume was created
-          example: Et necessitatibus.
-        education:
-          type: array
-          items:
-            $ref: '#/components/schemas/Education'
-          description: Education section in the resume
-          example:
-          - institution: Mollitia dolores sequi sed veritatis totam omnis.
-            major: Repellendus et et aut sint.
-          - institution: Mollitia dolores sequi sed veritatis totam omnis.
-            major: Repellendus et et aut sint.
-          - institution: Mollitia dolores sequi sed veritatis totam omnis.
-            major: Repellendus et et aut sint.
-        experience:
-          type: array
-          items:
-            $ref: '#/components/schemas/Experience'
-          description: Experience section in the resume
-          example:
-          - company: Aut rem.
-            duration: 5176619058752078184
-            role: Consequuntur quam est commodi cumque eaque quisquam.
-          - company: Aut rem.
-            duration: 5176619058752078184
-            role: Consequuntur quam est commodi cumque eaque quisquam.
-          - company: Aut rem.
-            duration: 5176619058752078184
-            role: Consequuntur quam est commodi cumque eaque quisquam.
-          - company: Aut rem.
-            duration: 5176619058752078184
-            role: Consequuntur quam est commodi cumque eaque quisquam.
-        id:
-          type: integer
-          description: ID of the resume
-          example: 1383508228189721459
-          format: int64
-        name:
-          type: string
-          description: Name in the resume
-          example: Similique facilis sapiente doloribus pariatur ut.
-      example:
-        created_at: Quia veritatis dicta minima odit esse.
-        education:
-        - institution: Mollitia dolores sequi sed veritatis totam omnis.
-          major: Repellendus et et aut sint.
-        - institution: Mollitia dolores sequi sed veritatis totam omnis.
-          major: Repellendus et et aut sint.
-        - institution: Mollitia dolores sequi sed veritatis totam omnis.
-          major: Repellendus et et aut sint.
-        experience:
-        - company: Aut rem.
-          duration: 5176619058752078184
-          role: Consequuntur quam est commodi cumque eaque quisquam.
-        - company: Aut rem.
-          duration: 5176619058752078184
-          role: Consequuntur quam est commodi cumque eaque quisquam.
-        - company: Aut rem.
-          duration: 5176619058752078184
-          role: Consequuntur quam est commodi cumque eaque quisquam.
-        id: 4617611467925159908
-        name: Sunt consequatur est quo consequatur aut.
-      required:
-      - id
-      - name
-      - experience
-      - education
-      - created_at
-    Resume:
-      type: object
-      properties:
-        education:
-          type: array
-          items:
-            $ref: '#/components/schemas/Education'
-          description: Education section in the resume
-          example:
-          - institution: Nihil voluptate dolorem ut ipsam fuga.
-            major: Ex sequi.
-          - institution: Nihil voluptate dolorem ut ipsam fuga.
-            major: Ex sequi.
-        experience:
-          type: array
-          items:
-            $ref: '#/components/schemas/Experience'
-          description: Experience section in the resume
-          example:
-          - company: Saepe similique libero sunt.
-            duration: 4538661945567210561
-            role: Cum maiores quo at ducimus sit.
-          - company: Saepe similique libero sunt.
-            duration: 4538661945567210561
-            role: Cum maiores quo at ducimus sit.
-          - company: Saepe similique libero sunt.
-            duration: 4538661945567210561
-            role: Cum maiores quo at ducimus sit.
-        name:
-          type: string
-          description: Name in the resume
-          example: Omnis id qui debitis.
-      example:
-        education:
-        - institution: Nihil voluptate dolorem ut ipsam fuga.
-          major: Ex sequi.
-        - institution: Nihil voluptate dolorem ut ipsam fuga.
-          major: Ex sequi.
-        experience:
-        - company: Saepe similique libero sunt.
-          duration: 4538661945567210561
-          role: Cum maiores quo at ducimus sit.
-        - company: Saepe similique libero sunt.
-          duration: 4538661945567210561
-          role: Cum maiores quo at ducimus sit.
-        name: Nihil rerum aut labore.
-      required:
-      - name
-    StoredResumeCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/GoaResume'
-      example:
-      - created_at: Ab molestiae et.
-        education:
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        experience:
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        id: 6715916505894079249
-        name: Possimus autem est.
-      - created_at: Ab molestiae et.
-        education:
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        experience:
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        id: 6715916505894079249
-        name: Possimus autem est.
-      - created_at: Ab molestiae et.
-        education:
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        experience:
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        id: 6715916505894079249
-        name: Possimus autem est.
-      - created_at: Ab molestiae et.
-        education:
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        - institution: Possimus voluptas eum.
-          major: Sint eos.
-        experience:
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        - company: Eligendi alias.
-          duration: 894629370113642138
-          role: Ut quia exercitationem autem non nisi.
-        id: 6715916505894079249
-        name: Possimus autem est.
+    schemas:
+        Education:
+            type: object
+            properties:
+                institution:
+                    type: string
+                    description: Name of the institution
+                    example: Dicta eveniet exercitationem.
+                major:
+                    type: string
+                    description: Major name
+                    example: Minima a officia sapiente cum laboriosam.
+            example:
+                institution: Nesciunt aliquid rerum ut non quod.
+                major: Quasi pariatur numquam quibusdam.
+            required:
+                - institution
+                - major
+        Experience:
+            type: object
+            properties:
+                company:
+                    type: string
+                    description: Name of the company
+                    example: Quaerat labore et hic itaque quis.
+                duration:
+                    type: integer
+                    description: Duration (in years) in the company
+                    example: 2703826316788748058
+                    format: int64
+                role:
+                    type: string
+                    description: Name of the role in the company
+                    example: Ducimus est illum voluptatem.
+            example:
+                company: Consequatur ad fugiat et ipsa animi.
+                duration: 3563129926077109962
+                role: Officiis consectetur quidem quod sapiente quia.
+            required:
+                - company
+                - role
+                - duration
+        GoaResume:
+            type: object
+            properties:
+                created_at:
+                    type: string
+                    description: Time when resume was created
+                    example: Et necessitatibus.
+                education:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Education'
+                    description: Education section in the resume
+                    example:
+                        - institution: Mollitia dolores sequi sed veritatis totam omnis.
+                          major: Repellendus et et aut sint.
+                        - institution: Mollitia dolores sequi sed veritatis totam omnis.
+                          major: Repellendus et et aut sint.
+                        - institution: Mollitia dolores sequi sed veritatis totam omnis.
+                          major: Repellendus et et aut sint.
+                experience:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Experience'
+                    description: Experience section in the resume
+                    example:
+                        - company: Aut rem.
+                          duration: 5176619058752078184
+                          role: Consequuntur quam est commodi cumque eaque quisquam.
+                        - company: Aut rem.
+                          duration: 5176619058752078184
+                          role: Consequuntur quam est commodi cumque eaque quisquam.
+                        - company: Aut rem.
+                          duration: 5176619058752078184
+                          role: Consequuntur quam est commodi cumque eaque quisquam.
+                        - company: Aut rem.
+                          duration: 5176619058752078184
+                          role: Consequuntur quam est commodi cumque eaque quisquam.
+                id:
+                    type: integer
+                    description: ID of the resume
+                    example: 1383508228189721459
+                    format: int64
+                name:
+                    type: string
+                    description: Name in the resume
+                    example: Similique facilis sapiente doloribus pariatur ut.
+            example:
+                created_at: Quia veritatis dicta minima odit esse.
+                education:
+                    - institution: Mollitia dolores sequi sed veritatis totam omnis.
+                      major: Repellendus et et aut sint.
+                    - institution: Mollitia dolores sequi sed veritatis totam omnis.
+                      major: Repellendus et et aut sint.
+                    - institution: Mollitia dolores sequi sed veritatis totam omnis.
+                      major: Repellendus et et aut sint.
+                experience:
+                    - company: Aut rem.
+                      duration: 5176619058752078184
+                      role: Consequuntur quam est commodi cumque eaque quisquam.
+                    - company: Aut rem.
+                      duration: 5176619058752078184
+                      role: Consequuntur quam est commodi cumque eaque quisquam.
+                    - company: Aut rem.
+                      duration: 5176619058752078184
+                      role: Consequuntur quam est commodi cumque eaque quisquam.
+                id: 4617611467925159908
+                name: Sunt consequatur est quo consequatur aut.
+            required:
+                - id
+                - name
+                - experience
+                - education
+                - created_at
+        Resume:
+            type: object
+            properties:
+                education:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Education'
+                    description: Education section in the resume
+                    example:
+                        - institution: Nihil voluptate dolorem ut ipsam fuga.
+                          major: Ex sequi.
+                        - institution: Nihil voluptate dolorem ut ipsam fuga.
+                          major: Ex sequi.
+                experience:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Experience'
+                    description: Experience section in the resume
+                    example:
+                        - company: Saepe similique libero sunt.
+                          duration: 4538661945567210561
+                          role: Cum maiores quo at ducimus sit.
+                        - company: Saepe similique libero sunt.
+                          duration: 4538661945567210561
+                          role: Cum maiores quo at ducimus sit.
+                        - company: Saepe similique libero sunt.
+                          duration: 4538661945567210561
+                          role: Cum maiores quo at ducimus sit.
+                name:
+                    type: string
+                    description: Name in the resume
+                    example: Omnis id qui debitis.
+            example:
+                education:
+                    - institution: Nihil voluptate dolorem ut ipsam fuga.
+                      major: Ex sequi.
+                    - institution: Nihil voluptate dolorem ut ipsam fuga.
+                      major: Ex sequi.
+                experience:
+                    - company: Saepe similique libero sunt.
+                      duration: 4538661945567210561
+                      role: Cum maiores quo at ducimus sit.
+                    - company: Saepe similique libero sunt.
+                      duration: 4538661945567210561
+                      role: Cum maiores quo at ducimus sit.
+                name: Nihil rerum aut labore.
+            required:
+                - name
+        StoredResumeCollection:
+            type: array
+            items:
+                $ref: '#/components/schemas/GoaResume'
+            example:
+                - created_at: Ab molestiae et.
+                  education:
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                  experience:
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                  id: 6715916505894079249
+                  name: Possimus autem est.
+                - created_at: Ab molestiae et.
+                  education:
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                  experience:
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                  id: 6715916505894079249
+                  name: Possimus autem est.
+                - created_at: Ab molestiae et.
+                  education:
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                  experience:
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                  id: 6715916505894079249
+                  name: Possimus autem est.
+                - created_at: Ab molestiae et.
+                  education:
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                    - institution: Possimus voluptas eum.
+                      major: Sint eos.
+                  experience:
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                    - company: Eligendi alias.
+                      duration: 894629370113642138
+                      role: Ut quia exercitationem autem non nisi.
+                  id: 6715916505894079249
+                  name: Possimus autem est.
 tags:
-- name: resume
-  description: The storage service makes it possible to add resumes using multipart.
+    - name: resume
+      description: The storage service makes it possible to add resumes using multipart.
