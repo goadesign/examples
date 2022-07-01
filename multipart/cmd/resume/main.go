@@ -75,8 +75,7 @@ func main() {
 			addr := "http://localhost:80"
 			u, err := url.Parse(addr)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", addr, err)
-				os.Exit(1)
+				logger.Fatalf("invalid URL %#v: %s\n", addr, err)
 			}
 			if *secureF {
 				u.Scheme = "https"
@@ -87,8 +86,7 @@ func main() {
 			if *httpPortF != "" {
 				h, _, err := net.SplitHostPort(u.Host)
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "invalid URL %#v: %s\n", u.Host, err)
-					os.Exit(1)
+					logger.Fatalf("invalid URL %#v: %s\n", u.Host, err)
 				}
 				u.Host = net.JoinHostPort(h, *httpPortF)
 			} else if u.Port() == "" {
@@ -98,7 +96,7 @@ func main() {
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)\n", *hostF)
+		logger.Fatalf("invalid host argument: %q (valid hosts: localhost)\n", *hostF)
 	}
 
 	// Wait for signal.
