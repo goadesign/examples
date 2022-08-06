@@ -3,7 +3,7 @@ package concatapi
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/fxamacker/cbor/v2"
@@ -36,7 +36,7 @@ func ResponseEncoder(ctx context.Context, w http.ResponseWriter) goahttp.Encoder
 // RequestEncoder returns a HTTP request encoder that uses CBOR.
 func RequestEncoder(r *http.Request) goahttp.Encoder {
 	var buf bytes.Buffer
-	r.Body = ioutil.NopCloser(&buf)
+	r.Body = io.NopCloser(&buf)
 	return cbor.NewEncoder(&buf)
 }
 
