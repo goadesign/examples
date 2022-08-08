@@ -1,4 +1,4 @@
-// Code generated with goa v3.8.1, DO NOT EDIT.
+// Code generated with goa v3.8.2, DO NOT EDIT.
 //
 // chatter protocol buffer definition
 //
