@@ -1,4 +1,4 @@
-// Code generated with goa v3.8.3, DO NOT EDIT.
+// Code generated with goa v3.8.4, DO NOT EDIT.
 //
 // secured_service protocol buffer definition
 //
