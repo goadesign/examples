@@ -92,8 +92,8 @@ github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea/go.mod h
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
 go.uber.org/multierr v1.1.0/go.mod h1:wR5kodmAFQ0UK8QlbwjlSNy0Z68gJhDJUG5sjR94q/0=
 go.uber.org/zap v1.10.0/go.mod h1:vwi/ZaCAaUcBkycHslxD9B2zi4UTXhF60s6SWpuDF0Q=
-goa.design/goa/v3 v3.8.5 h1:Y0/6ZwmwZftqQBOlBANU9mP4R+h2gIQUyfQMEs98pGU=
-goa.design/goa/v3 v3.8.5/go.mod h1:+tEl2wNEL54TMAQQ5Mu5il1zl20/7k89XMUv8hVJfa8=
+goa.design/goa/v3 v3.8.7 h1:GVkuaQrg9pQ1XfBgdrepIBlbSAq1JlByXTmuASyyNUA=
+goa.design/goa/v3 v3.8.7/go.mod h1:lgFS8pt76ubyi/K72CxwpAMmxfnS+T08gG8hPTaasNA=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
