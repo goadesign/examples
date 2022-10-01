@@ -38,7 +38,7 @@ all: check-goa gen lint test
 ci: depend all
 
 # Install protoc
-PROTOC_VERSION=3.14.0
+PROTOC_VERSION=21.7
 UNZIP=unzip
 ifeq ($(GOOS),linux)
 	PROTOC=protoc-$(PROTOC_VERSION)-linux-x86_64
@@ -78,7 +78,7 @@ depend:
 	curl -O -L https://github.com/google/protobuf/releases/download/v$(PROTOC_VERSION)/$(PROTOC).zip; \
 	$(UNZIP) $(PROTOC).zip
 	@cp $(PROTOC_EXEC) $(GOPATH)/bin && \
-		rm -r $(PROTOC) && \
+		rm -rf $(PROTOC) && \
 		echo "`protoc --version`"
 	@echo go mod graph
 
@@ -87,10 +87,7 @@ lint:
 	@if [ "`goimports -l $(GO_FILES) | grep -v .pb.go | tee /dev/stderr`" ]; then \
 		echo "^ - Repo contains improperly formatted go files" && echo && exit 1; \
 	fi
-	@if [ "`golint ./... | grep -vf .golint_exclude | tee /dev/stderr`" ]; then \
-		echo "^ - Lint errors!" && echo && exit 1; \
-	fi
-	@if [ "`staticcheck -checks all,-ST1000,-ST1001,-ST1021 ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
+	@if [ "`staticcheck -checks all,-ST1000,-ST1001,-ST1021,-SA1019 ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
 		echo "^ - staticcheck errors!" && echo && exit 1; \
 	fi
 
@@ -150,7 +147,7 @@ gen:
 	@echo "upload_download [13/13]"
 	@goa gen goa.design/examples/upload_download/design -o "upload_download"
 	@goa example goa.design/examples/upload_download/design -o "upload_download"
-	@go mod tidy -compat=1.17
+	@go mod tidy -compat=1.19
 
 build:
 	@cd "$(GIT_ROOT)/basic" && \
