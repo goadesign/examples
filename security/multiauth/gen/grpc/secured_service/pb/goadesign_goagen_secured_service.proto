@@ -1,4 +1,4 @@
-// Code generated with goa v3.9.1, DO NOT EDIT.
+// Code generated with goa v3.10.0, DO NOT EDIT.
 //
 // secured_service protocol buffer definition
 //
@@ -40,7 +40,7 @@ message SigninResponse {
 
 message SecureRequest {
 	// Whether to force auth failure even with a valid JWT
-	bool fail = 1;
+	optional bool fail = 1;
 }
 
 message SecureResponse {
@@ -58,11 +58,11 @@ message DoublySecureResponse {
 
 message AlsoDoublySecureRequest {
 	// Username used to perform signin
-	string username = 1;
+	optional string username = 1;
 	// Password used to perform signin
-	string password = 2;
+	optional string password = 2;
 	// API key
-	string key = 3;
+	optional string key = 3;
 }
 
 message AlsoDoublySecureResponse {

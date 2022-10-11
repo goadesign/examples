@@ -1,4 +1,4 @@
-// Code generated with goa v3.9.1, DO NOT EDIT.
+// Code generated with goa v3.10.0, DO NOT EDIT.
 //
 // storage protocol buffer definition
 //
@@ -52,9 +52,9 @@ message StoredBottle {
 	// Composition is the list of grape varietals and associated percentage.
 	repeated Component composition = 5;
 	// Description of bottle
-	string description = 6;
+	optional string description = 6;
 	// Rating of bottle from 1 (worst) to 5 (best)
-	uint32 rating = 7;
+	optional uint32 rating = 7;
 }
 
 message Winery {
@@ -65,14 +65,14 @@ message Winery {
 	// Country of winery
 	string country = 3;
 	// Winery website URL
-	string url = 4;
+	optional string url = 4;
 }
 
 message Component {
 	// Grape varietal
 	string varietal = 1;
 	// Percentage of varietal in wine
-	uint32 percentage = 2;
+	optional uint32 percentage = 2;
 }
 
 message ShowNotFoundError {
@@ -99,9 +99,9 @@ message ShowResponse {
 	// Composition is the list of grape varietals and associated percentage.
 	repeated Component composition = 5;
 	// Description of bottle
-	string description = 6;
+	optional string description = 6;
 	// Rating of bottle from 1 (worst) to 5 (best)
-	uint32 rating = 7;
+	optional uint32 rating = 7;
 }
 
 message AddRequest {
@@ -114,9 +114,9 @@ message AddRequest {
 	// Composition is the list of grape varietals and associated percentage.
 	repeated Component composition = 4;
 	// Description of bottle
-	string description = 5;
+	optional string description = 5;
 	// Rating of bottle from 1 (worst) to 5 (best)
-	uint32 rating = 6;
+	optional uint32 rating = 6;
 }
 
 message AddResponse {
@@ -156,9 +156,9 @@ message Bottle {
 	// Composition is the list of grape varietals and associated percentage.
 	repeated Component composition = 4;
 	// Description of bottle
-	string description = 5;
+	optional string description = 5;
 	// Rating of bottle from 1 (worst) to 5 (best)
-	uint32 rating = 6;
+	optional uint32 rating = 6;
 }
 
 message MultiAddResponse {

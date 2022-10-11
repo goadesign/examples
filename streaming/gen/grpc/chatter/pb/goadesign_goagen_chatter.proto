@@ -1,4 +1,4 @@
-// Code generated with goa v3.9.1, DO NOT EDIT.
+// Code generated with goa v3.10.0, DO NOT EDIT.
 //
 // chatter protocol buffer definition
 //
@@ -61,7 +61,7 @@ message ChatSummary {
 	// Message sent to the server
 	string message_ = 1;
 	// Length of the message sent
-	sint32 length = 2;
+	optional sint32 length = 2;
 	// Time at which the message was sent
 	string sent_at = 3;
 }
@@ -84,7 +84,7 @@ message HistoryResponse {
 	// Message sent to the server
 	string message_ = 1;
 	// Length of the message sent
-	sint32 length = 2;
+	optional sint32 length = 2;
 	// Time at which the message was sent
 	string sent_at = 3;
 }
