@@ -70,7 +70,8 @@ endif
 depend:
 	@echo INSTALLING DEPENDENCIES...
 	@go mod download
-	@env go get -v $(DEPEND)
+	@for package in $(DEPEND); do go install $$package; done
+	@go mod tidy -compat=1.19
 	@echo INSTALLING PROTOC...
 	@mkdir $(PROTOC)
 	@cd $(PROTOC); \
