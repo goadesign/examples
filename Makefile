@@ -24,9 +24,9 @@ export GO111MODULE=on
 # Only list test and build dependencies
 # Standard dependencies are installed via go get
 DEPEND=\
-	google.golang.org/protobuf/cmd/protoc-gen-go \
-        google.golang.org/grpc/cmd/protoc-gen-go-grpc \
-	honnef.co/go/tools/cmd/staticcheck \
+	google.golang.org/protobuf/cmd/protoc-gen-go@latest \
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest \
+	honnef.co/go/tools/cmd/staticcheck@latest \
 	goa.design/goa/v3/cmd/goa@v3
 
 .phony: all depend lint test build clean
@@ -54,17 +54,6 @@ ifeq ($(GOOS),windows)
 	GIT_ROOT:=$(subst \,/,$(GIT_ROOT))
 endif
 
-check-goa:
-ifdef GOA
-	go mod download
-	@echo $(GOA)
-else
-	go get -u goa.design/goa/v3@v3
-	go get -u goa.design/goa/v3/...@v3
-	go mod download
-	@echo $(GOA)
-endif
-
 # Note: the steps below rely on curl and tar which are available
 # on both Linux and Windows 10 (build>=17603).
 depend:
@@ -81,6 +70,17 @@ depend:
 		rm -rf $(PROTOC) && \
 		echo "`protoc --version`"
 	@echo go mod graph
+
+check-goa:
+ifdef GOA
+	go mod download
+	@echo $(GOA)
+else
+	go get -u goa.design/goa/v3@v3
+	go get -u goa.design/goa/v3/...@v3
+	go mod download
+	@echo $(GOA)
+endif
 
 lint:
 	@echo LINTING CODE...
