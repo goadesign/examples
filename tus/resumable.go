@@ -8,8 +8,8 @@ import (
 )
 
 // tusWrapper wraps the given TUS service instance and:
-//   * checks the value of the request Tus-Resumable header.
-//   * writes the response Tus-Resumable header.
+//   - checks the value of the request Tus-Resumable header.
+//   - writes the response Tus-Resumable header.
 type tusWrapper struct {
 	svc *tussvc
 }

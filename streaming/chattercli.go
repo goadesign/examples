@@ -11,7 +11,7 @@ import (
 	chattersvc "goa.design/examples/streaming/gen/chatter"
 )
 
-//InteractWithStreams performs the sample operations on the stream
+// InteractWithStreams performs the sample operations on the stream
 func InteractWithStreams(data interface{}) {
 	if data != nil {
 		switch stream := data.(type) {
