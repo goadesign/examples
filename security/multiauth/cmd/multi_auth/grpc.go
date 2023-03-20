@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"sync"
 
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	secured_servicepb "goa.design/examples/security/multiauth/gen/grpc/secured_service/pb"
 	securedservicesvr "goa.design/examples/security/multiauth/gen/grpc/secured_service/server"
 	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
@@ -42,7 +41,7 @@ func handleGRPCServer(ctx context.Context, u *url.URL, securedServiceEndpoints *
 
 	// Initialize gRPC server with the middleware.
 	srv := grpc.NewServer(
-		grpcmiddleware.WithUnaryServerChain(
+		grpc.ChainUnaryInterceptor(
 			grpcmdlwr.UnaryRequestID(),
 			grpcmdlwr.UnaryServerLog(adapter),
 		),

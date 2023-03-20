@@ -36,6 +36,11 @@ paths:
                                 example: 4194304
                                 format: int64
                             example: 4194304
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "404":
                     description: 'invalid_file_path: Could not locate file for download'
                     content:

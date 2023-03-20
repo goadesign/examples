@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"sync"
 
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	chattersvr "goa.design/examples/streaming/gen/grpc/chatter/server"
@@ -42,11 +41,11 @@ func handleGRPCServer(ctx context.Context, u *url.URL, chatterEndpoints *chatter
 
 	// Initialize gRPC server with the middleware.
 	srv := grpc.NewServer(
-		grpcmiddleware.WithUnaryServerChain(
+		grpc.ChainUnaryInterceptor(
 			grpcmdlwr.UnaryRequestID(),
 			grpcmdlwr.UnaryServerLog(adapter),
 		),
-		grpcmiddleware.WithStreamServerChain(
+		grpc.ChainStreamInterceptor(
 			grpcmdlwr.StreamRequestID(),
 			grpcmdlwr.StreamServerLog(adapter),
 		),

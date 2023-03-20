@@ -9,7 +9,7 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, interface{}, error) {
+func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, any, error) {
 	var (
 		doer goahttp.Doer
 	)

@@ -78,6 +78,11 @@ paths:
                                 enum:
                                     - 1.0.0
                             example: 1.0.0
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
         post:
             tags:
                 - tus
@@ -183,6 +188,11 @@ paths:
                                 example: 3713765798879909435
                                 format: int64
                             example: 375294180421079817
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "400":
                     description: 'InvalidChecksumAlgorithm: The checksum algorithm is not supported by the server.'
                     headers:
@@ -234,6 +244,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
                     headers:
@@ -247,6 +262,11 @@ paths:
                                 enum:
                                     - 1.0.0
                             example: 1.0.0
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "413":
                     description: 'MaximumSizeExceeded: If the length of the upload exceeds the maximum, which MAY be specified using the Tus-Max-Size header, the Server MUST respond with the 413 Request Entity Too Large status.'
                     headers:
@@ -298,6 +318,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: true
                             example: true
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "460":
                     description: 'ChecksumMismatch: The checksums mismatch.'
                     headers:
@@ -349,6 +374,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: true
                             example: true
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
     /upload/{id}:
         delete:
             tags:
@@ -364,9 +394,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: ldnibf8crl5l8bc639kt
+                    example: 7kd24ss8ftldjugnj4hh
                     pattern: '[0-9a-v]{20}'
-                  example: uf9khq5ce3dc8pott5ra
+                  example: o36qnios5hvbuj27eeqc
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -442,6 +472,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: true
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "410":
                     description: 'Gone: For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status.'
                     headers:
@@ -493,6 +528,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: true
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
                     headers:
@@ -506,6 +546,11 @@ paths:
                                 enum:
                                     - 1.0.0
                             example: 1.0.0
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
         head:
             tags:
                 - tus
@@ -520,9 +565,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: kci2c0bqhe4nn247bj6t
+                    example: 5prfl3v56na1c0kb6kjs
                     pattern: '[0-9a-v]{20}'
-                  example: kfp81aahf7fb0ea75cab
+                  example: g67fkk3sf0s3kgjr2vls
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -580,6 +625,11 @@ paths:
                                 example: 5128883553528072720
                                 format: int64
                             example: 6645337381640055720
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "404":
                     description: 'NotFound: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.'
                     headers:
@@ -631,6 +681,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: true
                             example: true
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "410":
                     description: 'Gone: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.'
                     headers:
@@ -682,6 +737,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
                     headers:
@@ -695,6 +755,11 @@ paths:
                                 enum:
                                     - 1.0.0
                             example: 1.0.0
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
         patch:
             tags:
                 - tus
@@ -709,9 +774,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: vfhbsbq8uvurqjbn289q
+                    example: 5ilpt17161iqpskddeln
                     pattern: '[0-9a-v]{20}'
-                  example: ulck0h0hub778mlvuclm
+                  example: f5kefl9ao1bm4ekva0pk
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -823,6 +888,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: true
                             example: true
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "404":
                     description: 'NotFound: If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.'
                     headers:
@@ -874,6 +944,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "409":
                     description: 'InvalidOffset: If the offsets do not match, the Server MUST respond with the 409 Conflict status without modifying the upload resource.'
                     headers:
@@ -925,6 +1000,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "410":
                     description: 'Gone: If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.'
                     headers:
@@ -976,6 +1056,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
                     headers:
@@ -989,6 +1074,11 @@ paths:
                                 enum:
                                     - 1.0.0
                             example: 1.0.0
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "415":
                     description: 'InvalidContentType: All PATCH requests MUST use Content-Type: application/offset+octet-stream, otherwise the server SHOULD return a 415 Unsupported Media Type status.'
                     headers:
@@ -1040,6 +1130,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: true
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "460":
                     description: 'ChecksumMismatch: The checksums mismatch.'
                     headers:
@@ -1091,6 +1186,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: true
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
                 "500":
                     description: 'Internal: Internal error'
                     headers:
@@ -1142,6 +1242,11 @@ paths:
                                 description: Is the error a timeout?
                                 example: false
                             example: false
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
 components: {}
 tags:
     - name: tus
