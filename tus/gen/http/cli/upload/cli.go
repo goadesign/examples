@@ -28,7 +28,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` tus head --id "g08e56nvmoucr7hq9vvg" --tus-resumable "1.0.0"` + "\n" +
+	return os.Args[0] + ` tus head --id "9fh6cehi371p4fmukp5g" --tus-resumable "1.0.0"` + "\n" +
 		""
 }
 
@@ -207,7 +207,7 @@ Clients use the HEAD request to determine the offset at which the upload should 
     -tus-resumable STRING: 
 
 Example:
-    %[1]s tus head --id "g08e56nvmoucr7hq9vvg" --tus-resumable "1.0.0"
+    %[1]s tus head --id "9fh6cehi371p4fmukp5g" --tus-resumable "1.0.0"
 `, os.Args[0])
 }
 
@@ -222,7 +222,7 @@ Clients use the PATCH method to start or resume an upload.
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    %[1]s tus patch --id "9dl7gi6uu414aq0mjtsc" --tus-resumable "1.0.0" --upload-offset 3237920552917083987 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
+    %[1]s tus patch --id "b7r3lde1iri34rht03o8" --tus-resumable "1.0.0" --upload-offset 3237920552917083987 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
 `, os.Args[0])
 }
 
@@ -261,6 +261,6 @@ Clients use the DELETE method to terminate completed and unfinished uploads allo
     -tus-resumable STRING: 
 
 Example:
-    %[1]s tus delete --id "lmesv7uo2rqet6op7hnk" --tus-resumable "1.0.0"
+    %[1]s tus delete --id "v9n0ait6fn2a054dhe31" --tus-resumable "1.0.0"
 `, os.Args[0])
 }

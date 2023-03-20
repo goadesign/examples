@@ -31,7 +31,7 @@ of mounting the tracing and X-Ray middleware is important as shown below.
   }
   // Initialize gRPC server with the middleware.
   srv := grpc.NewServer(
-    grpcmiddleware.WithUnaryServerChain(
+		grpc.ChainUnaryInterceptor(
       // Mount the trace and X-Ray middleware. Order is very important.
       grpcmdlwr.UnaryServerTrace(),
       xm,

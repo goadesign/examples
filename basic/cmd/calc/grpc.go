@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"sync"
 
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 	calcsvr "goa.design/examples/basic/gen/grpc/calc/server"
@@ -42,7 +41,7 @@ func handleGRPCServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpo
 
 	// Initialize gRPC server with the middleware.
 	srv := grpc.NewServer(
-		grpcmiddleware.WithUnaryServerChain(
+		grpc.ChainUnaryInterceptor(
 			grpcmdlwr.UnaryRequestID(),
 			grpcmdlwr.UnaryServerLog(adapter),
 		),

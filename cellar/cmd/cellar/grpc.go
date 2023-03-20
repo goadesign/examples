@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"sync"
 
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	sommeliersvr "goa.design/examples/cellar/gen/grpc/sommelier/server"
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
@@ -46,7 +45,7 @@ func handleGRPCServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 
 	// Initialize gRPC server with the middleware.
 	srv := grpc.NewServer(
-		grpcmiddleware.WithUnaryServerChain(
+		grpc.ChainUnaryInterceptor(
 			grpcmdlwr.UnaryRequestID(),
 			grpcmdlwr.UnaryServerLog(adapter),
 		),
