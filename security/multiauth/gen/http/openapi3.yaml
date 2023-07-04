@@ -40,6 +40,7 @@ paths:
                             schema:
                                 type: string
                                 example: Aut expedita optio.
+                            example: Provident veritatis tempora nesciunt molestiae consequuntur libero.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -47,6 +48,7 @@ paths:
                             schema:
                                 type: string
                                 example: Facilis dolores sunt nihil ut dolore et.
+                            example: Id facere est.
             security:
                 - jwt_header_Authorization:
                     - api:read
@@ -99,6 +101,7 @@ paths:
                             schema:
                                 type: string
                                 example: Non nisi error ut inventore sequi.
+                            example: Ad explicabo sed.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -106,6 +109,7 @@ paths:
                             schema:
                                 type: string
                                 example: Repudiandae qui sed optio odit dignissimos.
+                            example: Consequatur blanditiis consectetur quis.
             security:
                 - api_key_query_k: []
                   jwt_header_X-Authorization:
@@ -148,6 +152,7 @@ paths:
                             schema:
                                 type: string
                                 example: Atque eum unde vero dicta minus minima.
+                            example: Error et et officiis unde.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -155,6 +160,7 @@ paths:
                             schema:
                                 type: string
                                 example: Maiores porro alias.
+                            example: Delectus ratione voluptas sit quo.
             security:
                 - api_key_query_k: []
                   jwt_header_Authorization:
@@ -185,6 +191,7 @@ paths:
                             schema:
                                 type: string
                                 example: Magni perferendis unde itaque.
+                            example: Sed ipsam at hic optio dolores aut.
             security:
                 - basic_header_Authorization: []
 components:

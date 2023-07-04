@@ -55,10 +55,10 @@ definitions:
             message:
                 type: string
                 description: division by zero leads to infinity.
-                example: Aliquid architecto facere rem.
+                example: Alias incidunt.
         description: division by 0
         example:
-            message: Incidunt quibusdam.
+            message: Non et.
         required:
             - message
     CalcDivideRequestBody:
@@ -67,15 +67,15 @@ definitions:
         properties:
             dividend:
                 type: integer
-                example: 6518345420858817596
+                example: 6836512047429743720
                 format: int64
             divisor:
                 type: integer
-                example: 3168435671144148080
+                example: 7054049476353626766
                 format: int64
         example:
-            dividend: 6836512047429743720
-            divisor: 7054049476353626766
+            dividend: 5570723899899913296
+            divisor: 6513733567661029654
         required:
             - dividend
             - divisor
@@ -85,15 +85,15 @@ definitions:
         properties:
             quotient:
                 type: integer
-                example: 6001261670528037577
+                example: 7617773024289378824
                 format: int64
             reminder:
                 type: integer
-                example: 5850431520333673251
+                example: 8614350958614154271
                 format: int64
         example:
-            quotient: 1089204046671954241
-            reminder: 3833729960400405184
+            quotient: 4285228716133201605
+            reminder: 1232634558296710584
         required:
             - quotient
             - reminder
@@ -120,19 +120,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: true
+                example: false
         description: divide_timeout_response_body result type (default view)
         example:
             fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: false
-            timeout: false
+            temporary: true
+            timeout: true
         required:
             - name
             - id

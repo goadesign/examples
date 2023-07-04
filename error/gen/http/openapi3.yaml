@@ -37,6 +37,8 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DivByZero'
+                            example:
+                                message: Minima error ullam eius odio minima ipsam.
                 "504":
                     description: 'timeout: Operation timed out'
                     content:
@@ -51,7 +53,7 @@ components:
                 message:
                     type: string
                     description: division by zero leads to infinity.
-                    example: Aut adipisci temporibus laboriosam.
+                    example: Temporibus laboriosam.
             description: division by 0
             example:
                 message: Consequatur tempore ex quae facilis necessitatibus.
@@ -62,15 +64,15 @@ components:
             properties:
                 dividend:
                     type: integer
-                    example: 5570723899899913296
+                    example: 862594352938458553
                     format: int64
                 divisor:
                     type: integer
-                    example: 6513733567661029654
+                    example: 7528159319778012238
                     format: int64
             example:
-                dividend: 862594352938458553
-                divisor: 7528159319778012238
+                dividend: 3448989877641388488
+                divisor: 2788110747497692605
             required:
                 - dividend
                 - divisor
@@ -79,15 +81,15 @@ components:
             properties:
                 quotient:
                     type: integer
-                    example: 3448989877641388488
+                    example: 5305748056757514353
                     format: int64
                 reminder:
                     type: integer
-                    example: 2788110747497692605
+                    example: 6241407428951939308
                     format: int64
             example:
-                quotient: 5305748056757514353
-                reminder: 6241407428951939308
+                quotient: 5920194056805489328
+                reminder: 8052218409301066017
             required:
                 - quotient
                 - reminder
@@ -119,9 +121,12 @@ components:
                     description: Is the error a timeout?
                     example: false
             example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
                 name: bad_request
+                temporary: true
+                timeout: true
             required:
                 - name
                 - id

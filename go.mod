@@ -9,7 +9,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/rs/xid v1.5.0
-	goa.design/goa/v3 v3.11.3
+	goa.design/goa/v3 v3.12.1
 	google.golang.org/grpc v1.56.1
 	google.golang.org/protobuf v1.31.0
 )
@@ -27,11 +27,11 @@ require (
 	github.com/smartystreets/assertions v1.2.1 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
-	golang.org/x/mod v0.9.0 // indirect
-	golang.org/x/net v0.9.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/mod v0.12.0 // indirect
+	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/tools v0.10.0 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

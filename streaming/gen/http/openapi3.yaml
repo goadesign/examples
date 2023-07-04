@@ -21,7 +21,7 @@ paths:
                             schema:
                                 type: string
                                 example: Excepturi ullam repellendus eius quis quos inventore.
-                            example: Provident nihil ut laborum doloremque.
+                            example: Rerum maiores et aut.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
@@ -29,6 +29,7 @@ paths:
                             schema:
                                 type: string
                                 example: Amet facere nihil molestias.
+                            example: Sit inventore est recusandae accusantium.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -36,6 +37,7 @@ paths:
                             schema:
                                 type: string
                                 example: Perspiciatis tenetur aut natus occaecati suscipit sapiente.
+                            example: Et exercitationem nulla qui dicta.
             security:
                 - jwt_header_Authorization:
                     - stream:read
@@ -55,17 +57,15 @@ paths:
                   schema:
                     type: string
                     description: View to use to render the result
-                    example: Ut aut numquam dolore libero pariatur est.
-                  example: Tempore consectetur sit quas optio fuga consequatur.
+                    example: Assumenda et voluptas dolor aperiam.
+                  example: Quo neque rerum.
             responses:
                 "101":
                     description: Switching Protocols response.
                     content:
                         application/json:
                             schema:
-                                anyOf:
-                                    - $ref: '#/components/schemas/HistoryResponseBodyTiny'
-                                    - $ref: '#/components/schemas/ChatSummaryResponse'
+                                $ref: '#/components/schemas/ChatSummary'
                             example:
                                 length: 1377377358064110438
                                 message: Ullam quia neque quis qui quia optio.
@@ -76,14 +76,16 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Pariatur alias rerum nulla error ut.
+                                example: Optio in quia et nostrum.
+                            example: Reprehenderit autem necessitatibus esse unde adipisci.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Maiores omnis molestiae atque a.
+                                example: Eos consequatur nobis quod.
+                            example: Quis modi.
             security:
                 - jwt_header_Authorization:
                     - stream:read
@@ -98,11 +100,6 @@ paths:
             responses:
                 "101":
                     description: Switching Protocols response.
-                    content:
-                        application/json:
-                            schema:
-                                type: string
-                                format: binary
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
@@ -110,6 +107,7 @@ paths:
                             schema:
                                 type: string
                                 example: Aliquid voluptatem vitae error eveniet dolores sapiente.
+                            example: Libero commodi vero.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -117,6 +115,7 @@ paths:
                             schema:
                                 type: string
                                 example: Amet voluptatem.
+                            example: Ducimus velit ipsam sequi beatae provident dolorum.
             security:
                 - jwt_header_Authorization:
                     - stream:read
@@ -137,7 +136,7 @@ paths:
                                 type: string
                                 description: New JWT token
                                 example: Vero necessitatibus ullam sed maiores nobis.
-                            example: Beatae molestiae voluptatum tempore consequatur.
+                            example: Voluptatem reprehenderit amet sit ex corrupti.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
@@ -145,6 +144,7 @@ paths:
                             schema:
                                 type: string
                                 example: Sint sapiente vitae quis perferendis.
+                            example: Laborum dolorum officiis dignissimos hic est culpa.
             security:
                 - basic_header_Authorization: []
     /subscribe:
@@ -172,6 +172,7 @@ paths:
                             schema:
                                 type: string
                                 example: Quo omnis quasi nihil quasi cumque.
+                            example: Suscipit adipisci voluptas quia eligendi et.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -179,6 +180,7 @@ paths:
                             schema:
                                 type: string
                                 example: Esse non.
+                            example: Quo molestiae.
             security:
                 - jwt_header_Authorization:
                     - stream:read
@@ -211,6 +213,7 @@ paths:
                             schema:
                                 type: string
                                 example: Expedita in velit harum excepturi est iusto.
+                            example: Voluptatibus enim aliquid sunt suscipit.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -218,12 +221,37 @@ paths:
                             schema:
                                 type: string
                                 example: Fugiat consectetur commodi nihil autem.
+                            example: Ducimus sed qui veritatis.
             security:
                 - jwt_header_Authorization:
                     - stream:read
                     - stream:write
 components:
     schemas:
+        ChatSummary:
+            type: object
+            properties:
+                length:
+                    type: integer
+                    description: Length of the message sent
+                    example: 3807871536578403479
+                    format: int64
+                message:
+                    type: string
+                    description: Message sent to the server
+                    example: Vero quia ad quibusdam.
+                sent_at:
+                    type: string
+                    description: Time at which the message was sent
+                    example: "1997-05-03T17:42:57Z"
+                    format: date-time
+            example:
+                length: 2898030982842231240
+                message: Possimus qui hic perspiciatis modi quasi.
+                sent_at: "1996-12-15T08:33:55Z"
+            required:
+                - message
+                - sent_at
         ChatSummaryResponse:
             type: object
             properties:
@@ -289,18 +317,6 @@ components:
                 - message
                 - action
                 - added_at
-        HistoryResponseBodyTiny:
-            type: object
-            properties:
-                message:
-                    type: string
-                    description: Message sent to the server
-                    example: Vero quia ad quibusdam.
-            description: HistoryResponseBody result type (tiny view)
-            example:
-                message: Minima dolor necessitatibus debitis.
-            required:
-                - message
     securitySchemes:
         basic_header_Authorization:
             type: http
