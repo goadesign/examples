@@ -364,9 +364,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: g1p33k56saegja5seako
+                    example: 17ddu7tcfdiecpggieag
                     pattern: '[0-9a-v]{20}'
-                  example: sj9f56pd0s45a8mvjj7i
+                  example: 53vkpuj5csknbb5ensr2
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -520,9 +520,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: k85tc3s07m7v96q3om81
+                    example: 7pemasjp7e8b7ubj612u
                     pattern: '[0-9a-v]{20}'
-                  example: btlv1g6a4vcoc6nds6ot
+                  example: h0b9h59v7k097di64b8h
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -709,9 +709,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: su4snhvq5ft7gefr82np
+                    example: smfuts58lljv1qant6k7
                     pattern: '[0-9a-v]{20}'
-                  example: 7os5u0j3uaqhclr1i1in
+                  example: l1f0f3gc5t3ps2q3s9c4
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
