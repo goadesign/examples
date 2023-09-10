@@ -1,4 +1,4 @@
-// Code generated with goa v3.12.4, DO NOT EDIT.
+// Code generated with goa v3.13.0, DO NOT EDIT.
 //
 // sommelier protocol buffer definition
 //
@@ -9,7 +9,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.23.4
-// source: goadesign_goagen_sommelier.proto
+// source: goagen_cellar_sommelier.proto
 
 package sommelierpb
 
@@ -114,5 +114,5 @@ var Sommelier_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "goadesign_goagen_sommelier.proto",
+	Metadata: "goagen_cellar_sommelier.proto",
 }

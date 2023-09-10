@@ -1,4 +1,4 @@
-// Code generated with goa v3.12.4, DO NOT EDIT.
+// Code generated with goa v3.13.0, DO NOT EDIT.
 //
 // chatter protocol buffer definition
 //
@@ -9,7 +9,7 @@
 // versions:
 // 	protoc-gen-go v1.31.0
 // 	protoc        v4.23.4
-// source: goadesign_goagen_chatter.proto
+// source: goagen_streaming_chatter.proto
 
 package chatterpb
 
@@ -36,7 +36,7 @@ type LoginRequest struct {
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[0]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -49,7 +49,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[0]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{0}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{0}
 }
 
 type LoginResponse struct {
@@ -76,7 +76,7 @@ type LoginResponse struct {
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[1]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -89,7 +89,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[1]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -102,7 +102,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{1}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *LoginResponse) GetField() string {
@@ -123,7 +123,7 @@ type EchoerStreamingRequest struct {
 func (x *EchoerStreamingRequest) Reset() {
 	*x = EchoerStreamingRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[2]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -136,7 +136,7 @@ func (x *EchoerStreamingRequest) String() string {
 func (*EchoerStreamingRequest) ProtoMessage() {}
 
 func (x *EchoerStreamingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[2]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -149,7 +149,7 @@ func (x *EchoerStreamingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EchoerStreamingRequest.ProtoReflect.Descriptor instead.
 func (*EchoerStreamingRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{2}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *EchoerStreamingRequest) GetField() string {
@@ -170,7 +170,7 @@ type EchoerResponse struct {
 func (x *EchoerResponse) Reset() {
 	*x = EchoerResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[3]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -183,7 +183,7 @@ func (x *EchoerResponse) String() string {
 func (*EchoerResponse) ProtoMessage() {}
 
 func (x *EchoerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[3]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -196,7 +196,7 @@ func (x *EchoerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EchoerResponse.ProtoReflect.Descriptor instead.
 func (*EchoerResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{3}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *EchoerResponse) GetField() string {
@@ -217,7 +217,7 @@ type ListenerStreamingRequest struct {
 func (x *ListenerStreamingRequest) Reset() {
 	*x = ListenerStreamingRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[4]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -230,7 +230,7 @@ func (x *ListenerStreamingRequest) String() string {
 func (*ListenerStreamingRequest) ProtoMessage() {}
 
 func (x *ListenerStreamingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[4]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -243,7 +243,7 @@ func (x *ListenerStreamingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListenerStreamingRequest.ProtoReflect.Descriptor instead.
 func (*ListenerStreamingRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{4}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListenerStreamingRequest) GetField() string {
@@ -262,7 +262,7 @@ type ListenerResponse struct {
 func (x *ListenerResponse) Reset() {
 	*x = ListenerResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[5]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -275,7 +275,7 @@ func (x *ListenerResponse) String() string {
 func (*ListenerResponse) ProtoMessage() {}
 
 func (x *ListenerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[5]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -288,7 +288,7 @@ func (x *ListenerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListenerResponse.ProtoReflect.Descriptor instead.
 func (*ListenerResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{5}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{5}
 }
 
 type SummaryStreamingRequest struct {
@@ -302,7 +302,7 @@ type SummaryStreamingRequest struct {
 func (x *SummaryStreamingRequest) Reset() {
 	*x = SummaryStreamingRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[6]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -315,7 +315,7 @@ func (x *SummaryStreamingRequest) String() string {
 func (*SummaryStreamingRequest) ProtoMessage() {}
 
 func (x *SummaryStreamingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[6]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -328,7 +328,7 @@ func (x *SummaryStreamingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SummaryStreamingRequest.ProtoReflect.Descriptor instead.
 func (*SummaryStreamingRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{6}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *SummaryStreamingRequest) GetField() string {
@@ -349,7 +349,7 @@ type ChatSummaryCollection struct {
 func (x *ChatSummaryCollection) Reset() {
 	*x = ChatSummaryCollection{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[7]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -362,7 +362,7 @@ func (x *ChatSummaryCollection) String() string {
 func (*ChatSummaryCollection) ProtoMessage() {}
 
 func (x *ChatSummaryCollection) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[7]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -375,7 +375,7 @@ func (x *ChatSummaryCollection) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatSummaryCollection.ProtoReflect.Descriptor instead.
 func (*ChatSummaryCollection) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{7}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ChatSummaryCollection) GetField() []*ChatSummary {
@@ -401,7 +401,7 @@ type ChatSummary struct {
 func (x *ChatSummary) Reset() {
 	*x = ChatSummary{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[8]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -414,7 +414,7 @@ func (x *ChatSummary) String() string {
 func (*ChatSummary) ProtoMessage() {}
 
 func (x *ChatSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[8]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -427,7 +427,7 @@ func (x *ChatSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChatSummary.ProtoReflect.Descriptor instead.
 func (*ChatSummary) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{8}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ChatSummary) GetMessage_() string {
@@ -460,7 +460,7 @@ type SubscribeRequest struct {
 func (x *SubscribeRequest) Reset() {
 	*x = SubscribeRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[9]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -473,7 +473,7 @@ func (x *SubscribeRequest) String() string {
 func (*SubscribeRequest) ProtoMessage() {}
 
 func (x *SubscribeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[9]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -486,7 +486,7 @@ func (x *SubscribeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscribeRequest.ProtoReflect.Descriptor instead.
 func (*SubscribeRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{9}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{9}
 }
 
 type SubscribeResponse struct {
@@ -504,7 +504,7 @@ type SubscribeResponse struct {
 func (x *SubscribeResponse) Reset() {
 	*x = SubscribeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[10]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -517,7 +517,7 @@ func (x *SubscribeResponse) String() string {
 func (*SubscribeResponse) ProtoMessage() {}
 
 func (x *SubscribeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[10]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -530,7 +530,7 @@ func (x *SubscribeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscribeResponse.ProtoReflect.Descriptor instead.
 func (*SubscribeResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{10}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *SubscribeResponse) GetMessage_() string {
@@ -563,7 +563,7 @@ type HistoryRequest struct {
 func (x *HistoryRequest) Reset() {
 	*x = HistoryRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[11]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -576,7 +576,7 @@ func (x *HistoryRequest) String() string {
 func (*HistoryRequest) ProtoMessage() {}
 
 func (x *HistoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[11]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -589,7 +589,7 @@ func (x *HistoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HistoryRequest.ProtoReflect.Descriptor instead.
 func (*HistoryRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{11}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{11}
 }
 
 type HistoryResponse struct {
@@ -608,7 +608,7 @@ type HistoryResponse struct {
 func (x *HistoryResponse) Reset() {
 	*x = HistoryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_chatter_proto_msgTypes[12]
+		mi := &file_goagen_streaming_chatter_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -621,7 +621,7 @@ func (x *HistoryResponse) String() string {
 func (*HistoryResponse) ProtoMessage() {}
 
 func (x *HistoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_chatter_proto_msgTypes[12]
+	mi := &file_goagen_streaming_chatter_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -634,7 +634,7 @@ func (x *HistoryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HistoryResponse.ProtoReflect.Descriptor instead.
 func (*HistoryResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_chatter_proto_rawDescGZIP(), []int{12}
+	return file_goagen_streaming_chatter_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *HistoryResponse) GetMessage_() string {
@@ -658,11 +658,11 @@ func (x *HistoryResponse) GetSentAt() string {
 	return ""
 }
 
-var File_goadesign_goagen_chatter_proto protoreflect.FileDescriptor
+var File_goagen_streaming_chatter_proto protoreflect.FileDescriptor
 
-var file_goadesign_goagen_chatter_proto_rawDesc = []byte{
-	0x0a, 0x1e, 0x67, 0x6f, 0x61, 0x64, 0x65, 0x73, 0x69, 0x67, 0x6e, 0x5f, 0x67, 0x6f, 0x61, 0x67,
-	0x65, 0x6e, 0x5f, 0x63, 0x68, 0x61, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+var file_goagen_streaming_chatter_proto_rawDesc = []byte{
+	0x0a, 0x1e, 0x67, 0x6f, 0x61, 0x67, 0x65, 0x6e, 0x5f, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x69,
+	0x6e, 0x67, 0x5f, 0x63, 0x68, 0x61, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x12, 0x07, 0x63, 0x68, 0x61, 0x74, 0x74, 0x65, 0x72, 0x22, 0x0e, 0x0a, 0x0c, 0x4c, 0x6f, 0x67,
 	0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x25, 0x0a, 0x0d, 0x4c, 0x6f, 0x67,
 	0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x66, 0x69,
@@ -738,19 +738,19 @@ var file_goadesign_goagen_chatter_proto_rawDesc = []byte{
 }
 
 var (
-	file_goadesign_goagen_chatter_proto_rawDescOnce sync.Once
-	file_goadesign_goagen_chatter_proto_rawDescData = file_goadesign_goagen_chatter_proto_rawDesc
+	file_goagen_streaming_chatter_proto_rawDescOnce sync.Once
+	file_goagen_streaming_chatter_proto_rawDescData = file_goagen_streaming_chatter_proto_rawDesc
 )
 
-func file_goadesign_goagen_chatter_proto_rawDescGZIP() []byte {
-	file_goadesign_goagen_chatter_proto_rawDescOnce.Do(func() {
-		file_goadesign_goagen_chatter_proto_rawDescData = protoimpl.X.CompressGZIP(file_goadesign_goagen_chatter_proto_rawDescData)
+func file_goagen_streaming_chatter_proto_rawDescGZIP() []byte {
+	file_goagen_streaming_chatter_proto_rawDescOnce.Do(func() {
+		file_goagen_streaming_chatter_proto_rawDescData = protoimpl.X.CompressGZIP(file_goagen_streaming_chatter_proto_rawDescData)
 	})
-	return file_goadesign_goagen_chatter_proto_rawDescData
+	return file_goagen_streaming_chatter_proto_rawDescData
 }
 
-var file_goadesign_goagen_chatter_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
-var file_goadesign_goagen_chatter_proto_goTypes = []interface{}{
+var file_goagen_streaming_chatter_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_goagen_streaming_chatter_proto_goTypes = []interface{}{
 	(*LoginRequest)(nil),             // 0: chatter.LoginRequest
 	(*LoginResponse)(nil),            // 1: chatter.LoginResponse
 	(*EchoerStreamingRequest)(nil),   // 2: chatter.EchoerStreamingRequest
@@ -765,7 +765,7 @@ var file_goadesign_goagen_chatter_proto_goTypes = []interface{}{
 	(*HistoryRequest)(nil),           // 11: chatter.HistoryRequest
 	(*HistoryResponse)(nil),          // 12: chatter.HistoryResponse
 }
-var file_goadesign_goagen_chatter_proto_depIdxs = []int32{
+var file_goagen_streaming_chatter_proto_depIdxs = []int32{
 	8,  // 0: chatter.ChatSummaryCollection.field:type_name -> chatter.ChatSummary
 	0,  // 1: chatter.Chatter.Login:input_type -> chatter.LoginRequest
 	2,  // 2: chatter.Chatter.Echoer:input_type -> chatter.EchoerStreamingRequest
@@ -786,13 +786,13 @@ var file_goadesign_goagen_chatter_proto_depIdxs = []int32{
 	0,  // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_goadesign_goagen_chatter_proto_init() }
-func file_goadesign_goagen_chatter_proto_init() {
-	if File_goadesign_goagen_chatter_proto != nil {
+func init() { file_goagen_streaming_chatter_proto_init() }
+func file_goagen_streaming_chatter_proto_init() {
+	if File_goagen_streaming_chatter_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_goadesign_goagen_chatter_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*LoginRequest); i {
 			case 0:
 				return &v.state
@@ -804,7 +804,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*LoginResponse); i {
 			case 0:
 				return &v.state
@@ -816,7 +816,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EchoerStreamingRequest); i {
 			case 0:
 				return &v.state
@@ -828,7 +828,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EchoerResponse); i {
 			case 0:
 				return &v.state
@@ -840,7 +840,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListenerStreamingRequest); i {
 			case 0:
 				return &v.state
@@ -852,7 +852,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListenerResponse); i {
 			case 0:
 				return &v.state
@@ -864,7 +864,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SummaryStreamingRequest); i {
 			case 0:
 				return &v.state
@@ -876,7 +876,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ChatSummaryCollection); i {
 			case 0:
 				return &v.state
@@ -888,7 +888,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ChatSummary); i {
 			case 0:
 				return &v.state
@@ -900,7 +900,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SubscribeRequest); i {
 			case 0:
 				return &v.state
@@ -912,7 +912,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SubscribeResponse); i {
 			case 0:
 				return &v.state
@@ -924,7 +924,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*HistoryRequest); i {
 			case 0:
 				return &v.state
@@ -936,7 +936,7 @@ func file_goadesign_goagen_chatter_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_chatter_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_streaming_chatter_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*HistoryResponse); i {
 			case 0:
 				return &v.state
@@ -949,24 +949,24 @@ func file_goadesign_goagen_chatter_proto_init() {
 			}
 		}
 	}
-	file_goadesign_goagen_chatter_proto_msgTypes[8].OneofWrappers = []interface{}{}
-	file_goadesign_goagen_chatter_proto_msgTypes[12].OneofWrappers = []interface{}{}
+	file_goagen_streaming_chatter_proto_msgTypes[8].OneofWrappers = []interface{}{}
+	file_goagen_streaming_chatter_proto_msgTypes[12].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_goadesign_goagen_chatter_proto_rawDesc,
+			RawDescriptor: file_goagen_streaming_chatter_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_goadesign_goagen_chatter_proto_goTypes,
-		DependencyIndexes: file_goadesign_goagen_chatter_proto_depIdxs,
-		MessageInfos:      file_goadesign_goagen_chatter_proto_msgTypes,
+		GoTypes:           file_goagen_streaming_chatter_proto_goTypes,
+		DependencyIndexes: file_goagen_streaming_chatter_proto_depIdxs,
+		MessageInfos:      file_goagen_streaming_chatter_proto_msgTypes,
 	}.Build()
-	File_goadesign_goagen_chatter_proto = out.File
-	file_goadesign_goagen_chatter_proto_rawDesc = nil
-	file_goadesign_goagen_chatter_proto_goTypes = nil
-	file_goadesign_goagen_chatter_proto_depIdxs = nil
+	File_goagen_streaming_chatter_proto = out.File
+	file_goagen_streaming_chatter_proto_rawDesc = nil
+	file_goagen_streaming_chatter_proto_goTypes = nil
+	file_goagen_streaming_chatter_proto_depIdxs = nil
 }

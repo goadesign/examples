@@ -1,4 +1,4 @@
-// Code generated with goa v3.12.4, DO NOT EDIT.
+// Code generated with goa v3.13.0, DO NOT EDIT.
 //
 // chatter protocol buffer definition
 //
@@ -9,7 +9,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.23.4
-// source: goadesign_goagen_chatter.proto
+// source: goagen_streaming_chatter.proto
 
 package chatterpb
 
@@ -464,5 +464,5 @@ var Chatter_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "goadesign_goagen_chatter.proto",
+	Metadata: "goagen_streaming_chatter.proto",
 }

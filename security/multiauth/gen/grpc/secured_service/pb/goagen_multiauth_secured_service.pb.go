@@ -1,4 +1,4 @@
-// Code generated with goa v3.12.4, DO NOT EDIT.
+// Code generated with goa v3.13.0, DO NOT EDIT.
 //
 // secured_service protocol buffer definition
 //
@@ -9,7 +9,7 @@
 // versions:
 // 	protoc-gen-go v1.31.0
 // 	protoc        v4.23.4
-// source: goadesign_goagen_secured_service.proto
+// source: goagen_multiauth_secured_service.proto
 
 package secured_servicepb
 
@@ -36,7 +36,7 @@ type SigninRequest struct {
 func (x *SigninRequest) Reset() {
 	*x = SigninRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[0]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -49,7 +49,7 @@ func (x *SigninRequest) String() string {
 func (*SigninRequest) ProtoMessage() {}
 
 func (x *SigninRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[0]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *SigninRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SigninRequest.ProtoReflect.Descriptor instead.
 func (*SigninRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{0}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{0}
 }
 
 type SigninResponse struct {
@@ -81,7 +81,7 @@ type SigninResponse struct {
 func (x *SigninResponse) Reset() {
 	*x = SigninResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[1]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -94,7 +94,7 @@ func (x *SigninResponse) String() string {
 func (*SigninResponse) ProtoMessage() {}
 
 func (x *SigninResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[1]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -107,7 +107,7 @@ func (x *SigninResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SigninResponse.ProtoReflect.Descriptor instead.
 func (*SigninResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{1}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SigninResponse) GetJwt() string {
@@ -143,7 +143,7 @@ type SecureRequest struct {
 func (x *SecureRequest) Reset() {
 	*x = SecureRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[2]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -156,7 +156,7 @@ func (x *SecureRequest) String() string {
 func (*SecureRequest) ProtoMessage() {}
 
 func (x *SecureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[2]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -169,7 +169,7 @@ func (x *SecureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SecureRequest.ProtoReflect.Descriptor instead.
 func (*SecureRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{2}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *SecureRequest) GetFail() bool {
@@ -190,7 +190,7 @@ type SecureResponse struct {
 func (x *SecureResponse) Reset() {
 	*x = SecureResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[3]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -203,7 +203,7 @@ func (x *SecureResponse) String() string {
 func (*SecureResponse) ProtoMessage() {}
 
 func (x *SecureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[3]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -216,7 +216,7 @@ func (x *SecureResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SecureResponse.ProtoReflect.Descriptor instead.
 func (*SecureResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{3}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SecureResponse) GetField() string {
@@ -238,7 +238,7 @@ type DoublySecureRequest struct {
 func (x *DoublySecureRequest) Reset() {
 	*x = DoublySecureRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[4]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -251,7 +251,7 @@ func (x *DoublySecureRequest) String() string {
 func (*DoublySecureRequest) ProtoMessage() {}
 
 func (x *DoublySecureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[4]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -264,7 +264,7 @@ func (x *DoublySecureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoublySecureRequest.ProtoReflect.Descriptor instead.
 func (*DoublySecureRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{4}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DoublySecureRequest) GetKey() string {
@@ -285,7 +285,7 @@ type DoublySecureResponse struct {
 func (x *DoublySecureResponse) Reset() {
 	*x = DoublySecureResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[5]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -298,7 +298,7 @@ func (x *DoublySecureResponse) String() string {
 func (*DoublySecureResponse) ProtoMessage() {}
 
 func (x *DoublySecureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[5]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -311,7 +311,7 @@ func (x *DoublySecureResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoublySecureResponse.ProtoReflect.Descriptor instead.
 func (*DoublySecureResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{5}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DoublySecureResponse) GetField() string {
@@ -337,7 +337,7 @@ type AlsoDoublySecureRequest struct {
 func (x *AlsoDoublySecureRequest) Reset() {
 	*x = AlsoDoublySecureRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[6]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -350,7 +350,7 @@ func (x *AlsoDoublySecureRequest) String() string {
 func (*AlsoDoublySecureRequest) ProtoMessage() {}
 
 func (x *AlsoDoublySecureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[6]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -363,7 +363,7 @@ func (x *AlsoDoublySecureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AlsoDoublySecureRequest.ProtoReflect.Descriptor instead.
 func (*AlsoDoublySecureRequest) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{6}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AlsoDoublySecureRequest) GetUsername() string {
@@ -398,7 +398,7 @@ type AlsoDoublySecureResponse struct {
 func (x *AlsoDoublySecureResponse) Reset() {
 	*x = AlsoDoublySecureResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_goadesign_goagen_secured_service_proto_msgTypes[7]
+		mi := &file_goagen_multiauth_secured_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -411,7 +411,7 @@ func (x *AlsoDoublySecureResponse) String() string {
 func (*AlsoDoublySecureResponse) ProtoMessage() {}
 
 func (x *AlsoDoublySecureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_goadesign_goagen_secured_service_proto_msgTypes[7]
+	mi := &file_goagen_multiauth_secured_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -424,7 +424,7 @@ func (x *AlsoDoublySecureResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AlsoDoublySecureResponse.ProtoReflect.Descriptor instead.
 func (*AlsoDoublySecureResponse) Descriptor() ([]byte, []int) {
-	return file_goadesign_goagen_secured_service_proto_rawDescGZIP(), []int{7}
+	return file_goagen_multiauth_secured_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AlsoDoublySecureResponse) GetField() string {
@@ -434,11 +434,11 @@ func (x *AlsoDoublySecureResponse) GetField() string {
 	return ""
 }
 
-var File_goadesign_goagen_secured_service_proto protoreflect.FileDescriptor
+var File_goagen_multiauth_secured_service_proto protoreflect.FileDescriptor
 
-var file_goadesign_goagen_secured_service_proto_rawDesc = []byte{
-	0x0a, 0x26, 0x67, 0x6f, 0x61, 0x64, 0x65, 0x73, 0x69, 0x67, 0x6e, 0x5f, 0x67, 0x6f, 0x61, 0x67,
-	0x65, 0x6e, 0x5f, 0x73, 0x65, 0x63, 0x75, 0x72, 0x65, 0x64, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69,
+var file_goagen_multiauth_secured_service_proto_rawDesc = []byte{
+	0x0a, 0x26, 0x67, 0x6f, 0x61, 0x67, 0x65, 0x6e, 0x5f, 0x6d, 0x75, 0x6c, 0x74, 0x69, 0x61, 0x75,
+	0x74, 0x68, 0x5f, 0x73, 0x65, 0x63, 0x75, 0x72, 0x65, 0x64, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69,
 	0x63, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0f, 0x73, 0x65, 0x63, 0x75, 0x72, 0x65,
 	0x64, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x22, 0x0f, 0x0a, 0x0d, 0x53, 0x69, 0x67,
 	0x6e, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x5c, 0x0a, 0x0e, 0x53, 0x69,
@@ -499,19 +499,19 @@ var file_goadesign_goagen_secured_service_proto_rawDesc = []byte{
 }
 
 var (
-	file_goadesign_goagen_secured_service_proto_rawDescOnce sync.Once
-	file_goadesign_goagen_secured_service_proto_rawDescData = file_goadesign_goagen_secured_service_proto_rawDesc
+	file_goagen_multiauth_secured_service_proto_rawDescOnce sync.Once
+	file_goagen_multiauth_secured_service_proto_rawDescData = file_goagen_multiauth_secured_service_proto_rawDesc
 )
 
-func file_goadesign_goagen_secured_service_proto_rawDescGZIP() []byte {
-	file_goadesign_goagen_secured_service_proto_rawDescOnce.Do(func() {
-		file_goadesign_goagen_secured_service_proto_rawDescData = protoimpl.X.CompressGZIP(file_goadesign_goagen_secured_service_proto_rawDescData)
+func file_goagen_multiauth_secured_service_proto_rawDescGZIP() []byte {
+	file_goagen_multiauth_secured_service_proto_rawDescOnce.Do(func() {
+		file_goagen_multiauth_secured_service_proto_rawDescData = protoimpl.X.CompressGZIP(file_goagen_multiauth_secured_service_proto_rawDescData)
 	})
-	return file_goadesign_goagen_secured_service_proto_rawDescData
+	return file_goagen_multiauth_secured_service_proto_rawDescData
 }
 
-var file_goadesign_goagen_secured_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_goadesign_goagen_secured_service_proto_goTypes = []interface{}{
+var file_goagen_multiauth_secured_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_goagen_multiauth_secured_service_proto_goTypes = []interface{}{
 	(*SigninRequest)(nil),            // 0: secured_service.SigninRequest
 	(*SigninResponse)(nil),           // 1: secured_service.SigninResponse
 	(*SecureRequest)(nil),            // 2: secured_service.SecureRequest
@@ -521,7 +521,7 @@ var file_goadesign_goagen_secured_service_proto_goTypes = []interface{}{
 	(*AlsoDoublySecureRequest)(nil),  // 6: secured_service.AlsoDoublySecureRequest
 	(*AlsoDoublySecureResponse)(nil), // 7: secured_service.AlsoDoublySecureResponse
 }
-var file_goadesign_goagen_secured_service_proto_depIdxs = []int32{
+var file_goagen_multiauth_secured_service_proto_depIdxs = []int32{
 	0, // 0: secured_service.SecuredService.Signin:input_type -> secured_service.SigninRequest
 	2, // 1: secured_service.SecuredService.Secure:input_type -> secured_service.SecureRequest
 	4, // 2: secured_service.SecuredService.DoublySecure:input_type -> secured_service.DoublySecureRequest
@@ -537,13 +537,13 @@ var file_goadesign_goagen_secured_service_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_goadesign_goagen_secured_service_proto_init() }
-func file_goadesign_goagen_secured_service_proto_init() {
-	if File_goadesign_goagen_secured_service_proto != nil {
+func init() { file_goagen_multiauth_secured_service_proto_init() }
+func file_goagen_multiauth_secured_service_proto_init() {
+	if File_goagen_multiauth_secured_service_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_goadesign_goagen_secured_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SigninRequest); i {
 			case 0:
 				return &v.state
@@ -555,7 +555,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SigninResponse); i {
 			case 0:
 				return &v.state
@@ -567,7 +567,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SecureRequest); i {
 			case 0:
 				return &v.state
@@ -579,7 +579,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SecureResponse); i {
 			case 0:
 				return &v.state
@@ -591,7 +591,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DoublySecureRequest); i {
 			case 0:
 				return &v.state
@@ -603,7 +603,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DoublySecureResponse); i {
 			case 0:
 				return &v.state
@@ -615,7 +615,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AlsoDoublySecureRequest); i {
 			case 0:
 				return &v.state
@@ -627,7 +627,7 @@ func file_goadesign_goagen_secured_service_proto_init() {
 				return nil
 			}
 		}
-		file_goadesign_goagen_secured_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_goagen_multiauth_secured_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AlsoDoublySecureResponse); i {
 			case 0:
 				return &v.state
@@ -640,24 +640,24 @@ func file_goadesign_goagen_secured_service_proto_init() {
 			}
 		}
 	}
-	file_goadesign_goagen_secured_service_proto_msgTypes[2].OneofWrappers = []interface{}{}
-	file_goadesign_goagen_secured_service_proto_msgTypes[6].OneofWrappers = []interface{}{}
+	file_goagen_multiauth_secured_service_proto_msgTypes[2].OneofWrappers = []interface{}{}
+	file_goagen_multiauth_secured_service_proto_msgTypes[6].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_goadesign_goagen_secured_service_proto_rawDesc,
+			RawDescriptor: file_goagen_multiauth_secured_service_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_goadesign_goagen_secured_service_proto_goTypes,
-		DependencyIndexes: file_goadesign_goagen_secured_service_proto_depIdxs,
-		MessageInfos:      file_goadesign_goagen_secured_service_proto_msgTypes,
+		GoTypes:           file_goagen_multiauth_secured_service_proto_goTypes,
+		DependencyIndexes: file_goagen_multiauth_secured_service_proto_depIdxs,
+		MessageInfos:      file_goagen_multiauth_secured_service_proto_msgTypes,
 	}.Build()
-	File_goadesign_goagen_secured_service_proto = out.File
-	file_goadesign_goagen_secured_service_proto_rawDesc = nil
-	file_goadesign_goagen_secured_service_proto_goTypes = nil
-	file_goadesign_goagen_secured_service_proto_depIdxs = nil
+	File_goagen_multiauth_secured_service_proto = out.File
+	file_goagen_multiauth_secured_service_proto_rawDesc = nil
+	file_goagen_multiauth_secured_service_proto_goTypes = nil
+	file_goagen_multiauth_secured_service_proto_depIdxs = nil
 }

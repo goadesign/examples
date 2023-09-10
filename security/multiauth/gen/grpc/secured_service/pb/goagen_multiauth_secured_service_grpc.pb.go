@@ -1,4 +1,4 @@
-// Code generated with goa v3.12.4, DO NOT EDIT.
+// Code generated with goa v3.13.0, DO NOT EDIT.
 //
 // secured_service protocol buffer definition
 //
@@ -9,7 +9,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.23.4
-// source: goadesign_goagen_secured_service.proto
+// source: goagen_multiauth_secured_service.proto
 
 package secured_servicepb
 
@@ -235,5 +235,5 @@ var SecuredService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "goadesign_goagen_secured_service.proto",
+	Metadata: "goagen_multiauth_secured_service.proto",
 }

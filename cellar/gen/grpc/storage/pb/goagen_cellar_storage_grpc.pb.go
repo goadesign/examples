@@ -1,4 +1,4 @@
-// Code generated with goa v3.12.4, DO NOT EDIT.
+// Code generated with goa v3.13.0, DO NOT EDIT.
 //
 // storage protocol buffer definition
 //
@@ -9,7 +9,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.23.4
-// source: goadesign_goagen_storage.proto
+// source: goagen_cellar_storage.proto
 
 package storagepb
 
@@ -356,5 +356,5 @@ var Storage_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "goadesign_goagen_storage.proto",
+	Metadata: "goagen_cellar_storage.proto",
 }
