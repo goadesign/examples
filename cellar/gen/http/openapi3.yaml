@@ -468,6 +468,15 @@ paths:
             summary: rate storage
             description: Rate bottles by IDs
             operationId: storage#rate
+            parameters:
+                - name: payload
+                  in: query
+                  description: Query parameters
+                  style: deepObject
+                  required: true
+                  schema:
+                    type: object
+                    additionalProperties: true
             responses:
                 "200":
                     description: OK response.

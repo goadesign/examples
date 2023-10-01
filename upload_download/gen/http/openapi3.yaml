@@ -29,7 +29,6 @@ paths:
                     headers:
                         Content-Length:
                             description: Length is the downloaded content length in bytes.
-                            required: true
                             schema:
                                 type: integer
                                 description: Length is the downloaded content length in bytes.

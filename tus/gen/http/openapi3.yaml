@@ -20,7 +20,6 @@ paths:
                     headers:
                         Tus-Checksum-Algorithm:
                             description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
-                            required: true
                             schema:
                                 type: string
                                 description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
@@ -30,7 +29,6 @@ paths:
                             example: md5,sha1,crc32
                         Tus-Extension:
                             description: tusExtension is a comma separated list of extensions supported by the server. This implementation supports the creation, creation-with-upload, expiration, checksum and termination extensions
-                            required: true
                             schema:
                                 type: string
                                 description: tusExtension is a comma separated list of extensions supported by the server. This implementation supports the creation, creation-with-upload, expiration, checksum and termination extensions
@@ -48,7 +46,6 @@ paths:
                             example: 6978318493894829345
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
-                            required: true
                             schema:
                                 type: string
                                 description: tusResumable represents a tus protocol version.
@@ -57,7 +54,6 @@ paths:
                             example: 1.0.0
                         Tus-Version:
                             description: tusVersion is a comma separated list of protocol versions supported by the server. This implementation only supports 1.0.0.
-                            required: true
                             schema:
                                 type: string
                                 description: tusVersion is a comma separated list of protocol versions supported by the server. This implementation only supports 1.0.0.
@@ -70,7 +66,6 @@ paths:
                     headers:
                         Tus-Version:
                             description: Comma separated list of supported versions.
-                            required: true
                             schema:
                                 type: string
                                 description: Comma separated list of supported versions.
@@ -151,7 +146,6 @@ paths:
                     headers:
                         Location:
                             description: URL of created resource
-                            required: true
                             schema:
                                 type: string
                                 description: URL of created resource
@@ -160,7 +154,6 @@ paths:
                             example: /files/123
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
-                            required: true
                             schema:
                                 type: string
                                 description: tusResumable represents a tus protocol version.
@@ -176,7 +169,6 @@ paths:
                             example: Wed, 25 Jun 2014 16:00:00 GMT
                         Upload-Offset:
                             description: uploadOffset represents a byte offset within a resource.
-                            required: true
                             schema:
                                 type: integer
                                 description: uploadOffset represents a byte offset within a resource.
@@ -188,7 +180,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -196,7 +187,6 @@ paths:
                             example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -204,7 +194,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -212,7 +201,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -220,7 +208,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -228,7 +215,6 @@ paths:
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -239,7 +225,6 @@ paths:
                     headers:
                         Tus-Version:
                             description: Comma separated list of supported versions.
-                            required: true
                             schema:
                                 type: string
                                 description: Comma separated list of supported versions.
@@ -252,7 +237,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -260,7 +244,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -268,7 +251,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -276,7 +258,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -284,7 +265,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -292,7 +272,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -303,7 +282,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -311,7 +289,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -319,7 +296,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -327,7 +303,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -335,7 +310,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -343,7 +317,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -364,9 +337,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: lcq78o6u16pndbkav68c
+                    example: ik6rlq3a8366rpvebef0
                     pattern: '[0-9a-v]{20}'
-                  example: i93ou0ol0o11vvi0hopk
+                  example: m5hshraskinqrm8ikkh8
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -384,7 +357,6 @@ paths:
                     headers:
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
-                            required: true
                             schema:
                                 type: string
                                 description: tusResumable represents a tus protocol version.
@@ -396,7 +368,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -404,7 +375,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -412,7 +382,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -420,7 +389,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -428,7 +396,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -436,7 +403,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -447,7 +413,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -455,7 +420,6 @@ paths:
                             example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -463,7 +427,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -471,7 +434,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -479,7 +441,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -487,7 +448,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -498,7 +458,6 @@ paths:
                     headers:
                         Tus-Version:
                             description: Comma separated list of supported versions.
-                            required: true
                             schema:
                                 type: string
                                 description: Comma separated list of supported versions.
@@ -520,9 +479,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: gb2l1lqbg3aa59ij47h1
+                    example: e64o6s954tc2inqh39dk
                     pattern: '[0-9a-v]{20}'
-                  example: 1u7ngoe78hil85n44g2e
+                  example: tlg9j18c4vkmm8kkmt4j
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -540,7 +499,6 @@ paths:
                     headers:
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
-                            required: true
                             schema:
                                 type: string
                                 description: tusResumable represents a tus protocol version.
@@ -573,7 +531,6 @@ paths:
                             example: key1 val1,key2 val2
                         Upload-Offset:
                             description: uploadOffset represents a byte offset within a resource.
-                            required: true
                             schema:
                                 type: integer
                                 description: uploadOffset represents a byte offset within a resource.
@@ -585,7 +542,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -593,7 +549,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -601,7 +556,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -609,7 +563,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -617,7 +570,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -625,7 +577,6 @@ paths:
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -636,7 +587,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -644,7 +594,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -652,7 +601,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -660,7 +608,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -668,7 +615,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -676,7 +622,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -687,7 +632,6 @@ paths:
                     headers:
                         Tus-Version:
                             description: Comma separated list of supported versions.
-                            required: true
                             schema:
                                 type: string
                                 description: Comma separated list of supported versions.
@@ -709,9 +653,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: 7695dvcq622llir2cdkv
+                    example: tqo05mp6u44fclff5irv
                     pattern: '[0-9a-v]{20}'
-                  example: k8en7esqg761tg2send0
+                  example: 9s17nq3vsfd6euk8g7t3
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -749,7 +693,6 @@ paths:
                     headers:
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
-                            required: true
                             schema:
                                 type: string
                                 description: tusResumable represents a tus protocol version.
@@ -765,7 +708,6 @@ paths:
                             example: Wed, 25 Jun 2014 16:00:00 GMT
                         Upload-Offset:
                             description: uploadOffset represents a byte offset within a resource.
-                            required: true
                             schema:
                                 type: integer
                                 description: uploadOffset represents a byte offset within a resource.
@@ -777,7 +719,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -785,7 +726,6 @@ paths:
                             example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -793,7 +733,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -801,7 +740,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -809,7 +747,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -817,7 +754,6 @@ paths:
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -828,7 +764,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -836,7 +771,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -844,7 +778,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -852,7 +785,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -860,7 +792,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -868,7 +799,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -879,7 +809,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -887,7 +816,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -895,7 +823,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -903,7 +830,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -911,7 +837,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -919,7 +844,6 @@ paths:
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -930,7 +854,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -938,7 +861,6 @@ paths:
                             example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -946,7 +868,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -954,7 +875,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -962,7 +882,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -970,7 +889,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -981,7 +899,6 @@ paths:
                     headers:
                         Tus-Version:
                             description: Comma separated list of supported versions.
-                            required: true
                             schema:
                                 type: string
                                 description: Comma separated list of supported versions.
@@ -994,7 +911,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -1002,7 +918,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -1010,7 +925,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -1018,7 +932,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -1026,7 +939,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -1034,7 +946,6 @@ paths:
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -1045,7 +956,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -1053,7 +963,6 @@ paths:
                             example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -1061,7 +970,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -1069,7 +977,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -1077,7 +984,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -1085,7 +991,6 @@ paths:
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
@@ -1096,7 +1001,6 @@ paths:
                     headers:
                         goa-attribute-fault:
                             description: Is the error a server-side fault?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
@@ -1104,7 +1008,6 @@ paths:
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -1112,7 +1015,6 @@ paths:
                             example: 123abc
                         goa-attribute-message:
                             description: Message is a human-readable explanation specific to this occurrence of the problem.
-                            required: true
                             schema:
                                 type: string
                                 description: Message is a human-readable explanation specific to this occurrence of the problem.
@@ -1120,7 +1022,6 @@ paths:
                             example: parameter 'p' must be an integer
                         goa-attribute-name:
                             description: Name is the name of this class of errors.
-                            required: true
                             schema:
                                 type: string
                                 description: Name is the name of this class of errors.
@@ -1128,7 +1029,6 @@ paths:
                             example: bad_request
                         goa-attribute-temporary:
                             description: Is the error temporary?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
@@ -1136,7 +1036,6 @@ paths:
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
-                            required: true
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
