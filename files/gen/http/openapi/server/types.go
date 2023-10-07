@@ -3,6 +3,6 @@
 // openapi HTTP server types
 //
 // Command:
-// $ goa gen goa.design/examples/files/design -o files
+// $ goa gen goa.design/examples/files/design
 
 package server
