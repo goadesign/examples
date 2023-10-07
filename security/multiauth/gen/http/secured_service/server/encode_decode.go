@@ -3,7 +3,7 @@
 // secured_service HTTP server encoders and decoders
 //
 // Command:
-// $ goa gen goa.design/examples/security/multiauth/design -o security/multiauth
+// $ goa gen goa.design/examples/security/multiauth/design
 
 package server
 

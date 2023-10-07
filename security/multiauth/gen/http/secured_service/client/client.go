@@ -3,7 +3,7 @@
 // secured_service client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/security/multiauth/design -o security/multiauth
+// $ goa gen goa.design/examples/security/multiauth/design
 
 package client
 
