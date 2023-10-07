@@ -77,7 +77,6 @@ lint:
 gen:
 	@# NOTE: not all command line tools are generated
 	@echo GENERATING CODE...
-	@rm -rf ./cmd/*                && \
 	goa gen     "$(MODULE)/design" && \
 	goa example "$(MODULE)/design"
 
