@@ -3,7 +3,7 @@
 // api_key_service client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/security/hierarchy/design -o security/hierarchy
+// $ goa gen goa.design/examples/security/hierarchy/design
 
 package client
 

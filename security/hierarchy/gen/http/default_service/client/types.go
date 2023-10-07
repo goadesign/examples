@@ -3,6 +3,6 @@
 // default_service HTTP client types
 //
 // Command:
-// $ goa gen goa.design/examples/security/hierarchy/design -o security/hierarchy
+// $ goa gen goa.design/examples/security/hierarchy/design
 
 package client

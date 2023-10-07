@@ -3,7 +3,7 @@
 // HTTP request path constructors for the default_service service.
 //
 // Command:
-// $ goa gen goa.design/examples/security/hierarchy/design -o security/hierarchy
+// $ goa gen goa.design/examples/security/hierarchy/design
 
 package server
 

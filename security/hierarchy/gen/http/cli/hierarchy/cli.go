@@ -3,7 +3,7 @@
 // hierarchy HTTP client CLI support package
 //
 // Command:
-// $ goa gen goa.design/examples/security/hierarchy/design -o security/hierarchy
+// $ goa gen goa.design/examples/security/hierarchy/design
 
 package cli
 
