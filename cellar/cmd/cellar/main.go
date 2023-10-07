@@ -12,6 +12,8 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/boltdb/bolt"
+
 	cellar "goa.design/examples/cellar"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	storage "goa.design/examples/cellar/gen/storage"
@@ -37,15 +39,30 @@ func main() {
 	{
 		logger = log.New(os.Stderr, "[cellar] ", log.Ltime)
 	}
-
+	// Initialize service dependencies such as databases.
+	var (
+		db *bolt.DB
+	)
+	{
+		var err error
+		db, err = bolt.Open("cellar.db", 0600, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+	}
 	// Initialize the services.
 	var (
 		sommelierSvc sommelier.Service
 		storageSvc   storage.Service
+		err          error
 	)
 	{
 		sommelierSvc = cellar.NewSommelier(logger)
-		storageSvc = cellar.NewStorage(logger)
+		storageSvc, err = cellar.NewStorage(db, logger)
+		if err != nil {
+			logger.Fatalf("error creating database: %s", err)
+		}
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
