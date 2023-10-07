@@ -3,7 +3,7 @@
 // session HTTP server types
 //
 // Command:
-// $ goa gen goa.design/examples/cookies/design -o cookies
+// $ goa gen goa.design/examples/cookies/design
 
 package server
 

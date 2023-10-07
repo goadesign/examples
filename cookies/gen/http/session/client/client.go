@@ -3,7 +3,7 @@
 // session client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/cookies/design -o cookies
+// $ goa gen goa.design/examples/cookies/design
 
 package client
 
