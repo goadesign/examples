@@ -3,7 +3,7 @@
 // chatter client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/streaming/design -o streaming
+// $ goa gen github.com/ikawaha/examples/streaming/design
 
 package client
 

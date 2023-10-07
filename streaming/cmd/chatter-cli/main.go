@@ -58,7 +58,7 @@ func main() {
 	}
 	var (
 		endpoint goa.Endpoint
-		payload  interface{}
+		payload  any
 		err      error
 	)
 	{
