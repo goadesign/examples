@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"sync"
+	"syscall"
 	"time"
 
 	tussvc "goa.design/examples/tus"
@@ -40,9 +41,12 @@ func main() {
 
 	// SIGINT and SIGTERM signals cause the services to stop gracefully.
 	errc := make(chan error)
+
+	// Setup interrupt handler. This optional step configures the process so
+	// that SIGINT and SIGTERM signals cause the services to stop gracefully.
 	go func() {
 		c := make(chan os.Signal, 1)
-		signal.Notify(c, os.Interrupt)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		errc <- fmt.Errorf("%s", <-c)
 	}()
 
@@ -52,7 +56,7 @@ func main() {
 	// Start the servers and send errors (if any) to the error channel.
 	u, err := url.Parse(fmt.Sprintf("http://localhost:%s/upload", *httpPortF))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "invalid port %#v: %s\n", *httpPortF, err)
+		_, _ = fmt.Fprintf(os.Stderr, "invalid port %#v: %s\n", *httpPortF, err)
 		os.Exit(1)
 	}
 	handleHTTPServer(ctx, u, endpoints, &wg, errc, logger, *dbgF)

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	tussvr "goa.design/examples/tus/gen/http/tus/server"
-	tus "goa.design/examples/tus/gen/tus"
+	"goa.design/examples/tus/gen/tus"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
@@ -49,7 +49,10 @@ func handleHTTPServer(ctx context.Context, u *url.URL, tusEndpoints *tus.Endpoin
 		ctx, cancel := context.WithTimeout(ctx, 300*time.Second)
 		defer cancel()
 
-		srv.Shutdown(ctx)
+		err := srv.Shutdown(ctx)
+		if err != nil {
+			logger.Printf("failed to shutdown: %v", err)
+		}
 	}()
 }
 
@@ -59,7 +62,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, tusEndpoints *tus.Endpoin
 func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
-		w.Write([]byte("[" + id + "] encoding: " + err.Error()))
+		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Printf("[%s] ERROR: %s", id, err.Error())
 	}
 }
