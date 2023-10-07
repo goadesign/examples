@@ -3,7 +3,7 @@
 // concat service
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/cbor/design -o encodings/cbor
+// $ goa gen goa.design/examples/encodings/cbor/design
 
 package concat
 

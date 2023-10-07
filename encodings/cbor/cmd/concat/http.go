@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	concatapi "goa.design/examples/encodings/cbor"
 	concat "goa.design/examples/encodings/cbor/gen/concat"
 	concatsvr "goa.design/examples/encodings/cbor/gen/http/concat/server"
 	goahttp "goa.design/goa/v3/http"
@@ -34,8 +33,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 	// Other encodings can be used by providing the corresponding functions,
 	// see goa.design/implement/encoding.
 	var (
-		dec = concatapi.RequestDecoder
-		enc = concatapi.ResponseEncoder
+		dec = goahttp.RequestDecoder
+		enc = goahttp.ResponseEncoder
 	)
 
 	// Build the service HTTP request multiplexer and configure it to serve
@@ -75,7 +74,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
-	srv := &http.Server{Addr: u.Host, Handler: handler}
+	srv := &http.Server{Addr: u.Host, Handler: handler, ReadHeaderTimeout: time.Second * 60}
 	for _, m := range concatServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
@@ -97,7 +96,10 @@ func handleHTTPServer(ctx context.Context, u *url.URL, concatEndpoints *concat.E
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		_ = srv.Shutdown(ctx)
+		err := srv.Shutdown(ctx)
+		if err != nil {
+			logger.Printf("failed to shutdown: %v", err)
+		}
 	}()
 }
 
