@@ -3,7 +3,7 @@
 // text HTTP server encoders and decoders
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/text/design -o encodings/text
+// $ goa gen goa.design/examples/encodings/text/design
 
 package server
 

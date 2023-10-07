@@ -3,7 +3,7 @@
 // text endpoints
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/text/design -o encodings/text
+// $ goa gen goa.design/examples/encodings/text/design
 
 package text
 

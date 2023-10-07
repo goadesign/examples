@@ -3,7 +3,7 @@
 // HTTP request path constructors for the text service.
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/text/design -o encodings/text
+// $ goa gen goa.design/examples/encodings/text/design
 
 package client
 
