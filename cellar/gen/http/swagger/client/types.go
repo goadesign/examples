@@ -3,6 +3,6 @@
 // swagger HTTP client types
 //
 // Command:
-// $ goa gen goa.design/examples/cellar/design -o cellar
+// $ goa gen goa.design/examples/cellar/design
 
 package client
