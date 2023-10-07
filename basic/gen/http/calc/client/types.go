@@ -3,6 +3,6 @@
 // calc HTTP client types
 //
 // Command:
-// $ goa gen goa.design/examples/basic/design -o basic
+// $ goa gen goa.design/examples/basic/design
 
 package client

@@ -3,7 +3,7 @@
 // calc protocol buffer definition
 //
 // Command:
-// $ goa gen goa.design/examples/basic/design -o basic
+// $ goa gen goa.design/examples/basic/design
 
 syntax = "proto3";
 
