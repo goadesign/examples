@@ -3,7 +3,7 @@
 // multi_auth gRPC client CLI support package
 //
 // Command:
-// $ goa gen goa.design/examples/security/multiauth/design -o security/multiauth
+// $ goa gen goa.design/examples/security/multiauth/design
 
 package cli
 

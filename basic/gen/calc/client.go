@@ -3,7 +3,7 @@
 // calc client
 //
 // Command:
-// $ goa gen goa.design/examples/basic/design -o basic
+// $ goa gen goa.design/examples/basic/design
 
 package calc
 

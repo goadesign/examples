@@ -16,7 +16,7 @@ import (
 	sommelier "goa.design/examples/cellar/gen/sommelier"
 	storage "goa.design/examples/cellar/gen/storage"
 	goahttp "goa.design/goa/v3/http"
-	httpmiddleware "goa.design/goa/v3/http/middleware"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
 )
 
@@ -35,7 +35,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
 	// Other encodings can be used by providing the corresponding functions,
-	// see goa.design/encoding.
+	// see goa.design/implement/encoding.
 	var (
 		dec = goahttp.RequestDecoder
 		enc = goahttp.ResponseEncoder
@@ -62,6 +62,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 		sommelierServer = sommeliersvr.New(sommelierEndpoints, mux, dec, enc, eh, nil)
 		storageServer = storagesvr.New(storageEndpoints, mux, dec, enc, eh, nil, cellar.StorageMultiAddDecoderFunc, cellar.StorageMultiUpdateDecoderFunc)
 		swaggerServer = swaggersvr.New(nil, mux, dec, enc, eh, nil, nil)
+		if debug {
+			servers := goahttp.Servers{
+				sommelierServer,
+				storageServer,
+				swaggerServer,
+			}
+			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
+		}
 	}
 	// Configure the mux.
 	sommeliersvr.Mount(mux, sommelierServer)
@@ -72,16 +80,13 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
 	{
-		if debug {
-			handler = httpmiddleware.Debug(mux, os.Stdout)(handler)
-		}
-		handler = httpmiddleware.Log(adapter)(handler)
-		handler = httpmiddleware.RequestID()(handler)
+		handler = httpmdlwr.Log(adapter)(handler)
+		handler = httpmdlwr.RequestID()(handler)
 	}
 
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
-	srv := &http.Server{Addr: u.Host, Handler: handler}
+	srv := &http.Server{Addr: u.Host, Handler: handler, ReadHeaderTimeout: time.Second * 60}
 	for _, m := range sommelierServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
@@ -106,10 +111,13 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
 		// Shutdown gracefully with a 30s timeout.
-		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		srv.Shutdown(ctx)
+		err := srv.Shutdown(ctx)
+		if err != nil {
+			logger.Printf("failed to shutdown: %v", err)
+		}
 	}()
 }
 
@@ -119,7 +127,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, sommelierEndpoints *somme
 func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
-		w.Write([]byte("[" + id + "] encoding: " + err.Error()))
+		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Printf("[%s] ERROR: %s", id, err.Error())
 	}
 }

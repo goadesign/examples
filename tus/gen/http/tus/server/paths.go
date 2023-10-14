@@ -3,7 +3,7 @@
 // HTTP request path constructors for the tus service.
 //
 // Command:
-// $ goa gen goa.design/examples/tus/design -o tus
+// $ goa gen goa.design/examples/tus/design
 
 package server
 

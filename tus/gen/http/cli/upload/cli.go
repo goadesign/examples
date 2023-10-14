@@ -3,7 +3,7 @@
 // Upload HTTP client CLI support package
 //
 // Command:
-// $ goa gen goa.design/examples/tus/design -o tus
+// $ goa gen goa.design/examples/tus/design
 
 package cli
 
@@ -28,7 +28,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` tus head --id "nldc26ee721lv2pnqlki" --tus-resumable "1.0.0"` + "\n" +
+	return os.Args[0] + ` tus head --id "odtjehsobdnt64luh38o" --tus-resumable "1.0.0"` + "\n" +
 		""
 }
 
@@ -207,7 +207,7 @@ Clients use the HEAD request to determine the offset at which the upload should 
     -tus-resumable STRING: 
 
 Example:
-    %[1]s tus head --id "nldc26ee721lv2pnqlki" --tus-resumable "1.0.0"
+    %[1]s tus head --id "odtjehsobdnt64luh38o" --tus-resumable "1.0.0"
 `, os.Args[0])
 }
 
@@ -222,7 +222,7 @@ Clients use the PATCH method to start or resume an upload.
     -stream STRING: path to file containing the streamed request body
 
 Example:
-    %[1]s tus patch --id "a1nijh8pg0hkte4ios4l" --tus-resumable "1.0.0" --upload-offset 3237920552917083987 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
+    %[1]s tus patch --id "v4g6t1ktq3m1js4jcd3p" --tus-resumable "1.0.0" --upload-offset 3237920552917083987 --upload-checksum "sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=" --stream "goa.png"
 `, os.Args[0])
 }
 
@@ -261,6 +261,6 @@ Clients use the DELETE method to terminate completed and unfinished uploads allo
     -tus-resumable STRING: 
 
 Example:
-    %[1]s tus delete --id "9gdoklutr1aq5slbuics" --tus-resumable "1.0.0"
+    %[1]s tus delete --id "omlckokcapg7m9rq09ki" --tus-resumable "1.0.0"
 `, os.Args[0])
 }

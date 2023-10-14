@@ -3,7 +3,7 @@
 // tus HTTP client CLI support package
 //
 // Command:
-// $ goa gen goa.design/examples/tus/design -o tus
+// $ goa gen goa.design/examples/tus/design
 
 package client
 

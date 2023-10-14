@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/rs/xid"
 	session "goa.design/examples/cookies/gen/session"
+	"github.com/rs/xid"
 )
 
 // session service example implementation.

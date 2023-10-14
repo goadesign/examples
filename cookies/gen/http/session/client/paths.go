@@ -3,7 +3,7 @@
 // HTTP request path constructors for the session service.
 //
 // Command:
-// $ goa gen goa.design/examples/cookies/design -o cookies
+// $ goa gen goa.design/examples/cookies/design
 
 package client
 

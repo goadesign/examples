@@ -7,10 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Collect Workflow Telemetry
-      uses: runforesight/foresight-workflow-kit-action@v1
-      if: success() || failure()
-
     - name: Set up Go 1.21
       uses: actions/setup-go@v4.1.0
       with:
@@ -25,18 +21,9 @@ jobs:
       run: echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
       id: setup_path
 
-    - name: Build
-      run: make ci
-
-    - name: Compute code coverage
-      run: go test -v -json -coverprofile=coverage.out ./...> ./test-report.json || true 
-
-    - name: Analyze Test and/or Coverage Results
-      uses: runforesight/foresight-test-kit-action@v1
-      if: success() || failure()
-      with:
-        test_format: JSON
-        test_framework: GOLANG
-        test_path: "./test-report.json"
-        coverage_format: GOLANG
-        coverage_path: ./coverage.out
+    - name: Run CI for each Makefile
+      run: |
+        for makefile in $(find . -type f -name Makefile); do
+          make -C $(dirname $makefile) test
+        done
+        

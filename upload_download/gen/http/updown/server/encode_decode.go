@@ -3,7 +3,7 @@
 // updown HTTP server encoders and decoders
 //
 // Command:
-// $ goa gen goa.design/examples/upload_download/design -o upload_download
+// $ goa gen goa.design/examples/upload_download/design
 
 package server
 

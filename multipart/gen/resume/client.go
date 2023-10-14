@@ -3,7 +3,7 @@
 // resume client
 //
 // Command:
-// $ goa gen goa.design/examples/multipart/design -o multipart
+// $ goa gen goa.design/examples/multipart/design
 
 package resume
 

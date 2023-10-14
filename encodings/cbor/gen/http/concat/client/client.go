@@ -3,7 +3,7 @@
 // concat client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/encodings/cbor/design -o encodings/cbor
+// $ goa gen goa.design/examples/encodings/cbor/design
 
 package client
 

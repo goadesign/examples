@@ -3,7 +3,7 @@
 // tus client HTTP transport
 //
 // Command:
-// $ goa gen goa.design/examples/tus/design -o tus
+// $ goa gen goa.design/examples/tus/design
 
 package client
 

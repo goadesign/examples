@@ -3,7 +3,7 @@
 // calc gRPC server encoders and decoders
 //
 // Command:
-// $ goa gen goa.design/examples/error/design -o error
+// $ goa gen goa.design/examples/error/design
 
 package server
 

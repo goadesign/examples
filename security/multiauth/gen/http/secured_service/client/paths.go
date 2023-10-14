@@ -3,7 +3,7 @@
 // HTTP request path constructors for the secured_service service.
 //
 // Command:
-// $ goa gen goa.design/examples/security/multiauth/design -o security/multiauth
+// $ goa gen goa.design/examples/security/multiauth/design
 
 package client
 

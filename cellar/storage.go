@@ -5,9 +5,8 @@ import (
 	"log"
 	"strings"
 
-	storage "goa.design/examples/cellar/gen/storage"
-
 	"github.com/boltdb/bolt"
+	storage "goa.design/examples/cellar/gen/storage"
 )
 
 // storage service example implementation.

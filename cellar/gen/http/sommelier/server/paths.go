@@ -3,7 +3,7 @@
 // HTTP request path constructors for the sommelier service.
 //
 // Command:
-// $ goa gen goa.design/examples/cellar/design -o cellar
+// $ goa gen goa.design/examples/cellar/design
 
 package server
 
