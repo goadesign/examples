@@ -11,7 +11,7 @@ The samples in each directory serve as templates, and you can clone them using t
 
 ```shell
 $ go install golang.org/x/tools/cmd/gonew@latest
-$ gonew github.com/ikawaha/examples/basic@latest github.com/<your_repo>/basic
+$ gonew goa.design/examples/basic@latest github.com/<your_repo>/basic
 $ cd basic
 ```
 
