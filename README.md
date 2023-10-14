@@ -7,6 +7,14 @@ This repository contains examples of microservices implemented using
 the directory name. The [cellar](https://github.com/goadesign/examples/tree/master/cellar) example
 provides a complete implementation of a simple microservice.
 
+The samples in each directory serve as templates, and you can clone them using the `gonew` command, as explained in [this blog post](https://go.dev/blog/gonew).
+
+```shell
+$ go install golang.org/x/tools/cmd/gonew@latest
+$ gonew github.com/ikawaha/examples/basic@latest github.com/<your_repo>/basic
+$ cd basic
+```
+
 A [fully instrumented example](https://github.com/goadesign/clue/tree/main/example/weather) of a
 system consisting of multiple Goa microservices is included in the
 [Clue](https://github.com/goadesign/clue) repo.
