@@ -35,8 +35,6 @@ github.com/gorilla/websocket v1.5.0 h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWm
 github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 h1:UH//fgunKIs4JdUbpDl1VZCDaL56wXCB/5+wF6uHfaI=
 github.com/grpc-ecosystem/go-grpc-middleware v1.4.0/go.mod h1:g5qyo/la0ALbONm6Vbp88Yd8NsDy6rZz+RcrMPxvld8=
-github.com/ikawaha/calc v0.0.3 h1:lxw7qIXpYT329E4Fh+4rBeRiCZk3qZGnILNIrCXPm3Y=
-github.com/ikawaha/calc v0.0.3/go.mod h1:VgNWbu1m4GXqe4EahlPZbDsIA0ynKoyP2t1cdUkSRHg=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
@@ -65,6 +63,8 @@ go.uber.org/atomic v1.7.0/go.mod h1:fEN4uk6kAWBTFdckzkM89CLk9XfWZrxpCo0nPH17wJc=
 go.uber.org/goleak v1.1.10/go.mod h1:8a7PlsEVH3e/a/GLqe5IIrQx6GzcnRmZEufDUTk4A7A=
 go.uber.org/multierr v1.6.0/go.mod h1:cdWPpRnG4AhwMwsgIHip0KRBQjJy5kYEpYjJxpXp9iU=
 go.uber.org/zap v1.18.1/go.mod h1:xg/QME4nWcxGxrpdeYfq7UvYrLh66cuVKdrbD1XF/NI=
+goa.design/examples/basic v0.0.0-20231014231032-46da41257452 h1:7jwVE2EZoOLCqena3MSY3ydXwo96D/xieaoBTt20kqY=
+goa.design/examples/basic v0.0.0-20231014231032-46da41257452/go.mod h1:VgNWbu1m4GXqe4EahlPZbDsIA0ynKoyP2t1cdUkSRHg=
 goa.design/goa/v3 v3.13.2 h1:RclNIpo7891ZqGRVO4fpBjT7Fs7LjBNm78i8J41KHrI=
 goa.design/goa/v3 v3.13.2/go.mod h1:VvZsuC8CSIUQOHVqk6Ep3MFSFz21OjOv87UPqCHiB94=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
