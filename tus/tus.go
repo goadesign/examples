@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/rs/xid"
 	"goa.design/examples/tus/gen/http/tus/server"
 	"goa.design/examples/tus/gen/tus"
 	"goa.design/examples/tus/persist"
-	"github.com/rs/xid"
 	goahttp "goa.design/goa/v3/http"
 )
 
