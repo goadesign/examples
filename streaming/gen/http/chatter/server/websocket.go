@@ -3,7 +3,7 @@
 // chatter WebSocket server streaming
 //
 // Command:
-// $ goa gen github.com/ikawaha/examples/streaming/design
+// $ goa gen goa.design/examples/streaming/design
 
 package server
 

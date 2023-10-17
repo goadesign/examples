@@ -32,6 +32,8 @@ github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcU
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/x448/float16 v0.8.4 h1:qLwI1I70+NjRFUR3zs1JPUCgaCXSh3SW62uAKT1mSBM=
 github.com/x448/float16 v0.8.4/go.mod h1:14CWIYCyZA/cWjXOioeEpHeN/83MdbZDRQHoFcYsOfg=
+goa.design/goa/v3 v3.13.1 h1:JRWJs1GSD5WWPvGq7Ru68au7BcxG+cA7fWCi/q4ONq0=
+goa.design/goa/v3 v3.13.1/go.mod h1:v8tZEXhHSRXTsgtA9rK6tlVKA+7L6S0vqu8x6U9a17c=
 goa.design/goa/v3 v3.13.2 h1:RclNIpo7891ZqGRVO4fpBjT7Fs7LjBNm78i8J41KHrI=
 goa.design/goa/v3 v3.13.2/go.mod h1:VvZsuC8CSIUQOHVqk6Ep3MFSFz21OjOv87UPqCHiB94=
 golang.org/x/mod v0.12.0 h1:rmsUpXtvNzj340zd98LZ4KntptpfRHwpFOHG188oHXc=

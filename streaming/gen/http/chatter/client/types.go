@@ -3,7 +3,7 @@
 // chatter HTTP client types
 //
 // Command:
-// $ goa gen github.com/ikawaha/examples/streaming/design
+// $ goa gen goa.design/examples/streaming/design
 
 package client
 

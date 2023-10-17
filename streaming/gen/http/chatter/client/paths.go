@@ -3,7 +3,7 @@
 // HTTP request path constructors for the chatter service.
 //
 // Command:
-// $ goa gen github.com/ikawaha/examples/streaming/design
+// $ goa gen goa.design/examples/streaming/design
 
 package client
 
