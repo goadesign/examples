@@ -22,4 +22,4 @@ jobs:
       id: setup_path
 
     - name: Run CI for each Makefile
-      run: make
+      run: make test
