@@ -22,8 +22,4 @@ jobs:
       id: setup_path
 
     - name: Run CI for each Makefile
-      run: |
-        for makefile in $(find . -type f -name Makefile); do
-          make -C $(dirname $makefile) test
-        done
-        
+      run: make test
