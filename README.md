@@ -16,7 +16,15 @@ $ cd basic
 ```
 
 A [fully instrumented example](https://github.com/goadesign/clue/tree/main/example/weather) of a
-system consisting of multiple Goa microservices is included in the [Clue](https://github.com/goadesign/clue) repo. Please follow the README in the Clue repository for more details on running and testing the Goa Clue example.
+system consisting of multiple Goa microservices is included in the [Clue](https://github.com/goadesign/clue) repo.
+
+To get started with the Goa Clue example, you can use the gonew command to clone it into your own repository:
+
+```shell
+$ gonew github.com/goadesign/clue/example/weather github.com/<your_repo>/weather
+$ cd weather
+```
+Please follow the README in the Clue repository for more details on running and testing the Goa Clue example.
 
 As you study each example consider contributing back by providing better or more complete docs,
 adding clarifying comments to code or fixing any error you may run across!
