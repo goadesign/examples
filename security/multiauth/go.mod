@@ -5,7 +5,7 @@ go 1.21.1
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	goa.design/goa/v3 v3.13.2
-	google.golang.org/grpc v1.58.2
+	google.golang.org/grpc v1.58.3
 	google.golang.org/protobuf v1.31.0
 )
 
