@@ -52,7 +52,6 @@ paths:
             security:
                 - jwt_header_Authorization:
                     - api:read
-                    - api:write
         post:
             tags:
                 - secured_service

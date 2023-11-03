@@ -40,7 +40,6 @@ paths:
                             example: Et exercitationem nulla qui dicta.
             security:
                 - jwt_header_Authorization:
-                    - stream:read
                     - stream:write
     /history:
         get:
@@ -89,7 +88,6 @@ paths:
             security:
                 - jwt_header_Authorization:
                     - stream:read
-                    - stream:write
     /listener:
         get:
             tags:
@@ -118,7 +116,6 @@ paths:
                             example: Ducimus velit ipsam sequi beatae provident dolorum.
             security:
                 - jwt_header_Authorization:
-                    - stream:read
                     - stream:write
     /login:
         post:
@@ -183,7 +180,6 @@ paths:
                             example: Quo molestiae.
             security:
                 - jwt_header_Authorization:
-                    - stream:read
                     - stream:write
     /summary:
         get:
@@ -224,7 +220,6 @@ paths:
                             example: Ducimus sed qui veritatis.
             security:
                 - jwt_header_Authorization:
-                    - stream:read
                     - stream:write
 components:
     schemas:
