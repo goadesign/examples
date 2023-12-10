@@ -10,7 +10,7 @@ GOA_VERSION ?= latest
 all:
 	@for dir in $(DIRS); do \
 		echo "Making in $$dir..."; \
-		(cd $$dir && go get -u goa.design/goa/v3@$(GOA_VERSION) && make) || exit 1; \
+		(cd $$dir && go get -u goa.design/goa/v3@$(GOA_VERSION) && go mod tidy && make) || exit 1; \
 	done
 
 # Execute "make test" in all identified directories
