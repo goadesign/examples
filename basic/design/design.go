@@ -84,5 +84,5 @@ var _ = Service("calc", func() {
 
 	// Serve the file gen/http/openapi3.json for requests sent to
 	// /openapi.json.
-	Files("/openapi.json", "openapi3.json")
+	Files("/openapi.json", "gen/http/openapi3.json")
 })
