@@ -53,7 +53,7 @@ paths:
         get:
             tags:
                 - calc
-            summary: Download openapi3.json
+            summary: Download gen/http/openapi3.json
             operationId: calc#/openapi.json
             responses:
                 "200":
