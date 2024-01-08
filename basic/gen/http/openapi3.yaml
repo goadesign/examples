@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
     title: Calculator Service
     description: HTTP service for multiplying numbers, a goa teaser
-    version: "1.0"
+    version: 0.0.1
 servers:
     - url: http://localhost:8000/calc
       description: calc hosts the Calculator Service.

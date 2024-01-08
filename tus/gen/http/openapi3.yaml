@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
     title: File Upload Service
     description: HTTP service for uploading files using the tus protocol (https://tus.io)
-    version: "1.0"
+    version: 0.0.1
 servers:
     - url: http://localhost:8000/upload
       description: Upload hosts the upload service.
@@ -337,9 +337,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: 7lqams18m1igg6ert5nt
+                    example: j8r4spsunupe11kn6std
                     pattern: '[0-9a-v]{20}'
-                  example: 2mtoljo37ocb5bllla4h
+                  example: mma4fimcpb2t2j00ha6k
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -479,9 +479,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: 571op5ou17v9n8r2c8ah
+                    example: t88mjiin1i2d4bteqhud
                     pattern: '[0-9a-v]{20}'
-                  example: 9a9h2ngapcf5rtogkj18
+                  example: e1le8pcls4ijef9b5rdd
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -653,9 +653,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: lu4ks7holljuprd26kme
+                    example: hpm8mv690qtpm9oovssh
                     pattern: '[0-9a-v]{20}'
-                  example: hi84bqoudm673o2m1upf
+                  example: 77650mjhmmmbdq2gucqu
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.

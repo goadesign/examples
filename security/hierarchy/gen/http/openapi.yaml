@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
     title: Security Example API
     description: This API demonstrates the effect of using Security at the API, Service or Method levels
-    version: ""
+    version: 0.0.1
 host: localhost:80
 consumes:
     - application/json

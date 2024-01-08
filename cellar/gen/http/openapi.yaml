@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
     title: Cellar Service
     description: HTTP service for managing your wine cellar
-    version: ""
+    version: 0.0.1
 host: localhost:8000
 consumes:
     - application/json

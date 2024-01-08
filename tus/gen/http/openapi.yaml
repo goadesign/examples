@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
     title: File Upload Service
     description: HTTP service for uploading files using the tus protocol (https://tus.io)
-    version: ""
+    version: 0.0.1
 host: localhost:8000
 consumes:
     - application/json

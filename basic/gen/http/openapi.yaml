@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
     title: Calculator Service
     description: HTTP service for multiplying numbers, a goa teaser
-    version: ""
+    version: 0.0.1
 host: localhost:8000
 consumes:
     - application/json

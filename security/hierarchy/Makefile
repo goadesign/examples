@@ -69,7 +69,7 @@ lint:
 	@if [ "`goimports -l $(GO_FILES) | grep -v .pb.go | tee /dev/stderr`" ]; then \
 		echo "^ - Repo contains improperly formatted go files" && echo && exit 1; \
 	fi
-	@if [ "`staticcheck -checks all,-ST1000,-ST1001 ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
+	@if [ "`staticcheck ./... | grep -v ".pb.go" | tee /dev/stderr`" ]; then \
 		echo "^ - staticcheck errors!" && echo && exit 1; \
 	fi
 

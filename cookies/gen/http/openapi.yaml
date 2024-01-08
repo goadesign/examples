@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
     title: Session service
     description: HTTP service that showcase the use of HTTP cookies in Goa services.
-    version: ""
+    version: 0.0.1
 host: localhost:80
 consumes:
     - application/json

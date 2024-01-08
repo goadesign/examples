@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
     title: Chatter service describing the streaming features of goa v2.
-    version: ""
+    version: 0.0.1
 host: localhost:80
 consumes:
     - application/json

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
     title: Security Example API
     description: This API demonstrates the effect of using Security at the API, Service or Method levels
-    version: "1.0"
+    version: 0.0.1
 servers:
     - url: http://localhost:80
       description: Default server for hierarchy
