@@ -3,7 +3,7 @@ module goa.design/examples/basic
 go 1.21.1
 
 require (
-	goa.design/goa/v3 v3.14.2
+	goa.design/goa/v3 v3.14.4
 	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.32.0
 )

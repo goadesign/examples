@@ -2,7 +2,7 @@ module goa.design/examples/encodings/text
 
 go 1.21.1
 
-require goa.design/goa/v3 v3.14.2
+require goa.design/goa/v3 v3.14.4
 
 require (
 	github.com/AnatolyRugalev/goregen v0.1.0 // indirect
