@@ -4,7 +4,7 @@ go 1.21.1
 
 require (
 	github.com/fxamacker/cbor/v2 v2.5.0
-	goa.design/goa/v3 v3.14.4
+	goa.design/goa/v3 v3.14.5
 )
 
 require (
@@ -17,8 +17,8 @@ require (
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
+	golang.org/x/net v0.20.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.16.1 // indirect
+	golang.org/x/tools v0.17.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
