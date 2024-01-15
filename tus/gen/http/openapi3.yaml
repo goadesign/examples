@@ -111,6 +111,7 @@ paths:
                     example: 1
                     enum:
                         - 1
+                    format: int64
                   example: 1
                 - name: Upload-Checksum
                   in: header
@@ -337,9 +338,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: s2m77llfdt719gas5rf0
+                    example: 0dog32ir15v9e4s2nic4
                     pattern: '[0-9a-v]{20}'
-                  example: ofdqeo5aicm11q51tq75
+                  example: up89hfqi76jhbu2l5hgp
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -479,9 +480,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: ga22aah8go8nl3luosah
+                    example: vadnki56mihai2dsvfug
                     pattern: '[0-9a-v]{20}'
-                  example: 6thhslj8f8hsgmutakct
+                  example: 1uf8iu1ed5a9a9to57gn
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -513,6 +514,7 @@ paths:
                                 example: 1
                                 enum:
                                     - 1
+                                format: int64
                             example: 1
                         Upload-Length:
                             description: uploadLength represents the size of the entire upload in bytes.
@@ -653,9 +655,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: ie04l02k48ml8bjdrd7i
+                    example: 6hpaakoqtm6radidts3e
                     pattern: '[0-9a-v]{20}'
-                  example: mo0dodp5knv0tfb1o0dd
+                  example: vh7qn498qaac4k4q0qk2
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.

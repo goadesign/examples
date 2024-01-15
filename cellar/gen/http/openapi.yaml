@@ -246,12 +246,14 @@ definitions:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
                 example: 4
+                format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
                 example: 1951
+                format: int32
                 minimum: 1900
                 maximum: 2020
             winery:
@@ -286,6 +288,7 @@ definitions:
                 type: integer
                 description: Percentage of varietal in wine
                 example: 3
+                format: int32
                 minimum: 1
                 maximum: 100
             varietal:
@@ -307,6 +310,7 @@ definitions:
                 type: integer
                 description: Percentage of varietal in wine
                 example: 17
+                format: int32
                 minimum: 1
                 maximum: 100
             varietal:
@@ -328,6 +332,7 @@ definitions:
                 type: integer
                 description: Percentage of varietal in wine
                 example: 1
+                format: int32
                 minimum: 1
                 maximum: 100
             varietal:
@@ -437,12 +442,14 @@ definitions:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
                 example: 3
+                format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
                 example: 1965
+                format: int32
                 minimum: 1900
                 maximum: 2020
             winery:
@@ -617,12 +624,14 @@ definitions:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
                 example: 4
+                format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
                 example: 1988
+                format: int32
                 minimum: 1900
                 maximum: 2020
             winery:
@@ -731,12 +740,14 @@ definitions:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
                 example: 3
+                format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
                 example: 1957
+                format: int32
                 minimum: 1900
                 maximum: 2020
             winery:
