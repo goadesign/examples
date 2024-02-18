@@ -521,12 +521,14 @@ components:
                     type: integer
                     description: Rating of bottle from 1 (worst) to 5 (best)
                     example: 1
+                    format: int32
                     minimum: 1
                     maximum: 5
                 vintage:
                     type: integer
                     description: Vintage of bottle
                     example: 1980
+                    format: int32
                     minimum: 1900
                     maximum: 2020
                 winery:
@@ -561,6 +563,7 @@ components:
                     type: integer
                     description: Percentage of varietal in wine
                     example: 81
+                    format: int32
                     minimum: 1
                     maximum: 100
                 varietal:
@@ -764,12 +767,14 @@ components:
                     type: integer
                     description: Rating of bottle from 1 (worst) to 5 (best)
                     example: 4
+                    format: int32
                     minimum: 1
                     maximum: 5
                 vintage:
                     type: integer
                     description: Vintage of bottle
                     example: 1920
+                    format: int32
                     minimum: 1900
                     maximum: 2020
                 winery:
@@ -830,12 +835,14 @@ components:
                     type: integer
                     description: Rating of bottle from 1 (worst) to 5 (best)
                     example: 4
+                    format: int32
                     minimum: 1
                     maximum: 5
                 vintage:
                     type: integer
                     description: Vintage of bottle
                     example: 2018
+                    format: int32
                     minimum: 1900
                     maximum: 2020
                 winery:
