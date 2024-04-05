@@ -17,7 +17,6 @@ var GreetingResult = ResultType("application/vnd.hello", func() {
 var _ = Service("hello", func() {
 	Description("The hello service returns greetings with various statuses.")
 
-	// Method describes a service method (endpoint)
 	Method("hello", func() {
 		Payload(func() {
 			Attribute("greeting", String, "The greeting message")
@@ -35,7 +34,7 @@ var _ = Service("hello", func() {
 			Response(StatusAccepted, func() {
 				Tag("outcome", "accepted")
 			})
-			Response(StatusOK)
+			Response(StatusOK) // default response status
 		})
 	})
 })

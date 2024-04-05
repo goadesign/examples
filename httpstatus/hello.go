@@ -23,9 +23,9 @@ func (s *hellosrvc) HelloEndpoint(ctx context.Context, p *hello.HelloPayload) (*
 	var res hello.Hello
 	res.Greeting = p.Greeting
 	switch p.Greeting {
-	case "hello":
+	case "world":
 		res.Outcome = "created"
-	case "bye":
+	case "aloha":
 		res.Outcome = "accepted"
 	default:
 		res.Outcome = "defaultStatus"
