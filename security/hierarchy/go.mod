@@ -2,7 +2,7 @@ module goa.design/examples/security/hierarchy
 
 go 1.21.1
 
-require goa.design/goa/v3 v3.16.0
+require goa.design/goa/v3 v3.16.1
 
 require (
 	github.com/AnatolyRugalev/goregen v0.1.0 // indirect
