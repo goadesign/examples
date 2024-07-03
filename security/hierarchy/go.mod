@@ -2,7 +2,7 @@ module goa.design/examples/security/hierarchy
 
 go 1.21.1
 
-require goa.design/goa/v3 v3.17.0
+require goa.design/goa/v3 v3.17.1
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
