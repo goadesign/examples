@@ -74,8 +74,7 @@ lint:
 	fi
 
 .PHONY: gen
-gen:
-	@# NOTE: not all command line tools are generated
+gen: clean
 	@echo GENERATING CODE...
 	@goa gen     "$(MODULE)/design" && \
 	goa example "$(MODULE)/design"
