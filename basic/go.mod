@@ -2,8 +2,6 @@ module goa.design/examples/basic
 
 go 1.21.1
 
-replace goa.design/goa/v3 => /Users/raphael/src/goa
-
 require (
 	goa.design/clue v1.0.5
 	goa.design/goa/v3 v3.17.2
