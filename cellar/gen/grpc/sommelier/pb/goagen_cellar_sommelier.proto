@@ -1,4 +1,4 @@
-// Code generated with goa v3.17.2, DO NOT EDIT.
+// Code generated with goa v3.18.0, DO NOT EDIT.
 //
 // sommelier protocol buffer definition
 //
