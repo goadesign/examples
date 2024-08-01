@@ -2,7 +2,7 @@ module goa.design/examples/encodings/text
 
 go 1.21.1
 
-require goa.design/goa/v3 v3.18.0
+require goa.design/goa/v3 v3.18.2
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

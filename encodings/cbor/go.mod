@@ -4,7 +4,7 @@ go 1.21.1
 
 require (
 	github.com/fxamacker/cbor/v2 v2.5.0
-	goa.design/goa/v3 v3.18.0
+	goa.design/goa/v3 v3.18.2
 )
 
 require (
