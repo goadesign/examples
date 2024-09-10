@@ -163,7 +163,7 @@ func (s *securedServicesrvc) Signin(ctx context.Context, p *securedservice.Signi
 func (s *securedServicesrvc) Secure(ctx context.Context, p *securedservice.SecurePayload) (res string, err error) {
 	res = fmt.Sprintf("User authorized using JWT token %q", p.Token)
 	authInfo := contextAuthInfo(ctx)
-	s.logger.Printf(res)
+	s.logger.Print(res)
 	s.logger.Printf("%v", authInfo)
 	if p.Fail != nil && *p.Fail {
 		s.logger.Printf("Uh oh! `fail` passed in parameter. Auth failed!")
@@ -177,7 +177,7 @@ func (s *securedServicesrvc) Secure(ctx context.Context, p *securedservice.Secur
 func (s *securedServicesrvc) DoublySecure(ctx context.Context, p *securedservice.DoublySecurePayload) (res string, err error) {
 	res = fmt.Sprintf("User authorized using JWT token %q and API Key %q", p.Token, p.Key)
 	authInfo := contextAuthInfo(ctx)
-	s.logger.Printf(res)
+	s.logger.Print(res)
 	s.logger.Printf("%v", authInfo)
 	return
 }
@@ -187,7 +187,7 @@ func (s *securedServicesrvc) DoublySecure(ctx context.Context, p *securedservice
 func (s *securedServicesrvc) AlsoDoublySecure(ctx context.Context, p *securedservice.AlsoDoublySecurePayload) (res string, err error) {
 	if p.Username != nil && p.Password != nil && p.OauthToken != nil {
 		res = fmt.Sprintf("User authorized using username %q/password %q and OAuth2 token %q", *p.Username, *p.Password, *p.OauthToken)
-		s.logger.Printf(res)
+		s.logger.Print(res)
 		return
 	}
 	res = fmt.Sprintf("User authorized using JWT token %q and API Key %q", *p.Token, *p.Key)
