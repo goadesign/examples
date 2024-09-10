@@ -174,7 +174,7 @@ paths:
                 "200":
                     description: OK response.
                     schema:
-                        $ref: '#/definitions/SecuredServiceSigninResponseBody'
+                        $ref: '#/definitions/Creds'
                         required:
                             - jwt
                             - api_key
@@ -188,8 +188,8 @@ paths:
             security:
                 - basic_header_Authorization: []
 definitions:
-    SecuredServiceSigninResponseBody:
-        title: SecuredServiceSigninResponseBody
+    Creds:
+        title: Creds
         type: object
         properties:
             api_key:

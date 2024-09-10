@@ -20,7 +20,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/PickRequestBody'
+                            $ref: '#/components/schemas/Criteria'
                         example:
                             name: Blue's Cuvee
                             varietal:
@@ -98,16 +98,16 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Accusamus ut rerum dicta quo.
-                            example: Quod aliquam aperiam amet eum.
+                                example: Et et iusto consequatur recusandae.
+                            example: Amet eum officiis eligendi.
                 "404":
                     description: 'no_match: Not Found response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Optio aspernatur modi.
-                            example: Eligendi consectetur facere.
+                                example: Vitae libero quis non soluta.
+                            example: Facere quaerat dicta corporis.
     /storage:
         get:
             tags:
@@ -150,7 +150,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/AddRequestBody'
+                            $ref: '#/components/schemas/Bottle'
                         example:
                             composition:
                                 - percentage: 92
@@ -177,8 +177,8 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Cumque consequuntur dolorum eos.
-                            example: Sit aut officia pariatur.
+                                example: Nobis quia dolorum eius quo fugit ab.
+                            example: Qui quia deleniti aut.
     /storage/{id}:
         delete:
             tags:
@@ -194,8 +194,8 @@ paths:
                   schema:
                     type: string
                     description: ID of bottle to remove
-                    example: Qui quia deleniti aut.
-                  example: Reprehenderit doloremque.
+                    example: Reprehenderit doloremque.
+                  example: Dignissimos consequatur ad officia.
             responses:
                 "204":
                     description: No Content response.
@@ -217,7 +217,7 @@ paths:
                     enum:
                         - default
                         - tiny
-                  example: tiny
+                  example: default
                 - name: id
                   in: path
                   description: ID of bottle to show
@@ -225,15 +225,15 @@ paths:
                   schema:
                     type: string
                     description: ID of bottle to show
-                    example: Dolores aut.
-                  example: Eaque repellat quidem laudantium eaque dignissimos qui.
+                    example: Eaque repellat quidem laudantium eaque dignissimos qui.
+                  example: Sit aut officia pariatur.
             responses:
                 "200":
                     description: OK response.
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/StoredBottle'
+                                $ref: '#/components/schemas/CellarStoredBottle'
                             example:
                                 composition:
                                     - percentage: 99
@@ -275,7 +275,7 @@ paths:
                         schema:
                             type: array
                             items:
-                                $ref: '#/components/schemas/AddRequestBody'
+                                $ref: '#/components/schemas/Bottle'
                             example:
                                 - composition:
                                     - percentage: 92
@@ -348,6 +348,34 @@ paths:
                                 name: Longoria
                                 region: Central Coast, California
                                 url: http://www.longoriawine.com/
+                            - composition:
+                                - percentage: 92
+                                  varietal: Syrah
+                                - percentage: 92
+                                  varietal: Syrah
+                              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                              name: Blue's Cuvee
+                              rating: 1
+                              vintage: 1984
+                              winery:
+                                country: USA
+                                name: Longoria
+                                region: Central Coast, California
+                                url: http://www.longoriawine.com/
+                            - composition:
+                                - percentage: 92
+                                  varietal: Syrah
+                                - percentage: 92
+                                  varietal: Syrah
+                              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                              name: Blue's Cuvee
+                              rating: 1
+                              vintage: 1984
+                              winery:
+                                country: USA
+                                name: Longoria
+                                region: Central Coast, California
+                                url: http://www.longoriawine.com/
             responses:
                 "200":
                     description: OK response.
@@ -357,15 +385,15 @@ paths:
                                 type: array
                                 items:
                                     type: string
-                                    example: Eius voluptatem.
+                                    example: Cumque consequuntur dolorum eos.
                                 example:
-                                    - Laudantium corrupti et.
-                                    - Odit modi.
+                                    - Eius voluptatem.
+                                    - Modi laudantium corrupti et et.
+                                    - Modi sed et nulla.
                             example:
-                                - Ad officia quia.
-                                - Voluptates sequi nam.
-                                - Exercitationem nulla mollitia.
+                                - Sequi nam temporibus exercitationem nulla mollitia.
                                 - Itaque iste quibusdam eius officia quaerat dolor.
+                                - Nihil doloremque magnam qui aut sed.
     /storage/multi_update:
         put:
             tags:
@@ -383,17 +411,15 @@ paths:
                     type: array
                     items:
                         type: string
-                        example: Nihil doloremque magnam qui aut sed.
+                        example: Sunt earum hic aperiam.
                     description: IDs of the bottles to be updated
                     example:
-                        - Earum hic aperiam quaerat dolorum et.
-                        - Aspernatur a pariatur nesciunt autem adipisci ut.
-                        - Porro soluta sapiente ducimus et.
-                        - Et fugiat.
+                        - Et non aspernatur a pariatur nesciunt.
+                        - Adipisci ut laboriosam porro soluta.
                   example:
+                    - Et culpa.
+                    - Fugiat eum.
                     - Dolor mollitia est vel.
-                    - Dignissimos est non.
-                    - Ipsam tempora hic qui.
             requestBody:
                 required: true
                 content:
@@ -492,7 +518,7 @@ paths:
                     description: File downloaded
 components:
     schemas:
-        AddRequestBody:
+        Bottle:
             type: object
             properties:
                 composition:
@@ -501,11 +527,13 @@ components:
                         $ref: '#/components/schemas/Component'
                     description: Composition is the list of grape varietals and associated percentage.
                     example:
-                        - percentage: 92
+                        - percentage: 73
                           varietal: Syrah
-                        - percentage: 92
+                        - percentage: 73
                           varietal: Syrah
-                        - percentage: 92
+                        - percentage: 73
+                          varietal: Syrah
+                        - percentage: 73
                           varietal: Syrah
                 description:
                     type: string
@@ -520,33 +548,30 @@ components:
                 rating:
                     type: integer
                     description: Rating of bottle from 1 (worst) to 5 (best)
-                    example: 1
+                    example: 2
                     format: int32
                     minimum: 1
                     maximum: 5
                 vintage:
                     type: integer
                     description: Vintage of bottle
-                    example: 1980
+                    example: 1983
                     format: int32
                     minimum: 1900
                     maximum: 2020
                 winery:
                     $ref: '#/components/schemas/Winery'
+            description: Bottle describes a bottle of wine to be stored.
             example:
                 composition:
-                    - percentage: 92
+                    - percentage: 73
                       varietal: Syrah
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
+                    - percentage: 73
                       varietal: Syrah
                 description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                 name: Blue's Cuvee
-                rating: 1
-                vintage: 1909
+                rating: 4
+                vintage: 1939
                 winery:
                     country: USA
                     name: Longoria
@@ -556,13 +581,84 @@ components:
                 - name
                 - winery
                 - vintage
+        CellarStoredBottle:
+            type: object
+            properties:
+                composition:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Component'
+                    description: Composition is the list of grape varietals and associated percentage.
+                    example:
+                        - percentage: 73
+                          varietal: Syrah
+                        - percentage: 73
+                          varietal: Syrah
+                        - percentage: 73
+                          varietal: Syrah
+                        - percentage: 73
+                          varietal: Syrah
+                description:
+                    type: string
+                    description: Description of bottle
+                    example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                    maxLength: 2000
+                id:
+                    type: string
+                    description: ID is the unique id of the bottle.
+                    example: 123abc
+                name:
+                    type: string
+                    description: Name of bottle
+                    example: Blue's Cuvee
+                    maxLength: 100
+                rating:
+                    type: integer
+                    description: Rating of bottle from 1 (worst) to 5 (best)
+                    example: 3
+                    format: int32
+                    minimum: 1
+                    maximum: 5
+                vintage:
+                    type: integer
+                    description: Vintage of bottle
+                    example: 1938
+                    format: int32
+                    minimum: 1900
+                    maximum: 2020
+                winery:
+                    $ref: '#/components/schemas/Winery'
+            description: A StoredBottle describes a bottle retrieved by the storage service.
+            example:
+                composition:
+                    - percentage: 73
+                      varietal: Syrah
+                    - percentage: 73
+                      varietal: Syrah
+                    - percentage: 73
+                      varietal: Syrah
+                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                id: 123abc
+                name: Blue's Cuvee
+                rating: 3
+                vintage: 1915
+                winery:
+                    country: USA
+                    name: Longoria
+                    region: Central Coast, California
+                    url: http://www.longoriawine.com/
+            required:
+                - id
+                - name
+                - winery
+                - vintage
         Component:
             type: object
             properties:
                 percentage:
                     type: integer
                     description: Percentage of varietal in wine
-                    example: 81
+                    example: 59
                     format: int32
                     minimum: 1
                     maximum: 100
@@ -573,17 +669,46 @@ components:
                     pattern: '[A-Za-z'' ]+'
                     maxLength: 100
             example:
-                percentage: 75
+                percentage: 46
                 varietal: Syrah
             required:
                 - varietal
+        Criteria:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: Name of bottle to pick
+                    example: Blue's Cuvee
+                varietal:
+                    type: array
+                    items:
+                        type: string
+                        example: Aut sunt deleniti et beatae nisi soluta.
+                    description: Varietals in preference order
+                    example:
+                        - pinot noir
+                        - merlot
+                        - cabernet franc
+                winery:
+                    type: string
+                    description: Winery of bottle to pick
+                    example: longoria
+            description: Criteria described a set of criteria used to pick a bottle. All criteria are optional, at least one must be provided.
+            example:
+                name: Blue's Cuvee
+                varietal:
+                    - pinot noir
+                    - merlot
+                    - cabernet franc
+                winery: longoria
         MultiUpdateRequestBody:
             type: object
             properties:
                 bottles:
                     type: array
                     items:
-                        $ref: '#/components/schemas/AddRequestBody'
+                        $ref: '#/components/schemas/Bottle'
                     description: Array of bottle info that matches the ids attribute
                     example:
                         - composition:
@@ -694,114 +819,18 @@ components:
                 id:
                     type: string
                     description: ID of missing bottle
-                    example: Et vitae libero quis non soluta.
+                    example: Fugit amet facere.
                 message:
                     type: string
                     description: Message of error
                     example: bottle 1 not found
-            description: Bottle not found
+            description: NotFound is the type returned when attempting to show or delete a bottle that does not exist.
             example:
-                id: Tempora nobis quia.
+                id: Ut explicabo libero.
                 message: bottle 1 not found
             required:
                 - message
                 - id
-        PickRequestBody:
-            type: object
-            properties:
-                name:
-                    type: string
-                    description: Name of bottle to pick
-                    example: Blue's Cuvee
-                varietal:
-                    type: array
-                    items:
-                        type: string
-                        example: Amet facere consequatur ut explicabo libero.
-                    description: Varietals in preference order
-                    example:
-                        - pinot noir
-                        - merlot
-                        - cabernet franc
-                winery:
-                    type: string
-                    description: Winery of bottle to pick
-                    example: longoria
-            example:
-                name: Blue's Cuvee
-                varietal:
-                    - pinot noir
-                    - merlot
-                    - cabernet franc
-                winery: longoria
-        StoredBottle:
-            type: object
-            properties:
-                composition:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Component'
-                    description: Composition is the list of grape varietals and associated percentage.
-                    example:
-                        - percentage: 99
-                          varietal: Syrah
-                        - percentage: 99
-                          varietal: Syrah
-                        - percentage: 99
-                          varietal: Syrah
-                description:
-                    type: string
-                    description: Description of bottle
-                    example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-                    maxLength: 2000
-                id:
-                    type: string
-                    description: ID is the unique id of the bottle.
-                    example: 123abc
-                name:
-                    type: string
-                    description: Name of bottle
-                    example: Blue's Cuvee
-                    maxLength: 100
-                rating:
-                    type: integer
-                    description: Rating of bottle from 1 (worst) to 5 (best)
-                    example: 4
-                    format: int32
-                    minimum: 1
-                    maximum: 5
-                vintage:
-                    type: integer
-                    description: Vintage of bottle
-                    example: 1920
-                    format: int32
-                    minimum: 1900
-                    maximum: 2020
-                winery:
-                    $ref: '#/components/schemas/Winery'
-            example:
-                composition:
-                    - percentage: 99
-                      varietal: Syrah
-                    - percentage: 99
-                      varietal: Syrah
-                    - percentage: 99
-                      varietal: Syrah
-                description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-                id: 123abc
-                name: Blue's Cuvee
-                rating: 4
-                vintage: 1925
-                winery:
-                    country: USA
-                    name: Longoria
-                    region: Central Coast, California
-                    url: http://www.longoriawine.com/
-            required:
-                - id
-                - name
-                - winery
-                - vintage
         StoredBottleResponse:
             type: object
             properties:
@@ -817,6 +846,8 @@ components:
                           varietal: Syrah
                         - percentage: 82
                           varietal: Syrah
+                        - percentage: 82
+                          varietal: Syrah
                 description:
                     type: string
                     description: Description of bottle
@@ -841,7 +872,7 @@ components:
                 vintage:
                     type: integer
                     description: Vintage of bottle
-                    example: 2018
+                    example: 1930
                     format: int32
                     minimum: 1900
                     maximum: 2020
@@ -854,11 +885,13 @@ components:
                       varietal: Syrah
                     - percentage: 82
                       varietal: Syrah
+                    - percentage: 82
+                      varietal: Syrah
                 description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                 id: 123abc
                 name: Blue's Cuvee
-                rating: 2
-                vintage: 1902
+                rating: 4
+                vintage: 1991
                 winery:
                     name: Longoria
             required:
@@ -930,14 +963,6 @@ components:
                 $ref: '#/components/schemas/StoredBottleResponseTiny'
             description: ListResponseBody is the result type for an array of StoredBottleResponse (tiny view)
             example:
-                - id: 123abc
-                  name: Blue's Cuvee
-                  winery:
-                    name: Longoria
-                - id: 123abc
-                  name: Blue's Cuvee
-                  winery:
-                    name: Longoria
                 - id: 123abc
                   name: Blue's Cuvee
                   winery:

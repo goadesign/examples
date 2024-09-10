@@ -24,7 +24,7 @@ paths:
                   in: body
                   required: true
                   schema:
-                    $ref: '#/definitions/SommelierPickRequestBody'
+                    $ref: '#/definitions/Criteria'
             responses:
                 "200":
                     description: OK response.
@@ -65,7 +65,7 @@ paths:
                   in: body
                   required: true
                   schema:
-                    $ref: '#/definitions/StorageAddRequestBody'
+                    $ref: '#/definitions/Bottle'
                     required:
                         - name
                         - winery
@@ -102,11 +102,11 @@ paths:
                 "200":
                     description: OK response.
                     schema:
-                        $ref: '#/definitions/StorageShowResponseBody'
+                        $ref: '#/definitions/CellarStoredBottle'
                 "404":
                     description: Not Found response.
                     schema:
-                        $ref: '#/definitions/StorageShowNotFoundResponseBody'
+                        $ref: '#/definitions/NotFound'
                         required:
                             - message
                             - id
@@ -145,7 +145,7 @@ paths:
                   schema:
                     type: array
                     items:
-                        $ref: '#/definitions/BottleRequestBody'
+                        $ref: '#/definitions/Bottle'
             responses:
                 "200":
                     description: OK response.
@@ -153,7 +153,7 @@ paths:
                         type: array
                         items:
                             type: string
-                            example: Voluptatem omnis magni.
+                            example: Sed ut officiis.
             schemes:
                 - http
     /storage/multi_update:
@@ -214,20 +214,16 @@ paths:
                 - http
                 - https
 definitions:
-    BottleRequestBody:
-        title: BottleRequestBody
+    Bottle:
+        title: Bottle
         type: object
         properties:
             composition:
                 type: array
                 items:
-                    $ref: '#/definitions/ComponentRequestBody'
+                    $ref: '#/definitions/Component'
                 description: Composition is the list of grape varietals and associated percentage.
                 example:
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
-                      varietal: Syrah
                     - percentage: 92
                       varietal: Syrah
                     - percentage: 92
@@ -245,20 +241,19 @@ definitions:
             rating:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
-                example: 4
+                example: 3
                 format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
-                example: 1951
+                example: 1971
                 format: int32
                 minimum: 1900
                 maximum: 2020
             winery:
-                $ref: '#/definitions/WineryRequestBody'
-        description: Bottle describes a bottle of wine to be stored.
+                $ref: '#/definitions/Winery'
         example:
             composition:
                 - percentage: 92
@@ -267,10 +262,12 @@ definitions:
                   varietal: Syrah
                 - percentage: 92
                   varietal: Syrah
+                - percentage: 92
+                  varietal: Syrah
             description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
             name: Blue's Cuvee
-            rating: 2
-            vintage: 1961
+            rating: 3
+            vintage: 1988
             winery:
                 country: USA
                 name: Longoria
@@ -280,30 +277,71 @@ definitions:
             - name
             - winery
             - vintage
-    ComponentRequestBody:
-        title: ComponentRequestBody
+    CellarStoredBottle:
+        title: 'Mediatype identifier: application/vnd.cellar.stored-bottle; view=default'
         type: object
         properties:
-            percentage:
+            composition:
+                type: array
+                items:
+                    $ref: '#/definitions/Component'
+                description: Composition is the list of grape varietals and associated percentage.
+                example:
+                    - percentage: 99
+                      varietal: Syrah
+                    - percentage: 99
+                      varietal: Syrah
+            description:
+                type: string
+                description: Description of bottle
+                example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                maxLength: 2000
+            id:
+                type: string
+                description: ID is the unique id of the bottle.
+                example: 123abc
+            name:
+                type: string
+                description: Name of bottle
+                example: Blue's Cuvee
+                maxLength: 100
+            rating:
                 type: integer
-                description: Percentage of varietal in wine
-                example: 3
+                description: Rating of bottle from 1 (worst) to 5 (best)
+                example: 2
                 format: int32
                 minimum: 1
-                maximum: 100
-            varietal:
-                type: string
-                description: Grape varietal
-                example: Syrah
-                pattern: '[A-Za-z'' ]+'
-                maxLength: 100
+                maximum: 5
+            vintage:
+                type: integer
+                description: Vintage of bottle
+                example: 1988
+                format: int32
+                minimum: 1900
+                maximum: 2020
+            winery:
+                $ref: '#/definitions/WineryResponseBodyTiny'
+        description: ShowResponseBody result type (default view)
         example:
-            percentage: 77
-            varietal: Syrah
+            composition:
+                - percentage: 99
+                  varietal: Syrah
+                - percentage: 99
+                  varietal: Syrah
+            description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+            id: 123abc
+            name: Blue's Cuvee
+            rating: 4
+            vintage: 2017
+            winery:
+                name: Longoria
         required:
-            - varietal
-    ComponentResponse:
-        title: ComponentResponse
+            - id
+            - name
+            - winery
+            - vintage
+    Component:
+        title: Component
         type: object
         properties:
             percentage:
@@ -324,30 +362,8 @@ definitions:
             varietal: Syrah
         required:
             - varietal
-    ComponentResponseBody:
-        title: ComponentResponseBody
-        type: object
-        properties:
-            percentage:
-                type: integer
-                description: Percentage of varietal in wine
-                example: 1
-                format: int32
-                minimum: 1
-                maximum: 100
-            varietal:
-                type: string
-                description: Grape varietal
-                example: Syrah
-                pattern: '[A-Za-z'' ]+'
-                maxLength: 100
-        example:
-            percentage: 20
-            varietal: Syrah
-        required:
-            - varietal
-    SommelierPickRequestBody:
-        title: SommelierPickRequestBody
+    Criteria:
+        title: Criteria
         type: object
         properties:
             name:
@@ -375,6 +391,25 @@ definitions:
                 - merlot
                 - cabernet franc
             winery: longoria
+    NotFound:
+        title: NotFound
+        type: object
+        properties:
+            id:
+                type: string
+                description: ID of missing bottle
+                example: Harum dolores adipisci repellat et esse.
+            message:
+                type: string
+                description: Message of error
+                example: bottle 1 not found
+        description: Bottle not found
+        example:
+            id: Ratione nemo.
+            message: bottle 1 not found
+        required:
+            - message
+            - id
     SommelierStoredBottleResponseCollection:
         title: 'Mediatype identifier: application/vnd.cellar.stored-bottle; type=collection; view=default'
         type: array
@@ -410,71 +445,6 @@ definitions:
               vintage: 1941
               winery:
                 name: Longoria
-    StorageAddRequestBody:
-        title: StorageAddRequestBody
-        type: object
-        properties:
-            composition:
-                type: array
-                items:
-                    $ref: '#/definitions/ComponentRequestBody'
-                description: Composition is the list of grape varietals and associated percentage.
-                example:
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
-                      varietal: Syrah
-            description:
-                type: string
-                description: Description of bottle
-                example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-                maxLength: 2000
-            name:
-                type: string
-                description: Name of bottle
-                example: Blue's Cuvee
-                maxLength: 100
-            rating:
-                type: integer
-                description: Rating of bottle from 1 (worst) to 5 (best)
-                example: 3
-                format: int32
-                minimum: 1
-                maximum: 5
-            vintage:
-                type: integer
-                description: Vintage of bottle
-                example: 1965
-                format: int32
-                minimum: 1900
-                maximum: 2020
-            winery:
-                $ref: '#/definitions/WineryRequestBody'
-        example:
-            composition:
-                - percentage: 92
-                  varietal: Syrah
-                - percentage: 92
-                  varietal: Syrah
-                - percentage: 92
-                  varietal: Syrah
-            description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-            name: Blue's Cuvee
-            rating: 3
-            vintage: 1951
-            winery:
-                country: USA
-                name: Longoria
-                region: Central Coast, California
-                url: http://www.longoriawine.com/
-        required:
-            - name
-            - winery
-            - vintage
     StorageMultiUpdateRequestBody:
         title: StorageMultiUpdateRequestBody
         type: object
@@ -482,7 +452,7 @@ definitions:
             bottles:
                 type: array
                 items:
-                    $ref: '#/definitions/BottleRequestBody'
+                    $ref: '#/definitions/Bottle'
                 description: Array of bottle info that matches the ids attribute
                 example:
                     - composition:
@@ -571,94 +541,22 @@ definitions:
                     name: Longoria
                     region: Central Coast, California
                     url: http://www.longoriawine.com/
+                - composition:
+                    - percentage: 92
+                      varietal: Syrah
+                    - percentage: 92
+                      varietal: Syrah
+                  description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                  name: Blue's Cuvee
+                  rating: 1
+                  vintage: 1984
+                  winery:
+                    country: USA
+                    name: Longoria
+                    region: Central Coast, California
+                    url: http://www.longoriawine.com/
         required:
             - bottles
-    StorageShowNotFoundResponseBody:
-        title: StorageShowNotFoundResponseBody
-        type: object
-        properties:
-            id:
-                type: string
-                description: ID of missing bottle
-                example: Adipisci repellat et esse quia.
-            message:
-                type: string
-                description: Message of error
-                example: bottle 1 not found
-        description: Bottle not found
-        example:
-            id: Nemo quae.
-            message: bottle 1 not found
-        required:
-            - message
-            - id
-    StorageShowResponseBody:
-        title: 'Mediatype identifier: application/vnd.cellar.stored-bottle; view=default'
-        type: object
-        properties:
-            composition:
-                type: array
-                items:
-                    $ref: '#/definitions/ComponentResponseBody'
-                description: Composition is the list of grape varietals and associated percentage.
-                example:
-                    - percentage: 99
-                      varietal: Syrah
-                    - percentage: 99
-                      varietal: Syrah
-            description:
-                type: string
-                description: Description of bottle
-                example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-                maxLength: 2000
-            id:
-                type: string
-                description: ID is the unique id of the bottle.
-                example: 123abc
-            name:
-                type: string
-                description: Name of bottle
-                example: Blue's Cuvee
-                maxLength: 100
-            rating:
-                type: integer
-                description: Rating of bottle from 1 (worst) to 5 (best)
-                example: 4
-                format: int32
-                minimum: 1
-                maximum: 5
-            vintage:
-                type: integer
-                description: Vintage of bottle
-                example: 1988
-                format: int32
-                minimum: 1900
-                maximum: 2020
-            winery:
-                $ref: '#/definitions/WineryResponseBodyTiny'
-        description: ShowResponseBody result type (default view)
-        example:
-            composition:
-                - percentage: 99
-                  varietal: Syrah
-                - percentage: 99
-                  varietal: Syrah
-                - percentage: 99
-                  varietal: Syrah
-                - percentage: 99
-                  varietal: Syrah
-            description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-            id: 123abc
-            name: Blue's Cuvee
-            rating: 3
-            vintage: 1931
-            winery:
-                name: Longoria
-        required:
-            - id
-            - name
-            - winery
-            - vintage
     StorageStoredBottleResponseTinyCollection:
         title: 'Mediatype identifier: application/vnd.cellar.stored-bottle; type=collection; view=tiny'
         type: array
@@ -715,7 +613,7 @@ definitions:
             composition:
                 type: array
                 items:
-                    $ref: '#/definitions/ComponentResponse'
+                    $ref: '#/definitions/Component'
                 description: Composition is the list of grape varietals and associated percentage.
                 example:
                     - percentage: 82
@@ -800,7 +698,7 @@ definitions:
             - id
             - name
             - winery
-    WineryRequestBody:
+    Winery:
         title: 'Mediatype identifier: winery; view=default'
         type: object
         properties:

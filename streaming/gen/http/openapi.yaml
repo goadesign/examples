@@ -72,7 +72,7 @@ paths:
                 "101":
                     description: Switching Protocols response.
                     schema:
-                        $ref: '#/definitions/ChatterHistoryResponseBody'
+                        $ref: '#/definitions/GoaSummary'
                 "401":
                     description: Unauthorized response.
                     schema:
@@ -164,7 +164,7 @@ paths:
                 "101":
                     description: Switching Protocols response.
                     schema:
-                        $ref: '#/definitions/ChatterSubscribeResponseBody'
+                        $ref: '#/definitions/Event'
                         required:
                             - message
                             - action
@@ -261,7 +261,33 @@ definitions:
             - length: 7192545811968992741
               message: In quo soluta ducimus blanditiis.
               sent_at: "2000-11-29T18:15:59Z"
-    ChatterHistoryResponseBody:
+    Event:
+        title: Event
+        type: object
+        properties:
+            action:
+                type: string
+                example: added
+                enum:
+                    - added
+            added_at:
+                type: string
+                description: Time at which the message was added
+                example: "1995-02-21T13:02:15Z"
+                format: date-time
+            message:
+                type: string
+                description: Message sent to the server
+                example: Maiores sunt dolor quam.
+        example:
+            action: added
+            added_at: "1980-10-26T13:18:08Z"
+            message: Libero dolore.
+        required:
+            - message
+            - action
+            - added_at
+    GoaSummary:
         title: 'Mediatype identifier: application/vnd.goa.summary; view=default'
         type: object
         properties:
@@ -287,32 +313,6 @@ definitions:
         required:
             - message
             - sent_at
-    ChatterSubscribeResponseBody:
-        title: ChatterSubscribeResponseBody
-        type: object
-        properties:
-            action:
-                type: string
-                example: added
-                enum:
-                    - added
-            added_at:
-                type: string
-                description: Time at which the message was added
-                example: "1995-02-21T13:02:15Z"
-                format: date-time
-            message:
-                type: string
-                description: Message sent to the server
-                example: Maiores sunt dolor quam.
-        example:
-            action: added
-            added_at: "1980-10-26T13:18:08Z"
-            message: Libero dolore.
-        required:
-            - message
-            - action
-            - added_at
 securityDefinitions:
     basic_header_Authorization:
         type: basic

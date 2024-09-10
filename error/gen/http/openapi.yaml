@@ -38,7 +38,7 @@ paths:
                 "400":
                     description: Response used for division by zero errors
                     schema:
-                        $ref: '#/definitions/CalcDivideDivByZeroResponseBody'
+                        $ref: '#/definitions/DivByZero'
                         required:
                             - message
                 "504":
@@ -48,19 +48,6 @@ paths:
             schemes:
                 - http
 definitions:
-    CalcDivideDivByZeroResponseBody:
-        title: CalcDivideDivByZeroResponseBody
-        type: object
-        properties:
-            message:
-                type: string
-                description: division by zero leads to infinity.
-                example: Alias incidunt.
-        description: division by 0
-        example:
-            message: Non et.
-        required:
-            - message
     CalcDivideRequestBody:
         title: CalcDivideRequestBody
         type: object
@@ -140,3 +127,16 @@ definitions:
             - temporary
             - timeout
             - fault
+    DivByZero:
+        title: DivByZero
+        type: object
+        properties:
+            message:
+                type: string
+                description: division by zero leads to infinity.
+                example: Alias incidunt.
+        description: division by 0
+        example:
+            message: Non et.
+        required:
+            - message

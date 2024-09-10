@@ -53,10 +53,10 @@ components:
                 message:
                     type: string
                     description: division by zero leads to infinity.
-                    example: Temporibus laboriosam.
-            description: division by 0
+                    example: Molestiae modi quo est.
+            description: DivByZero is the error returned when using value 0 as divisor.
             example:
-                message: Consequatur tempore ex quae facilis necessitatibus.
+                message: Eum aut adipisci temporibus laboriosam et.
             required:
                 - message
         DivideRequestBody:
@@ -64,15 +64,15 @@ components:
             properties:
                 dividend:
                     type: integer
-                    example: 862594352938458553
+                    example: 6339444414280965279
                     format: int64
                 divisor:
                     type: integer
-                    example: 7528159319778012238
+                    example: 2998957498373416763
                     format: int64
             example:
-                dividend: 3448989877641388488
-                divisor: 2788110747497692605
+                dividend: 669093391323277721
+                divisor: 6850943989821012471
             required:
                 - dividend
                 - divisor
@@ -81,15 +81,15 @@ components:
             properties:
                 quotient:
                     type: integer
-                    example: 5305748056757514353
+                    example: 2082938806418090480
                     format: int64
                 reminder:
                     type: integer
-                    example: 6241407428951939308
+                    example: 817058348830766028
                     format: int64
             example:
-                quotient: 5920194056805489328
-                reminder: 8052218409301066017
+                quotient: 3322573843781975777
+                reminder: 499723715072376515
             required:
                 - quotient
                 - reminder
@@ -115,17 +115,17 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: false
+                    example: true
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
-                    example: false
+                    example: true
             example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: true
             required:
                 - name

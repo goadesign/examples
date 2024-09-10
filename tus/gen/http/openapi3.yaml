@@ -41,9 +41,9 @@ paths:
                             schema:
                                 type: integer
                                 description: tusMaxSize represents the maximum allowed size of an entire upload in bytes.
-                                example: 362107772182032851
+                                example: 8301972345851209535
                                 format: int64
-                            example: 5239470052445234784
+                            example: 4231768284416444115
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
                             schema:
@@ -98,9 +98,9 @@ paths:
                   schema:
                     type: integer
                     description: uploadLength represents the size of the entire upload in bytes.
-                    example: 8307486652680731187
+                    example: 5268296530249370747
                     format: int64
-                  example: 5009682066195419524
+                  example: 9211130372186307866
                 - name: Upload-Defer-Length
                   in: header
                   description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
@@ -138,9 +138,9 @@ paths:
                   schema:
                     type: integer
                     description: Length of the upload
-                    example: 911111279497668625
+                    example: 3981826684640843246
                     format: int64
-                  example: 1940572356623241493
+                  example: 1746248236236630255
             responses:
                 "201":
                     description: Created response.
@@ -173,9 +173,9 @@ paths:
                             schema:
                                 type: integer
                                 description: uploadOffset represents a byte offset within a resource.
-                                example: 2156984729590519734
+                                example: 2838119830367367178
                                 format: int64
-                            example: 8435060717203676339
+                            example: 8025731963266458173
                 "400":
                     description: 'InvalidChecksumAlgorithm: The checksum algorithm is not supported by the server.'
                     headers:
@@ -184,7 +184,7 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
-                                example: false
+                                example: true
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
@@ -212,14 +212,14 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
-                                example: true
+                                example: false
                             example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
+                                example: false
                             example: false
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
@@ -269,8 +269,8 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
-                                example: true
-                            example: false
+                                example: false
+                            example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
@@ -314,15 +314,15 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
-                                example: false
+                                example: true
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
-                            example: true
+                                example: false
+                            example: false
     /upload/{id}:
         delete:
             tags:
@@ -338,9 +338,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: p0rh4qpqjlt1ipdq3cdu
+                    example: 72guglvt3g3kf9u294nv
                     pattern: '[0-9a-v]{20}'
-                  example: td4e72guglvt3g3kf9u2
+                  example: m427ikm7buual7hu11gk
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -373,7 +373,7 @@ paths:
                                 type: boolean
                                 description: Is the error a server-side fault?
                                 example: true
-                            example: false
+                            example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -401,13 +401,13 @@ paths:
                                 type: boolean
                                 description: Is the error temporary?
                                 example: false
-                            example: true
+                            example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
+                                example: false
                             example: true
                 "410":
                     description: 'Gone: For all future requests to this URL, the Server SHOULD respond with the 404 Not Found or 410 Gone status.'
@@ -417,7 +417,7 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
-                                example: false
+                                example: true
                             example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
@@ -446,7 +446,7 @@ paths:
                                 type: boolean
                                 description: Is the error temporary?
                                 example: false
-                            example: true
+                            example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
@@ -480,9 +480,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: cnrvn79n23f6g22rhtf0
+                    example: 8kkq4vt8kjpdk41kfmgd
                     pattern: '[0-9a-v]{20}'
-                  example: a5n88kkq4vt8kjpdk41k
+                  example: f8ntn1qaf56ubka9h8pm
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -521,9 +521,9 @@ paths:
                             schema:
                                 type: integer
                                 description: uploadLength represents the size of the entire upload in bytes.
-                                example: 8709432541754109325
+                                example: 4785609670039078446
                                 format: int64
-                            example: 9074591856707264616
+                            example: 3800428807669491121
                         Upload-Metadata:
                             description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
                             schema:
@@ -536,9 +536,9 @@ paths:
                             schema:
                                 type: integer
                                 description: uploadOffset represents a byte offset within a resource.
-                                example: 2510986195090557775
+                                example: 933629840332264312
                                 format: int64
-                            example: 6326262271777010864
+                            example: 6468834223461452578
                 "404":
                     description: 'NotFound: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.'
                     headers:
@@ -548,7 +548,7 @@ paths:
                                 type: boolean
                                 description: Is the error a server-side fault?
                                 example: true
-                            example: false
+                            example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -575,14 +575,14 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
-                                example: false
-                            example: true
+                                example: true
+                            example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
+                                example: false
                             example: true
                 "410":
                     description: 'Gone: If the resource is not found, the Server SHOULD return either the 404 Not Found, 410 Gone or 403 Forbidden status without the Upload-Offset header.'
@@ -592,8 +592,8 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
-                                example: true
-                            example: false
+                                example: false
+                            example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -628,7 +628,7 @@ paths:
                                 type: boolean
                                 description: Is the error a timeout?
                                 example: true
-                            example: true
+                            example: false
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
                     headers:
@@ -655,9 +655,9 @@ paths:
                   schema:
                     type: string
                     description: 'IDs are generated using Xid: https://github.com/rs/xid'
-                    example: f63jil6llrn6e1c6psmc
+                    example: p25k5dgt2j8dhe9keak6
                     pattern: '[0-9a-v]{20}'
-                  example: b3mup25k5dgt2j8dhe9k
+                  example: o3b862gmgitosprqgi10
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
@@ -677,9 +677,9 @@ paths:
                   schema:
                     type: integer
                     description: uploadOffset represents a byte offset within a resource.
-                    example: 1127119176542063566
+                    example: 6205790034352291191
                     format: int64
-                  example: 430424572116187338
+                  example: 7198595536880776233
                 - name: Upload-Checksum
                   in: header
                   description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
@@ -713,9 +713,9 @@ paths:
                             schema:
                                 type: integer
                                 description: uploadOffset represents a byte offset within a resource.
-                                example: 6972328769689751508
+                                example: 3917165151269970929
                                 format: int64
-                            example: 8631607307890293944
+                            example: 6018258577936763118
                 "400":
                     description: 'InvalidChecksumAlgorithm: The checksum algorithm is not supported by the server.'
                     headers:
@@ -725,7 +725,7 @@ paths:
                                 type: boolean
                                 description: Is the error a server-side fault?
                                 example: true
-                            example: true
+                            example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -759,8 +759,8 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: false
-                            example: true
+                                example: true
+                            example: false
                 "404":
                     description: 'NotFound: If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.'
                     headers:
@@ -770,7 +770,7 @@ paths:
                                 type: boolean
                                 description: Is the error a server-side fault?
                                 example: true
-                            example: true
+                            example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -797,7 +797,7 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
-                                example: false
+                                example: true
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
@@ -814,8 +814,8 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
-                                example: true
-                            example: false
+                                example: false
+                            example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -843,14 +843,14 @@ paths:
                                 type: boolean
                                 description: Is the error temporary?
                                 example: false
-                            example: true
+                            example: false
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
                                 example: true
-                            example: false
+                            example: true
                 "410":
                     description: 'Gone: If a Client does attempt to resume an upload which has since been removed by the Server, the Server SHOULD respond with the404 Not Found or 410 Gone status.'
                     headers:
@@ -859,8 +859,8 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
-                                example: false
-                            example: false
+                                example: true
+                            example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -887,15 +887,15 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error temporary?
-                                example: false
+                                example: true
                             example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
-                            example: true
+                                example: false
+                            example: false
                 "412":
                     description: 'InvalidTusResumable: If the version specified by the Client is not supported by the Server, it MUST respond with the 412 Precondition Failed status.'
                     headers:
@@ -916,7 +916,7 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a server-side fault?
-                                example: false
+                                example: true
                             example: true
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
@@ -951,7 +951,7 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
+                                example: false
                             example: true
                 "460":
                     description: 'ChecksumMismatch: The checksums mismatch.'
@@ -962,7 +962,7 @@ paths:
                                 type: boolean
                                 description: Is the error a server-side fault?
                                 example: true
-                            example: true
+                            example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -996,8 +996,8 @@ paths:
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
-                                example: true
-                            example: false
+                                example: false
+                            example: true
                 "500":
                     description: 'Internal: Internal error'
                     headers:
@@ -1007,7 +1007,7 @@ paths:
                                 type: boolean
                                 description: Is the error a server-side fault?
                                 example: true
-                            example: true
+                            example: false
                         goa-attribute-id:
                             description: ID is a unique identifier for this particular occurrence of the problem.
                             schema:
@@ -1035,15 +1035,160 @@ paths:
                                 type: boolean
                                 description: Is the error temporary?
                                 example: false
-                            example: false
+                            example: true
                         goa-attribute-timeout:
                             description: Is the error a timeout?
                             schema:
                                 type: boolean
                                 description: Is the error a timeout?
                                 example: true
-                            example: true
-components: {}
+                            example: false
+components:
+    schemas:
+        ErrInvalidTUSResumable:
+            type: object
+            properties:
+                tusVersion:
+                    type: string
+                    description: Comma separated list of supported versions.
+                    example: 1.0.0
+                    enum:
+                        - 1.0.0
+            description: ErrInvalidTUSResumable describes the error returned when a non-supported Tus-Resumable header is provided by the client.
+            example:
+                tusVersion: 1.0.0
+            required:
+                - tusVersion
+        TUSCoreHeaders:
+            type: object
+            properties:
+                tusResumable:
+                    type: string
+                    description: tusResumable represents a tus protocol version.
+                    example: 1.0.0
+                    pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+                uploadLength:
+                    type: integer
+                    description: uploadLength represents the size of the entire upload in bytes.
+                    example: 2449869231074428063
+                    format: int64
+                uploadOffset:
+                    type: integer
+                    description: uploadOffset represents a byte offset within a resource.
+                    example: 3983402454002594651
+                    format: int64
+            description: TUSCoreHeaders defines the tus core protocol headers used in both requests and responses.
+            example:
+                tusResumable: 1.0.0
+                uploadLength: 6335522247195051591
+                uploadOffset: 2569513896541879511
+            required:
+                - tusResumable
+        TUSCoreRequestHeaders:
+            type: object
+            properties:
+                tusResumable:
+                    type: string
+                    description: tusResumable represents a tus protocol version.
+                    example: 1.0.0
+                    pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+                uploadLength:
+                    type: integer
+                    description: uploadLength represents the size of the entire upload in bytes.
+                    example: 1661231430974535735
+                    format: int64
+                uploadOffset:
+                    type: integer
+                    description: uploadOffset represents a byte offset within a resource.
+                    example: 7151895347991376553
+                    format: int64
+            description: TUSCoreRequestHeaders defines the tus core protocol request headers.
+            example:
+                tusResumable: 1.0.0
+                uploadLength: 2766044426360363715
+                uploadOffset: 3153916313005131426
+            required:
+                - tusResumable
+        TUSCoreResponseHeaders:
+            type: object
+            properties:
+                tusExtension:
+                    type: string
+                    description: tusExtension is a comma separated list of extensions supported by the server. This implementation supports the creation, creation-with-upload, expiration, checksum and termination extensions
+                    example: creation,creation-with-upload,creation-defer-length,expiration,checksum,termination
+                    enum:
+                        - creation,creation-with-upload,creation-defer-length,expiration,checksum,termination
+                tusMaxSize:
+                    type: integer
+                    description: tusMaxSize represents the maximum allowed size of an entire upload in bytes.
+                    example: 2235354803746955152
+                    format: int64
+                tusResumable:
+                    type: string
+                    description: tusResumable represents a tus protocol version.
+                    example: 1.0.0
+                    pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
+                tusVersion:
+                    type: string
+                    description: tusVersion is a comma separated list of protocol versions supported by the server. This implementation only supports 1.0.0.
+                    example: 1.0.0
+                    enum:
+                        - 1.0.0
+                uploadLength:
+                    type: integer
+                    description: uploadLength represents the size of the entire upload in bytes.
+                    example: 8290484526665898946
+                    format: int64
+                uploadOffset:
+                    type: integer
+                    description: uploadOffset represents a byte offset within a resource.
+                    example: 8416853221352839330
+                    format: int64
+            description: TUSCoreResponseHeaders defines the tus core protocol response headers.
+            example:
+                tusExtension: creation,creation-with-upload,creation-defer-length,expiration,checksum,termination
+                tusMaxSize: 2533088262292620797
+                tusResumable: 1.0.0
+                tusVersion: 1.0.0
+                uploadLength: 5083977948910692096
+                uploadOffset: 4440130362551150063
+            required:
+                - tusResumable
+        TUSExtensionHeaders:
+            type: object
+            properties:
+                tusChecksumAlgorithm:
+                    type: string
+                    description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
+                    example: md5,sha1,crc32
+                    enum:
+                        - md5,sha1,crc32
+                uploadChecksum:
+                    type: string
+                    description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
+                    example: sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=
+                uploadDeferLength:
+                    type: integer
+                    description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
+                    example: 1
+                    enum:
+                        - 1
+                    format: int64
+                uploadExpires:
+                    type: string
+                    description: The Upload-Expires response header indicates the time after which the unfinished upload expires.
+                    example: Wed, 25 Jun 2014 16:00:00 GMT
+                uploadMetadata:
+                    type: string
+                    description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
+                    example: key1 val1,key2 val2
+            description: TUSExtensionHeaders defines the suppoterd tus protocol extension headers used in both requests and responses.
+            example:
+                tusChecksumAlgorithm: md5,sha1,crc32
+                uploadChecksum: sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=
+                uploadDeferLength: 1
+                uploadExpires: Wed, 25 Jun 2014 16:00:00 GMT
+                uploadMetadata: key1 val1,key2 val2
 tags:
     - name: tus
       description: The tus service exposes the methods required to implement the tus protocol
