@@ -211,7 +211,7 @@ func ParseEndpoint(
 				err = json.Unmarshal([]byte(*storageRatePFlag), &val)
 				data = val
 				if err != nil {
-					return nil, nil, fmt.Errorf("invalid JSON for storageRatePFlag, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Magnam ut consequatur.\",\n         \"Quo rerum et ut omnis praesentium non.\"\n      ]\n   }'")
+					return nil, nil, fmt.Errorf("invalid JSON for storageRatePFlag, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Laboriosam consequatur delectus doloribus.\",\n         \"Est mollitia.\",\n         \"Voluptas ex enim.\",\n         \"Est explicabo eveniet dolore.\"\n      ]\n   }'")
 				}
 			case "multi-add":
 				endpoint = c.MultiAdd(storageMultiAddEncoderFn)
@@ -363,8 +363,10 @@ Rate bottles by IDs
 Example:
     %[1]s storage rate --p '{
       "\u003cuint32 Value\u003e": [
-         "Magnam ut consequatur.",
-         "Quo rerum et ut omnis praesentium non."
+         "Laboriosam consequatur delectus doloribus.",
+         "Est mollitia.",
+         "Voluptas ex enim.",
+         "Est explicabo eveniet dolore."
       ]
    }'
 `, os.Args[0])

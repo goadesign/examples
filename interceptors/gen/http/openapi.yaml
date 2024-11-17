@@ -1,0 +1,350 @@
+swagger: "2.0"
+info:
+    title: ""
+    version: 0.0.1
+host: localhost:80
+consumes:
+    - application/json
+    - application/xml
+    - application/gob
+produces:
+    - application/json
+    - application/xml
+    - application/gob
+paths:
+    /records/{tenantID}:
+        post:
+            tags:
+                - interceptors
+            summary: create interceptors
+            description: Create a new record with all interceptors in action
+            operationId: interceptors#create
+            parameters:
+                - name: tenantID
+                  in: path
+                  description: Valid UUID representation as per RFC 4122
+                  required: true
+                  type: string
+                - name: Authorization
+                  in: header
+                  description: JWT auth token
+                  required: true
+                  type: string
+                - name: CreateRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/InterceptorsCreateRequestBody'
+                    required:
+                        - value
+            responses:
+                "201":
+                    description: Created response.
+                    schema:
+                        $ref: '#/definitions/InterceptorsCreateResponseBody'
+                        required:
+                            - id
+                            - value
+                            - tenant
+                            - status
+                            - processedAt
+                            - duration
+            schemes:
+                - http
+    /records/{tenantID}/{recordID}:
+        get:
+            tags:
+                - interceptors
+            summary: get interceptors
+            description: Get retrieves a record by ID with all interceptors in action
+            operationId: interceptors#get
+            parameters:
+                - name: tenantID
+                  in: path
+                  description: Valid UUID representation as per RFC 4122
+                  required: true
+                  type: string
+                - name: recordID
+                  in: path
+                  description: Valid UUID representation as per RFC 4122
+                  required: true
+                  type: string
+                - name: Authorization
+                  in: header
+                  description: JWT auth token
+                  required: true
+                  type: string
+                - name: GetRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/InterceptorsGetRequestBody'
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        $ref: '#/definitions/InterceptorsGetResponseBody'
+                        required:
+                            - id
+                            - value
+                            - tenant
+                            - status
+                            - processedAt
+                            - duration
+                "404":
+                    description: Not Found response.
+                    schema:
+                        $ref: '#/definitions/InterceptorsGetNotFoundResponseBody'
+                "503":
+                    description: Service Unavailable response.
+                    schema:
+                        $ref: '#/definitions/InterceptorsGetUnavailableResponseBody'
+            schemes:
+                - http
+definitions:
+    InterceptorsCreateRequestBody:
+        title: InterceptorsCreateRequestBody
+        type: object
+        properties:
+            spanID:
+                type: string
+                description: Unique span ID for request, initialized by the TraceRequest interceptor
+                example: 668c7a25-605c-40e9-bdd2-53cb6d907b71
+                format: uuid
+            traceID:
+                type: string
+                description: Unique trace ID for request, initialized by the TraceRequest interceptor
+                example: 71cbc370-8808-4c83-9919-fb9e83f95378
+                format: uuid
+            value:
+                type: string
+                description: Value to store in record
+                example: Similique iure officia esse.
+        example:
+            spanID: a24bd244-32e9-4c64-8dc2-99dd72539507
+            traceID: 92812f03-eb5e-406e-a27a-c098581687fc
+            value: Fuga odit maxime architecto quas.
+        required:
+            - value
+    InterceptorsCreateResponseBody:
+        title: InterceptorsCreateResponseBody
+        type: object
+        properties:
+            duration:
+                type: integer
+                description: Processing duration in ms
+                example: 4685379097517369650
+                format: int64
+            id:
+                type: string
+                description: ID of the created record
+                example: ee600886-6ee2-4fed-b146-2c5c00035a3f
+                format: uuid
+            processedAt:
+                type: string
+                description: Timestamp when processed
+                example: Quisquam aut ut.
+            retryCount:
+                type: integer
+                description: Number of retry attempts made
+                example: 2100269439826732371
+                format: int64
+            retryDuration:
+                type: integer
+                description: Total time spent retrying
+                example: 2665423838246089994
+                format: int64
+            status:
+                type: integer
+                description: Response status code
+                example: 4410730854393359695
+                format: int64
+            tenant:
+                type: string
+                description: Tenant the record belongs to
+                example: Et doloribus aut quam.
+            value:
+                type: string
+                description: Value of the record
+                example: Dicta ut.
+        example:
+            duration: 6828013960697177096
+            id: 9275ab10-d9e8-445a-8997-058e638a5a2c
+            processedAt: Sed eos.
+            retryCount: 3415679854328597230
+            retryDuration: 7015135027743460803
+            status: 5846038720268119165
+            tenant: Voluptatem iusto in culpa.
+            value: Consequatur repudiandae occaecati ut omnis eveniet.
+        required:
+            - id
+            - value
+            - tenant
+            - status
+            - processedAt
+            - duration
+    InterceptorsGetNotFoundResponseBody:
+        title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+        type: object
+        properties:
+            fault:
+                type: boolean
+                description: Is the error a server-side fault?
+                example: false
+            id:
+                type: string
+                description: ID is a unique identifier for this particular occurrence of the problem.
+                example: 123abc
+            message:
+                type: string
+                description: Message is a human-readable explanation specific to this occurrence of the problem.
+                example: parameter 'p' must be an integer
+            name:
+                type: string
+                description: Name is the name of this class of errors.
+                example: bad_request
+            temporary:
+                type: boolean
+                description: Is the error temporary?
+                example: false
+            timeout:
+                type: boolean
+                description: Is the error a timeout?
+                example: true
+        description: Record not found (default view)
+        example:
+            fault: true
+            id: 123abc
+            message: parameter 'p' must be an integer
+            name: bad_request
+            temporary: true
+            timeout: false
+        required:
+            - name
+            - id
+            - message
+            - temporary
+            - timeout
+            - fault
+    InterceptorsGetRequestBody:
+        title: InterceptorsGetRequestBody
+        type: object
+        properties:
+            spanID:
+                type: string
+                description: Unique span ID for request, initialized by the TraceRequest interceptor
+                example: 6af1b354-0e99-466c-8585-3ee560fa56f3
+                format: uuid
+            traceID:
+                type: string
+                description: Unique trace ID for request, initialized by the TraceRequest interceptor
+                example: aacbda4e-7474-4724-bce3-7b5992e4afcd
+                format: uuid
+        example:
+            spanID: 0b85e27c-b6fa-4f26-8cad-fa307236a944
+            traceID: c220a8f2-b967-475e-8829-33123db03d1f
+    InterceptorsGetResponseBody:
+        title: InterceptorsGetResponseBody
+        type: object
+        properties:
+            cachedAt:
+                type: string
+                description: Time at which the record was cached, written by the Cache interceptor
+                example: Odit laboriosam.
+            duration:
+                type: integer
+                description: Processing duration in ms, written by the RequestAudit interceptor
+                example: 2917596090609310648
+                format: int64
+            id:
+                type: string
+                description: ID of the record
+                example: 5f714205-c291-476c-ad6c-e05786ba2d88
+                format: uuid
+            processedAt:
+                type: string
+                description: Timestamp when processed, written by the RequestAudit interceptor
+                example: Ipsam voluptatibus officiis.
+            retryCount:
+                type: integer
+                description: Number of retry attempts made, written client-side by the Retry interceptor
+                example: 6226804624437123940
+                format: int64
+            retryDuration:
+                type: integer
+                description: Total time spent retrying, written client-side by the Retry interceptor
+                example: 7008107608638211119
+                format: int64
+            status:
+                type: integer
+                description: Response status code
+                example: 4628019824413920914
+                format: int64
+            tenant:
+                type: string
+                description: Tenant the record belongs to
+                example: Occaecati labore quidem distinctio.
+            value:
+                type: string
+                description: Value of the record
+                example: Distinctio rerum.
+        example:
+            cachedAt: Mollitia aut et.
+            duration: 2352769900265307526
+            id: 131194e5-f6bc-4981-9faa-628644f09ebf
+            processedAt: Quibusdam itaque dolor animi.
+            retryCount: 7983654329278550397
+            retryDuration: 8963490726165227173
+            status: 566028649804286508
+            tenant: Aut accusamus delectus consequatur vel id.
+            value: Nostrum labore sequi eius ipsa dicta molestias.
+        required:
+            - id
+            - value
+            - tenant
+            - status
+            - processedAt
+            - duration
+    InterceptorsGetUnavailableResponseBody:
+        title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+        type: object
+        properties:
+            fault:
+                type: boolean
+                description: Is the error a server-side fault?
+                example: false
+            id:
+                type: string
+                description: ID is a unique identifier for this particular occurrence of the problem.
+                example: 123abc
+            message:
+                type: string
+                description: Message is a human-readable explanation specific to this occurrence of the problem.
+                example: parameter 'p' must be an integer
+            name:
+                type: string
+                description: Name is the name of this class of errors.
+                example: bad_request
+            temporary:
+                type: boolean
+                description: Is the error temporary?
+                example: true
+            timeout:
+                type: boolean
+                description: Is the error a timeout?
+                example: true
+        description: Temporary error (default view)
+        example:
+            fault: true
+            id: 123abc
+            message: parameter 'p' must be an integer
+            name: bad_request
+            temporary: false
+            timeout: true
+        required:
+            - name
+            - id
+            - message
+            - temporary
+            - timeout
+            - fault

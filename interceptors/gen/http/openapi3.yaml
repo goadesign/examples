@@ -1,0 +1,324 @@
+openapi: 3.0.3
+info:
+    title: Goa API
+    version: 0.0.1
+servers:
+    - url: http://localhost:80
+      description: Default server for interceptors
+paths:
+    /records/{tenantID}:
+        post:
+            tags:
+                - interceptors
+            summary: create interceptors
+            description: Create a new record with all interceptors in action
+            operationId: interceptors#create
+            parameters:
+                - name: tenantID
+                  in: path
+                  description: Tenant ID for the request
+                  required: true
+                  schema:
+                    type: string
+                    description: Valid UUID representation as per RFC 4122
+                    example: bcd44737-a547-4294-8c51-a6665750b1b4
+                    format: uuid
+                  example: Aliquid necessitatibus asperiores iure.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateRequestBody'
+                        example:
+                            spanID: 624adc57-e52c-4436-a5bd-a3b009450803
+                            traceID: b87d0a57-3e1e-46cb-b2a4-ad8fd2004a09
+                            value: Aut delectus et veritatis.
+            responses:
+                "201":
+                    description: Created response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateResponseBody'
+                            example:
+                                duration: 6894439911109425697
+                                id: 3466536e-bd49-46fc-bee0-83f4036136bd
+                                processedAt: Et sequi nulla ut asperiores saepe.
+                                retryCount: 4390294228574029225
+                                retryDuration: 4078918533712117051
+                                status: 9055129798069585809
+                                tenant: Quaerat aut nam.
+                                value: Fugiat iste pariatur.
+    /records/{tenantID}/{recordID}:
+        get:
+            tags:
+                - interceptors
+            summary: get interceptors
+            description: Get retrieves a record by ID with all interceptors in action
+            operationId: interceptors#get
+            parameters:
+                - name: tenantID
+                  in: path
+                  description: Tenant ID for the request
+                  required: true
+                  schema:
+                    type: string
+                    description: Valid UUID representation as per RFC 4122
+                    example: 0e01ef16-cfd8-400f-90f8-9d9ebfcee79c
+                    format: uuid
+                  example: Aliquid necessitatibus asperiores iure.
+                - name: recordID
+                  in: path
+                  description: ID of the record to retrieve
+                  required: true
+                  schema:
+                    type: string
+                    description: Valid UUID representation as per RFC 4122
+                    example: 0668cea0-2683-49f8-b0a8-803130a7e21d
+                    format: uuid
+                  example: Aliquid necessitatibus asperiores iure.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetRequestBody'
+                        example:
+                            spanID: 9c82b6c6-170b-4a8a-af64-32c4f79dec6f
+                            traceID: ae190227-2887-4b9f-9262-36051d64f7fd
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetResponseBody'
+                            example:
+                                cachedAt: Sunt nam.
+                                duration: 2823724599055313288
+                                id: 01023e58-e473-4231-92da-7d6c3917b26a
+                                processedAt: Quis dicta pariatur fuga vero adipisci.
+                                retryCount: 3631993255110556936
+                                retryDuration: 192377636191646470
+                                status: 1214071349339020933
+                                tenant: Provident sit deserunt reiciendis.
+                                value: Ipsa tempora dolorem quasi.
+                "404":
+                    description: 'NotFound: Record not found'
+                    content:
+                        application/vnd.goa.error:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                "503":
+                    description: 'Unavailable: Temporary error'
+                    content:
+                        application/vnd.goa.error:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+components:
+    schemas:
+        CreateRequestBody:
+            type: object
+            properties:
+                spanID:
+                    type: string
+                    description: Unique span ID for request, initialized by the TraceRequest interceptor
+                    example: 5f03d85b-ac8f-4b0b-ab98-2625b4a0e238
+                    format: uuid
+                traceID:
+                    type: string
+                    description: Unique trace ID for request, initialized by the TraceRequest interceptor
+                    example: 6f819376-b8d0-4e68-b65d-c4288f952604
+                    format: uuid
+                value:
+                    type: string
+                    description: Value to store in record
+                    example: Illo perferendis nihil et ratione.
+            example:
+                spanID: 8edf51d7-226f-419c-83a1-4eb875634708
+                traceID: eb0ede22-1c44-469a-8fce-36b3369f0347
+                value: Neque ad voluptatem iusto odit laudantium.
+            required:
+                - value
+        CreateResponseBody:
+            type: object
+            properties:
+                duration:
+                    type: integer
+                    description: Processing duration in ms
+                    example: 3260636293404914224
+                    format: int64
+                id:
+                    type: string
+                    description: ID of the created record
+                    example: 6e30a44b-df4e-48ea-a520-faecf684c78b
+                    format: uuid
+                processedAt:
+                    type: string
+                    description: Timestamp when processed
+                    example: Qui possimus soluta.
+                retryCount:
+                    type: integer
+                    description: Number of retry attempts made
+                    example: 6053400074677673352
+                    format: int64
+                retryDuration:
+                    type: integer
+                    description: Total time spent retrying
+                    example: 3199775912930233563
+                    format: int64
+                status:
+                    type: integer
+                    description: Response status code
+                    example: 6258149825306871012
+                    format: int64
+                tenant:
+                    type: string
+                    description: Tenant the record belongs to
+                    example: Ex ut ipsam voluptatem et.
+                value:
+                    type: string
+                    description: Value of the record
+                    example: Molestiae et aspernatur voluptas corrupti.
+            example:
+                duration: 9086720554236545702
+                id: 3b49a936-6dbc-470e-ba75-187a99779e3a
+                processedAt: Qui unde earum velit qui.
+                retryCount: 7562410826338079722
+                retryDuration: 7120615252950309517
+                status: 2013261084019525639
+                tenant: Ut dolorem deserunt et laborum excepturi.
+                value: Qui et laudantium officia voluptas molestias.
+            required:
+                - id
+                - value
+                - tenant
+                - status
+                - processedAt
+                - duration
+        Error:
+            type: object
+            properties:
+                fault:
+                    type: boolean
+                    description: Is the error a server-side fault?
+                    example: true
+                id:
+                    type: string
+                    description: ID is a unique identifier for this particular occurrence of the problem.
+                    example: 123abc
+                message:
+                    type: string
+                    description: Message is a human-readable explanation specific to this occurrence of the problem.
+                    example: parameter 'p' must be an integer
+                name:
+                    type: string
+                    description: Name is the name of this class of errors.
+                    example: bad_request
+                temporary:
+                    type: boolean
+                    description: Is the error temporary?
+                    example: true
+                timeout:
+                    type: boolean
+                    description: Is the error a timeout?
+                    example: true
+            description: Record not found
+            example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+            required:
+                - name
+                - id
+                - message
+                - temporary
+                - timeout
+                - fault
+        GetRequestBody:
+            type: object
+            properties:
+                spanID:
+                    type: string
+                    description: Unique span ID for request, initialized by the TraceRequest interceptor
+                    example: a642ee68-3f85-4433-9348-8812ee55c3be
+                    format: uuid
+                traceID:
+                    type: string
+                    description: Unique trace ID for request, initialized by the TraceRequest interceptor
+                    example: b922618a-a66e-4fcf-b079-554b4903a1e4
+                    format: uuid
+            example:
+                spanID: b46dfcd5-9712-46e1-8851-7c41aac788b3
+                traceID: fe19ce65-6d3f-4f39-8060-19fe542df7c8
+        GetResponseBody:
+            type: object
+            properties:
+                cachedAt:
+                    type: string
+                    description: Time at which the record was cached, written by the Cache interceptor
+                    example: Laudantium est quaerat illum nam reiciendis reiciendis.
+                duration:
+                    type: integer
+                    description: Processing duration in ms, written by the RequestAudit interceptor
+                    example: 3876140198211973756
+                    format: int64
+                id:
+                    type: string
+                    description: ID of the record
+                    example: 75140303-21fe-447a-b37f-2c9b182f87c8
+                    format: uuid
+                processedAt:
+                    type: string
+                    description: Timestamp when processed, written by the RequestAudit interceptor
+                    example: Quisquam doloribus voluptatem eligendi voluptas eaque quis.
+                retryCount:
+                    type: integer
+                    description: Number of retry attempts made, written client-side by the Retry interceptor
+                    example: 651800025259921048
+                    format: int64
+                retryDuration:
+                    type: integer
+                    description: Total time spent retrying, written client-side by the Retry interceptor
+                    example: 3719387169351422667
+                    format: int64
+                status:
+                    type: integer
+                    description: Response status code
+                    example: 1186156954869002976
+                    format: int64
+                tenant:
+                    type: string
+                    description: Tenant the record belongs to
+                    example: Expedita atque voluptate.
+                value:
+                    type: string
+                    description: Value of the record
+                    example: Distinctio voluptas illo aut quia.
+            example:
+                cachedAt: Facilis cumque sunt.
+                duration: 5098800549171839946
+                id: e829fbdf-3887-4596-bc7e-de24bef67927
+                processedAt: Exercitationem aspernatur minima repudiandae.
+                retryCount: 6058919283286866865
+                retryDuration: 3323308754531571459
+                status: 3701670497447090793
+                tenant: Dolor quaerat doloremque ut.
+                value: Et in nam nisi laboriosam ducimus.
+            required:
+                - id
+                - value
+                - tenant
+                - status
+                - processedAt
+                - duration
+tags:
+    - name: interceptors
+      description: |-
+        The interceptors service demonstrates a comprehensive use of interceptors combining
+        authentication, tenant validation, caching, audit logging, and retry mechanisms. It showcases
+        both client-side and server-side interceptors working together to provide a robust service.

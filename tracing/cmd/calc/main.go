@@ -43,7 +43,7 @@ func main() {
 		calcSvc calcsvc.Service
 	)
 	{
-		calcSvc = calc.NewCalc(logger)
+		calcSvc = calc.NewCalc()
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

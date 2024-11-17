@@ -1,0 +1,57 @@
+// Code generated with goa v3.19.1, DO NOT EDIT.
+//
+// interceptors protocol buffer definition
+//
+// Command:
+// $ goa gen goa.design/examples/interceptors/design
+
+syntax = "proto3";
+
+package interceptors;
+
+option go_package = "/interceptorspb";
+
+// The interceptors service demonstrates a comprehensive use of interceptors
+// combining
+// authentication, tenant validation, caching, audit logging, and retry
+// mechanisms. It showcases
+// both client-side and server-side interceptors working together to provide a
+// robust service.
+service Interceptors {
+	// Get retrieves a record by ID with all interceptors in action
+	rpc Get (GetRequest) returns (GetResponse);
+}
+
+message GetRequest {
+	// Tenant ID for the request
+	string tenant_id = 1;
+	// ID of the record to retrieve
+	string record_id = 2;
+	// JWT auth token
+	string auth = 3;
+	// Unique trace ID for request, initialized by the TraceRequest interceptor
+	optional string trace_id = 4;
+	// Unique span ID for request, initialized by the TraceRequest interceptor
+	optional string span_id = 5;
+}
+
+message GetResponse {
+	// ID of the record
+	string id = 1;
+	// Value of the record
+	string value = 2;
+	// Tenant the record belongs to
+	string tenant = 3;
+	// Response status code
+	sint32 status = 4;
+	// Timestamp when processed, written by the RequestAudit interceptor
+	string processed_at = 5;
+	// Processing duration in ms, written by the RequestAudit interceptor
+	sint32 duration = 6;
+	// Time at which the record was cached, written by the Cache interceptor
+	optional string cached_at = 7;
+	// Number of retry attempts made, written client-side by the Retry interceptor
+	optional sint32 retry_count = 8;
+	// Total time spent retrying, written client-side by the Retry interceptor
+	optional sint32 retry_duration = 9;
+}

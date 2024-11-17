@@ -1,0 +1,20 @@
+go 1.23.3
+
+use (
+	./basic
+	./cellar
+	./cookies
+	./encodings/cbor
+	./encodings/text
+	./error
+	./files
+	./httpstatus
+	./interceptors
+	./multipart
+	./security/hierarchy
+	./security/multiauth
+	./streaming
+	./tracing
+	./tus
+	./upload_download
+)
