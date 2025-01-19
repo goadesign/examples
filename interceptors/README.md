@@ -1,24 +1,53 @@
 # Interceptors Example
 
-This example demonstrates the concepts of various interceptors in a Goa service. It is intended as a learning tool to understand how interceptors work in Goa and should not be used directly in production environments.
+This example demonstrates how to structure and organize interceptors in a Goa service. It provides skeleton implementations that show the basic patterns for both client-side and server-side interceptors. Note that these are educational examples and not production-ready implementations.
 
-## ⚠️ Important Note
+## Design Overview
 
-This code is for educational purposes only. The implementations are intentionally simplified to highlight the concepts and mechanics of Goa interceptors. In a production environment, you would need to:
+The example shows how to organize different types of interceptors:
 
-- Implement proper JWT validation and security measures
-- Use appropriate caching strategies and storage backends
-- Add comprehensive error handling and logging
-- Follow your organization's security best practices
-- Consider performance implications and scaling requirements
+### Server-Side Interceptors
 
-The interceptors demonstrated include:
-- Authentication (JWT) - basic example of token validation
-- Caching - simple in-memory implementation
-- Audit Logging - basic request/response logging
-- Request Tracing - simplified trace ID generation
-- Retry Mechanism - basic retry logic
-- Request Deadlines - simple timeout handling
+```go
+// Example interceptor chain - implementations are skeleton/logging only
+ServerInterceptor(TraceRequest)  // Shows where to add trace context
+ServerInterceptor(RequestAudit)  // Shows where to add timing/logging
+ServerInterceptor(JWTAuth)       // Shows where to add auth checks
+ServerInterceptor(SetDeadline)   // Shows where to add timeouts
+ServerInterceptor(Cache)         // Shows where to add caching
+```
+
+### Client-Side Interceptors
+
+```go
+// Example client interceptors - implementations are skeleton/logging only
+ClientInterceptor(EncodeTenant)  // Shows where to modify auth tokens
+ClientInterceptor(Retry)         // Shows where to add retry logic
+```
+
+## Example Patterns Demonstrated
+
+The example shows common interceptor patterns (note: implementations are skeleton only):
+
+1. **Authentication Pattern**
+   - Where to add JWT token validation
+   - How to pass tenant information
+   - Structure for auth checks
+
+2. **Observability Pattern**
+   - Where to add request tracing
+   - How to structure audit logging
+   - Points for adding metrics
+
+3. **Caching Pattern**
+   - Where to add cache checks
+   - Structure for cache updates
+   - Points for cache invalidation
+
+4. **Resilience Pattern**
+   - Where to add timeouts
+   - Structure for retry logic
+   - Error handling points
 
 ## Running the Example
 
@@ -26,21 +55,61 @@ The interceptors demonstrated include:
    ```bash
    ./run-service.sh
    ```
+   This builds and starts both the service and CLI on port 8088.
 
 2. In another terminal, run the demo:
    ```bash
    ./demo.sh
    ```
 
-## What the Demo Shows
+## Demo Scenarios
 
-The demo script demonstrates several interceptor features:
+The demo script shows the interceptor chain in action with test scenarios:
 
-1. **Basic Flow**: Creates a record and retrieves it, showing authentication and audit logging in action
-2. **Caching**: Makes the same request twice to demonstrate caching
-3. **Retry Mechanism**: Tests the retry interceptor by requesting an unavailable resource
-4. **Deadline**: Shows how the deadline interceptor handles slow requests
-5. **Authentication**: Demonstrates JWT token validation
+1. **Basic Request Flow**
+   ```bash
+   # Shows the complete interceptor chain with logging
+   interceptors-cli create --tenant-id <UUID> --auth "Bearer <token>"
+   ```
+
+2. **Cache Structure**
+   ```bash
+   # Shows where cache checks would happen
+   interceptors-cli get --record-id <UUID> --tenant-id <UUID> --auth "Bearer <token>"
+   ```
+
+3. **Retry Pattern**
+   ```bash
+   # Shows where retry logic would be implemented
+   interceptors-cli get --record-id "00000000-0000-0000-0000-000000000000"
+   ```
+
+4. **Timeout Pattern**
+   ```bash
+   # Shows where deadline handling would occur
+   interceptors-cli get --record-id "00000000-0000-0000-0000-000000000001"
+   ```
+
+5. **Auth Pattern**
+   ```bash
+   # Shows where token validation would happen
+   interceptors-cli get --record-id <UUID> --auth "Bearer wrong-token"
+   ```
+
+## Implementation Notes
+
+The interceptors in this example are skeleton implementations that only log their execution. They demonstrate:
+
+1. How to structure interceptors in the design
+2. Where to place different types of middleware logic
+3. How to chain interceptors in a specific order
+4. How client and server interceptors interact
+
+Key Files:
+- `design/design.go`: Shows how to define interceptors in Goa DSL
+- `interceptors/interceptors_server.go`: Shows server interceptor structure
+- `interceptors/interceptors_client.go`: Shows client interceptor structure
+- `demo.sh`: Shows how to test interceptor patterns
 
 ## Service Endpoints
 
