@@ -4,8 +4,6 @@ go 1.22.7
 
 toolchain go1.23.3
 
-replace goa.design/goa/v3 => /Users/raphael/src/goa
-
 require (
 	goa.design/clue v1.0.5
 	goa.design/goa/v3 v3.19.1
