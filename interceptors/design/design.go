@@ -37,6 +37,29 @@ var TraceRequest = Interceptor("TraceRequest", func() {
 	})
 })
 
+// TraceBidirectionalStream handles bidirectional streaming trace context
+var TraceBidirectionalStream = Interceptor("TraceBidirectionalStream", func() {
+	Description("Server-side and client-side interceptor that adds trace context to the bidirectional stream payload")
+
+	ReadStreamingPayload(func() {
+		Attribute("traceID", String, "Unique trace ID for request")
+		Attribute("spanID", String, "Unique span ID for request")
+	})
+	WriteStreamingPayload(func() {
+		Attribute("traceID", String, "Unique trace ID for request")
+		Attribute("spanID", String, "Unique span ID for request")
+	})
+
+	ReadStreamingResult(func() {
+		Attribute("traceID", String, "Unique trace ID for request")
+		Attribute("spanID", String, "Unique span ID for request")
+	})
+	WriteStreamingResult(func() {
+		Attribute("traceID", String, "Unique trace ID for request")
+		Attribute("spanID", String, "Unique span ID for request")
+	})
+})
+
 // RequestAudit handles request/response logging and timing
 var RequestAudit = Interceptor("RequestAudit", func() {
 	Description("Server-side interceptor that provides comprehensive request/response audit logging")
@@ -92,21 +115,23 @@ authentication, tenant validation, caching, audit logging, and retry mechanisms.
 both client-side and server-side interceptors working together to provide a robust service.`)
 
 	// Server-side interceptors - ordered by execution sequence
-	ServerInterceptor(TraceRequest) // Add trace context first
-	ServerInterceptor(RequestAudit) // Start timing
-	ServerInterceptor(JWTAuth)      // Then validate authentication
-	ServerInterceptor(SetDeadline)  // Set deadline
+	ServerInterceptor(JWTAuth)     // Then validate authentication
+	ServerInterceptor(SetDeadline) // Set deadline
 
 	// Client-side interceptors
 	ClientInterceptor(EncodeTenant)
-	ClientInterceptor(Retry)
 
 	// Define a method that uses all the interceptors
 	Method("get", func() {
 		Description("Get retrieves a record by ID with all interceptors in action")
 
+		ServerInterceptor(TraceRequest) // Add trace context first
+		ServerInterceptor(RequestAudit) // Start timing
 		// Add cache interceptor only for get method
 		ServerInterceptor(Cache)
+
+		// Add retry interceptor only for get method
+		ClientInterceptor(Retry)
 
 		Payload(func() {
 			Field(1, "tenantID", UUID, "Tenant ID for the request")
@@ -152,6 +177,11 @@ both client-side and server-side interceptors working together to provide a robu
 	Method("create", func() {
 		Description("Create a new record with all interceptors in action")
 
+		ServerInterceptor(TraceRequest) // Add trace context first
+		ServerInterceptor(RequestAudit) // Start timing
+		// Add retry interceptor only for create method
+		ClientInterceptor(Retry)
+
 		Payload(func() {
 			Field(1, "tenantID", UUID, "Tenant ID for the request")
 			Field(2, "value", String, "Value to store in record")
@@ -177,6 +207,41 @@ both client-side and server-side interceptors working together to provide a robu
 			POST("/records/{tenantID}")
 			Header("auth:Authorization")
 			Response(StatusCreated)
+		})
+	})
+
+	Method("stream", func() {
+		Description("Stream records")
+
+		ServerInterceptor(TraceBidirectionalStream)
+		ClientInterceptor(TraceBidirectionalStream)
+
+		Payload(func() {
+			Field(1, "tenantID", UUID, "Tenant ID for the request")
+			Field(2, "auth", String, "JWT auth token")
+			Required("tenantID", "auth")
+		})
+		StreamingPayload(func() {
+			Field(1, "id", UUID, "ID of the created record")
+			Field(2, "value", String, "Value of the record")
+			Field(3, "traceID", UUID, "Unique trace ID for request, initialized by the TraceRequest interceptor")
+			Field(4, "spanID", UUID, "Unique span ID for request, initialized by the TraceRequest interceptor")
+			Required("id", "value")
+		})
+		StreamingResult(func() {
+			Field(1, "id", UUID, "ID of the created record")
+			Field(2, "value", String, "Value of the record")
+			Field(3, "tenant", String, "Tenant the record belongs to")
+			Field(4, "status", Int, "Response status code")
+			Field(5, "traceID", UUID, "Unique trace ID for request, initialized by the TraceRequest interceptor")
+			Field(6, "spanID", UUID, "Unique span ID for request, initialized by the TraceRequest interceptor")
+			Required("id", "value", "tenant", "status")
+		})
+
+		HTTP(func() {
+			GET("/records/{tenantID}/stream")
+			Header("auth:Authorization")
+			Response(StatusOK)
 		})
 	})
 })

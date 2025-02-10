@@ -28,6 +28,9 @@ type ServerInterceptors interface {
 	RequestAudit(ctx context.Context, info *RequestAuditInfo, next goa.Endpoint) (any, error)
 	// Server-side interceptor which sets the context deadline for the request
 	SetDeadline(ctx context.Context, info *SetDeadlineInfo, next goa.Endpoint) (any, error)
+	// Server-side and client-side interceptor that adds trace context to the
+	// bidirectional stream payload
+	TraceBidirectionalStream(ctx context.Context, info *TraceBidirectionalStreamInfo, next goa.Endpoint) (any, error)
 	// Server-side interceptor that adds trace context to the request payload
 	TraceRequest(ctx context.Context, info *TraceRequestInfo, next goa.Endpoint) (any, error)
 }
@@ -36,7 +39,12 @@ type ServerInterceptors interface {
 type (
 	// CacheInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	CacheInfo goa.InterceptorInfo
+	CacheInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
 
 	// CachePayload provides type-safe access to the method payload.
 	// It allows reading and writing specific fields of the payload as defined
@@ -53,7 +61,12 @@ type (
 	}
 	// JWTAuthInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	JWTAuthInfo goa.InterceptorInfo
+	JWTAuthInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
 
 	// JWTAuthPayload provides type-safe access to the method payload.
 	// It allows reading and writing specific fields of the payload as defined
@@ -64,7 +77,12 @@ type (
 	}
 	// RequestAuditInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	RequestAuditInfo goa.InterceptorInfo
+	RequestAuditInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
 
 	// RequestAuditResult provides type-safe access to the method result.
 	// It allows reading and writing specific fields of the result as defined
@@ -76,10 +94,48 @@ type (
 	}
 	// SetDeadlineInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	SetDeadlineInfo goa.InterceptorInfo
+	SetDeadlineInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
+	// TraceBidirectionalStreamInfo provides metadata about the current interception.
+	// It includes service name, method name, and access to the endpoint.
+	TraceBidirectionalStreamInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
+
+	// TraceBidirectionalStreamStreamingPayload provides type-safe access to the method streaming payload.
+	// It allows reading and writing specific fields of the streaming payload as defined
+	// in the design.
+	TraceBidirectionalStreamStreamingPayload interface {
+		TraceID() UUID
+		SpanID() UUID
+		SetTraceID(UUID)
+		SetSpanID(UUID)
+	}
+
+	// TraceBidirectionalStreamStreamingResult provides type-safe access to the method streaming result.
+	// It allows reading and writing specific fields of the streaming result as defined
+	// in the design.
+	TraceBidirectionalStreamStreamingResult interface {
+		TraceID() UUID
+		SpanID() UUID
+		SetTraceID(UUID)
+		SetSpanID(UUID)
+	}
 	// TraceRequestInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	TraceRequestInfo goa.InterceptorInfo
+	TraceRequestInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
 
 	// TraceRequestPayload provides type-safe access to the method payload.
 	// It allows reading and writing specific fields of the payload as defined
@@ -101,6 +157,9 @@ type (
 	jWTAuthCreatePayload struct {
 		payload *CreatePayload
 	}
+	jWTAuthStreamPayload struct {
+		payload *StreamPayload
+	}
 	traceRequestGetPayload struct {
 		payload *GetPayload
 	}
@@ -115,6 +174,12 @@ type (
 	}
 	requestAuditCreateResult struct {
 		result *CreateResult
+	}
+	traceBidirectionalStreamStreamStreamingPayload struct {
+		payload *StreamStreamingPayload
+	}
+	traceBidirectionalStreamStreamStreamingResult struct {
+		result *StreamResult
 	}
 )
 
@@ -139,11 +204,40 @@ func WrapCreateEndpoint(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoin
 	return endpoint
 }
 
+// WrapStreamEndpoint wraps the stream endpoint with the server-side
+// interceptors defined in the design.
+func WrapStreamEndpoint(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
+	endpoint = wrapStreamJWTAuth(endpoint, i)
+	endpoint = wrapStreamSetDeadline(endpoint, i)
+	endpoint = wrapStreamTraceBidirectionalStream(endpoint, i)
+	return endpoint
+}
+
 // Public accessor methods for Info types
+
+// Service returns the name of the service handling the request.
+func (info *CacheInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *CacheInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *CacheInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *CacheInfo) RawPayload() any {
+	return info.rawPayload
+}
 
 // Payload returns a type-safe accessor for the method payload.
 func (info *CacheInfo) Payload() CachePayload {
-	return &cacheGetPayload{payload: info.RawPayload.(*GetPayload)}
+	return &cacheGetPayload{payload: info.RawPayload().(*GetPayload)}
 }
 
 // Result returns a type-safe accessor for the method result.
@@ -151,21 +245,63 @@ func (info *CacheInfo) Result(res any) CacheResult {
 	return &cacheGetResult{result: res.(*GetResult)}
 }
 
+// Service returns the name of the service handling the request.
+func (info *JWTAuthInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *JWTAuthInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *JWTAuthInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *JWTAuthInfo) RawPayload() any {
+	return info.rawPayload
+}
+
 // Payload returns a type-safe accessor for the method payload.
 func (info *JWTAuthInfo) Payload() JWTAuthPayload {
-	switch info.Method {
+	switch info.Method() {
 	case "Get":
-		return &jWTAuthGetPayload{payload: info.RawPayload.(*GetPayload)}
+		return &jWTAuthGetPayload{payload: info.RawPayload().(*GetPayload)}
 	case "Create":
-		return &jWTAuthCreatePayload{payload: info.RawPayload.(*CreatePayload)}
+		return &jWTAuthCreatePayload{payload: info.RawPayload().(*CreatePayload)}
+	case "Stream":
+		return &jWTAuthStreamPayload{payload: info.RawPayload().(*StreamPayload)}
 	default:
 		return nil
 	}
 }
 
+// Service returns the name of the service handling the request.
+func (info *RequestAuditInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *RequestAuditInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *RequestAuditInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *RequestAuditInfo) RawPayload() any {
+	return info.rawPayload
+}
+
 // Result returns a type-safe accessor for the method result.
 func (info *RequestAuditInfo) Result(res any) RequestAuditResult {
-	switch info.Method {
+	switch info.Method() {
 	case "Get":
 		return &requestAuditGetResult{result: res.(*GetResult)}
 	case "Create":
@@ -175,13 +311,93 @@ func (info *RequestAuditInfo) Result(res any) RequestAuditResult {
 	}
 }
 
+// Service returns the name of the service handling the request.
+func (info *SetDeadlineInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *SetDeadlineInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *SetDeadlineInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *SetDeadlineInfo) RawPayload() any {
+	return info.rawPayload
+}
+
+// Service returns the name of the service handling the request.
+func (info *TraceBidirectionalStreamInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *TraceBidirectionalStreamInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *TraceBidirectionalStreamInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *TraceBidirectionalStreamInfo) RawPayload() any {
+	return info.rawPayload
+}
+
+// ClientStreamingPayload returns a type-safe accessor for the method streaming payload for a client-side interceptor.
+func (info *TraceBidirectionalStreamInfo) ClientStreamingPayload() TraceBidirectionalStreamStreamingPayload {
+	return &traceBidirectionalStreamStreamStreamingPayload{payload: info.RawPayload().(*StreamStreamingPayload)}
+}
+
+// ClientStreamingResult returns a type-safe accessor for the method streaming result for a client-side interceptor.
+func (info *TraceBidirectionalStreamInfo) ClientStreamingResult(res any) TraceBidirectionalStreamStreamingResult {
+	return &traceBidirectionalStreamStreamStreamingResult{result: res.(*StreamResult)}
+}
+
+// ServerStreamingPayload returns a type-safe accessor for the method streaming payload for a server-side interceptor.
+func (info *TraceBidirectionalStreamInfo) ServerStreamingPayload(pay any) TraceBidirectionalStreamStreamingPayload {
+	return &traceBidirectionalStreamStreamStreamingPayload{payload: pay.(*StreamStreamingPayload)}
+}
+
+// ServerStreamingResult returns a type-safe accessor for the method streaming result for a server-side interceptor.
+func (info *TraceBidirectionalStreamInfo) ServerStreamingResult() TraceBidirectionalStreamStreamingResult {
+	return &traceBidirectionalStreamStreamStreamingResult{result: info.RawPayload().(*StreamResult)}
+}
+
+// Service returns the name of the service handling the request.
+func (info *TraceRequestInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *TraceRequestInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *TraceRequestInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *TraceRequestInfo) RawPayload() any {
+	return info.rawPayload
+}
+
 // Payload returns a type-safe accessor for the method payload.
 func (info *TraceRequestInfo) Payload() TraceRequestPayload {
-	switch info.Method {
+	switch info.Method() {
 	case "Get":
-		return &traceRequestGetPayload{payload: info.RawPayload.(*GetPayload)}
+		return &traceRequestGetPayload{payload: info.RawPayload().(*GetPayload)}
 	case "Create":
-		return &traceRequestCreatePayload{payload: info.RawPayload.(*CreatePayload)}
+		return &traceRequestCreatePayload{payload: info.RawPayload().(*CreatePayload)}
 	default:
 		return nil
 	}
@@ -208,6 +424,12 @@ func (p *jWTAuthCreatePayload) Auth() string {
 func (p *jWTAuthCreatePayload) TenantID() UUID {
 	return p.payload.TenantID
 }
+func (p *jWTAuthStreamPayload) Auth() string {
+	return p.payload.Auth
+}
+func (p *jWTAuthStreamPayload) TenantID() UUID {
+	return p.payload.TenantID
+}
 
 func (r *requestAuditGetResult) Status() int {
 	return r.result.Status
@@ -226,6 +448,47 @@ func (r *requestAuditCreateResult) SetProcessedAt(v string) {
 }
 func (r *requestAuditCreateResult) SetDuration(v int) {
 	r.result.Duration = v
+}
+
+func (p *traceBidirectionalStreamStreamStreamingPayload) TraceID() UUID {
+	if p.payload.TraceID == nil {
+		var zero UUID
+		return zero
+	}
+	return *p.payload.TraceID
+}
+func (p *traceBidirectionalStreamStreamStreamingPayload) SpanID() UUID {
+	if p.payload.SpanID == nil {
+		var zero UUID
+		return zero
+	}
+	return *p.payload.SpanID
+}
+func (p *traceBidirectionalStreamStreamStreamingPayload) SetTraceID(v UUID) {
+	p.payload.TraceID = &v
+}
+func (p *traceBidirectionalStreamStreamStreamingPayload) SetSpanID(v UUID) {
+	p.payload.SpanID = &v
+}
+func (r *traceBidirectionalStreamStreamStreamingResult) TraceID() UUID {
+	if r.result.TraceID == nil {
+		var zero UUID
+		return zero
+	}
+	return *r.result.TraceID
+}
+func (r *traceBidirectionalStreamStreamStreamingResult) SpanID() UUID {
+	if r.result.SpanID == nil {
+		var zero UUID
+		return zero
+	}
+	return *r.result.SpanID
+}
+func (r *traceBidirectionalStreamStreamStreamingResult) SetTraceID(v UUID) {
+	r.result.TraceID = &v
+}
+func (r *traceBidirectionalStreamStreamStreamingResult) SetSpanID(v UUID) {
+	r.result.SpanID = &v
 }
 
 func (p *traceRequestGetPayload) SetTraceID(v UUID) {

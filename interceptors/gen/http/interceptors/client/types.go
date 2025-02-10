@@ -32,6 +32,19 @@ type CreateRequestBody struct {
 	SpanID *string `form:"spanID,omitempty" json:"spanID,omitempty" xml:"spanID,omitempty"`
 }
 
+// StreamStreamingBody is the type of the "interceptors" service "stream"
+// endpoint HTTP request body.
+type StreamStreamingBody struct {
+	// ID of the created record
+	ID UUIDStreamingBody `form:"id" json:"id" xml:"id"`
+	// Value of the record
+	Value string `form:"value" json:"value" xml:"value"`
+	// Unique trace ID for request, initialized by the TraceRequest interceptor
+	TraceID *UUIDStreamingBody `form:"traceID,omitempty" json:"traceID,omitempty" xml:"traceID,omitempty"`
+	// Unique span ID for request, initialized by the TraceRequest interceptor
+	SpanID *UUIDStreamingBody `form:"spanID,omitempty" json:"spanID,omitempty" xml:"spanID,omitempty"`
+}
+
 // GetResponseBody is the type of the "interceptors" service "get" endpoint
 // HTTP response body.
 type GetResponseBody struct {
@@ -76,6 +89,23 @@ type CreateResponseBody struct {
 	RetryDuration *int `form:"retryDuration,omitempty" json:"retryDuration,omitempty" xml:"retryDuration,omitempty"`
 }
 
+// StreamResponseBody is the type of the "interceptors" service "stream"
+// endpoint HTTP response body.
+type StreamResponseBody struct {
+	// ID of the created record
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Value of the record
+	Value *string `form:"value,omitempty" json:"value,omitempty" xml:"value,omitempty"`
+	// Tenant the record belongs to
+	Tenant *string `form:"tenant,omitempty" json:"tenant,omitempty" xml:"tenant,omitempty"`
+	// Response status code
+	Status *int `form:"status,omitempty" json:"status,omitempty" xml:"status,omitempty"`
+	// Unique trace ID for request, initialized by the TraceRequest interceptor
+	TraceID *string `form:"traceID,omitempty" json:"traceID,omitempty" xml:"traceID,omitempty"`
+	// Unique span ID for request, initialized by the TraceRequest interceptor
+	SpanID *string `form:"spanID,omitempty" json:"spanID,omitempty" xml:"spanID,omitempty"`
+}
+
 // GetNotFoundResponseBody is the type of the "interceptors" service "get"
 // endpoint HTTP response body for the "NotFound" error.
 type GetNotFoundResponseBody struct {
@@ -112,6 +142,9 @@ type GetUnavailableResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// UUIDStreamingBody is used to define fields on request body types.
+type UUIDStreamingBody string
+
 // NewGetRequestBody builds the HTTP request body from the payload of the "get"
 // endpoint of the "interceptors" service.
 func NewGetRequestBody(p *interceptors.GetPayload) *GetRequestBody {
@@ -139,6 +172,24 @@ func NewCreateRequestBody(p *interceptors.CreatePayload) *CreateRequestBody {
 	}
 	if p.SpanID != nil {
 		spanID := string(*p.SpanID)
+		body.SpanID = &spanID
+	}
+	return body
+}
+
+// NewStreamStreamingBody builds the HTTP request body from the payload of the
+// "stream" endpoint of the "interceptors" service.
+func NewStreamStreamingBody(p *interceptors.StreamStreamingPayload) *StreamStreamingBody {
+	body := &StreamStreamingBody{
+		ID:    UUIDStreamingBody(p.ID),
+		Value: p.Value,
+	}
+	if p.TraceID != nil {
+		traceID := UUIDStreamingBody(*p.TraceID)
+		body.TraceID = &traceID
+	}
+	if p.SpanID != nil {
+		spanID := UUIDStreamingBody(*p.SpanID)
 		body.SpanID = &spanID
 	}
 	return body
@@ -208,6 +259,27 @@ func NewCreateResultCreated(body *CreateResponseBody) *interceptors.CreateResult
 	return v
 }
 
+// NewStreamResultOK builds a "interceptors" service "stream" endpoint result
+// from a HTTP "OK" response.
+func NewStreamResultOK(body *StreamResponseBody) *interceptors.StreamResult {
+	v := &interceptors.StreamResult{
+		ID:     interceptors.UUID(*body.ID),
+		Value:  *body.Value,
+		Tenant: *body.Tenant,
+		Status: *body.Status,
+	}
+	if body.TraceID != nil {
+		traceID := interceptors.UUID(*body.TraceID)
+		v.TraceID = &traceID
+	}
+	if body.SpanID != nil {
+		spanID := interceptors.UUID(*body.SpanID)
+		v.SpanID = &spanID
+	}
+
+	return v
+}
+
 // ValidateGetResponseBody runs the validations defined on GetResponseBody
 func ValidateGetResponseBody(body *GetResponseBody) (err error) {
 	if body.ID == nil {
@@ -260,6 +332,32 @@ func ValidateCreateResponseBody(body *CreateResponseBody) (err error) {
 	return
 }
 
+// ValidateStreamResponseBody runs the validations defined on StreamResponseBody
+func ValidateStreamResponseBody(body *StreamResponseBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Value == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("value", "body"))
+	}
+	if body.Tenant == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("tenant", "body"))
+	}
+	if body.Status == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("status", "body"))
+	}
+	if body.ID != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.id", *body.ID, goa.FormatUUID))
+	}
+	if body.TraceID != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.traceID", *body.TraceID, goa.FormatUUID))
+	}
+	if body.SpanID != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.spanID", *body.SpanID, goa.FormatUUID))
+	}
+	return
+}
+
 // ValidateGetNotFoundResponseBody runs the validations defined on
 // get_NotFound_response_body
 func ValidateGetNotFoundResponseBody(body *GetNotFoundResponseBody) (err error) {
@@ -305,5 +403,11 @@ func ValidateGetUnavailableResponseBody(body *GetUnavailableResponseBody) (err e
 	if body.Fault == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
 	}
+	return
+}
+
+// ValidateUUIDStreamingBody runs the validations defined on UUIDStreamingBody
+func ValidateUUIDStreamingBody(body UUIDStreamingBody) (err error) {
+	err = goa.MergeErrors(err, goa.ValidateFormat("body", string(body), goa.FormatUUID))
 	return
 }

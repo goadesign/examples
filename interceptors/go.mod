@@ -1,15 +1,14 @@
 module goa.design/examples/interceptors
 
-go 1.22.7
-
-toolchain go1.23.3
+go 1.23
 
 require (
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/websocket v1.5.3
 	goa.design/clue v1.0.7
-	goa.design/goa/v3 v3.19.2-rc1
-	google.golang.org/grpc v1.69.4
-	google.golang.org/protobuf v1.36.3
+	goa.design/goa/v3 v3.20.0-rc1
+	google.golang.org/grpc v1.70.0
+	google.golang.org/protobuf v1.36.4
 )
 
 require (
@@ -18,7 +17,7 @@ require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/go-chi/chi/v5 v5.2.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/gohugoio/hashstructure v0.3.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

@@ -101,6 +101,36 @@ paths:
                         $ref: '#/definitions/InterceptorsGetUnavailableResponseBody'
             schemes:
                 - http
+    /records/{tenantID}/stream:
+        get:
+            tags:
+                - interceptors
+            summary: stream interceptors
+            description: Stream records
+            operationId: interceptors#stream
+            parameters:
+                - name: tenantID
+                  in: path
+                  description: Valid UUID representation as per RFC 4122
+                  required: true
+                  type: string
+                - name: Authorization
+                  in: header
+                  description: JWT auth token
+                  required: true
+                  type: string
+            responses:
+                "101":
+                    description: Switching Protocols response.
+                    schema:
+                        $ref: '#/definitions/InterceptorsStreamResponseBody'
+                        required:
+                            - id
+                            - value
+                            - tenant
+                            - status
+            schemes:
+                - ws
 definitions:
     InterceptorsCreateRequestBody:
         title: InterceptorsCreateRequestBody
@@ -109,21 +139,21 @@ definitions:
             spanID:
                 type: string
                 description: Unique span ID for request, initialized by the TraceRequest interceptor
-                example: 668c7a25-605c-40e9-bdd2-53cb6d907b71
+                example: 29e580bf-8ed1-4f19-b60c-352214b806df
                 format: uuid
             traceID:
                 type: string
                 description: Unique trace ID for request, initialized by the TraceRequest interceptor
-                example: 71cbc370-8808-4c83-9919-fb9e83f95378
+                example: 0c85e724-f296-4161-92e9-c90de96436d0
                 format: uuid
             value:
                 type: string
                 description: Value to store in record
-                example: Similique iure officia esse.
+                example: Ut quia reiciendis voluptatum quia.
         example:
-            spanID: a24bd244-32e9-4c64-8dc2-99dd72539507
-            traceID: 92812f03-eb5e-406e-a27a-c098581687fc
-            value: Fuga odit maxime architecto quas.
+            spanID: 9b6b1c4b-3b86-41e0-b2d3-467713766ff4
+            traceID: f842a33c-5087-4249-869b-41f44e253343
+            value: Placeat nesciunt voluptas rerum consequatur ut at.
         required:
             - value
     InterceptorsCreateResponseBody:
@@ -133,49 +163,49 @@ definitions:
             duration:
                 type: integer
                 description: Processing duration in ms
-                example: 4685379097517369650
+                example: 6712797237524310620
                 format: int64
             id:
                 type: string
                 description: ID of the created record
-                example: ee600886-6ee2-4fed-b146-2c5c00035a3f
+                example: 1505eca3-abf9-47be-a051-3cc1ac869d6e
                 format: uuid
             processedAt:
                 type: string
                 description: Timestamp when processed
-                example: Quisquam aut ut.
+                example: Ducimus doloribus sit porro.
             retryCount:
                 type: integer
                 description: Number of retry attempts made
-                example: 2100269439826732371
+                example: 1282775257137073598
                 format: int64
             retryDuration:
                 type: integer
                 description: Total time spent retrying
-                example: 2665423838246089994
+                example: 1655803061842165866
                 format: int64
             status:
                 type: integer
                 description: Response status code
-                example: 4410730854393359695
+                example: 271401219907671088
                 format: int64
             tenant:
                 type: string
                 description: Tenant the record belongs to
-                example: Et doloribus aut quam.
+                example: Molestiae praesentium corporis.
             value:
                 type: string
                 description: Value of the record
-                example: Dicta ut.
+                example: Vero voluptas consectetur odio praesentium nisi dignissimos.
         example:
-            duration: 6828013960697177096
-            id: 9275ab10-d9e8-445a-8997-058e638a5a2c
-            processedAt: Sed eos.
-            retryCount: 3415679854328597230
-            retryDuration: 7015135027743460803
-            status: 5846038720268119165
-            tenant: Voluptatem iusto in culpa.
-            value: Consequatur repudiandae occaecati ut omnis eveniet.
+            duration: 8335746665792469984
+            id: bc56c1bb-6f8d-4c3e-a153-8475b20e1d69
+            processedAt: Quia voluptate quam ut quo.
+            retryCount: 8188308883955071545
+            retryDuration: 341724810159970805
+            status: 1640505517961949417
+            tenant: Qui quia voluptatem necessitatibus doloribus et.
+            value: Minima et debitis similique.
         required:
             - id
             - value
@@ -190,7 +220,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -206,18 +236,18 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: false
+                example: true
             timeout:
                 type: boolean
                 description: Is the error a timeout?
                 example: true
         description: Record not found (default view)
         example:
-            fault: true
+            fault: false
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: true
+            temporary: false
             timeout: false
         required:
             - name
@@ -233,16 +263,16 @@ definitions:
             spanID:
                 type: string
                 description: Unique span ID for request, initialized by the TraceRequest interceptor
-                example: 6af1b354-0e99-466c-8585-3ee560fa56f3
+                example: 1959bb59-5ab1-4415-8885-728ac60cc1f3
                 format: uuid
             traceID:
                 type: string
                 description: Unique trace ID for request, initialized by the TraceRequest interceptor
-                example: aacbda4e-7474-4724-bce3-7b5992e4afcd
+                example: 57a37f50-ed5d-4319-b8ed-162e5bd3e1ef
                 format: uuid
         example:
-            spanID: 0b85e27c-b6fa-4f26-8cad-fa307236a944
-            traceID: c220a8f2-b967-475e-8829-33123db03d1f
+            spanID: 5b2f4108-5922-4bd5-9a48-3d82e22ecb02
+            traceID: d81b1710-f6f4-43de-889b-4c31639c6015
     InterceptorsGetResponseBody:
         title: InterceptorsGetResponseBody
         type: object
@@ -250,54 +280,54 @@ definitions:
             cachedAt:
                 type: string
                 description: Time at which the record was cached, written by the Cache interceptor
-                example: Odit laboriosam.
+                example: Molestiae ipsam.
             duration:
                 type: integer
                 description: Processing duration in ms, written by the RequestAudit interceptor
-                example: 2917596090609310648
+                example: 4041388843296110658
                 format: int64
             id:
                 type: string
                 description: ID of the record
-                example: 5f714205-c291-476c-ad6c-e05786ba2d88
+                example: cb87528f-0478-46e3-adff-bab6a8d3760a
                 format: uuid
             processedAt:
                 type: string
                 description: Timestamp when processed, written by the RequestAudit interceptor
-                example: Ipsam voluptatibus officiis.
+                example: Sed perspiciatis corporis.
             retryCount:
                 type: integer
                 description: Number of retry attempts made, written client-side by the Retry interceptor
-                example: 6226804624437123940
+                example: 6608198285387567718
                 format: int64
             retryDuration:
                 type: integer
                 description: Total time spent retrying, written client-side by the Retry interceptor
-                example: 7008107608638211119
+                example: 4348821142730194322
                 format: int64
             status:
                 type: integer
                 description: Response status code
-                example: 4628019824413920914
+                example: 7548420244555805334
                 format: int64
             tenant:
                 type: string
                 description: Tenant the record belongs to
-                example: Occaecati labore quidem distinctio.
+                example: Repellat aut.
             value:
                 type: string
                 description: Value of the record
-                example: Distinctio rerum.
+                example: Non doloribus modi autem sed sequi.
         example:
-            cachedAt: Mollitia aut et.
-            duration: 2352769900265307526
-            id: 131194e5-f6bc-4981-9faa-628644f09ebf
-            processedAt: Quibusdam itaque dolor animi.
-            retryCount: 7983654329278550397
-            retryDuration: 8963490726165227173
-            status: 566028649804286508
-            tenant: Aut accusamus delectus consequatur vel id.
-            value: Nostrum labore sequi eius ipsa dicta molestias.
+            cachedAt: Repellendus sit corporis unde consectetur.
+            duration: 5892548184232957614
+            id: 86e2de32-5a58-47de-bdbd-1b4255a58bba
+            processedAt: Doloremque qui.
+            retryCount: 6513275449747503812
+            retryDuration: 4533506119215742706
+            status: 7862620419154776647
+            tenant: Eum qui vitae omnis.
+            value: Rerum dicta.
         required:
             - id
             - value
@@ -328,11 +358,11 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: true
+                example: false
         description: Temporary error (default view)
         example:
             fault: true
@@ -340,7 +370,7 @@ definitions:
             message: parameter 'p' must be an integer
             name: bad_request
             temporary: false
-            timeout: true
+            timeout: false
         required:
             - name
             - id
@@ -348,3 +378,47 @@ definitions:
             - temporary
             - timeout
             - fault
+    InterceptorsStreamResponseBody:
+        title: InterceptorsStreamResponseBody
+        type: object
+        properties:
+            id:
+                type: string
+                description: ID of the created record
+                example: f9ed7d90-c040-4a21-9571-c469a1f89fbd
+                format: uuid
+            spanID:
+                type: string
+                description: Unique span ID for request, initialized by the TraceRequest interceptor
+                example: 03c7a5df-7be0-42b6-ac11-2c142758dfa4
+                format: uuid
+            status:
+                type: integer
+                description: Response status code
+                example: 8504919717171234071
+                format: int64
+            tenant:
+                type: string
+                description: Tenant the record belongs to
+                example: Eaque a a.
+            traceID:
+                type: string
+                description: Unique trace ID for request, initialized by the TraceRequest interceptor
+                example: af654500-9597-40a5-8ddb-9786bfe49a5e
+                format: uuid
+            value:
+                type: string
+                description: Value of the record
+                example: Pariatur sunt aut est dolor recusandae voluptatibus.
+        example:
+            id: e5f5bccf-86d5-4888-a697-55f09213a85e
+            spanID: 00a30ea4-7d32-4464-b1cd-8b6127ad20a5
+            status: 2203681731170129552
+            tenant: Aliquam quo et aperiam ut voluptatum.
+            traceID: d61c9300-89d0-4ba0-bb1a-040200e68d85
+            value: In at magnam.
+        required:
+            - id
+            - value
+            - tenant
+            - status

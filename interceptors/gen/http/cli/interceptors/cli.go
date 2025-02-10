@@ -23,16 +23,16 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `interceptors (get|create)
+	return `interceptors (get|create|stream)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` interceptors get --body '{
-      "spanID": "9c82b6c6-170b-4a8a-af64-32c4f79dec6f",
-      "traceID": "ae190227-2887-4b9f-9262-36051d64f7fd"
-   }' --tenant-id "be7e5e5d-a636-4c75-ad31-77dad296b99d" --record-id "60ed6c8a-c22a-4286-97c9-e35ff19b7615" --auth "Fuga asperiores sint."` + "\n" +
+      "spanID": "150d7874-6995-4405-9422-192a638fe1a3",
+      "traceID": "f03bb3ab-2f3b-4961-8396-30a04e467ad7"
+   }' --tenant-id "f2cd9ea9-8fd3-4b79-90a3-db4edb23981e" --record-id "7f502b4d-d893-45b1-a638-f84863ffa6eb" --auth "Mollitia harum eos consequatur aut qui."` + "\n" +
 		""
 }
 
@@ -44,6 +44,8 @@ func ParseEndpoint(
 	enc func(*http.Request) goahttp.Encoder,
 	dec func(*http.Response) goahttp.Decoder,
 	restore bool,
+	dialer goahttp.Dialer,
+	interceptorsConfigurer *interceptorsc.ConnConfigurer,
 	inter interceptors.ClientInterceptors,
 ) (goa.Endpoint, any, error) {
 	var (
@@ -59,10 +61,15 @@ func ParseEndpoint(
 		interceptorsCreateBodyFlag     = interceptorsCreateFlags.String("body", "REQUIRED", "")
 		interceptorsCreateTenantIDFlag = interceptorsCreateFlags.String("tenant-id", "REQUIRED", "Tenant ID for the request")
 		interceptorsCreateAuthFlag     = interceptorsCreateFlags.String("auth", "REQUIRED", "")
+
+		interceptorsStreamFlags        = flag.NewFlagSet("stream", flag.ExitOnError)
+		interceptorsStreamTenantIDFlag = interceptorsStreamFlags.String("tenant-id", "REQUIRED", "Tenant ID for the request")
+		interceptorsStreamAuthFlag     = interceptorsStreamFlags.String("auth", "REQUIRED", "")
 	)
 	interceptorsFlags.Usage = interceptorsUsage
 	interceptorsGetFlags.Usage = interceptorsGetUsage
 	interceptorsCreateFlags.Usage = interceptorsCreateUsage
+	interceptorsStreamFlags.Usage = interceptorsStreamUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -104,6 +111,9 @@ func ParseEndpoint(
 			case "create":
 				epf = interceptorsCreateFlags
 
+			case "stream":
+				epf = interceptorsStreamFlags
+
 			}
 
 		}
@@ -127,7 +137,7 @@ func ParseEndpoint(
 	{
 		switch svcn {
 		case "interceptors":
-			c := interceptorsc.NewClient(scheme, host, doer, enc, dec, restore)
+			c := interceptorsc.NewClient(scheme, host, doer, enc, dec, restore, dialer, interceptorsConfigurer)
 			switch epn {
 			case "get":
 				endpoint = c.Get()
@@ -137,6 +147,10 @@ func ParseEndpoint(
 				endpoint = c.Create()
 				endpoint = interceptors.WrapCreateClientEndpoint(endpoint, inter)
 				data, err = interceptorsc.BuildCreatePayload(*interceptorsCreateBodyFlag, *interceptorsCreateTenantIDFlag, *interceptorsCreateAuthFlag)
+			case "stream":
+				endpoint = c.Stream()
+				endpoint = interceptors.WrapStreamClientEndpoint(endpoint, inter)
+				data, err = interceptorsc.BuildStreamPayload(*interceptorsStreamTenantIDFlag, *interceptorsStreamAuthFlag)
 			}
 		}
 	}
@@ -159,6 +173,7 @@ Usage:
 COMMAND:
     get: Get retrieves a record by ID with all interceptors in action
     create: Create a new record with all interceptors in action
+    stream: Stream records
 
 Additional help:
     %[1]s interceptors COMMAND --help
@@ -175,9 +190,9 @@ Get retrieves a record by ID with all interceptors in action
 
 Example:
     %[1]s interceptors get --body '{
-      "spanID": "9c82b6c6-170b-4a8a-af64-32c4f79dec6f",
-      "traceID": "ae190227-2887-4b9f-9262-36051d64f7fd"
-   }' --tenant-id "be7e5e5d-a636-4c75-ad31-77dad296b99d" --record-id "60ed6c8a-c22a-4286-97c9-e35ff19b7615" --auth "Fuga asperiores sint."
+      "spanID": "150d7874-6995-4405-9422-192a638fe1a3",
+      "traceID": "f03bb3ab-2f3b-4961-8396-30a04e467ad7"
+   }' --tenant-id "f2cd9ea9-8fd3-4b79-90a3-db4edb23981e" --record-id "7f502b4d-d893-45b1-a638-f84863ffa6eb" --auth "Mollitia harum eos consequatur aut qui."
 `, os.Args[0])
 }
 
@@ -191,9 +206,21 @@ Create a new record with all interceptors in action
 
 Example:
     %[1]s interceptors create --body '{
-      "spanID": "624adc57-e52c-4436-a5bd-a3b009450803",
-      "traceID": "b87d0a57-3e1e-46cb-b2a4-ad8fd2004a09",
-      "value": "Aut delectus et veritatis."
-   }' --tenant-id "1b1318c7-6c60-4890-9aac-58c6b31affa3" --auth "Mollitia natus cumque dolore."
+      "spanID": "60119d23-b695-492d-b0fb-4c5195591902",
+      "traceID": "d94bb031-1e29-4544-a640-ae17323e1a90",
+      "value": "Rerum nesciunt suscipit est quo."
+   }' --tenant-id "cb74657b-6207-403a-ac44-dcee07812d9c" --auth "Earum neque."
+`, os.Args[0])
+}
+
+func interceptorsStreamUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] interceptors stream -tenant-id STRING -auth STRING
+
+Stream records
+    -tenant-id STRING: Tenant ID for the request
+    -auth STRING: 
+
+Example:
+    %[1]s interceptors stream --tenant-id "32ced90b-a389-4014-96ee-998ad792affe" --auth "Provident illum voluptas repellat eum est omnis."
 `, os.Args[0])
 }

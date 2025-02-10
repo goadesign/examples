@@ -29,7 +29,7 @@ func UsageCommands() string {
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` interceptors get --message '{
-      "auth": "Praesentium distinctio et voluptatem.",
+      "auth": "Voluptas rerum non iste ducimus et recusandae.",
       "recordID": "Aliquid necessitatibus asperiores iure.",
       "spanID": "Aliquid necessitatibus asperiores iure.",
       "tenantID": "Aliquid necessitatibus asperiores iure.",
@@ -155,7 +155,7 @@ Get retrieves a record by ID with all interceptors in action
 
 Example:
     %[1]s interceptors get --message '{
-      "auth": "Praesentium distinctio et voluptatem.",
+      "auth": "Voluptas rerum non iste ducimus et recusandae.",
       "recordID": "Aliquid necessitatibus asperiores iure.",
       "spanID": "Aliquid necessitatibus asperiores iure.",
       "tenantID": "Aliquid necessitatibus asperiores iure.",

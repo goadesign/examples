@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/websocket"
 	cli "goa.design/examples/interceptors/gen/http/cli/interceptors"
 	"goa.design/examples/interceptors/gen/interceptors"
 	interceptorsex "goa.design/examples/interceptors/interceptors"
@@ -24,6 +25,13 @@ func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, any, er
 		interceptorsInterceptors = interceptorsex.NewInterceptorsClientInterceptors()
 	}
 
+	var (
+		dialer *websocket.Dialer
+	)
+	{
+		dialer = websocket.DefaultDialer
+	}
+
 	return cli.ParseEndpoint(
 		scheme,
 		host,
@@ -31,6 +39,8 @@ func doHTTP(scheme, host string, timeout int, debug bool) (goa.Endpoint, any, er
 		goahttp.RequestEncoder,
 		goahttp.ResponseDecoder,
 		debug,
+		dialer,
+		nil,
 		interceptorsInterceptors,
 	)
 }

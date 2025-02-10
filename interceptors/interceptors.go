@@ -77,3 +77,76 @@ func (s *interceptorssrvc) Create(ctx context.Context, p *interceptors.CreatePay
 
 	return result, nil
 }
+
+// Stream demonstrates the streaming interceptor by sending a stream of records and accepting new records to
+// be created. It shows how interceptors can access and utilize context values (like trace ID and span ID)
+// throughout the request lifecycle.
+func (s *interceptorssrvc) Stream(ctx context.Context, p *interceptors.StreamPayload, stream interceptors.StreamServerStream) error {
+	log.Printf(ctx, "[Stream] Streaming records for tenant: %s", p.TenantID)
+	defer stream.Close()
+
+	var err error
+	s.records.Range(func(key, value any) bool {
+		result := value.(*interceptors.CreateResult)
+		log.Printf(ctx, "[Stream] Sending stream result: %s", result.ID)
+		err = stream.SendWithContext(ctx, &interceptors.StreamResult{
+			ID:     result.ID,
+			Value:  result.Value,
+			Tenant: result.Tenant,
+			Status: 200,
+		})
+		return err == nil
+	})
+	if err != nil {
+		log.Printf(ctx, "[Stream] Error sending stream result: %s", err)
+		return err
+	}
+
+	errCh := make(chan error)
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				payload, err := stream.RecvWithContext(ctx)
+				if err != nil {
+					log.Printf(ctx, "[Stream] Error receiving stream payload: %s", err)
+					errCh <- err
+					return
+				}
+				log.Printf(ctx, "[Stream] Received stream payload: %s", payload.ID)
+
+				result := &interceptors.CreateResult{
+					ID:     payload.ID,
+					Value:  payload.Value,
+					Tenant: string(p.TenantID),
+					Status: 201,
+				}
+
+				s.records.Store(result.ID, result)
+				log.Printf(ctx, "[Stream] Sending stream result: %s", result.ID)
+				err = stream.SendWithContext(ctx, &interceptors.StreamResult{
+					ID:     result.ID,
+					Value:  result.Value,
+					Tenant: result.Tenant,
+					Status: 200,
+				})
+				if err != nil {
+					log.Printf(ctx, "[Stream] Error sending stream result: %s", err)
+					errCh <- err
+					return
+				}
+			}
+		}
+	}()
+	for {
+		select {
+		case <-ctx.Done():
+			log.Printf(ctx, "[Stream] Context done")
+			return nil
+		case err := <-errCh:
+			return err
+		}
+	}
+}

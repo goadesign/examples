@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gorilla/websocket"
 	"goa.design/clue/debug"
 	"goa.design/clue/log"
 	interceptorssvr "goa.design/examples/interceptors/gen/http/interceptors/server"
@@ -49,7 +50,8 @@ func handleHTTPServer(ctx context.Context, u *url.URL, interceptorsEndpoints *in
 	)
 	{
 		eh := errorHandler(ctx)
-		interceptorsServer = interceptorssvr.New(interceptorsEndpoints, mux, dec, enc, eh, nil)
+		upgrader := &websocket.Upgrader{}
+		interceptorsServer = interceptorssvr.New(interceptorsEndpoints, mux, dec, enc, eh, nil, upgrader, nil)
 	}
 
 	// Configure the mux.

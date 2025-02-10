@@ -23,7 +23,7 @@ func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string,
 	{
 		err = json.Unmarshal([]byte(interceptorsGetBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"9c82b6c6-170b-4a8a-af64-32c4f79dec6f\",\n      \"traceID\": \"ae190227-2887-4b9f-9262-36051d64f7fd\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"150d7874-6995-4405-9422-192a638fe1a3\",\n      \"traceID\": \"f03bb3ab-2f3b-4961-8396-30a04e467ad7\"\n   }'")
 		}
 		if body.TraceID != nil {
 			err = goa.MergeErrors(err, goa.ValidateFormat("body.traceID", *body.TraceID, goa.FormatUUID))
@@ -79,7 +79,7 @@ func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantI
 	{
 		err = json.Unmarshal([]byte(interceptorsCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"624adc57-e52c-4436-a5bd-a3b009450803\",\n      \"traceID\": \"b87d0a57-3e1e-46cb-b2a4-ad8fd2004a09\",\n      \"value\": \"Aut delectus et veritatis.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"60119d23-b695-492d-b0fb-4c5195591902\",\n      \"traceID\": \"d94bb031-1e29-4544-a640-ae17323e1a90\",\n      \"value\": \"Rerum nesciunt suscipit est quo.\"\n   }'")
 		}
 		if body.TraceID != nil {
 			err = goa.MergeErrors(err, goa.ValidateFormat("body.traceID", *body.TraceID, goa.FormatUUID))
@@ -114,6 +114,29 @@ func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantI
 		spanID := interceptors.UUID(*body.SpanID)
 		v.SpanID = &spanID
 	}
+	v.TenantID = interceptors.UUID(tenantID)
+	v.Auth = auth
+
+	return v, nil
+}
+
+// BuildStreamPayload builds the payload for the interceptors stream endpoint
+// from CLI flags.
+func BuildStreamPayload(interceptorsStreamTenantID string, interceptorsStreamAuth string) (*interceptors.StreamPayload, error) {
+	var err error
+	var tenantID string
+	{
+		tenantID = interceptorsStreamTenantID
+		err = goa.MergeErrors(err, goa.ValidateFormat("tenantID", tenantID, goa.FormatUUID))
+		if err != nil {
+			return nil, err
+		}
+	}
+	var auth string
+	{
+		auth = interceptorsStreamAuth
+	}
+	v := &interceptors.StreamPayload{}
 	v.TenantID = interceptors.UUID(tenantID)
 	v.Auth = auth
 

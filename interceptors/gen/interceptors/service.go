@@ -24,6 +24,8 @@ type Service interface {
 	Get(context.Context, *GetPayload) (res *GetResult, err error)
 	// Create a new record with all interceptors in action
 	Create(context.Context, *CreatePayload) (res *CreateResult, err error)
+	// Stream records
+	Stream(context.Context, *StreamPayload, StreamServerStream) (err error)
 }
 
 // APIName is the name of the API as defined in the design.
@@ -40,7 +42,39 @@ const ServiceName = "interceptors"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [2]string{"get", "create"}
+var MethodNames = [3]string{"get", "create", "stream"}
+
+// StreamServerStream is the interface a "stream" endpoint server stream must
+// satisfy.
+type StreamServerStream interface {
+	// Send streams instances of "StreamResult".
+	Send(*StreamResult) error
+	// SendWithContext streams instances of "StreamResult" with context.
+	SendWithContext(context.Context, *StreamResult) error
+	// Recv reads instances of "StreamStreamingPayload" from the stream.
+	Recv() (*StreamStreamingPayload, error)
+	// RecvWithContext reads instances of "StreamStreamingPayload" from the stream
+	// with context.
+	RecvWithContext(context.Context) (*StreamStreamingPayload, error)
+	// Close closes the stream.
+	Close() error
+}
+
+// StreamClientStream is the interface a "stream" endpoint client stream must
+// satisfy.
+type StreamClientStream interface {
+	// Send streams instances of "StreamStreamingPayload".
+	Send(*StreamStreamingPayload) error
+	// SendWithContext streams instances of "StreamStreamingPayload" with context.
+	SendWithContext(context.Context, *StreamStreamingPayload) error
+	// Recv reads instances of "StreamResult" from the stream.
+	Recv() (*StreamResult, error)
+	// RecvWithContext reads instances of "StreamResult" from the stream with
+	// context.
+	RecvWithContext(context.Context) (*StreamResult, error)
+	// Close closes the stream.
+	Close() error
+}
 
 // CreatePayload is the payload type of the interceptors service create method.
 type CreatePayload struct {
@@ -110,6 +144,43 @@ type GetResult struct {
 	RetryCount *int
 	// Total time spent retrying, written client-side by the Retry interceptor
 	RetryDuration *int
+}
+
+// StreamPayload is the payload type of the interceptors service stream method.
+type StreamPayload struct {
+	// Tenant ID for the request
+	TenantID UUID
+	// JWT auth token
+	Auth string
+}
+
+// StreamResult is the result type of the interceptors service stream method.
+type StreamResult struct {
+	// ID of the created record
+	ID UUID
+	// Value of the record
+	Value string
+	// Tenant the record belongs to
+	Tenant string
+	// Response status code
+	Status int
+	// Unique trace ID for request, initialized by the TraceRequest interceptor
+	TraceID *UUID
+	// Unique span ID for request, initialized by the TraceRequest interceptor
+	SpanID *UUID
+}
+
+// StreamStreamingPayload is the streaming payload type of the interceptors
+// service stream method.
+type StreamStreamingPayload struct {
+	// ID of the created record
+	ID UUID
+	// Value of the record
+	Value string
+	// Unique trace ID for request, initialized by the TraceRequest interceptor
+	TraceID *UUID
+	// Unique span ID for request, initialized by the TraceRequest interceptor
+	SpanID *UUID
 }
 
 // Valid UUID representation as per RFC 4122

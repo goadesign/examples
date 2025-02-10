@@ -38,3 +38,4 @@ basic/cmd/calc/calc
 interceptors/cmd/example/example
 .vscode/settings.json
 interceptors/cmd/tokgen/tokgen
+interceptors/bin/

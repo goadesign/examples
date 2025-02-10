@@ -24,13 +24,21 @@ type ClientInterceptors interface {
 	// Client-side interceptor which implements smart retry logic with exponential
 	// backoff
 	Retry(ctx context.Context, info *RetryInfo, next goa.Endpoint) (any, error)
+	// Server-side and client-side interceptor that adds trace context to the
+	// bidirectional stream payload
+	TraceBidirectionalStream(ctx context.Context, info *TraceBidirectionalStreamInfo, next goa.Endpoint) (any, error)
 }
 
 // Access interfaces for interceptor payloads and results
 type (
 	// EncodeTenantInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	EncodeTenantInfo goa.InterceptorInfo
+	EncodeTenantInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
 
 	// EncodeTenantPayload provides type-safe access to the method payload.
 	// It allows reading and writing specific fields of the payload as defined
@@ -41,7 +49,12 @@ type (
 	}
 	// RetryInfo provides metadata about the current interception.
 	// It includes service name, method name, and access to the endpoint.
-	RetryInfo goa.InterceptorInfo
+	RetryInfo struct {
+		service    string
+		method     string
+		callType   goa.InterceptorCallType
+		rawPayload any
+	}
 
 	// RetryResult provides type-safe access to the method result.
 	// It allows reading and writing specific fields of the result as defined
@@ -60,6 +73,9 @@ type (
 	}
 	encodeTenantCreatePayload struct {
 		payload *CreatePayload
+	}
+	encodeTenantStreamPayload struct {
+		payload *StreamPayload
 	}
 	retryGetResult struct {
 		result *GetResult
@@ -85,23 +101,73 @@ func WrapCreateClientEndpoint(endpoint goa.Endpoint, i ClientInterceptors) goa.E
 	return endpoint
 }
 
+// WrapStreamClientEndpoint wraps the stream endpoint with the client
+// interceptors defined in the design.
+func WrapStreamClientEndpoint(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoint {
+	endpoint = wrapClientStreamEncodeTenant(endpoint, i)
+	endpoint = wrapClientStreamTraceBidirectionalStream(endpoint, i)
+	return endpoint
+}
+
 // Public accessor methods for Info types
+
+// Service returns the name of the service handling the request.
+func (info *EncodeTenantInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *EncodeTenantInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *EncodeTenantInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *EncodeTenantInfo) RawPayload() any {
+	return info.rawPayload
+}
 
 // Payload returns a type-safe accessor for the method payload.
 func (info *EncodeTenantInfo) Payload() EncodeTenantPayload {
-	switch info.Method {
+	switch info.Method() {
 	case "Get":
-		return &encodeTenantGetPayload{payload: info.RawPayload.(*GetPayload)}
+		return &encodeTenantGetPayload{payload: info.RawPayload().(*GetPayload)}
 	case "Create":
-		return &encodeTenantCreatePayload{payload: info.RawPayload.(*CreatePayload)}
+		return &encodeTenantCreatePayload{payload: info.RawPayload().(*CreatePayload)}
+	case "Stream":
+		return &encodeTenantStreamPayload{payload: info.RawPayload().(*StreamPayload)}
 	default:
 		return nil
 	}
 }
 
+// Service returns the name of the service handling the request.
+func (info *RetryInfo) Service() string {
+	return info.service
+}
+
+// Method returns the name of the method handling the request.
+func (info *RetryInfo) Method() string {
+	return info.method
+}
+
+// CallType returns the type of call the interceptor is handling.
+func (info *RetryInfo) CallType() goa.InterceptorCallType {
+	return info.callType
+}
+
+// RawPayload returns the raw payload of the request.
+func (info *RetryInfo) RawPayload() any {
+	return info.rawPayload
+}
+
 // Result returns a type-safe accessor for the method result.
 func (info *RetryInfo) Result(res any) RetryResult {
-	switch info.Method {
+	switch info.Method() {
 	case "Get":
 		return &retryGetResult{result: res.(*GetResult)}
 	case "Create":
@@ -123,6 +189,12 @@ func (p *encodeTenantCreatePayload) TenantID() UUID {
 	return p.payload.TenantID
 }
 func (p *encodeTenantCreatePayload) SetAuth(v string) {
+	p.payload.Auth = v
+}
+func (p *encodeTenantStreamPayload) TenantID() UUID {
+	return p.payload.TenantID
+}
+func (p *encodeTenantStreamPayload) SetAuth(v string) {
 	p.payload.Auth = v
 }
 

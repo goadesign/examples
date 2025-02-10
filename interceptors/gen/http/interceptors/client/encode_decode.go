@@ -221,3 +221,91 @@ func DecodeCreateResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 		}
 	}
 }
+
+// BuildStreamRequest instantiates a HTTP request object with method and path
+// set to call the "interceptors" service "stream" endpoint
+func (c *Client) BuildStreamRequest(ctx context.Context, v any) (*http.Request, error) {
+	var (
+		tenantID string
+	)
+	{
+		p, ok := v.(*interceptors.StreamPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("interceptors", "stream", "*interceptors.StreamPayload", v)
+		}
+		tenantID = string(p.TenantID)
+	}
+	scheme := c.scheme
+	switch c.scheme {
+	case "http":
+		scheme = "ws"
+	case "https":
+		scheme = "wss"
+	}
+	u := &url.URL{Scheme: scheme, Host: c.host, Path: StreamInterceptorsPath(tenantID)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("interceptors", "stream", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeStreamRequest returns an encoder for requests sent to the interceptors
+// stream server.
+func EncodeStreamRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, any) error {
+	return func(req *http.Request, v any) error {
+		p, ok := v.(*interceptors.StreamPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("interceptors", "stream", "*interceptors.StreamPayload", v)
+		}
+		{
+			head := p.Auth
+			req.Header.Set("Authorization", head)
+		}
+		return nil
+	}
+}
+
+// DecodeStreamResponse returns a decoder for responses returned by the
+// interceptors stream endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+func DecodeStreamResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
+	return func(resp *http.Response) (any, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body StreamResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("interceptors", "stream", err)
+			}
+			err = ValidateStreamResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("interceptors", "stream", err)
+			}
+			res := NewStreamResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("interceptors", "stream", resp.StatusCode, string(body))
+		}
+	}
+}

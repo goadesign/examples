@@ -21,6 +21,7 @@ type Server struct {
 	Mounts []*MountPoint
 	Get    http.Handler
 	Create http.Handler
+	Stream http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -47,14 +48,21 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
+	upgrader goahttp.Upgrader,
+	configurer *ConnConfigurer,
 ) *Server {
+	if configurer == nil {
+		configurer = &ConnConfigurer{}
+	}
 	return &Server{
 		Mounts: []*MountPoint{
 			{"Get", "GET", "/records/{tenantID}/{recordID}"},
 			{"Create", "POST", "/records/{tenantID}"},
+			{"Stream", "GET", "/records/{tenantID}/stream"},
 		},
 		Get:    NewGetHandler(e.Get, mux, decoder, encoder, errhandler, formatter),
 		Create: NewCreateHandler(e.Create, mux, decoder, encoder, errhandler, formatter),
+		Stream: NewStreamHandler(e.Stream, mux, decoder, encoder, errhandler, formatter, upgrader, configurer.StreamFn),
 	}
 }
 
@@ -65,6 +73,7 @@ func (s *Server) Service() string { return "interceptors" }
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.Get = m(s.Get)
 	s.Create = m(s.Create)
+	s.Stream = m(s.Stream)
 }
 
 // MethodNames returns the methods served.
@@ -74,6 +83,7 @@ func (s *Server) MethodNames() []string { return interceptors.MethodNames[:] }
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountGetHandler(mux, h.Get)
 	MountCreateHandler(mux, h.Create)
+	MountStreamHandler(mux, h.Stream)
 }
 
 // Mount configures the mux to serve the interceptors endpoints.
@@ -179,6 +189,72 @@ func NewCreateHandler(
 		}
 		if err := encodeResponse(ctx, w, res); err != nil {
 			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountStreamHandler configures the mux to serve the "interceptors" service
+// "stream" endpoint.
+func MountStreamHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/records/{tenantID}/stream", f)
+}
+
+// NewStreamHandler creates a HTTP handler which loads the HTTP request and
+// calls the "interceptors" service "stream" endpoint.
+func NewStreamHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+	upgrader goahttp.Upgrader,
+	configurer goahttp.ConnConfigureFunc,
+) http.Handler {
+	var (
+		decodeRequest = DecodeStreamRequest(mux, decoder)
+		encodeError   = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "stream")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "interceptors")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithCancel(ctx)
+		v := &interceptors.StreamEndpointInput{
+			Stream: &StreamServerStream{
+				upgrader:   upgrader,
+				configurer: configurer,
+				cancel:     cancel,
+				w:          w,
+				r:          r,
+			},
+			Payload: payload.(*interceptors.StreamPayload),
+		}
+		_, err = endpoint(ctx, v)
+		if err != nil {
+			if v.Stream.(*StreamServerStream).conn != nil {
+				// Response writer has been hijacked, do not encode the error
+				errhandler(ctx, w, err)
+				return
+			}
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
 		}
 	})
 }

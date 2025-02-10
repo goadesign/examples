@@ -17,6 +17,16 @@ import (
 type Endpoints struct {
 	Get    goa.Endpoint
 	Create goa.Endpoint
+	Stream goa.Endpoint
+}
+
+// StreamEndpointInput holds both the payload and the server stream of the
+// "stream" method.
+type StreamEndpointInput struct {
+	// Payload is the method payload.
+	Payload *StreamPayload
+	// Stream is the server stream used by the "stream" method to send data.
+	Stream StreamServerStream
 }
 
 // NewEndpoints wraps the methods of the "interceptors" service with endpoints.
@@ -24,9 +34,11 @@ func NewEndpoints(s Service, si ServerInterceptors) *Endpoints {
 	endpoints := &Endpoints{
 		Get:    NewGetEndpoint(s),
 		Create: NewCreateEndpoint(s),
+		Stream: NewStreamEndpoint(s),
 	}
 	endpoints.Get = WrapGetEndpoint(endpoints.Get, si)
 	endpoints.Create = WrapCreateEndpoint(endpoints.Create, si)
+	endpoints.Stream = WrapStreamEndpoint(endpoints.Stream, si)
 	return endpoints
 }
 
@@ -34,6 +46,7 @@ func NewEndpoints(s Service, si ServerInterceptors) *Endpoints {
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.Get = m(e.Get)
 	e.Create = m(e.Create)
+	e.Stream = m(e.Stream)
 }
 
 // NewGetEndpoint returns an endpoint function that calls the method "get" of
@@ -51,5 +64,14 @@ func NewCreateEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		p := req.(*CreatePayload)
 		return s.Create(ctx, p)
+	}
+}
+
+// NewStreamEndpoint returns an endpoint function that calls the method
+// "stream" of service "interceptors".
+func NewStreamEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		ep := req.(*StreamEndpointInput)
+		return nil, s.Stream(ctx, ep.Payload, ep.Stream)
 	}
 }

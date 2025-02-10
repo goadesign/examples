@@ -23,14 +23,19 @@ type Client struct {
 	// Create Doer is the HTTP client used to make requests to the create endpoint.
 	CreateDoer goahttp.Doer
 
+	// Stream Doer is the HTTP client used to make requests to the stream endpoint.
+	StreamDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
 
-	scheme  string
-	host    string
-	encoder func(*http.Request) goahttp.Encoder
-	decoder func(*http.Response) goahttp.Decoder
+	scheme     string
+	host       string
+	encoder    func(*http.Request) goahttp.Encoder
+	decoder    func(*http.Response) goahttp.Decoder
+	dialer     goahttp.Dialer
+	configurer *ConnConfigurer
 }
 
 // NewClient instantiates HTTP clients for all the interceptors service servers.
@@ -41,15 +46,23 @@ func NewClient(
 	enc func(*http.Request) goahttp.Encoder,
 	dec func(*http.Response) goahttp.Decoder,
 	restoreBody bool,
+	dialer goahttp.Dialer,
+	cfn *ConnConfigurer,
 ) *Client {
+	if cfn == nil {
+		cfn = &ConnConfigurer{}
+	}
 	return &Client{
 		GetDoer:             doer,
 		CreateDoer:          doer,
+		StreamDoer:          doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
 		decoder:             dec,
 		encoder:             enc,
+		dialer:              dialer,
+		configurer:          cfn,
 	}
 }
 
@@ -98,5 +111,36 @@ func (c *Client) Create() goa.Endpoint {
 			return nil, goahttp.ErrRequestError("interceptors", "create", err)
 		}
 		return decodeResponse(resp)
+	}
+}
+
+// Stream returns an endpoint that makes HTTP requests to the interceptors
+// service stream server.
+func (c *Client) Stream() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeStreamRequest(c.encoder)
+		decodeResponse = DecodeStreamResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildStreamRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		conn, resp, err := c.dialer.DialContext(ctx, req.URL.String(), req.Header)
+		if err != nil {
+			if resp != nil {
+				return decodeResponse(resp)
+			}
+			return nil, goahttp.ErrRequestError("interceptors", "stream", err)
+		}
+		if c.configurer.StreamFn != nil {
+			conn = c.configurer.StreamFn(conn, nil)
+		}
+		stream := &StreamClientStream{conn: conn}
+		return stream, nil
 	}
 }

@@ -17,13 +17,15 @@ import (
 type Client struct {
 	GetEndpoint    goa.Endpoint
 	CreateEndpoint goa.Endpoint
+	StreamEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "interceptors" service client given the endpoints.
-func NewClient(get, create goa.Endpoint, ci ClientInterceptors) *Client {
+func NewClient(get, create, stream goa.Endpoint, ci ClientInterceptors) *Client {
 	return &Client{
 		GetEndpoint:    WrapGetClientEndpoint(get, ci),
 		CreateEndpoint: WrapCreateClientEndpoint(create, ci),
+		StreamEndpoint: WrapStreamClientEndpoint(stream, ci),
 	}
 }
 
@@ -49,4 +51,14 @@ func (c *Client) Create(ctx context.Context, p *CreatePayload) (res *CreateResul
 		return
 	}
 	return ires.(*CreateResult), nil
+}
+
+// Stream calls the "stream" endpoint of the "interceptors" service.
+func (c *Client) Stream(ctx context.Context, p *StreamPayload) (res StreamClientStream, err error) {
+	var ires any
+	ires, err = c.StreamEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(StreamClientStream), nil
 }

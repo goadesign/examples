@@ -20,3 +20,8 @@ func GetInterceptorsPath(tenantID string, recordID string) string {
 func CreateInterceptorsPath(tenantID string) string {
 	return fmt.Sprintf("/records/%v", tenantID)
 }
+
+// StreamInterceptorsPath returns the URL path to the interceptors service stream HTTP endpoint.
+func StreamInterceptorsPath(tenantID string) string {
+	return fmt.Sprintf("/records/%v/stream", tenantID)
+}

@@ -176,3 +176,29 @@ func DecodeCreateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 		return payload, nil
 	}
 }
+
+// DecodeStreamRequest returns a decoder for requests sent to the interceptors
+// stream endpoint.
+func DecodeStreamRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			tenantID string
+			auth     string
+			err      error
+
+			params = mux.Vars(r)
+		)
+		tenantID = params["tenantID"]
+		err = goa.MergeErrors(err, goa.ValidateFormat("tenantID", tenantID, goa.FormatUUID))
+		auth = r.Header.Get("Authorization")
+		if auth == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("auth", "header"))
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewStreamPayload(tenantID, auth)
+
+		return payload, nil
+	}
+}
