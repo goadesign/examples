@@ -405,9 +405,3 @@ func ValidateGetUnavailableResponseBody(body *GetUnavailableResponseBody) (err e
 	}
 	return
 }
-
-// ValidateUUIDStreamingBody runs the validations defined on UUIDStreamingBody
-func ValidateUUIDStreamingBody(body UUIDStreamingBody) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("body", string(body), goa.FormatUUID))
-	return
-}

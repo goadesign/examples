@@ -335,11 +335,3 @@ func ValidateStreamStreamingBody(body *StreamStreamingBody) (err error) {
 	}
 	return
 }
-
-// ValidateUUIDStreamingBody runs the validations defined on UUIDStreamingBody
-func ValidateUUIDStreamingBody(body UUIDStreamingBody) (err error) {
-	if body != nil {
-		err = goa.MergeErrors(err, goa.ValidateFormat("body", string(*body), goa.FormatUUID))
-	}
-	return
-}
