@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	goa.design/clue v1.0.7
-	goa.design/goa/v3 v3.20.0-rc1.0.20250211061628-8b56a61ddd45
+	goa.design/goa/v3 v3.20.0-rc1.0.20250218194113-0094132f1d01
 	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.4
 )
@@ -17,7 +17,6 @@ require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
 	github.com/go-chi/chi/v5 v5.2.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
-	github.com/gohugoio/hashstructure v0.3.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

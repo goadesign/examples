@@ -155,12 +155,8 @@ func wrapStreamSetDeadline(endpoint goa.Endpoint, i ServerInterceptors) goa.Endp
 // server interceptor to endpoints.
 func wrapStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
-		res, err := endpoint(ctx, req)
-		if err != nil {
-			return res, err
-		}
-		stream := res.(StreamServerStream)
-		return &wrappedStreamServerStream{
+		stream := req.(*StreamEndpointInput).Stream
+		req.(*StreamEndpointInput).Stream = &wrappedStreamServerStream{
 			ctx: ctx,
 			sendWithContext: func(ctx context.Context, req *StreamResult) error {
 				info := &TraceBidirectionalStreamInfo{
@@ -188,7 +184,8 @@ func wrapStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ServerIntercept
 				return castRes, err
 			},
 			stream: stream,
-		}, nil
+		}
+		return endpoint(ctx, req)
 	}
 }
 

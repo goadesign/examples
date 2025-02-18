@@ -273,7 +273,12 @@ func (info *JWTAuthInfo) Payload() JWTAuthPayload {
 	case "Create":
 		return &jWTAuthCreatePayload{payload: info.RawPayload().(*CreatePayload)}
 	case "Stream":
-		return &jWTAuthStreamPayload{payload: info.RawPayload().(*StreamPayload)}
+		switch pay := info.RawPayload().(type) {
+		case *StreamEndpointInput:
+			return &jWTAuthStreamPayload{payload: pay.Payload}
+		default:
+			return &jWTAuthStreamPayload{payload: pay.(*StreamPayload)}
+		}
 	default:
 		return nil
 	}
