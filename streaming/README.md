@@ -1,7 +1,7 @@
 # Chatter Service
 
 The "chatter" service illustrates the **streaming endpoint** features in
-goa v2.
+Goa.
 
 ## Design
 
@@ -134,9 +134,9 @@ stop repeating me
 
 ## Customizing HTTP Websocket Connections
 
-goa v2 uses [gorilla websocket](https://godoc.org/github.com/gorilla/websocket)
+Goa uses [gorilla websocket](https://godoc.org/github.com/gorilla/websocket)
 underneath to implement streaming via websocket in the HTTP transport layer.  By
-default, goa v2 uses the default
+default, Goa uses the default
 [`Upgrader`](https://godoc.org/github.com/gorilla/websocket#Upgrader) server
 side to upgrade HTTP connection to a websocket connection and the
 [`DefaultDialer`](https://godoc.org/github.com/gorilla/websocket#pkg-variables)
@@ -201,11 +201,11 @@ with a pong.
 
 ## Gotchas
 
-* goa v2 uses websockets to implement streaming in the HTTP transport layer.
+* Goa uses websockets to implement streaming in the HTTP transport layer.
 The [websocket protocol](https://tools.ietf.org/html/rfc6455) has two parts,
 an opening handshake and the data transfer. The opening handshake always
 uses a `GET` request to the server to upgrade the HTTP connection to a
-websocket connection. Therefore, even though your goa v2 HTTP endpoint in a
+websocket connection. Therefore, even though your Goa HTTP endpoint in a
 streaming method defines a verb other than `GET`, the first HTTP request is
 always a `GET`. This could potentially lead to requests to your streaming
 endpoint get routed to some other endpoint using the `GET` verb. To avoid this,
