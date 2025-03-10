@@ -18,11 +18,11 @@ import (
 
 // Server lists the openapi service endpoint HTTP handlers.
 type Server struct {
-	Mounts              []*MountPoint
-	GenHTTPOpenapiJSON  http.Handler
-	GenHTTPOpenapiYaml  http.Handler
-	GenHTTPOpenapi3JSON http.Handler
-	GenHTTPOpenapi3Yaml http.Handler
+	Mounts                 []*MountPoint
+	OpenapiSpecialYaml     http.Handler
+	GenOpenapiSpecialYaml  http.Handler
+	OpenapiSpecialYaml2    http.Handler
+	GenOpenapiSpecialYaml2 http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -49,38 +49,36 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
-	fileSystemGenHTTPOpenapiJSON http.FileSystem,
-	fileSystemGenHTTPOpenapiYaml http.FileSystem,
-	fileSystemGenHTTPOpenapi3JSON http.FileSystem,
-	fileSystemGenHTTPOpenapi3Yaml http.FileSystem,
+	fileSystemOpenapiSpecialYaml http.FileSystem,
+	fileSystemGenOpenapiSpecialYaml http.FileSystem,
+	fileSystemOpenapiSpecialYaml2 http.FileSystem,
+	fileSystemGenOpenapiSpecialYaml2 http.FileSystem,
 ) *Server {
-	if fileSystemGenHTTPOpenapiJSON == nil {
-		fileSystemGenHTTPOpenapiJSON = http.Dir(".")
+	if fileSystemOpenapiSpecialYaml == nil {
+		fileSystemOpenapiSpecialYaml = http.Dir(".")
 	}
-	fileSystemGenHTTPOpenapiJSON = appendPrefix(fileSystemGenHTTPOpenapiJSON, "/gen/http")
-	if fileSystemGenHTTPOpenapiYaml == nil {
-		fileSystemGenHTTPOpenapiYaml = http.Dir(".")
+	if fileSystemGenOpenapiSpecialYaml == nil {
+		fileSystemGenOpenapiSpecialYaml = http.Dir(".")
 	}
-	fileSystemGenHTTPOpenapiYaml = appendPrefix(fileSystemGenHTTPOpenapiYaml, "/gen/http")
-	if fileSystemGenHTTPOpenapi3JSON == nil {
-		fileSystemGenHTTPOpenapi3JSON = http.Dir(".")
+	fileSystemGenOpenapiSpecialYaml = appendPrefix(fileSystemGenOpenapiSpecialYaml, "/gen")
+	if fileSystemOpenapiSpecialYaml2 == nil {
+		fileSystemOpenapiSpecialYaml2 = http.Dir(".")
 	}
-	fileSystemGenHTTPOpenapi3JSON = appendPrefix(fileSystemGenHTTPOpenapi3JSON, "/gen/http")
-	if fileSystemGenHTTPOpenapi3Yaml == nil {
-		fileSystemGenHTTPOpenapi3Yaml = http.Dir(".")
+	if fileSystemGenOpenapiSpecialYaml2 == nil {
+		fileSystemGenOpenapiSpecialYaml2 = http.Dir(".")
 	}
-	fileSystemGenHTTPOpenapi3Yaml = appendPrefix(fileSystemGenHTTPOpenapi3Yaml, "/gen/http")
+	fileSystemGenOpenapiSpecialYaml2 = appendPrefix(fileSystemGenOpenapiSpecialYaml2, "/gen")
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Serve gen/http/openapi.json", "GET", "/openapi.json"},
-			{"Serve gen/http/openapi.yaml", "GET", "/openapi.yaml"},
-			{"Serve gen/http/openapi3.json", "GET", "/openapi3.json"},
-			{"Serve gen/http/openapi3.yaml", "GET", "/openapi3.yaml"},
+			{"Serve openapiSpecial.yaml", "GET", "/openapi.json"},
+			{"Serve gen/openapiSpecial.yaml", "GET", "/openapi.yaml"},
+			{"Serve openapiSpecial.yaml", "GET", "/openapi3.json"},
+			{"Serve gen/openapiSpecial.yaml", "GET", "/openapi3.yaml"},
 		},
-		GenHTTPOpenapiJSON:  http.FileServer(fileSystemGenHTTPOpenapiJSON),
-		GenHTTPOpenapiYaml:  http.FileServer(fileSystemGenHTTPOpenapiYaml),
-		GenHTTPOpenapi3JSON: http.FileServer(fileSystemGenHTTPOpenapi3JSON),
-		GenHTTPOpenapi3Yaml: http.FileServer(fileSystemGenHTTPOpenapi3Yaml),
+		OpenapiSpecialYaml:     http.FileServer(fileSystemOpenapiSpecialYaml),
+		GenOpenapiSpecialYaml:  http.FileServer(fileSystemGenOpenapiSpecialYaml),
+		OpenapiSpecialYaml2:    http.FileServer(fileSystemOpenapiSpecialYaml2),
+		GenOpenapiSpecialYaml2: http.FileServer(fileSystemGenOpenapiSpecialYaml2),
 	}
 }
 
@@ -96,10 +94,10 @@ func (s *Server) MethodNames() []string { return openapi.MethodNames[:] }
 
 // Mount configures the mux to serve the openapi endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
-	MountGenHTTPOpenapiJSON(mux, h.GenHTTPOpenapiJSON)
-	MountGenHTTPOpenapiYaml(mux, h.GenHTTPOpenapiYaml)
-	MountGenHTTPOpenapi3JSON(mux, h.GenHTTPOpenapi3JSON)
-	MountGenHTTPOpenapi3Yaml(mux, h.GenHTTPOpenapi3Yaml)
+	MountOpenapiSpecialYaml(mux, h.OpenapiSpecialYaml)
+	MountGenOpenapiSpecialYaml(mux, h.GenOpenapiSpecialYaml)
+	MountOpenapiSpecialYaml2(mux, h.OpenapiSpecialYaml2)
+	MountGenOpenapiSpecialYaml2(mux, h.GenOpenapiSpecialYaml2)
 }
 
 // Mount configures the mux to serve the openapi endpoints.
@@ -118,6 +116,14 @@ type appendFS struct {
 // passing it to the underlying fs.FS.
 func (s appendFS) Open(name string) (http.File, error) {
 	switch name {
+	case "/openapi.json":
+		name = "/openapiSpecial.yaml"
+	case "/openapi.yaml":
+		name = "/openapiSpecial.yaml"
+	case "/openapi3.json":
+		name = "/openapiSpecial.yaml"
+	case "/openapi3.yaml":
+		name = "/openapiSpecial.yaml"
 	}
 	return s.fs.Open(path.Join(s.prefix, name))
 }
@@ -128,26 +134,26 @@ func appendPrefix(fsys http.FileSystem, prefix string) http.FileSystem {
 	return appendFS{prefix: prefix, fs: fsys}
 }
 
-// MountGenHTTPOpenapiJSON configures the mux to serve GET request made to
+// MountOpenapiSpecialYaml configures the mux to serve GET request made to
 // "/openapi.json".
-func MountGenHTTPOpenapiJSON(mux goahttp.Muxer, h http.Handler) {
+func MountOpenapiSpecialYaml(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/openapi.json", h.ServeHTTP)
 }
 
-// MountGenHTTPOpenapiYaml configures the mux to serve GET request made to
+// MountGenOpenapiSpecialYaml configures the mux to serve GET request made to
 // "/openapi.yaml".
-func MountGenHTTPOpenapiYaml(mux goahttp.Muxer, h http.Handler) {
+func MountGenOpenapiSpecialYaml(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/openapi.yaml", h.ServeHTTP)
 }
 
-// MountGenHTTPOpenapi3JSON configures the mux to serve GET request made to
+// MountOpenapiSpecialYaml2 configures the mux to serve GET request made to
 // "/openapi3.json".
-func MountGenHTTPOpenapi3JSON(mux goahttp.Muxer, h http.Handler) {
+func MountOpenapiSpecialYaml2(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/openapi3.json", h.ServeHTTP)
 }
 
-// MountGenHTTPOpenapi3Yaml configures the mux to serve GET request made to
+// MountGenOpenapiSpecialYaml2 configures the mux to serve GET request made to
 // "/openapi3.yaml".
-func MountGenHTTPOpenapi3Yaml(mux goahttp.Muxer, h http.Handler) {
+func MountGenOpenapiSpecialYaml2(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("GET", "/openapi3.yaml", h.ServeHTTP)
 }

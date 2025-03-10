@@ -10,7 +10,7 @@ paths:
         get:
             tags:
                 - openapi
-            summary: Download gen/http/openapi.json
+            summary: Download openapiSpecial.yaml
             operationId: openapi#/openapi.json
             responses:
                 "200":
@@ -19,7 +19,7 @@ paths:
         get:
             tags:
                 - openapi
-            summary: Download gen/http/openapi.yaml
+            summary: Download gen/openapiSpecial.yaml
             operationId: openapi#/openapi.yaml
             responses:
                 "200":
@@ -28,7 +28,7 @@ paths:
         get:
             tags:
                 - openapi
-            summary: Download gen/http/openapi3.json
+            summary: Download openapiSpecial.yaml
             operationId: openapi#/openapi3.json
             responses:
                 "200":
@@ -37,7 +37,7 @@ paths:
         get:
             tags:
                 - openapi
-            summary: Download gen/http/openapi3.yaml
+            summary: Download gen/openapiSpecial.yaml
             operationId: openapi#/openapi3.yaml
             responses:
                 "200":
