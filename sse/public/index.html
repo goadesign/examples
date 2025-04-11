@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        button.disconnect {
+            background-color: #f44336;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 70%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #events {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .event {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .event-connected {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+        }
+        .event-message {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+        }
+        .event-time {
+            color: #757575;
+            font-size: 0.8em;
+        }
+        .status {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .status.disconnected {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>Server-Sent Events Demo</h1>
+    
+    <div class="card">
+        <h2>Connection Status: <span id="status" class="status disconnected">Disconnected</span></h2>
+        <div class="controls">
+            <button id="connect">Connect to SSE Stream</button>
+            <button id="disconnect" class="disconnect" disabled>Disconnect</button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>Send Message</h2>
+        <div class="controls">
+            <input type="text" id="message" placeholder="Enter a message to broadcast" disabled>
+            <button id="send" disabled>Send</button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>Events</h2>
+        <div id="events"></div>
+    </div>
+    
+    <div class="card">
+        <h2>Debug Information</h2>
+        <div id="debug" style="white-space: pre; font-family: monospace; background-color: #f5f5f5; padding: 10px; border-radius: 4px; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const connectBtn = document.getElementById('connect');
+            const disconnectBtn = document.getElementById('disconnect');
+            const sendBtn = document.getElementById('send');
+            const messageInput = document.getElementById('message');
+            const eventsContainer = document.getElementById('events');
+            const statusEl = document.getElementById('status');
+            const debugEl = document.getElementById('debug');
+            
+            let eventSource = null;
+            
+            // Connect to SSE stream
+            connectBtn.addEventListener('click', () => {
+                // Create new EventSource with correct MIME type handling
+                debugLog('Creating new EventSource...');
+                eventSource = new EventSource('/events/stream');
+                debugLog('EventSource created: ' + eventSource.readyState);
+                
+                // Update UI
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                statusEl.textContent = 'Connected';
+                statusEl.classList.remove('disconnected');
+                
+                // Listen for open event
+                eventSource.onopen = (e) => {
+                    console.log('Connection established', e);
+                    debugLog('Connection established - readyState: ' + eventSource.readyState);
+                    addEvent('system', 'Connection established');
+                };
+                
+                // Simple event listeners for specific event types
+                // Listen for 'connected' events
+                eventSource.addEventListener('connected', (e) => {
+                    console.log('Connected event received:', e);
+                    debugLog('Connected event data: ' + e.data);
+                    
+                    try {
+                        const data = JSON.parse(e.data);
+                        addEvent('connected', `Connected to SSE stream. ${data.clients} client(s) connected.`);
+                    } catch (error) {
+                        console.error('Error parsing connected event data:', error);
+                        addEvent('connected', `Connected to SSE stream. ${e.data}`);
+                    }
+                });
+                
+                // Listen for 'message' events
+                eventSource.addEventListener('message', (e) => {
+                    console.log('Message event received:', e);
+                    debugLog('Message event data: ' + e.data);
+                    
+                    try {
+                        const data = JSON.parse(e.data);
+                        addEvent('message', data.message || e.data);
+                    } catch (error) {
+                        console.error('Error parsing message event data:', error);
+                        addEvent('message', e.data);
+                    }
+                });
+                
+                // Default handler for any unnamed events
+                eventSource.onmessage = (e) => {
+                    console.log('Default message received:', e);
+                    debugLog('Default message data: ' + e.data);
+                    
+                    try {
+                        const data = JSON.parse(e.data);
+                        addEvent('default', data.message || JSON.stringify(data));
+                    } catch (error) {
+                        console.error('Error parsing default message:', error);
+                        addEvent('default', e.data);
+                    }
+                };
+                
+                // Add a generic event listener for any event
+                eventSource.addEventListener('error', (e) => {
+                    console.error('Error event received:', e);
+                    debugLog('Error event received: ' + JSON.stringify(e, replacer));
+                });
+                
+                // Listen for error event
+                eventSource.onerror = (e) => {
+                    console.error('EventSource error:', e);
+                    if (eventSource.readyState === EventSource.CLOSED) {
+                        handleDisconnect();
+                    }
+                };
+            });
+            
+            // Disconnect from SSE stream
+            disconnectBtn.addEventListener('click', () => {
+                if (eventSource) {
+                    eventSource.close();
+                    handleDisconnect();
+                }
+            });
+            
+            // Send message
+            sendBtn.addEventListener('click', () => {
+                const message = messageInput.value.trim();
+                if (message) {
+                    fetch('/events/trigger', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        messageInput.value = '';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+            
+            // Allow sending message with Enter key
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendBtn.click();
+                }
+            });
+            
+            // Handle disconnect
+            function handleDisconnect() {
+                eventSource = null;
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+                statusEl.textContent = 'Disconnected';
+                statusEl.classList.add('disconnected');
+                addEvent('system', 'Disconnected from SSE stream.');
+            }
+            
+            // Add event to the events container
+            function addEvent(type, message) {
+                const eventEl = document.createElement('div');
+                eventEl.className = `event event-${type}`;
+                
+                const time = new Date().toLocaleTimeString();
+                
+                eventEl.innerHTML = `
+                    <div class="event-time">${time}</div>
+                    <div class="event-message">${message}</div>
+                `;
+                
+                eventsContainer.appendChild(eventEl);
+                eventsContainer.scrollTop = eventsContainer.scrollHeight;
+            }
+            
+            // Add debug information
+            function debugLog(message) {
+                const time = new Date().toLocaleTimeString();
+                debugEl.innerHTML += `[${time}] ${message}\n`;
+                debugEl.scrollTop = debugEl.scrollHeight;
+            }
+            
+            // Helper function to handle circular references in JSON.stringify
+            function replacer(key, value) {
+                if (key === 'currentTarget' || key === 'target') {
+                    return '[DOM Element]';
+                }
+                return value;
+            }
+        });
+    </script>
+</body>
+</html>

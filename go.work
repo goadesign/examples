@@ -13,6 +13,7 @@ use (
 	./multipart
 	./security/hierarchy
 	./security/multiauth
+	./sse
 	./streaming
 	./tracing
 	./tus
