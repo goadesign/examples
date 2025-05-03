@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	cli "goa.design/examples/sse/gen/http/cli/events"
+	cli "goa.design/examples/sse/gen/http/cli/monitor"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )

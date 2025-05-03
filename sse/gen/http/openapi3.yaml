@@ -4,14 +4,14 @@ info:
     version: 0.0.1
 servers:
     - url: http://localhost:80
-      description: Default server for events
+      description: Default server for monitor
 paths:
     /{*filepath}:
         get:
             tags:
-                - events
+                - monitor
             summary: Download public
-            operationId: events#/{*filepath}
+            operationId: monitor#/{*filepath}
             parameters:
                 - name: filepath
                   in: path
@@ -22,69 +22,52 @@ paths:
                     description: File not found
                 "404":
                     description: File not found
-    /events/stream:
+    /monitor:
         get:
             tags:
-                - events
-            summary: stream events
-            description: Stream events using Server-Sent Events
-            operationId: events#stream
+                - monitor
+            summary: monitor monitor
+            description: Monitor CPU and memory usage via Server-Sent Events
+            operationId: monitor#monitor
             responses:
-                "200":
-                    description: OK response.
-                    content:
-                        text/event-stream:
-                            schema:
-                                type: string
-                                format: binary
-    /events/trigger:
-        post:
-            tags:
-                - events
-            summary: trigger events
-            description: Trigger a new event to be sent to all connected clients
-            operationId: events#trigger
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/TriggerRequestBody'
-                        example:
-                            message: Something happened!
-            responses:
-                "200":
-                    description: OK response.
+                "101":
+                    description: Switching Protocols response.
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/TriggerResponseBody'
+                                $ref: '#/components/schemas/Usage'
                             example:
-                                status: Dolorem soluta facilis.
+                                cpu: 50
+                                memory: 30
+                                timestamp: "1971-03-18T22:52:37Z"
 components:
     schemas:
-        TriggerRequestBody:
+        Usage:
             type: object
             properties:
-                message:
+                cpu:
+                    type: integer
+                    description: CPU usage percentage
+                    example: 50
+                    format: int64
+                memory:
+                    type: integer
+                    description: Memory usage percentage
+                    example: 30
+                    format: int64
+                timestamp:
                     type: string
-                    description: Message to broadcast
-                    example: Something happened!
+                    description: Timestamp of the usage report
+                    example: "1992-08-31T10:48:59Z"
+                    format: date-time
             example:
-                message: Something happened!
+                cpu: 50
+                memory: 30
+                timestamp: "1987-06-02T11:04:15Z"
             required:
-                - message
-        TriggerResponseBody:
-            type: object
-            properties:
-                status:
-                    type: string
-                    description: Status of the operation
-                    example: Quasi dolor assumenda repudiandae nihil.
-            example:
-                status: Temporibus inventore est.
-            required:
-                - status
+                - timestamp
+                - cpu
+                - memory
 tags:
-    - name: events
-      description: The events service provides real-time updates via SSE
+    - name: monitor
+      description: The monitor service provides real-time system monitoring via SSE

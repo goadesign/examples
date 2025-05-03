@@ -15,9 +15,9 @@ paths:
     /{filepath}:
         get:
             tags:
-                - events
+                - monitor
             summary: Download public
-            operationId: events#/{*filepath}
+            operationId: monitor#/{*filepath}
             parameters:
                 - name: filepath
                   in: path
@@ -35,44 +35,24 @@ paths:
                         $ref: '#/definitions/Error'
             schemes:
                 - http
-    /events/stream:
+    /monitor:
         get:
             tags:
-                - events
-            summary: stream events
-            description: Stream events using Server-Sent Events
-            operationId: events#stream
-            produces:
-                - text/event-stream
+                - monitor
+            summary: monitor monitor
+            description: Monitor CPU and memory usage via Server-Sent Events
+            operationId: monitor#monitor
             responses:
-                "200":
-                    description: OK response.
-            schemes:
-                - http
-    /events/trigger:
-        post:
-            tags:
-                - events
-            summary: trigger events
-            description: Trigger a new event to be sent to all connected clients
-            operationId: events#trigger
-            parameters:
-                - name: TriggerRequestBody
-                  in: body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/EventsTriggerRequestBody'
-                    required:
-                        - message
-            responses:
-                "200":
-                    description: OK response.
+                "101":
+                    description: Switching Protocols response.
                     schema:
-                        $ref: '#/definitions/EventsTriggerResponseBody'
+                        $ref: '#/definitions/Usage'
                         required:
-                            - status
+                            - timestamp
+                            - cpu
+                            - memory
             schemes:
-                - http
+                - ws
 definitions:
     Error:
         title: 'Mediatype identifier: application/vnd.goa.error; view=default'
@@ -81,7 +61,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -97,19 +77,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: false
+                example: true
         description: Error response result type (default view)
         example:
             fault: false
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: false
-            timeout: true
+            temporary: true
+            timeout: false
         required:
             - name
             - id
@@ -117,27 +97,30 @@ definitions:
             - temporary
             - timeout
             - fault
-    EventsTriggerRequestBody:
-        title: EventsTriggerRequestBody
+    Usage:
+        title: Usage
         type: object
         properties:
-            message:
+            cpu:
+                type: integer
+                description: CPU usage percentage
+                example: 50
+                format: int64
+            memory:
+                type: integer
+                description: Memory usage percentage
+                example: 30
+                format: int64
+            timestamp:
                 type: string
-                description: Message to broadcast
-                example: Something happened!
+                description: Timestamp of the usage report
+                example: "1986-09-20T13:57:16Z"
+                format: date-time
         example:
-            message: Something happened!
+            cpu: 50
+            memory: 30
+            timestamp: "1976-07-27T02:35:49Z"
         required:
-            - message
-    EventsTriggerResponseBody:
-        title: EventsTriggerResponseBody
-        type: object
-        properties:
-            status:
-                type: string
-                description: Status of the operation
-                example: Non aliquid facilis vel vitae qui.
-        example:
-            status: Sint laboriosam nisi et.
-        required:
-            - status
+            - timestamp
+            - cpu
+            - memory

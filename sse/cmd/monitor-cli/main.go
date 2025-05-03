@@ -2,14 +2,17 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"net/url"
 	"os"
 	"strings"
 
+	"goa.design/clue/log"
 	goa "goa.design/goa/v3/pkg"
+
+	monitorapi "goa.design/examples/sse"
+	genmonitor "goa.design/examples/sse/gen/monitor"
 )
 
 func main() {
@@ -87,14 +90,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	if data != nil {
-		m, _ := json.MarshalIndent(data, "", "    ")
-		fmt.Println(string(m))
-	}
+	ctx := context.Background()
+	ctx = log.Context(ctx)
+	monitorapi.InteractWithStreams(ctx, data.(genmonitor.MonitorClientStream))
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, `%s is a command line client for the events API.
+	fmt.Fprintf(os.Stderr, `%s is a command line client for the monitor API.
 
 Usage:
     %s [-host HOST][-url URL][-timeout SECONDS][-verbose|-v] SERVICE ENDPOINT [flags]

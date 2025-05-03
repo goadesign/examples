@@ -13,8 +13,8 @@ import (
 
 	"goa.design/clue/debug"
 	"goa.design/clue/log"
-	"goa.design/examples/sse"
-	genevents "goa.design/examples/sse/gen/events"
+	monitorapi "goa.design/examples/sse"
+	monitor "goa.design/examples/sse/gen/monitor"
 )
 
 func main() {
@@ -43,21 +43,21 @@ func main() {
 
 	// Initialize the services.
 	var (
-		eventsSvc genevents.Service
+		monitorSvc monitor.Service
 	)
 	{
-		eventsSvc = events.New()
+		monitorSvc = monitorapi.NewMonitor()
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		eventsEndpoints *genevents.Endpoints
+		monitorEndpoints *monitor.Endpoints
 	)
 	{
-		eventsEndpoints = genevents.NewEndpoints(eventsSvc)
-		eventsEndpoints.Use(debug.LogPayloads())
-		eventsEndpoints.Use(log.Endpoint)
+		monitorEndpoints = monitor.NewEndpoints(monitorSvc)
+		monitorEndpoints.Use(debug.LogPayloads())
+		monitorEndpoints.Use(log.Endpoint)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -99,7 +99,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, eventsEndpoints, &wg, errc, *dbgF)
+			handleHTTPServer(ctx, u, monitorEndpoints, &wg, errc, *dbgF)
 		}
 
 	default:

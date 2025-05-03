@@ -9,16 +9,14 @@ import (
 
 	"goa.design/clue/debug"
 	"goa.design/clue/log"
-
-	events "goa.design/examples/sse"
-	genevents "goa.design/examples/sse/gen/events"
-	geneventssvr "goa.design/examples/sse/gen/http/events/server"
+	monitorsvr "goa.design/examples/sse/gen/http/monitor/server"
+	monitor "goa.design/examples/sse/gen/monitor"
 	goahttp "goa.design/goa/v3/http"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, eventsEndpoints *genevents.Endpoints, wg *sync.WaitGroup, errc chan error, dbg bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, monitorEndpoints *monitor.Endpoints, wg *sync.WaitGroup, errc chan error, dbg bool) {
 
 	// Provide the transport specific request decoder and response encoder.
 	// The goa http package has built-in support for JSON, XML and gob.
@@ -47,18 +45,15 @@ func handleHTTPServer(ctx context.Context, u *url.URL, eventsEndpoints *genevent
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		eventsServer *geneventssvr.Server
+		monitorServer *monitorsvr.Server
 	)
 	{
 		eh := errorHandler(ctx)
-		// Use the embedded file system for static files
-		fileSystem := http.FS(events.StaticFS)
-		// Use the same file system for both the root and minimal.html
-		eventsServer = geneventssvr.New(eventsEndpoints, mux, dec, enc, eh, nil, fileSystem)
+		monitorServer = monitorsvr.New(monitorEndpoints, mux, dec, enc, eh, nil, nil)
 	}
 
 	// Configure the mux.
-	geneventssvr.Mount(mux, eventsServer)
+	monitorsvr.Mount(mux, monitorServer)
 
 	var handler http.Handler = mux
 	if dbg {
@@ -70,7 +65,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, eventsEndpoints *genevent
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler, ReadHeaderTimeout: time.Second * 60}
-	for _, m := range eventsServer.Mounts {
+	for _, m := range monitorServer.Mounts {
 		log.Printf(ctx, "HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 
