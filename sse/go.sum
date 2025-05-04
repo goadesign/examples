@@ -77,6 +77,8 @@ go.opentelemetry.io/otel/trace v1.35.0 h1:dPpEfJu1sDIqruz7BHFG3c7528f6ddfSWfFDVt
 go.opentelemetry.io/otel/trace v1.35.0/go.mod h1:WUk7DtFp1Aw2MkvqGdwiXYDZZNvA/1J8o6xRXLrIkyc=
 goa.design/clue v1.1.1 h1:u/d+Fkxl1k/c1WqnZmnKvQip7KiKVk6VvMS9DU7RhRI=
 goa.design/clue v1.1.1/go.mod h1:9dhc4P/+Xmg6k+y+fZMdrg6OcqguN6XpTAb1Ci+bqDw=
+goa.design/goa/v3 v3.21.0 h1:+Y1ka2R558pkvmaV6IoAR8LYvOKWbZJVnPmax0cTA1k=
+goa.design/goa/v3 v3.21.0/go.mod h1:tiyIZM2XW66uPBvJSIJJwzTu0FUNgR10eKUFV0elx8w=
 golang.org/x/mod v0.24.0 h1:ZfthKaKaT4NrhGVZHO1/WDTwGES4De8KtWO0SIbNJMU=
 golang.org/x/mod v0.24.0/go.mod h1:IXM97Txy2VM4PJ3gI61r1YEk/gAj6zAHN3AdZt6S9Ww=
 golang.org/x/net v0.39.0 h1:ZCu7HMWDxpXpaiKdhzIfaltL9Lp31x/3fCP11bc6/fY=
