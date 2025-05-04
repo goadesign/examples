@@ -1,4 +1,4 @@
-go 1.23.3
+go 1.24.2
 
 use (
 	./basic
@@ -13,6 +13,7 @@ use (
 	./multipart
 	./security/hierarchy
 	./security/multiauth
+	./sse
 	./streaming
 	./tracing
 	./tus

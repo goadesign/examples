@@ -1,0 +1,73 @@
+openapi: 3.0.3
+info:
+    title: Goa API
+    version: 0.0.1
+servers:
+    - url: http://localhost:80
+      description: Default server for monitor
+paths:
+    /{*filepath}:
+        get:
+            tags:
+                - monitor
+            summary: Download public
+            operationId: monitor#/{*filepath}
+            parameters:
+                - name: filepath
+                  in: path
+                  description: Relative file path
+                  required: true
+            responses:
+                "200":
+                    description: File not found
+                "404":
+                    description: File not found
+    /monitor:
+        get:
+            tags:
+                - monitor
+            summary: monitor monitor
+            description: Monitor CPU and memory usage via Server-Sent Events
+            operationId: monitor#monitor
+            responses:
+                "101":
+                    description: Switching Protocols response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Usage'
+                            example:
+                                cpu: 50
+                                memory: 30
+                                timestamp: "1971-03-18T22:52:37Z"
+components:
+    schemas:
+        Usage:
+            type: object
+            properties:
+                cpu:
+                    type: integer
+                    description: CPU usage percentage
+                    example: 50
+                    format: int64
+                memory:
+                    type: integer
+                    description: Memory usage percentage
+                    example: 30
+                    format: int64
+                timestamp:
+                    type: string
+                    description: Timestamp of the usage report
+                    example: "1992-08-31T10:48:59Z"
+                    format: date-time
+            example:
+                cpu: 50
+                memory: 30
+                timestamp: "1987-06-02T11:04:15Z"
+            required:
+                - timestamp
+                - cpu
+                - memory
+tags:
+    - name: monitor
+      description: The monitor service provides real-time system monitoring via SSE

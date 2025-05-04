@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f7fa;
+      }
+      h1 {
+        color: #333;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 24px;
+      }
+      section {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        margin-bottom: 24px;
+        padding: 20px;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      button {
+        background: #4caf50;
+        border: none;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      button.disconnect { background: #f44336; }
+      button:disabled { background: #ccc; cursor: not-allowed; }
+      
+      /* Current stats display */
+      .stats-display {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .stat-card {
+        flex: 1;
+        min-width: 200px;
+        padding: 16px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .stat-title {
+        font-weight: 600;
+        color: #555;
+      }
+      .stat-value {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #333;
+      }
+      .stat-bar-container {
+        height: 8px;
+        background: #eee;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .stat-bar {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+      }
+      .cpu-bar { background: #2196f3; }
+      .memory-bar { background: #4caf50; }
+      
+      /* Graph */
+      #chart-container {
+        height: 300px;
+        margin-top: 20px;
+        position: relative;
+        background: #fff;
+        padding: 30px 20px 40px 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      .chart-grid {
+        position: absolute;
+        top: 30px;
+        left: 40px;
+        right: 20px;
+        bottom: 40px;
+        display: grid;
+        grid-template-rows: repeat(5, 1fr);
+        border-left: 2px solid #aaa;
+        border-bottom: 2px solid #aaa;
+      }
+      .grid-line {
+        border-top: 1px dashed #aaa;
+        position: relative;
+      }
+      .grid-label {
+        position: absolute;
+        left: -30px;
+        top: -10px;
+        font-size: 12px;
+        color: #666;
+        font-weight: 500;
+      }
+      .chart-area {
+        position: absolute;
+        top: 30px;
+        left: 40px;
+        right: 20px;
+        bottom: 40px;
+        overflow: hidden;
+      }
+      /* Lines for the graph */
+      .line-chart {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      .chart-line {
+        fill: none;
+        stroke-width: 3;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+      }
+      .cpu-line {
+        stroke: #2196f3;
+        stroke-dasharray: none;
+      }
+      .memory-line {
+        stroke: #4caf50;
+        stroke-dasharray: none;
+      }
+      /* Data points */
+      .data-points {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+      .data-point {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-left: -4px;
+        margin-top: -4px;
+        z-index: 3;
+      }
+      .cpu-point {
+        background-color: #2196f3;
+        border: 2px solid white;
+        box-shadow: 0 0 4px rgba(0,0,0,0.3);
+      }
+      .memory-point {
+        background-color: #4caf50;
+        border: 2px solid white;
+        box-shadow: 0 0 4px rgba(0,0,0,0.3);
+      }
+      .data-tooltip {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .data-point:hover .data-tooltip {
+        opacity: 1;
+      }
+      /* Time axis */
+      .time-axis {
+        position: absolute;
+        left: 40px;
+        right: 20px;
+        bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .time-label {
+        font-size: 11px;
+        color: #666;
+        white-space: nowrap;
+        font-weight: 500;
+      }
+      
+      /* Legend */
+      .chart-legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 40px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .legend-color {
+        width: 15px;
+        height: 15px;
+        border-radius: 3px;
+      }
+      .cpu-legend { background: #2196f3; }
+      .memory-legend { background: #4caf50; }
+      
+      /* Status */
+      .status {
+        color: #4caf50;
+        font-weight: bold;
+      }
+      .status.disconnected {
+        color: #f44336;
+      }
+    </style>
+</head>
+<body>
+    <h1>System Resource Monitor</h1>
+    
+    <section>
+      <h2>Connection Status: <span id="status" class="status disconnected">Disconnected</span></h2>
+      <div class="controls">
+        <button id="connect">Start Monitoring</button>
+        <button id="disconnect" class="disconnect" disabled>Stop Monitoring</button>
+      </div>
+      
+      <!-- Current stats cards -->
+      <div class="stats-display">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">CPU Usage</div>
+            <div class="stat-value" id="cpu-value">--</div>
+          </div>
+          <div class="stat-bar-container">
+            <div class="stat-bar cpu-bar" id="cpu-bar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Memory Usage</div>
+            <div class="stat-value" id="memory-value">--</div>
+          </div>
+          <div class="stat-bar-container">
+            <div class="stat-bar memory-bar" id="memory-bar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="last-update" style="text-align: right; margin-top: 10px; color: #777; font-size: 0.9em;">Last update: --</div>
+    </section>
+
+    <section>
+      <h2>Resource Usage Graph</h2>
+      <div id="chart-container">
+        <div class="chart-grid">
+          <div class="grid-line"><span class="grid-label">100%</span></div>
+          <div class="grid-line"><span class="grid-label">75%</span></div>
+          <div class="grid-line"><span class="grid-label">50%</span></div>
+          <div class="grid-line"><span class="grid-label">25%</span></div>
+          <div class="grid-line"><span class="grid-label">0%</span></div>
+        </div>
+        <div class="chart-area">
+          <svg id="line-chart" class="line-chart" preserveAspectRatio="none"></svg>
+          <div id="data-points" class="data-points"></div>
+        </div>
+        <div id="time-axis" class="time-axis"></div>
+      </div>
+      
+      <div class="chart-legend">
+        <div class="legend-item">
+          <div class="legend-color cpu-legend"></div>
+          <span>CPU</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color memory-legend"></div>
+          <span>Memory</span>
+        </div>
+      </div>
+    </section>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const connectBtn = document.getElementById('connect');
+            const disconnectBtn = document.getElementById('disconnect');
+            const statusEl = document.getElementById('status');
+            // Get chart elements
+            
+            let eventSource = null;
+            const dataPoints = [];
+            const MAX_DATA_POINTS = 10;
+            
+            // Connect to SSE stream
+            connectBtn.addEventListener('click', () => {
+                // Prevent multiple connections
+                if (eventSource && eventSource.readyState !== EventSource.CLOSED) {
+                    return;
+                }
+                
+                // Create new EventSource
+                eventSource = new EventSource('/monitor');
+                
+                // Update UI
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                statusEl.textContent = 'Connected';
+                statusEl.classList.remove('disconnected');
+                
+                // Listen for open event
+                eventSource.onopen = (e) => {
+                    console.log('Connection established', e);
+                };
+                
+                // Listen for 'message' events
+                eventSource.addEventListener('message', (e) => {
+                    console.log('Usage data received:', e);
+                    
+                    try {
+                        // Parse the JSON data from the event
+                        const usageData = JSON.parse(e.data);
+                        
+                        // Add to data points array
+                        dataPoints.push(usageData);
+                        
+                        // Keep only the last MAX_DATA_POINTS
+                        if (dataPoints.length > MAX_DATA_POINTS) {
+                            dataPoints.shift();
+                        }
+                        
+                        // Update the current stats display
+                        updateStatsDisplay(usageData);
+                        
+                        // Update the chart
+                        updateChart();
+                        
+                    } catch (error) {
+                        console.error('Error parsing usage data:', error);
+                    }
+                });
+                
+                // Listen for error event
+                eventSource.onerror = (e) => {
+                    console.error('EventSource error:', e);
+                };
+            });
+            
+            // Disconnect from SSE stream
+            disconnectBtn.addEventListener('click', () => {
+                if (eventSource) {
+                    eventSource.close();
+                }
+                handleDisconnect();
+            });
+            
+            // Handle disconnect
+            function handleDisconnect() {
+                if (eventSource && eventSource.readyState !== EventSource.CLOSED) {
+                    eventSource.close();
+                }
+                eventSource = null;
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                statusEl.textContent = 'Disconnected';
+                statusEl.classList.add('disconnected');
+            }
+            
+            // Function to update the current stats display
+            function updateStatsDisplay(data) {
+                // Update CPU stats
+                document.getElementById('cpu-value').textContent = `${data.CPU}%`;
+                document.getElementById('cpu-bar').style.width = `${data.CPU}%`;
+                
+                // Update Memory stats
+                document.getElementById('memory-value').textContent = `${data.Memory}%`;
+                document.getElementById('memory-bar').style.width = `${data.Memory}%`;
+                
+                // Update timestamp
+                const timestamp = new Date(data.Timestamp).toLocaleTimeString();
+                document.getElementById('last-update').textContent = `Last update: ${timestamp}`;
+            }
+            
+            // Function to update the chart
+            function updateChart() {
+                const chartArea = document.querySelector('.chart-area');
+                const lineChart = document.getElementById('line-chart');
+                const dataPointsContainer = document.getElementById('data-points');
+                const timeAxis = document.getElementById('time-axis');
+                
+                // Clear previous chart data
+                lineChart.innerHTML = '';
+                dataPointsContainer.innerHTML = '';
+                timeAxis.innerHTML = '';
+                
+                // Set SVG dimensions
+                const chartWidth = chartArea.clientWidth;
+                const chartHeight = chartArea.clientHeight;
+                lineChart.setAttribute('width', chartWidth);
+                lineChart.setAttribute('height', chartHeight);
+                lineChart.setAttribute('viewBox', `0 0 ${chartWidth} ${chartHeight}`);
+                
+                // Skip if no data points
+                if (dataPoints.length === 0) return;
+                
+                // Create path data for CPU and memory lines
+                let cpuPathData = '';
+                let memoryPathData = '';
+                
+                // Calculate x positions based on number of data points
+                const xStep = chartWidth / (Math.max(1, dataPoints.length - 1));
+                
+                // Create time labels
+                dataPoints.forEach((data, index) => {
+                    const x = index * xStep;
+                    const cpuY = chartHeight - (data.CPU / 100) * chartHeight;
+                    const memoryY = chartHeight - (data.Memory / 100) * chartHeight;
+                    
+                    // Add points to path data
+                    if (index === 0) {
+                        cpuPathData = `M ${x},${cpuY}`;
+                        memoryPathData = `M ${x},${memoryY}`;
+                    } else {
+                        cpuPathData += ` L ${x},${cpuY}`;
+                        memoryPathData += ` L ${x},${memoryY}`;
+                    }
+                    
+                    // Create CPU data point
+                    const cpuPoint = document.createElement('div');
+                    cpuPoint.className = 'data-point cpu-point';
+                    cpuPoint.style.left = `${x}px`;
+                    cpuPoint.style.top = `${cpuY}px`;
+                    
+                    // Create tooltip for CPU
+                    const cpuTooltip = document.createElement('div');
+                    cpuTooltip.className = 'data-tooltip';
+                    cpuTooltip.textContent = `CPU: ${data.CPU}%`;
+                    cpuPoint.appendChild(cpuTooltip);
+                    
+                    // Create Memory data point
+                    const memoryPoint = document.createElement('div');
+                    memoryPoint.className = 'data-point memory-point';
+                    memoryPoint.style.left = `${x}px`;
+                    memoryPoint.style.top = `${memoryY}px`;
+                    
+                    // Create tooltip for Memory
+                    const memoryTooltip = document.createElement('div');
+                    memoryTooltip.className = 'data-tooltip';
+                    memoryTooltip.textContent = `Memory: ${data.Memory}%`;
+                    memoryPoint.appendChild(memoryTooltip);
+                    
+                    // Add data points to container
+                    dataPointsContainer.appendChild(cpuPoint);
+                    dataPointsContainer.appendChild(memoryPoint);
+                    
+                    // Create time label
+                    const timeLabel = document.createElement('div');
+                    timeLabel.className = 'time-label';
+                    // Format time to show hours:minutes:seconds
+                    const time = new Date(data.Timestamp);
+                    const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    timeLabel.textContent = formattedTime;
+                    timeLabel.style.transform = `translateX(-50%)`;
+                    timeLabel.style.left = `${x}px`;
+                    timeAxis.appendChild(timeLabel);
+                });
+                
+                // Create SVG paths for CPU and memory lines
+                const cpuPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                cpuPath.setAttribute('d', cpuPathData);
+                cpuPath.setAttribute('class', 'chart-line cpu-line');
+                
+                const memoryPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                memoryPath.setAttribute('d', memoryPathData);
+                memoryPath.setAttribute('class', 'chart-line memory-line');
+                
+                // Add paths to SVG
+                lineChart.appendChild(cpuPath);
+                lineChart.appendChild(memoryPath);
+            }
+        });
+    </script>
+</body>
+</html>
