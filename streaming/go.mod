@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.23.6
 
 require (
-	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/websocket v1.5.3
 	goa.design/goa/v3 v3.21.0
 	google.golang.org/grpc v1.72.0
