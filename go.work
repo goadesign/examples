@@ -3,6 +3,7 @@ go 1.24.2
 use (
 	./basic
 	./cellar
+	./concerts
 	./cookies
 	./encodings/cbor
 	./encodings/text

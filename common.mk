@@ -61,8 +61,10 @@ lint:
 
 gen:
 	@echo GENERATING CODE...
-	@goa gen    "$(MODULE)/design" && \
-	goa example "$(MODULE)/design"
+	@goa gen "$(MODULE)/design"
+ifneq ($(SKIP_GOA_EXAMPLE),true)
+	@goa example "$(MODULE)/design"
+endif
 
 build:
 	@go build "./cmd/$(APP)" && go build "./cmd/$(APP)-cli"
