@@ -239,6 +239,24 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+    /openapi3.json:
+        get:
+            tags:
+                - concerts
+            summary: Download openapi3.json
+            operationId: concerts#/openapi3.json
+            responses:
+                "200":
+                    description: File downloaded
+    /openapi3.yaml:
+        get:
+            tags:
+                - concerts
+            summary: Download openapi3.yaml
+            operationId: concerts#/openapi3.yaml
+            responses:
+                "200":
+                    description: File downloaded
 components:
     schemas:
         Concert:

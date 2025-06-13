@@ -10,6 +10,7 @@ package server
 import (
 	"context"
 	"net/http"
+	"path"
 
 	concerts "goa.design/examples/concerts/gen/concerts"
 	goahttp "goa.design/goa/v3/http"
@@ -18,12 +19,14 @@ import (
 
 // Server lists the concerts service endpoint HTTP handlers.
 type Server struct {
-	Mounts []*MountPoint
-	List   http.Handler
-	Create http.Handler
-	Show   http.Handler
-	Update http.Handler
-	Delete http.Handler
+	Mounts       []*MountPoint
+	List         http.Handler
+	Create       http.Handler
+	Show         http.Handler
+	Update       http.Handler
+	Delete       http.Handler
+	Openapi3JSON http.Handler
+	Openapi3Yaml http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -50,7 +53,17 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
+	fileSystemOpenapi3JSON http.FileSystem,
+	fileSystemOpenapi3Yaml http.FileSystem,
 ) *Server {
+	if fileSystemOpenapi3JSON == nil {
+		fileSystemOpenapi3JSON = http.Dir(".")
+	}
+	fileSystemOpenapi3JSON = appendPrefix(fileSystemOpenapi3JSON, "/")
+	if fileSystemOpenapi3Yaml == nil {
+		fileSystemOpenapi3Yaml = http.Dir(".")
+	}
+	fileSystemOpenapi3Yaml = appendPrefix(fileSystemOpenapi3Yaml, "/")
 	return &Server{
 		Mounts: []*MountPoint{
 			{"List", "GET", "/concerts"},
@@ -58,12 +71,16 @@ func New(
 			{"Show", "GET", "/concerts/{concertID}"},
 			{"Update", "PUT", "/concerts/{concertID}"},
 			{"Delete", "DELETE", "/concerts/{concertID}"},
+			{"Serve openapi3.json", "GET", "/openapi3.json"},
+			{"Serve openapi3.yaml", "GET", "/openapi3.yaml"},
 		},
-		List:   NewListHandler(e.List, mux, decoder, encoder, errhandler, formatter),
-		Create: NewCreateHandler(e.Create, mux, decoder, encoder, errhandler, formatter),
-		Show:   NewShowHandler(e.Show, mux, decoder, encoder, errhandler, formatter),
-		Update: NewUpdateHandler(e.Update, mux, decoder, encoder, errhandler, formatter),
-		Delete: NewDeleteHandler(e.Delete, mux, decoder, encoder, errhandler, formatter),
+		List:         NewListHandler(e.List, mux, decoder, encoder, errhandler, formatter),
+		Create:       NewCreateHandler(e.Create, mux, decoder, encoder, errhandler, formatter),
+		Show:         NewShowHandler(e.Show, mux, decoder, encoder, errhandler, formatter),
+		Update:       NewUpdateHandler(e.Update, mux, decoder, encoder, errhandler, formatter),
+		Delete:       NewDeleteHandler(e.Delete, mux, decoder, encoder, errhandler, formatter),
+		Openapi3JSON: http.FileServer(fileSystemOpenapi3JSON),
+		Openapi3Yaml: http.FileServer(fileSystemOpenapi3Yaml),
 	}
 }
 
@@ -89,6 +106,8 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountShowHandler(mux, h.Show)
 	MountUpdateHandler(mux, h.Update)
 	MountDeleteHandler(mux, h.Delete)
+	MountOpenapi3JSON(mux, h.Openapi3JSON)
+	MountOpenapi3Yaml(mux, h.Openapi3Yaml)
 }
 
 // Mount configures the mux to serve the concerts endpoints.
@@ -349,4 +368,37 @@ func NewDeleteHandler(
 			errhandler(ctx, w, err)
 		}
 	})
+}
+
+// appendFS is a custom implementation of fs.FS that appends a specified prefix
+// to the file paths before delegating the Open call to the underlying fs.FS.
+type appendFS struct {
+	prefix string
+	fs     http.FileSystem
+}
+
+// Open opens the named file, appending the prefix to the file path before
+// passing it to the underlying fs.FS.
+func (s appendFS) Open(name string) (http.File, error) {
+	switch name {
+	}
+	return s.fs.Open(path.Join(s.prefix, name))
+}
+
+// appendPrefix returns a new fs.FS that appends the specified prefix to file paths
+// before delegating to the provided embed.FS.
+func appendPrefix(fsys http.FileSystem, prefix string) http.FileSystem {
+	return appendFS{prefix: prefix, fs: fsys}
+}
+
+// MountOpenapi3JSON configures the mux to serve GET request made to
+// "/openapi3.json".
+func MountOpenapi3JSON(mux goahttp.Muxer, h http.Handler) {
+	mux.Handle("GET", "/openapi3.json", h.ServeHTTP)
+}
+
+// MountOpenapi3Yaml configures the mux to serve GET request made to
+// "/openapi3.yaml".
+func MountOpenapi3Yaml(mux goahttp.Muxer, h http.Handler) {
+	mux.Handle("GET", "/openapi3.yaml", h.ServeHTTP)
 }

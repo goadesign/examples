@@ -171,6 +171,32 @@ paths:
                         $ref: '#/definitions/ConcertsDeleteNotFoundResponseBody'
             schemes:
                 - http
+    /openapi3.json:
+        get:
+            tags:
+                - concerts
+            summary: Download openapi3.json
+            operationId: concerts#/openapi3.json
+            responses:
+                "200":
+                    description: File downloaded
+                    schema:
+                        type: file
+            schemes:
+                - http
+    /openapi3.yaml:
+        get:
+            tags:
+                - concerts
+            summary: Download openapi3.yaml
+            operationId: concerts#/openapi3.yaml
+            responses:
+                "200":
+                    description: File downloaded
+                    schema:
+                        type: file
+            schemes:
+                - http
 definitions:
     Concert:
         title: Concert

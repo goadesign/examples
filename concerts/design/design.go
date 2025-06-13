@@ -22,6 +22,10 @@ var _ = API("concerts", func() {
 var _ = Service("concerts", func() {
 	Description("The concerts service manages music concert data. It provides CRUD operations for concert information including artist details, venues, dates, and pricing.")
 
+	// Serve OpenAPI specifications
+	Files("/openapi3.json", "openapi3.json")
+	Files("/openapi3.yaml", "openapi3.yaml")
+
 	Method("list", func() {
 		Description("List concerts with optional pagination. Returns an array of concerts sorted by date.")
 		Meta("openapi:summary", "List all concerts")

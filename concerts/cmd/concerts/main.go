@@ -10,6 +10,7 @@ import (
 	goahttp "goa.design/goa/v3/http"
 
 	// Use gen prefix for generated packages
+	concerts "goa.design/examples/concerts"
 	genconcerts "goa.design/examples/concerts/gen/concerts"
 	genhttp "goa.design/examples/concerts/gen/http/concerts/server"
 )
@@ -99,7 +100,11 @@ func main() {
 	mux := goahttp.NewMuxer()
 	requestDecoder := goahttp.RequestDecoder
 	responseEncoder := goahttp.ResponseEncoder
-	handler := genhttp.New(endpoints, mux, requestDecoder, responseEncoder, nil, nil)
+	
+	// Use the embedded OpenAPI files from the top-level package
+	openAPIFS := concerts.OpenAPIFileSystem()
+	
+	handler := genhttp.New(endpoints, mux, requestDecoder, responseEncoder, nil, nil, openAPIFS, openAPIFS)
 
 	// Mount the handler on the mux
 	genhttp.Mount(mux, handler)
