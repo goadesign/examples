@@ -19,8 +19,8 @@ paths:
                         schema:
                             $ref: '#/components/schemas/DivideRequestBody'
                         example:
-                            dividend: 6322633713974661021
-                            divisor: 3793862871819669726
+                            dividend: 3793862871819669726
+                            divisor: 8399553735696626949
             responses:
                 "200":
                     description: OK response.
@@ -29,8 +29,8 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DivideResponseBody'
                             example:
-                                quotient: 8399553735696626949
-                                reminder: 360622074634248926
+                                quotient: 360622074634248926
+                                reminder: 8133055152903002499
                 "400":
                     description: 'div_by_zero: Response used for division by zero errors'
                     content:

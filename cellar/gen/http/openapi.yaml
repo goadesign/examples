@@ -153,7 +153,7 @@ paths:
                         type: array
                         items:
                             type: string
-                            example: Sed ut officiis.
+                            example: Quia ea voluptates sequi nam temporibus exercitationem.
             schemes:
                 - http
     /storage/multi_update:
@@ -224,9 +224,13 @@ definitions:
                     $ref: '#/definitions/Component'
                 description: Composition is the list of grape varietals and associated percentage.
                 example:
-                    - percentage: 92
+                    - percentage: 33
                       varietal: Syrah
-                    - percentage: 92
+                    - percentage: 33
+                      varietal: Syrah
+                    - percentage: 33
+                      varietal: Syrah
+                    - percentage: 33
                       varietal: Syrah
             description:
                 type: string
@@ -241,14 +245,14 @@ definitions:
             rating:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
-                example: 3
+                example: 2
                 format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
-                example: 1971
+                example: 1968
                 format: int32
                 minimum: 1900
                 maximum: 2020
@@ -256,18 +260,16 @@ definitions:
                 $ref: '#/definitions/Winery'
         example:
             composition:
-                - percentage: 92
+                - percentage: 33
                   varietal: Syrah
-                - percentage: 92
+                - percentage: 33
                   varietal: Syrah
-                - percentage: 92
-                  varietal: Syrah
-                - percentage: 92
+                - percentage: 33
                   varietal: Syrah
             description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
             name: Blue's Cuvee
-            rating: 3
-            vintage: 1988
+            rating: 4
+            vintage: 2001
             winery:
                 country: USA
                 name: Longoria
@@ -287,9 +289,13 @@ definitions:
                     $ref: '#/definitions/Component'
                 description: Composition is the list of grape varietals and associated percentage.
                 example:
-                    - percentage: 99
+                    - percentage: 92
                       varietal: Syrah
-                    - percentage: 99
+                    - percentage: 92
+                      varietal: Syrah
+                    - percentage: 92
+                      varietal: Syrah
+                    - percentage: 92
                       varietal: Syrah
             description:
                 type: string
@@ -308,14 +314,14 @@ definitions:
             rating:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
-                example: 2
+                example: 3
                 format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
-                example: 1988
+                example: 1922
                 format: int32
                 minimum: 1900
                 maximum: 2020
@@ -324,15 +330,15 @@ definitions:
         description: ShowResponseBody result type (default view)
         example:
             composition:
-                - percentage: 99
+                - percentage: 92
                   varietal: Syrah
-                - percentage: 99
+                - percentage: 92
                   varietal: Syrah
             description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
             id: 123abc
             name: Blue's Cuvee
-            rating: 4
-            vintage: 2017
+            rating: 1
+            vintage: 2000
             winery:
                 name: Longoria
         required:
@@ -347,7 +353,7 @@ definitions:
             percentage:
                 type: integer
                 description: Percentage of varietal in wine
-                example: 17
+                example: 97
                 format: int32
                 minimum: 1
                 maximum: 100
@@ -358,7 +364,7 @@ definitions:
                 pattern: '[A-Za-z'' ]+'
                 maxLength: 100
         example:
-            percentage: 34
+            percentage: 7
             varietal: Syrah
         required:
             - varietal
@@ -374,7 +380,7 @@ definitions:
                 type: array
                 items:
                     type: string
-                    example: Repudiandae quia omnis temporibus ut.
+                    example: Facere quaerat dicta corporis.
                 description: Varietals in preference order
                 example:
                     - pinot noir
@@ -398,14 +404,14 @@ definitions:
             id:
                 type: string
                 description: ID of missing bottle
-                example: Harum dolores adipisci repellat et esse.
+                example: Dignissimos qui ea sit aut.
             message:
                 type: string
                 description: Message of error
                 example: bottle 1 not found
         description: Bottle not found
         example:
-            id: Ratione nemo.
+            id: Pariatur aut qui quia deleniti aut consequatur.
             message: bottle 1 not found
         required:
             - message
@@ -445,6 +451,20 @@ definitions:
               vintage: 1941
               winery:
                 name: Longoria
+            - composition:
+                - percentage: 82
+                  varietal: Syrah
+                - percentage: 82
+                  varietal: Syrah
+                - percentage: 82
+                  varietal: Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+              id: 123abc
+              name: Blue's Cuvee
+              rating: 3
+              vintage: 1941
+              winery:
+                name: Longoria
     StorageMultiUpdateRequestBody:
         title: StorageMultiUpdateRequestBody
         type: object
@@ -456,56 +476,48 @@ definitions:
                 description: Array of bottle info that matches the ids attribute
                 example:
                     - composition:
-                        - percentage: 92
+                        - percentage: 33
                           varietal: Syrah
-                        - percentage: 92
+                        - percentage: 33
+                          varietal: Syrah
+                        - percentage: 33
                           varietal: Syrah
                       description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                       name: Blue's Cuvee
-                      rating: 1
-                      vintage: 1984
+                      rating: 2
+                      vintage: 1908
                       winery:
                         country: USA
                         name: Longoria
                         region: Central Coast, California
                         url: http://www.longoriawine.com/
                     - composition:
-                        - percentage: 92
+                        - percentage: 33
                           varietal: Syrah
-                        - percentage: 92
+                        - percentage: 33
+                          varietal: Syrah
+                        - percentage: 33
                           varietal: Syrah
                       description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                       name: Blue's Cuvee
-                      rating: 1
-                      vintage: 1984
+                      rating: 2
+                      vintage: 1908
                       winery:
                         country: USA
                         name: Longoria
                         region: Central Coast, California
                         url: http://www.longoriawine.com/
                     - composition:
-                        - percentage: 92
+                        - percentage: 33
                           varietal: Syrah
-                        - percentage: 92
+                        - percentage: 33
                           varietal: Syrah
-                      description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-                      name: Blue's Cuvee
-                      rating: 1
-                      vintage: 1984
-                      winery:
-                        country: USA
-                        name: Longoria
-                        region: Central Coast, California
-                        url: http://www.longoriawine.com/
-                    - composition:
-                        - percentage: 92
-                          varietal: Syrah
-                        - percentage: 92
+                        - percentage: 33
                           varietal: Syrah
                       description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                       name: Blue's Cuvee
-                      rating: 1
-                      vintage: 1984
+                      rating: 2
+                      vintage: 1908
                       winery:
                         country: USA
                         name: Longoria
@@ -514,42 +526,32 @@ definitions:
         example:
             bottles:
                 - composition:
-                    - percentage: 92
+                    - percentage: 33
                       varietal: Syrah
-                    - percentage: 92
+                    - percentage: 33
+                      varietal: Syrah
+                    - percentage: 33
                       varietal: Syrah
                   description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                   name: Blue's Cuvee
-                  rating: 1
-                  vintage: 1984
+                  rating: 2
+                  vintage: 1908
                   winery:
                     country: USA
                     name: Longoria
                     region: Central Coast, California
                     url: http://www.longoriawine.com/
                 - composition:
-                    - percentage: 92
+                    - percentage: 33
                       varietal: Syrah
-                    - percentage: 92
+                    - percentage: 33
                       varietal: Syrah
-                  description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
-                  name: Blue's Cuvee
-                  rating: 1
-                  vintage: 1984
-                  winery:
-                    country: USA
-                    name: Longoria
-                    region: Central Coast, California
-                    url: http://www.longoriawine.com/
-                - composition:
-                    - percentage: 92
-                      varietal: Syrah
-                    - percentage: 92
+                    - percentage: 33
                       varietal: Syrah
                   description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
                   name: Blue's Cuvee
-                  rating: 1
-                  vintage: 1984
+                  rating: 2
+                  vintage: 1908
                   winery:
                     country: USA
                     name: Longoria
@@ -606,6 +608,20 @@ definitions:
               vintage: 1941
               winery:
                 name: Longoria
+            - composition:
+                - percentage: 82
+                  varietal: Syrah
+                - percentage: 82
+                  varietal: Syrah
+                - percentage: 82
+                  varietal: Syrah
+              description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+              id: 123abc
+              name: Blue's Cuvee
+              rating: 3
+              vintage: 1941
+              winery:
+                name: Longoria
     StoredBottleResponse:
         title: 'Mediatype identifier: application/vnd.cellar.stored-bottle; view=default'
         type: object
@@ -616,6 +632,8 @@ definitions:
                     $ref: '#/definitions/Component'
                 description: Composition is the list of grape varietals and associated percentage.
                 example:
+                    - percentage: 82
+                      varietal: Syrah
                     - percentage: 82
                       varietal: Syrah
                     - percentage: 82
@@ -637,14 +655,14 @@ definitions:
             rating:
                 type: integer
                 description: Rating of bottle from 1 (worst) to 5 (best)
-                example: 3
+                example: 2
                 format: int32
                 minimum: 1
                 maximum: 5
             vintage:
                 type: integer
                 description: Vintage of bottle
-                example: 1957
+                example: 2003
                 format: int32
                 minimum: 1900
                 maximum: 2020
@@ -659,13 +677,11 @@ definitions:
                   varietal: Syrah
                 - percentage: 82
                   varietal: Syrah
-                - percentage: 82
-                  varietal: Syrah
             description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
             id: 123abc
             name: Blue's Cuvee
-            rating: 2
-            vintage: 1933
+            rating: 4
+            vintage: 1915
             winery:
                 name: Longoria
         required:

@@ -20,87 +20,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Et velit aut fugit possimus.
-                  example: Et culpa quis aut.
-                - name: b
-                  in: path
-                  description: Right operand
-                  required: true
-                  schema:
-                    type: string
-                    description: Right operand
                     example: Fugit nam incidunt vitae doloremque unde.
                   example: Ullam quos eum modi culpa vel.
-            responses:
-                "200":
-                    description: OK response.
-                    content:
-                        text/html:
-                            schema:
-                                type: string
-                                example:
-                                    - 69
-                                    - 116
-                                    - 32
-                                    - 97
-                                    - 117
-                                    - 116
-                                    - 32
-                                    - 110
-                                    - 101
-                                    - 99
-                                    - 101
-                                    - 115
-                                    - 115
-                                    - 105
-                                    - 116
-                                    - 97
-                                    - 116
-                                    - 105
-                                    - 98
-                                    - 117
-                                    - 115
-                                    - 32
-                                    - 97
-                                    - 100
-                                    - 46
-                                format: binary
-                            example:
-                                - 83
-                                - 97
-                                - 101
-                                - 112
-                                - 101
-                                - 32
-                                - 105
-                                - 110
-                                - 118
-                                - 101
-                                - 110
-                                - 116
-                                - 111
-                                - 114
-                                - 101
-                                - 32
-                                - 101
-                                - 116
-                                - 46
-    /concatbytesfield/{a}/{b}:
-        get:
-            tags:
-                - text
-            summary: concatbytesfield text
-            operationId: text#concatbytesfield
-            parameters:
-                - name: a
-                  in: path
-                  description: Left operand
-                  required: true
-                  schema:
-                    type: string
-                    description: Left operand
-                    example: Ut sed perspiciatis ducimus voluptas similique.
-                  example: Iusto a fugiat vitae sequi ut impedit.
                 - name: b
                   in: path
                   description: Right operand
@@ -108,8 +29,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Architecto dignissimos fuga non.
-                  example: Rerum deserunt cupiditate in architecto.
+                    example: Saepe inventore et.
+                  example: Non aut sapiente nemo hic.
             responses:
                 "200":
                     description: OK response.
@@ -140,49 +61,112 @@ paths:
                                     - 46
                                 format: binary
                             example:
-                                - 82
-                                - 101
-                                - 109
-                                - 32
+                                - 86
+                                - 111
+                                - 108
+                                - 117
+                                - 112
+                                - 116
+                                - 97
                                 - 115
-                                - 101
-                                - 100
                                 - 32
                                 - 97
-                                - 116
-                                - 113
-                                - 117
-                                - 101
-                                - 32
                                 - 117
                                 - 116
                                 - 32
-                                - 101
-                                - 118
-                                - 101
-                                - 110
                                 - 105
-                                - 101
-                                - 116
-                                - 32
-                                - 118
-                                - 111
-                                - 108
-                                - 117
                                 - 112
-                                - 116
+                                - 115
                                 - 97
+                                - 109
+                                - 46
+    /concatbytesfield/{a}/{b}:
+        get:
+            tags:
+                - text
+            summary: concatbytesfield text
+            operationId: text#concatbytesfield
+            parameters:
+                - name: a
+                  in: path
+                  description: Left operand
+                  required: true
+                  schema:
+                    type: string
+                    description: Left operand
+                    example: Architecto dignissimos fuga non.
+                  example: Rerum deserunt cupiditate in architecto.
+                - name: b
+                  in: path
+                  description: Right operand
+                  required: true
+                  schema:
+                    type: string
+                    description: Right operand
+                    example: Rem sed atque ut eveniet voluptas voluptate.
+                  example: Nemo necessitatibus aliquid.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        text/html:
+                            schema:
+                                type: string
+                                example:
+                                    - 67
+                                    - 111
+                                    - 109
+                                    - 109
+                                    - 111
+                                    - 100
+                                    - 105
+                                    - 32
+                                    - 97
+                                    - 114
+                                    - 99
+                                    - 104
+                                    - 105
+                                    - 116
+                                    - 101
+                                    - 99
+                                    - 116
+                                    - 111
+                                    - 32
+                                    - 118
+                                    - 111
+                                    - 108
+                                    - 117
+                                    - 112
+                                    - 116
+                                    - 97
+                                    - 115
+                                    - 32
+                                    - 110
+                                    - 111
+                                    - 98
+                                    - 105
+                                    - 115
+                                    - 46
+                                format: binary
+                            example:
+                                - 80
+                                - 101
+                                - 114
+                                - 115
+                                - 112
+                                - 105
+                                - 99
+                                - 105
+                                - 97
+                                - 116
+                                - 105
                                 - 115
                                 - 32
-                                - 118
-                                - 111
-                                - 108
                                 - 117
-                                - 112
-                                - 116
+                                - 108
+                                - 108
                                 - 97
-                                - 116
-                                - 101
+                                - 109
                                 - 46
     /concatstringfield/{a}/{b}:
         get:
@@ -198,8 +182,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Non aut sapiente nemo hic.
-                  example: Voluptas aut ipsam.
+                    example: Pariatur sit vero accusamus corrupti neque.
+                  example: Ab nisi autem.
                 - name: b
                   in: path
                   description: Right operand
@@ -207,8 +191,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Pariatur sit vero accusamus corrupti neque.
-                  example: Ab nisi autem.
+                    example: Odit et ut repellendus.
+                  example: Ut sed perspiciatis ducimus voluptas similique.
             responses:
                 "200":
                     description: OK response.
@@ -216,8 +200,8 @@ paths:
                         text/html:
                             schema:
                                 type: string
-                                example: Nihil a molestiae vitae.
-                            example: Odit et ut repellendus.
+                                example: Asperiores rerum laudantium.
+                            example: Iusto a fugiat vitae sequi ut impedit.
     /concatstrings/{a}/{b}:
         get:
             tags:
@@ -232,8 +216,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Asperiores rerum laudantium.
-                  example: Commodi architecto voluptas nobis.
+                    example: Temporibus itaque facilis animi laudantium fugiat.
+                  example: Ut esse aliquam sunt sed dolor quam.
                 - name: b
                   in: path
                   description: Right operand
@@ -241,8 +225,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Temporibus itaque facilis animi laudantium fugiat.
-                  example: Ut esse aliquam sunt sed dolor quam.
+                    example: Velit aliquid magni.
+                  example: Et velit aut fugit possimus.
             responses:
                 "200":
                     description: OK response.
@@ -250,8 +234,8 @@ paths:
                         text/html:
                             schema:
                                 type: string
-                                example: Alias corporis.
-                            example: Velit aliquid magni.
+                                example: Nihil a molestiae vitae.
+                            example: Et culpa quis aut.
     /swagger.json:
         get:
             tags:
@@ -269,10 +253,46 @@ components:
                 bytesfield:
                     type: string
                     example:
-                        - 79
-                        - 100
+                        - 70
+                        - 117
+                        - 103
                         - 105
+                        - 116
+                        - 32
+                        - 115
+                        - 105
+                        - 109
+                        - 105
+                        - 108
+                        - 105
+                        - 113
+                        - 117
+                        - 101
+                        - 32
+                        - 99
                         - 111
+                        - 110
+                        - 115
+                        - 101
+                        - 113
+                        - 117
+                        - 97
+                        - 116
+                        - 117
+                        - 114
+                        - 32
+                        - 101
+                        - 116
+                        - 32
+                        - 109
+                        - 111
+                        - 108
+                        - 101
+                        - 115
+                        - 116
+                        - 105
+                        - 97
+                        - 115
                         - 32
                         - 98
                         - 101
@@ -280,89 +300,39 @@ components:
                         - 116
                         - 97
                         - 101
-                        - 32
-                        - 102
-                        - 97
-                        - 99
-                        - 101
-                        - 114
-                        - 101
-                        - 32
-                        - 113
-                        - 117
-                        - 105
-                        - 115
-                        - 113
-                        - 117
-                        - 97
-                        - 109
-                        - 32
-                        - 118
-                        - 111
-                        - 108
-                        - 117
-                        - 112
-                        - 116
-                        - 97
-                        - 116
-                        - 101
-                        - 115
                         - 46
                     format: binary
                 stringfield:
                     type: string
-                    example: Tempora quia quia omnis quia reiciendis nostrum.
+                    example: Aut molestias magni iusto ad aut.
             example:
                 bytesfield:
-                    - 70
-                    - 117
-                    - 103
-                    - 105
+                    - 69
                     - 116
                     - 32
-                    - 115
-                    - 105
-                    - 109
-                    - 105
-                    - 108
-                    - 105
-                    - 113
+                    - 97
                     - 117
-                    - 101
+                    - 116
                     - 32
-                    - 99
-                    - 111
                     - 110
-                    - 115
                     - 101
-                    - 113
-                    - 117
+                    - 99
+                    - 101
+                    - 115
+                    - 115
+                    - 105
+                    - 116
                     - 97
-                    - 116
-                    - 117
-                    - 114
-                    - 32
-                    - 101
-                    - 116
-                    - 32
-                    - 109
-                    - 111
-                    - 108
-                    - 101
-                    - 115
                     - 116
                     - 105
-                    - 97
+                    - 98
+                    - 117
                     - 115
                     - 32
-                    - 98
-                    - 101
                     - 97
-                    - 116
-                    - 97
-                    - 101
+                    - 100
                     - 46
-                stringfield: Aut molestias magni iusto ad aut.
+                stringfield: Alias corporis.
 tags:
     - name: text
       description: The text service performs operations on strings

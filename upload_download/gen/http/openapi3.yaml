@@ -21,8 +21,8 @@ paths:
                   schema:
                     type: string
                     description: Path to downloaded file.
-                    example: Esse atque consequatur quis et.
-                  example: Odit architecto eos id dolores.
+                    example: Architecto eos id dolores ducimus quo culpa.
+                  example: Perspiciatis est culpa sed error et.
             responses:
                 "200":
                     description: OK response.
@@ -126,7 +126,7 @@ components:
                     example: false
             description: Error returned when the Content-Type header does not define a multipart request.
             example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request

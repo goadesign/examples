@@ -20,24 +20,24 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Qui veritatis ea suscipit.
-                            example: Aspernatur nulla deleniti.
+                                example: Adipisci nihil quis modi quaerat itaque.
+                            example: Eum adipisci iusto occaecati rerum earum.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Voluptas quia eligendi et eaque.
-                            example: Sunt sit voluptatibus.
+                                example: Earum quae fugiat enim.
+                            example: Sint consequatur sit cupiditate neque vel sint.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Molestiae iure assumenda.
-                            example: Atque et magnam blanditiis voluptates.
+                                example: Et architecto est numquam commodi rerum est.
+                            example: Nihil sed.
             security:
                 - jwt_header_Authorization:
                     - stream:write
@@ -56,8 +56,8 @@ paths:
                   schema:
                     type: string
                     description: View to use to render the result
-                    example: Nihil sed.
-                  example: Impedit ut odio vel saepe illum iusto.
+                    example: Aut incidunt deserunt est modi earum.
+                  example: Aut expedita ea cupiditate dolor.
             responses:
                 "101":
                     description: Switching Protocols response.
@@ -66,25 +66,25 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/GoaSummary'
                             example:
-                                length: 7051438596234715468
-                                message: Consequatur facilis perferendis ad quos.
-                                sent_at: "1997-03-12T03:19:42Z"
+                                length: 5227746826151536988
+                                message: Fugit et id cum cum.
+                                sent_at: "1978-02-25T14:12:07Z"
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Quaerat asperiores fugit ducimus dolorem.
-                            example: Inventore ut ut id eveniet eum eveniet.
+                                example: Soluta ipsam cupiditate.
+                            example: Et corrupti non.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Voluptates tempore non amet sunt aut deserunt.
-                            example: In in ut sint incidunt enim.
+                                example: Et sed.
+                            example: Quae dicta repudiandae dolorem ex a voluptatem.
             security:
                 - jwt_header_Authorization:
                     - stream:read
@@ -104,16 +104,16 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Doloremque quo neque rerum.
-                            example: Soluta ipsam cupiditate.
+                                example: Consequuntur cumque id aliquam aliquam.
+                            example: Impedit ut odio vel saepe illum iusto.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Reprehenderit autem necessitatibus esse unde adipisci.
-                            example: Et sed.
+                                example: Velit voluptates enim quo vel modi.
+                            example: Inventore ut ut id eveniet eum eveniet.
             security:
                 - jwt_header_Authorization:
                     - stream:write
@@ -132,16 +132,16 @@ paths:
                             schema:
                                 type: string
                                 description: New JWT token
-                                example: Laborum ducimus velit ipsam sequi.
-                            example: Repudiandae sunt molestias qui doloribus.
+                                example: Dolor aperiam doloremque.
+                            example: A ut ut aut voluptates sit.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Provident dolorum est voluptatibus enim aliquid.
-                            example: Et et amet.
+                                example: Neque rerum facilis.
+                            example: Quisquam deserunt suscipit quia.
             security:
                 - basic_header_Authorization: []
     /subscribe:
@@ -160,24 +160,24 @@ paths:
                                 $ref: '#/components/schemas/Event'
                             example:
                                 action: added
-                                added_at: "1995-12-26T18:55:28Z"
-                                message: Laudantium est consectetur ut.
+                                added_at: "1982-12-11T22:46:57Z"
+                                message: Unde ea recusandae.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Id error nulla.
-                            example: Eum adipisci iusto occaecati rerum earum.
+                                example: Sunt sit voluptatibus.
+                            example: Voluptatibus sint voluptatem incidunt fugiat odit.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Beatae dicta.
-                            example: Sint consequatur sit cupiditate neque vel sint.
+                                example: Atque et magnam blanditiis voluptates.
+                            example: Nobis nesciunt eaque voluptatibus est sit aut.
             security:
                 - jwt_header_Authorization:
                     - stream:write
@@ -196,31 +196,34 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ChatSummaryResponseCollection'
                             example:
-                                - length: 7192545811968992741
-                                  message: In quo soluta ducimus blanditiis.
-                                  sent_at: "2000-11-29T18:15:59Z"
-                                - length: 7192545811968992741
-                                  message: In quo soluta ducimus blanditiis.
-                                  sent_at: "2000-11-29T18:15:59Z"
-                                - length: 7192545811968992741
-                                  message: In quo soluta ducimus blanditiis.
-                                  sent_at: "2000-11-29T18:15:59Z"
+                                - length: 1105227772908485323
+                                  message: Quidem et sint cupiditate at aut.
+                                  sent_at: "1988-11-26T16:43:27Z"
+                                - length: 1105227772908485323
+                                  message: Quidem et sint cupiditate at aut.
+                                  sent_at: "1988-11-26T16:43:27Z"
+                                - length: 1105227772908485323
+                                  message: Quidem et sint cupiditate at aut.
+                                  sent_at: "1988-11-26T16:43:27Z"
+                                - length: 1105227772908485323
+                                  message: Quidem et sint cupiditate at aut.
+                                  sent_at: "1988-11-26T16:43:27Z"
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Inventore dolores.
-                            example: A ut ut aut voluptates sit.
+                                example: Et et amet.
+                            example: In in ut sint incidunt enim.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Iusto neque minus sit quae incidunt.
-                            example: Quisquam deserunt suscipit quia.
+                                example: Aspernatur nulla deleniti.
+                            example: Optio fugit sunt quod incidunt.
             security:
                 - jwt_header_Authorization:
                     - stream:write
@@ -232,22 +235,22 @@ components:
                 length:
                     type: integer
                     description: Length of the message sent
-                    example: 8660456896459588679
+                    example: 7238520324567891595
                     format: int64
                 message:
                     type: string
                     description: Message sent to the server
-                    example: Itaque tempore earum quae fugiat enim.
+                    example: Corporis nisi praesentium eaque.
                 sent_at:
                     type: string
                     description: Time at which the message was sent
-                    example: "2016-01-14T18:54:25Z"
+                    example: "1988-04-06T15:46:04Z"
                     format: date-time
             description: ChatSummaryResponse result type (default view)
             example:
-                length: 8740123299469121795
-                message: Iusto quis quibusdam voluptatum nemo.
-                sent_at: "1974-11-23T04:59:48Z"
+                length: 1644665013397551871
+                message: Perspiciatis aliquid aut impedit et.
+                sent_at: "1979-10-21T06:46:08Z"
             required:
                 - message
                 - sent_at
@@ -257,12 +260,12 @@ components:
                 $ref: '#/components/schemas/ChatSummaryResponse'
             description: SummaryResponseBody is the result type for an array of ChatSummaryResponse (default view)
             example:
-                - length: 7192545811968992741
-                  message: In quo soluta ducimus blanditiis.
-                  sent_at: "2000-11-29T18:15:59Z"
-                - length: 7192545811968992741
-                  message: In quo soluta ducimus blanditiis.
-                  sent_at: "2000-11-29T18:15:59Z"
+                - length: 1105227772908485323
+                  message: Quidem et sint cupiditate at aut.
+                  sent_at: "1988-11-26T16:43:27Z"
+                - length: 1105227772908485323
+                  message: Quidem et sint cupiditate at aut.
+                  sent_at: "1988-11-26T16:43:27Z"
         Event:
             type: object
             properties:
@@ -274,16 +277,16 @@ components:
                 added_at:
                     type: string
                     description: Time at which the message was added
-                    example: "2012-03-30T14:32:29Z"
+                    example: "1995-02-24T08:42:47Z"
                     format: date-time
                 message:
                     type: string
                     description: Message sent to the server
-                    example: Corporis dolorem.
+                    example: Quidem aut est.
             example:
                 action: added
-                added_at: "1984-08-20T15:36:58Z"
-                message: Et fuga architecto deserunt expedita porro.
+                added_at: "2001-10-24T02:08:53Z"
+                message: Aut qui qui quo omnis.
             required:
                 - message
                 - action
@@ -294,21 +297,21 @@ components:
                 length:
                     type: integer
                     description: Length of the message sent
-                    example: 2861419859645713776
+                    example: 767232288878080996
                     format: int64
                 message:
                     type: string
                     description: Message sent to the server
-                    example: Omnis molestiae atque a.
+                    example: Modi quasi ipsa cupiditate itaque.
                 sent_at:
                     type: string
                     description: Time at which the message was sent
-                    example: "2003-04-11T08:29:04Z"
+                    example: "1979-06-19T02:02:38Z"
                     format: date-time
             example:
-                length: 4296683829615391764
-                message: Dolore libero pariatur est.
-                sent_at: "2014-08-22T15:57:57Z"
+                length: 3872568260242236993
+                message: Corrupti impedit laborum.
+                sent_at: "1991-07-21T11:42:29Z"
             required:
                 - message
                 - sent_at

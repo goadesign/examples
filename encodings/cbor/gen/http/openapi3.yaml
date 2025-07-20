@@ -20,8 +20,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Recusandae quo qui.
-                  example: Similique animi sapiente quas ea sunt iure.
+                    example: Similique animi sapiente quas ea sunt iure.
+                  example: Totam aliquid dolores consequatur et exercitationem harum.
                 - name: b
                   in: path
                   description: Right operand
@@ -29,8 +29,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Totam aliquid dolores consequatur et exercitationem harum.
-                  example: Quia dolor non dolorem quia.
+                    example: Quia dolor non dolorem quia.
+                  example: Totam maxime cumque placeat facere.
             responses:
                 "200":
                     description: OK response.
@@ -38,8 +38,8 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Consequatur omnis.
-                            example: Totam maxime cumque placeat facere.
+                                example: Recusandae quo qui.
+                            example: Nesciunt praesentium atque fugiat pariatur.
 components: {}
 tags:
     - name: concat

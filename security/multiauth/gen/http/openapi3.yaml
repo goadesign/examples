@@ -23,7 +23,7 @@ paths:
                     type: boolean
                     description: Whether to force auth failure even with a valid JWT
                     example: false
-                  example: true
+                  example: false
             responses:
                 "200":
                     description: OK response.
@@ -31,24 +31,24 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Non consequuntur numquam voluptatum temporibus.
-                            example: Incidunt minima eos amet voluptas quia fuga.
+                                example: Quos ut est ipsum consequatur fugiat at.
+                            example: Consequuntur libero aliquid error dolorem deserunt.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Aut expedita optio.
-                            example: Provident veritatis tempora nesciunt molestiae consequuntur libero.
+                                example: Atque eum unde vero dicta minus minima.
+                            example: Ratione voluptas.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Facilis dolores sunt nihil ut dolore et.
-                            example: Id facere est.
+                                example: Maiores porro alias.
+                            example: Ex nulla.
             security:
                 - jwt_header_Authorization:
                     - api:read
@@ -73,8 +73,8 @@ paths:
                   allowEmptyValue: true
                   schema:
                     type: string
-                    example: Alias architecto quasi.
-                  example: Ipsum modi saepe.
+                    example: Eaque pariatur eos laborum.
+                  example: Consequatur blanditiis consectetur quis.
                 - name: X-Authorization
                   in: header
                   description: JWT used for authentication
@@ -91,24 +91,24 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Tenetur et eaque nesciunt.
-                            example: Eaque pariatur eos laborum.
+                                example: Sed ipsam at hic optio dolores aut.
+                            example: Ad explicabo sed.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Non nisi error ut inventore sequi.
-                            example: Ad explicabo sed.
+                                example: Amet voluptas quia.
+                            example: Nam et consequuntur nemo sit cum.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Repudiandae qui sed optio odit dignissimos.
-                            example: Consequatur blanditiis consectetur quis.
+                                example: Rerum aut incidunt minima.
+                            example: Dolorem et totam nemo numquam eum.
             security:
                 - api_key_query_k: []
                   jwt_header_X-Authorization:
@@ -142,24 +142,24 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Quos ut est ipsum consequatur fugiat at.
-                            example: Error dolorem deserunt similique ex.
+                                example: Tenetur et eaque nesciunt.
+                            example: Quo dicta error et et officiis.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Atque eum unde vero dicta minus minima.
-                            example: Error et et officiis unde.
+                                example: Non nisi error ut inventore sequi.
+                            example: Soluta ipsum modi saepe.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Maiores porro alias.
-                            example: Delectus ratione voluptas sit quo.
+                                example: Repudiandae qui sed optio odit dignissimos.
+                            example: Corrupti alias architecto.
             security:
                 - api_key_query_k: []
                   jwt_header_Authorization:
@@ -189,8 +189,8 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Magni perferendis unde itaque.
-                            example: Sed ipsam at hic optio dolores aut.
+                                example: Aut expedita optio.
+                            example: Sunt id facere est suscipit provident veritatis.
             security:
                 - basic_header_Authorization: []
 components:
