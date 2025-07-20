@@ -100,10 +100,10 @@ func main() {
 	mux := goahttp.NewMuxer()
 	requestDecoder := goahttp.RequestDecoder
 	responseEncoder := goahttp.ResponseEncoder
-	
+
 	// Use the embedded OpenAPI files from the top-level package
 	openAPIFS := concerts.OpenAPIFileSystem()
-	
+
 	handler := genhttp.New(endpoints, mux, requestDecoder, responseEncoder, nil, nil, openAPIFS, openAPIFS)
 
 	// Mount the handler on the mux
