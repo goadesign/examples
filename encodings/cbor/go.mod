@@ -6,7 +6,7 @@ toolchain go1.23.6
 
 require (
 	github.com/fxamacker/cbor/v2 v2.5.0
-	goa.design/goa/v3 v3.21.4
+	goa.design/goa/v3 v3.21.5
 )
 
 require (

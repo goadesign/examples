@@ -54,8 +54,8 @@ go.opentelemetry.io/otel/sdk/metric v1.35.0 h1:1RriWBmCKgkeHEhM7a2uMjMUfP7MsOF5J
 go.opentelemetry.io/otel/sdk/metric v1.35.0/go.mod h1:is6XYCUMpcKi+ZsOvfluY5YstFnhW0BidkR+gL+qN+w=
 go.opentelemetry.io/otel/trace v1.35.0 h1:dPpEfJu1sDIqruz7BHFG3c7528f6ddfSWfFDVt/xgMs=
 go.opentelemetry.io/otel/trace v1.35.0/go.mod h1:WUk7DtFp1Aw2MkvqGdwiXYDZZNvA/1J8o6xRXLrIkyc=
-goa.design/goa/v3 v3.21.4 h1:r11hmYi67gwP+oKy+V8AzI4/WxPXqD9fwZbh7HMU4Vc=
-goa.design/goa/v3 v3.21.4/go.mod h1:5THVDuChOIctYM+t3xmL4f2fJbFPzzwvrYMj3PQZg9g=
+goa.design/goa/v3 v3.21.5 h1:eS6SHJ1KZ5q5bhT/llw0LMTCWbosBwlFX4v8MctYs38=
+goa.design/goa/v3 v3.21.5/go.mod h1:5THVDuChOIctYM+t3xmL4f2fJbFPzzwvrYMj3PQZg9g=
 golang.org/x/mod v0.25.0 h1:n7a+ZbQKQA/Ysbyb0/6IbB1H/X41mKgbhfv7AfG/44w=
 golang.org/x/mod v0.25.0/go.mod h1:IXM97Txy2VM4PJ3gI61r1YEk/gAj6zAHN3AdZt6S9Ww=
 golang.org/x/net v0.41.0 h1:vBTly1HeNPEn3wtREYfy4GZ/NECgw2Cnl+nK6Nz3uvw=

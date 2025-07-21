@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.23.6
 
 require (
-	goa.design/goa/v3 v3.21.4
+	goa.design/goa/v3 v3.21.5
 	google.golang.org/genproto v0.0.0-20250428153025-10db94c68c34
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.6

@@ -4,7 +4,7 @@ go 1.23.0
 
 toolchain go1.23.6
 
-require goa.design/goa/v3 v3.21.4
+require goa.design/goa/v3 v3.21.5
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
