@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"slices"
+	"sort"
 	"strings"
 
 	goa "goa.design/goa/v3/pkg"
@@ -23,6 +25,7 @@ func main() {
 	)
 	flag.Usage = usage
 	flag.Parse()
+
 	var (
 		addr    string
 		timeout int
@@ -56,6 +59,7 @@ func main() {
 		scheme = u.Scheme
 		host = u.Host
 	}
+
 	var (
 		endpoint goa.Endpoint
 		payload  any
@@ -92,6 +96,10 @@ func main() {
 }
 
 func usage() {
+	var usageCommands []string
+	usageCommands = append(usageCommands, httpUsageCommands()...)
+	sort.Strings(usageCommands)
+	usageCommands = slices.Compact(usageCommands)
 	fmt.Fprintf(os.Stderr, `%s is a command line client for the concat API.
 
 Usage:
@@ -109,12 +117,12 @@ Additional help:
 
 Example:
 %s
-`, os.Args[0], os.Args[0], indent(httpUsageCommands()), os.Args[0], indent(httpUsageExamples()))
+`, os.Args[0], os.Args[0], indent(strings.Join(usageCommands, "\n")), os.Args[0], indent(httpUsageExamples()))
 }
 
 func indent(s string) string {
 	if s == "" {
 		return ""
 	}
-	return "    " + strings.Replace(s, "\n", "\n    ", -1)
+	return "    " + strings.ReplaceAll(s, "\n", "\n    ")
 }

@@ -46,7 +46,7 @@ var _ = Service("tus", func() {
 		Description("Clients use the HEAD request to determine the offset at which the upload should be continued.")
 		Payload(func() {
 			Reference(TUSCoreHeaders)
-			ID()
+			UploadID()
 			Attribute("tusResumable")
 			Required("id", "tusResumable")
 		})
@@ -90,7 +90,7 @@ var _ = Service("tus", func() {
 		Payload(func() {
 			Reference(TUSCoreHeaders)
 			Reference(TUSExtensionHeaders)
-			ID()
+			UploadID()
 			Attribute("tusResumable")
 			Attribute("uploadOffset")
 			Attribute("uploadChecksum")
@@ -249,7 +249,7 @@ var _ = Service("tus", func() {
 		Description("Clients use the DELETE method to terminate completed and unfinished uploads allowing the Server to free up used resources.")
 		Payload(func() {
 			Reference(TUSCoreHeaders)
-			ID()
+			UploadID()
 			Attribute("tusResumable")
 			Required("id", "tusResumable")
 		})
@@ -336,7 +336,15 @@ var TUSExtensionHeaders = Type("TUSExtensionHeaders", func() {
 })
 
 // ID is the attribute used to represent upload identifiers.
-func ID() {
+func UploadUploadID() {
+	Attribute("id", String, "id is the unique upload identifier.", func() {
+		Description("IDs are generated using Xid: https://github.com/rs/xid")
+		Pattern(`[0-9a-v]{20}`)
+	})
+}
+
+// UploadID is the attribute used to represent upload identifiers.
+func UploadID() {
 	Attribute("id", String, "id is the unique upload identifier.", func() {
 		Description("IDs are generated using Xid: https://github.com/rs/xid")
 		Pattern(`[0-9a-v]{20}`)

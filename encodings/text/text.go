@@ -3,7 +3,6 @@ package encodings
 import (
 	"context"
 	"fmt"
-	"log"
 
 	text "goa.design/examples/encodings/text/gen/text"
 )
@@ -11,12 +10,11 @@ import (
 // text service example implementation.
 // The example methods log the requests and return zero values.
 type textsrvc struct {
-	logger *log.Logger
 }
 
 // NewText returns the text service implementation.
-func NewText(logger *log.Logger) text.Service {
-	return &textsrvc{logger}
+func NewText() text.Service {
+	return &textsrvc{}
 }
 
 // Concatstrings implements Concatstrings.

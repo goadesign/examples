@@ -113,7 +113,7 @@ Additional help:
 
 Example:
 %s
-`, os.Args[0], os.Args[0], indent(httpUsageCommands()), os.Args[0], indent(httpUsageExamples()))
+`, os.Args[0], os.Args[0], indent(strings.Join(httpUsageCommands(), "\n")), os.Args[0], indent(httpUsageExamples()))
 }
 
 func indent(s string) string {

@@ -50,6 +50,7 @@ func main() {
 	{
 		interceptorsSvc = interceptorsapi.NewInterceptors()
 	}
+
 	// Initialize the interceptors.
 	var (
 		interceptorsInterceptors interceptors.ServerInterceptors
