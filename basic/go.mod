@@ -1,8 +1,6 @@
 module goa.design/examples/basic
 
-go 1.24.0
-
-toolchain go1.24.2
+go 1.24.2
 
 require (
 	goa.design/clue v1.1.1
