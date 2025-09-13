@@ -1,6 +1,6 @@
 module goa.design/examples/streaming
 
-go 1.24.0
+go 1.24.2
 
 toolchain go1.24.5
 
