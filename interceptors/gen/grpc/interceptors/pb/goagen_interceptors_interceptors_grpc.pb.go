@@ -1,4 +1,4 @@
-// Code generated with goa v3.22.1, DO NOT EDIT.
+// Code generated with goa v3.22.2, DO NOT EDIT.
 //
 // interceptors protocol buffer definition
 //
