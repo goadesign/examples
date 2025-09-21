@@ -2,8 +2,6 @@ module goa.design/examples/tracing
 
 go 1.24.2
 
-toolchain go1.24.2
-
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	goa.design/examples/basic v0.0.0-20231014231032-46da41257452
@@ -12,7 +10,7 @@ require (
 )
 
 require (
-	github.com/go-chi/chi/v5 v5.2.1 // indirect
+	github.com/go-chi/chi/v5 v5.2.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
