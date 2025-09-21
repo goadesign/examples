@@ -6,7 +6,7 @@ toolchain go1.24.5
 
 require (
 	github.com/boltdb/bolt v1.3.1
-	goa.design/goa/v3 v3.22.2
+	goa.design/goa/v3 v3.22.3
 	google.golang.org/grpc v1.75.1
 	google.golang.org/protobuf v1.36.9
 )

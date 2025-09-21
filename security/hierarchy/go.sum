@@ -34,8 +34,8 @@ github.com/rogpeppe/go-internal v1.13.1 h1:KvO1DLK/DRN07sQ1LQKScxyZJuNnedQ5/wKSR
 github.com/rogpeppe/go-internal v1.13.1/go.mod h1:uMEvuHeurkdAXX61udpOXGD/AzZDWNMNyH2VO9fmH0o=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
-goa.design/goa/v3 v3.22.2 h1:gDKkLxGw+HA7ChszuW/DVygiaIncpkjV+ohopRmDkTs=
-goa.design/goa/v3 v3.22.2/go.mod h1:uoL/ToZDMYwpxy1UM946W8bFKz8wCBzXcqs3ZwrsUkw=
+goa.design/goa/v3 v3.22.3 h1:OYC6j7j5zkHaJk+j78EL0tZ2PnlGj/70kPRuLNi/k80=
+goa.design/goa/v3 v3.22.3/go.mod h1:uoL/ToZDMYwpxy1UM946W8bFKz8wCBzXcqs3ZwrsUkw=
 golang.org/x/mod v0.28.0 h1:gQBtGhjxykdjY9YhZpSlZIsbnaE2+PgjfLWUQTnoZ1U=
 golang.org/x/mod v0.28.0/go.mod h1:yfB/L0NOf/kmEbXjzCPOx1iK1fRutOydrCMsqRhEBxI=
 golang.org/x/sync v0.17.0 h1:l60nONMj9l5drqw6jlhIELNv9I0A4OFgRsG9k2oT9Ug=
