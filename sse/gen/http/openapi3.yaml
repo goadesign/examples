@@ -6,20 +6,22 @@ servers:
     - url: http://localhost:80
       description: Default server for monitor
 paths:
-    /{*filepath}:
+    /{filepath}:
         get:
             tags:
                 - monitor
             summary: Download public
-            operationId: monitor#/{*filepath}
+            operationId: monitor#/{filepath}
             parameters:
                 - name: filepath
                   in: path
                   description: Relative file path
                   required: true
+                  schema:
+                    type: string
             responses:
                 "200":
-                    description: File not found
+                    description: File downloaded
                 "404":
                     description: File not found
     /monitor:
