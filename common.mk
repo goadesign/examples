@@ -70,7 +70,7 @@ build:
 	@go build "./cmd/$(APP)" && go build "./cmd/$(APP)-cli"
 
 clean:
-	@rm -rf "./cmd/$(APP)" "./cmd/$(APP)-cli"
+	@rm -f "./$(APP)" "./$(APP)-cli"
 
 test:
 	@echo TESTING...
