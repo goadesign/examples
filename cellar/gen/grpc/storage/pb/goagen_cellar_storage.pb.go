@@ -1,4 +1,4 @@
-// Code generated with goa v3.23.4, DO NOT EDIT.
+// Code generated with goa v3.24.0, DO NOT EDIT.
 //
 // storage protocol buffer definition
 //
