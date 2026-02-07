@@ -6,7 +6,7 @@ toolchain go1.24.5
 
 require (
 	goa.design/clue v1.2.2
-	goa.design/goa/v3 v3.24.2
+	goa.design/goa/v3 v3.24.3
 )
 
 require (
