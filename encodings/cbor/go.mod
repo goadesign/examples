@@ -7,7 +7,7 @@ toolchain go1.24.5
 require (
 	github.com/fxamacker/cbor/v2 v2.5.0
 	goa.design/clue v1.2.2
-	goa.design/goa/v3 v3.25.2
+	goa.design/goa/v3 v3.25.3
 )
 
 require (
