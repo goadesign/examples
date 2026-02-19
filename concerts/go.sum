@@ -22,8 +22,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
-goa.design/goa/v3 v3.25.0 h1:6WyjTqAjE9KAmBq/8Tbtr12ODmf+OpTvg5imI95x4/w=
-goa.design/goa/v3 v3.25.0/go.mod h1:VZ8CcXJRZh09ijtNJJS2gNyKufpmrM+Ul/Qy3viwcOU=
+goa.design/goa/v3 v3.25.2 h1:8Sa8PtDsWAWU/Z2BDCAH+NM6VSEuwEuqj4AJwapVgOw=
+goa.design/goa/v3 v3.25.2/go.mod h1:VZ8CcXJRZh09ijtNJJS2gNyKufpmrM+Ul/Qy3viwcOU=
 golang.org/x/mod v0.32.0 h1:9F4d3PHLljb6x//jOyokMv3eX+YDeepZSEo3mFJy93c=
 golang.org/x/mod v0.32.0/go.mod h1:SgipZ/3h2Ci89DlEtEXWUk/HteuRin+HHhN+WbNhguU=
 golang.org/x/sync v0.19.0 h1:vV+1eWNmZ5geRlYjzm2adRgW2/mcpevXNg50YZtPCE4=
