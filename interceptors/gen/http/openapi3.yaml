@@ -21,9 +21,19 @@ paths:
                   schema:
                     type: string
                     description: Valid UUID representation as per RFC 4122
-                    example: 2ddfa9da-5328-4356-94d1-4e34d31453ca
+                    example: 2ddfa9da-5328-448f-a674-0443ca5f4159
                     format: uuid
                   example: b39b771d-1348-4566-bde1-e935e7a128c7
+                - name: Authorization
+                  in: header
+                  description: JWT auth token
+                  allowEmptyValue: true
+                  required: true
+                  schema:
+                    type: string
+                    description: JWT auth token
+                    example: Magni dolorem quos iure est corporis.
+                  example: Aut aut aut dolor.
             requestBody:
                 required: true
                 content:
@@ -78,6 +88,16 @@ paths:
                     example: 370aa339-18db-4cc2-a207-97b4771131ff
                     format: uuid
                   example: b39b771d-1348-4566-bde1-e935e7a128c7
+                - name: Authorization
+                  in: header
+                  description: JWT auth token
+                  allowEmptyValue: true
+                  required: true
+                  schema:
+                    type: string
+                    description: JWT auth token
+                    example: Necessitatibus ducimus vitae possimus quia.
+                  example: Qui distinctio corrupti est incidunt eos ut.
             requestBody:
                 required: true
                 content:
@@ -131,9 +151,19 @@ paths:
                   schema:
                     type: string
                     description: Valid UUID representation as per RFC 4122
-                    example: cd3fee4d-4954-4061-a28a-b9005ec4d411
+                    example: 38f752d6-fbba-415a-9c5b-d8a0d73f2146
                     format: uuid
                   example: b39b771d-1348-4566-bde1-e935e7a128c7
+                - name: Authorization
+                  in: header
+                  description: JWT auth token
+                  allowEmptyValue: true
+                  required: true
+                  schema:
+                    type: string
+                    description: JWT auth token
+                    example: Est totam maxime quidem quae.
+                  example: Expedita modi est vitae necessitatibus.
             responses:
                 "101":
                     description: Switching Protocols response.

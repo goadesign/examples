@@ -1,12 +1,10 @@
 module goa.design/examples/cellar
 
-go 1.24.2
-
-toolchain go1.24.5
+go 1.26.0
 
 require (
 	github.com/boltdb/bolt v1.3.1
-	goa.design/goa/v3 v3.25.3
+	goa.design/goa/v3 v3.26.0
 	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
 )

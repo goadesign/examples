@@ -30,11 +30,6 @@ paths:
                   description: Whether to force auth failure even with a valid JWT
                   required: false
                   type: boolean
-                - name: Authorization
-                  in: header
-                  description: JWT used for authentication
-                  required: true
-                  type: string
             responses:
                 "200":
                     description: OK response.
@@ -67,17 +62,6 @@ paths:
                   * `api:read`
                   * `api:write`
             operationId: secured_service#doubly_secure
-            parameters:
-                - name: k
-                  in: query
-                  description: API key
-                  required: true
-                  type: string
-                - name: Authorization
-                  in: header
-                  description: JWT used for authentication
-                  required: true
-                  type: string
             responses:
                 "200":
                     description: OK response.
@@ -115,26 +99,6 @@ paths:
                   * `api:read`
                   * `api:write`
             operationId: secured_service#also_doubly_secure
-            parameters:
-                - name: k
-                  in: query
-                  description: API key
-                  required: false
-                  type: string
-                - name: oauth
-                  in: query
-                  required: false
-                  type: string
-                - name: X-Authorization
-                  in: header
-                  description: JWT used for authentication
-                  required: false
-                  type: string
-                - name: Authorization
-                  in: header
-                  description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
-                  required: false
-                  type: string
             responses:
                 "200":
                     description: OK response.
@@ -164,12 +128,6 @@ paths:
             summary: signin secured_service
             description: Creates a valid JWT
             operationId: secured_service#signin
-            parameters:
-                - name: Authorization
-                  in: header
-                  description: Basic Auth security using Basic scheme (https://tools.ietf.org/html/rfc7617)
-                  required: true
-                  type: string
             responses:
                 "200":
                     description: OK response.

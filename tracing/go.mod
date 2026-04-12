@@ -1,6 +1,6 @@
 module goa.design/examples/tracing
 
-go 1.24.2
+go 1.26.0
 
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0

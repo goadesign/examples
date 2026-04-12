@@ -58,32 +58,6 @@ paths:
             summary: also_doubly_secure secured_service
             description: This action is secured with the jwt scheme and also requires an API key header.
             operationId: secured_service#also_doubly_secure
-            parameters:
-                - name: k
-                  in: query
-                  description: API key
-                  allowEmptyValue: true
-                  schema:
-                    type: string
-                    description: API key
-                    example: abcdef12345
-                  example: abcdef12345
-                - name: oauth
-                  in: query
-                  allowEmptyValue: true
-                  schema:
-                    type: string
-                    example: Eaque pariatur eos laborum.
-                  example: Consequatur blanditiis consectetur quis.
-                - name: X-Authorization
-                  in: header
-                  description: JWT used for authentication
-                  allowEmptyValue: true
-                  schema:
-                    type: string
-                    description: JWT used for authentication
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
-                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
             responses:
                 "200":
                     description: OK response.
@@ -92,7 +66,7 @@ paths:
                             schema:
                                 type: string
                                 example: Sed ipsam at hic optio dolores aut.
-                            example: Ad explicabo sed.
+                            example: Eaque pariatur eos laborum.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
@@ -100,7 +74,7 @@ paths:
                             schema:
                                 type: string
                                 example: Amet voluptas quia.
-                            example: Nam et consequuntur nemo sit cum.
+                            example: Ad explicabo sed.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
@@ -108,7 +82,7 @@ paths:
                             schema:
                                 type: string
                                 example: Rerum aut incidunt minima.
-                            example: Dolorem et totam nemo numquam eum.
+                            example: Consequatur blanditiis consectetur quis.
             security:
                 - api_key_query_k: []
                   jwt_header_X-Authorization:
@@ -124,17 +98,6 @@ paths:
             summary: doubly_secure secured_service
             description: This action is secured with the jwt scheme and also requires an API key query string.
             operationId: secured_service#doubly_secure
-            parameters:
-                - name: k
-                  in: query
-                  description: API key
-                  allowEmptyValue: true
-                  required: true
-                  schema:
-                    type: string
-                    description: API key
-                    example: abcdef12345
-                  example: abcdef12345
             responses:
                 "200":
                     description: OK response.

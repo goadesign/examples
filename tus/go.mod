@@ -1,12 +1,10 @@
 module goa.design/examples/tus
 
-go 1.24.2
-
-toolchain go1.24.5
+go 1.26.0
 
 require (
 	github.com/rs/xid v1.5.0
-	goa.design/goa/v3 v3.25.3
+	goa.design/goa/v3 v3.26.0
 )
 
 require (

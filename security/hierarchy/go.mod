@@ -1,10 +1,8 @@
 module goa.design/examples/security/hierarchy
 
-go 1.24.2
+go 1.26.0
 
-toolchain go1.24.5
-
-require goa.design/goa/v3 v3.25.3
+require goa.design/goa/v3 v3.26.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

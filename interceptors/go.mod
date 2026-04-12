@@ -1,12 +1,12 @@
 module goa.design/examples/interceptors
 
-go 1.24.2
+go 1.26.0
 
 require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	goa.design/clue v1.1.1
-	goa.design/goa/v3 v3.25.3
+	goa.design/goa/v3 v3.26.0
 	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
 )
