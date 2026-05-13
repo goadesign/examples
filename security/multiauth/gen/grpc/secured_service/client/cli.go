@@ -42,7 +42,7 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 		if securedServiceSecureMessage != "" {
 			err = json.Unmarshal([]byte(securedServiceSecureMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"fail\": true\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"fail\": false\n   }'")
 			}
 		}
 	}
@@ -54,6 +54,19 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 		Fail: message.Fail,
 	}
 	v.Token = token
+
+	return v, nil
+}
+
+// BuildBearerSecurePayload builds the payload for the secured_service
+// bearer_secure endpoint from CLI flags.
+func BuildBearerSecurePayload(securedServiceBearerSecureBearerToken string) (*securedservice.BearerSecurePayload, error) {
+	var bearerToken string
+	{
+		bearerToken = securedServiceBearerSecureBearerToken
+	}
+	v := &securedservice.BearerSecurePayload{}
+	v.BearerToken = bearerToken
 
 	return v, nil
 }

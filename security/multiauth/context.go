@@ -10,6 +10,7 @@ type authInfo struct {
 	user   string
 	claims jwt.MapClaims
 	key    string
+	bearer string
 }
 
 func (auth authInfo) String() string {
@@ -19,6 +20,8 @@ func (auth authInfo) String() string {
 		return "AuthInfo: JWT/OAuth"
 	} else if auth.key != "" {
 		return "AuthInfo: API"
+	} else if auth.bearer != "" {
+		return "AuthInfo: Bearer"
 	} else {
 		return "AuthInfo: none"
 	}

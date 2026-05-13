@@ -26,3 +26,12 @@ func NewSecurePayload(token string) *apikeyservice.SecurePayload {
 
 	return v
 }
+
+// NewBearerSecurePayload builds a api_key_service service bearer_secure
+// endpoint payload.
+func NewBearerSecurePayload(bearerToken string) *apikeyservice.BearerSecurePayload {
+	v := &apikeyservice.BearerSecurePayload{}
+	v.BearerToken = bearerToken
+
+	return v
+}

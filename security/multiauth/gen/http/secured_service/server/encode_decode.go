@@ -154,6 +154,77 @@ func EncodeSecureError(encoder func(context.Context, http.ResponseWriter) goahtt
 	}
 }
 
+// EncodeBearerSecureResponse returns an encoder for responses returned by the
+// secured_service bearer_secure endpoint.
+func EncodeBearerSecureResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		res, _ := v.(string)
+		enc := encoder(ctx, w)
+		body := res
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeBearerSecureRequest returns a decoder for requests sent to the
+// secured_service bearer_secure endpoint.
+func DecodeBearerSecureRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*securedservice.BearerSecurePayload, error) {
+	return func(r *http.Request) (*securedservice.BearerSecurePayload, error) {
+		var payload *securedservice.BearerSecurePayload
+		var (
+			bearerToken string
+			err         error
+		)
+		bearerToken = r.Header.Get("Authorization")
+		if bearerToken == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("bearer_token", "header"))
+		}
+		if err != nil {
+			return payload, err
+		}
+		payload = NewBearerSecurePayload(bearerToken)
+		if strings.Contains(payload.BearerToken, " ") {
+			// Remove authorization scheme prefix (e.g. "Bearer")
+			cred := strings.SplitN(payload.BearerToken, " ", 2)[1]
+			payload.BearerToken = cred
+		}
+
+		return payload, nil
+	}
+}
+
+// EncodeBearerSecureError returns an encoder for errors returned by the
+// bearer_secure secured_service endpoint.
+func EncodeBearerSecureError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(ctx context.Context, err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en goa.GoaErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.GoaErrorName() {
+		case "invalid-scopes":
+			var res securedservice.InvalidScopes
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			body := res
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusForbidden)
+			return enc.Encode(body)
+		case "unauthorized":
+			var res securedservice.Unauthorized
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			body := res
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusUnauthorized)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodeDoublySecureResponse returns an encoder for responses returned by the
 // secured_service doubly_secure endpoint.
 func EncodeDoublySecureResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {

@@ -76,6 +76,28 @@ func (c *Client) Secure() goa.Endpoint {
 	}
 }
 
+// BearerSecure calls the "BearerSecure" function in
+// secured_servicepb.SecuredServiceClient interface.
+func (c *Client) BearerSecure() goa.Endpoint {
+	return func(ctx context.Context, v any) (any, error) {
+		inv := goagrpc.NewInvoker(
+			BuildBearerSecureFunc(c.grpccli, c.opts...),
+			EncodeBearerSecureRequest,
+			DecodeBearerSecureResponse)
+		res, err := inv.Invoke(ctx, v)
+		if err != nil {
+			resp := goagrpc.DecodeError(err)
+			switch message := resp.(type) {
+			case *goapb.ErrorResponse:
+				return nil, goagrpc.NewServiceError(message)
+			default:
+				return nil, goa.Fault("%s", err.Error())
+			}
+		}
+		return res, nil
+	}
+}
+
 // DoublySecure calls the "DoublySecure" function in
 // secured_servicepb.SecuredServiceClient interface.
 func (c *Client) DoublySecure() goa.Endpoint {

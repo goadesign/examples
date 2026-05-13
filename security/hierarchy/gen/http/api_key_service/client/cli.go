@@ -36,3 +36,16 @@ func BuildSecurePayload(apiKeyServiceSecureToken string) (*apikeyservice.SecureP
 
 	return v, nil
 }
+
+// BuildBearerSecurePayload builds the payload for the api_key_service
+// bearer_secure endpoint from CLI flags.
+func BuildBearerSecurePayload(apiKeyServiceBearerSecureBearerToken string) (*apikeyservice.BearerSecurePayload, error) {
+	var bearerToken string
+	{
+		bearerToken = apiKeyServiceBearerSecureBearerToken
+	}
+	v := &apikeyservice.BearerSecurePayload{}
+	v.BearerToken = bearerToken
+
+	return v, nil
+}

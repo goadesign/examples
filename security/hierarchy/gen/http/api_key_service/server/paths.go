@@ -16,3 +16,8 @@ func DefaultAPIKeyServicePath() string {
 func SecureAPIKeyServicePath() string {
 	return "/svc/secure"
 }
+
+// BearerSecureAPIKeyServicePath returns the URL path to the api_key_service service bearer_secure HTTP endpoint.
+func BearerSecureAPIKeyServicePath() string {
+	return "/svc/bearer"
+}

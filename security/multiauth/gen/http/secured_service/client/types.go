@@ -21,15 +21,18 @@ type SigninResponseBody struct {
 	APIKey *string `form:"api_key,omitempty" json:"api_key,omitempty" xml:"api_key,omitempty"`
 	// OAuth2 token
 	OauthToken *string `form:"oauth_token,omitempty" json:"oauth_token,omitempty" xml:"oauth_token,omitempty"`
+	// Bearer token
+	BearerToken *string `form:"bearer_token,omitempty" json:"bearer_token,omitempty" xml:"bearer_token,omitempty"`
 }
 
 // NewSigninCredsOK builds a "secured_service" service "signin" endpoint result
 // from a HTTP "OK" response.
 func NewSigninCredsOK(body *SigninResponseBody) *securedservice.Creds {
 	v := &securedservice.Creds{
-		JWT:        *body.JWT,
-		APIKey:     *body.APIKey,
-		OauthToken: *body.OauthToken,
+		JWT:         *body.JWT,
+		APIKey:      *body.APIKey,
+		OauthToken:  *body.OauthToken,
+		BearerToken: *body.BearerToken,
 	}
 
 	return v
@@ -54,6 +57,22 @@ func NewSecureInvalidScopes(body string) securedservice.InvalidScopes {
 // NewSecureUnauthorized builds a secured_service service secure endpoint
 // unauthorized error.
 func NewSecureUnauthorized(body string) securedservice.Unauthorized {
+	v := securedservice.Unauthorized(body)
+
+	return v
+}
+
+// NewBearerSecureInvalidScopes builds a secured_service service bearer_secure
+// endpoint invalid-scopes error.
+func NewBearerSecureInvalidScopes(body string) securedservice.InvalidScopes {
+	v := securedservice.InvalidScopes(body)
+
+	return v
+}
+
+// NewBearerSecureUnauthorized builds a secured_service service bearer_secure
+// endpoint unauthorized error.
+func NewBearerSecureUnauthorized(body string) securedservice.Unauthorized {
 	v := securedservice.Unauthorized(body)
 
 	return v
@@ -101,6 +120,9 @@ func ValidateSigninResponseBody(body *SigninResponseBody) (err error) {
 	}
 	if body.OauthToken == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("oauth_token", "body"))
+	}
+	if body.BearerToken == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("bearer_token", "body"))
 	}
 	return
 }

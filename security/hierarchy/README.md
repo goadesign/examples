@@ -10,6 +10,8 @@ of the security DSLs:
   security scheme that uses an API key.
 * [BasicAuthSecurity](https://pkg.go.dev/goa.design/goa/v3/dsl#BasicAuthSecurity)
   defines a security scheme that uses basic auth.
+* [BearerSecurity](https://pkg.go.dev/goa.design/goa/v3/dsl#BearerSecurity) defines a
+  security scheme that uses bearer tokens.
 * [JWTSecurity](https://pkg.go.dev/goa.design/goa/v3/dsl#JWTSecurity) defines a security
   scheme that uses JWT tokens.
 * [OAuth2Security](https://pkg.go.dev/goa.design/goa/v3/dsl#OAuth2Security) defines a
@@ -129,6 +131,7 @@ shows the basic auth security scheme defined at the API level being applied.
 
 The [generated endpoints code](https://github.com/goadesign/examples/tree/master/security/hierarchy/gen/api_key_service/endpoints.go)
 code the `api_key_service` shows the API key scheme applied the default
-endpoint (using the security scheme defined at the service leve), the JWT
+endpoint (using the security scheme defined at the service level), the JWT
 scheme used by the `secure` method that overrides the default set at the
-service level and the `unsecure` method with no security scheme applied.
+service level, the bearer scheme used by the `bearer_secure` method and the
+`unsecure` method with no security scheme applied.

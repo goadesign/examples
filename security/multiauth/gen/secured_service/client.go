@@ -17,15 +17,17 @@ import (
 type Client struct {
 	SigninEndpoint           goa.Endpoint
 	SecureEndpoint           goa.Endpoint
+	BearerSecureEndpoint     goa.Endpoint
 	DoublySecureEndpoint     goa.Endpoint
 	AlsoDoublySecureEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "secured_service" service client given the endpoints.
-func NewClient(signin, secure, doublySecure, alsoDoublySecure goa.Endpoint) *Client {
+func NewClient(signin, secure, bearerSecure, doublySecure, alsoDoublySecure goa.Endpoint) *Client {
 	return &Client{
 		SigninEndpoint:           signin,
 		SecureEndpoint:           secure,
+		BearerSecureEndpoint:     bearerSecure,
 		DoublySecureEndpoint:     doublySecure,
 		AlsoDoublySecureEndpoint: alsoDoublySecure,
 	}
@@ -52,6 +54,21 @@ func (c *Client) Signin(ctx context.Context, p *SigninPayload) (res *Creds, err 
 func (c *Client) Secure(ctx context.Context, p *SecurePayload) (res string, err error) {
 	var ires any
 	ires, err = c.SecureEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(string), nil
+}
+
+// BearerSecure calls the "bearer_secure" endpoint of the "secured_service"
+// service.
+// BearerSecure may return the following errors:
+//   - "invalid-scopes" (type InvalidScopes)
+//   - "unauthorized" (type Unauthorized)
+//   - error: internal error
+func (c *Client) BearerSecure(ctx context.Context, p *BearerSecurePayload) (res string, err error) {
+	var ires any
+	ires, err = c.BearerSecureEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

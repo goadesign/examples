@@ -18,9 +18,10 @@ import (
 
 // Server lists the api_key_service service endpoint HTTP handlers.
 type Server struct {
-	Mounts  []*MountPoint
-	Default http.Handler
-	Secure  http.Handler
+	Mounts       []*MountPoint
+	Default      http.Handler
+	Secure       http.Handler
+	BearerSecure http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -52,9 +53,11 @@ func New(
 		Mounts: []*MountPoint{
 			{"Default", "GET", "/svc/default"},
 			{"Secure", "GET", "/svc/secure"},
+			{"BearerSecure", "GET", "/svc/bearer"},
 		},
-		Default: NewDefaultHandler(e.Default, mux, decoder, encoder, errhandler, formatter),
-		Secure:  NewSecureHandler(e.Secure, mux, decoder, encoder, errhandler, formatter),
+		Default:      NewDefaultHandler(e.Default, mux, decoder, encoder, errhandler, formatter),
+		Secure:       NewSecureHandler(e.Secure, mux, decoder, encoder, errhandler, formatter),
+		BearerSecure: NewBearerSecureHandler(e.BearerSecure, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -65,6 +68,7 @@ func (s *Server) Service() string { return "api_key_service" }
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.Default = m(s.Default)
 	s.Secure = m(s.Secure)
+	s.BearerSecure = m(s.BearerSecure)
 }
 
 // MethodNames returns the methods served.
@@ -74,6 +78,7 @@ func (s *Server) MethodNames() []string { return apikeyservice.MethodNames[:] }
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountDefaultHandler(mux, h.Default)
 	MountSecureHandler(mux, h.Secure)
+	MountBearerSecureHandler(mux, h.BearerSecure)
 }
 
 // Mount configures the mux to serve the api_key_service endpoints.
@@ -164,6 +169,59 @@ func NewSecureHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "secure")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "api_key_service")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			if errhandler != nil {
+				errhandler(ctx, w, err)
+			}
+		}
+	})
+}
+
+// MountBearerSecureHandler configures the mux to serve the "api_key_service"
+// service "bearer_secure" endpoint.
+func MountBearerSecureHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/svc/bearer", f)
+}
+
+// NewBearerSecureHandler creates a HTTP handler which loads the HTTP request
+// and calls the "api_key_service" service "bearer_secure" endpoint.
+func NewBearerSecureHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeBearerSecureRequest(mux, decoder)
+		encodeResponse = EncodeBearerSecureResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "bearer_secure")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "api_key_service")
 		payload, err := decodeRequest(r)
 		if err != nil {

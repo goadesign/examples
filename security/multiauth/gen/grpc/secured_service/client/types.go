@@ -23,9 +23,10 @@ func NewProtoSigninRequest() *secured_servicepb.SigninRequest {
 // "secured_service" service from the gRPC response type.
 func NewSigninResult(message *secured_servicepb.SigninResponse) *securedservice.Creds {
 	result := &securedservice.Creds{
-		JWT:        message.Jwt,
-		APIKey:     message.ApiKey,
-		OauthToken: message.OauthToken,
+		JWT:         message.Jwt,
+		APIKey:      message.ApiKey,
+		OauthToken:  message.OauthToken,
+		BearerToken: message.BearerToken,
 	}
 	return result
 }
@@ -42,6 +43,20 @@ func NewProtoSecureRequest(payload *securedservice.SecurePayload) *secured_servi
 // NewSecureResult builds the result type of the "secure" endpoint of the
 // "secured_service" service from the gRPC response type.
 func NewSecureResult(message *secured_servicepb.SecureResponse) string {
+	result := message.Field
+	return result
+}
+
+// NewProtoBearerSecureRequest builds the gRPC request type from the payload of
+// the "bearer_secure" endpoint of the "secured_service" service.
+func NewProtoBearerSecureRequest() *secured_servicepb.BearerSecureRequest {
+	message := &secured_servicepb.BearerSecureRequest{}
+	return message
+}
+
+// NewBearerSecureResult builds the result type of the "bearer_secure" endpoint
+// of the "secured_service" service from the gRPC response type.
+func NewBearerSecureResult(message *secured_servicepb.BearerSecureResponse) string {
 	result := message.Field
 	return result
 }

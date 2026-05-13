@@ -16,9 +16,10 @@ import (
 
 // Endpoints wraps the "api_key_service" service endpoints.
 type Endpoints struct {
-	Default  goa.Endpoint
-	Secure   goa.Endpoint
-	Unsecure goa.Endpoint
+	Default      goa.Endpoint
+	Secure       goa.Endpoint
+	BearerSecure goa.Endpoint
+	Unsecure     goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "api_key_service" service with
@@ -27,9 +28,10 @@ func NewEndpoints(s Service) *Endpoints {
 	// Casting service to Auther interface
 	a := s.(Auther)
 	return &Endpoints{
-		Default:  NewDefaultEndpoint(s, a.APIKeyAuth),
-		Secure:   NewSecureEndpoint(s, a.JWTAuth),
-		Unsecure: NewUnsecureEndpoint(s),
+		Default:      NewDefaultEndpoint(s, a.APIKeyAuth),
+		Secure:       NewSecureEndpoint(s, a.JWTAuth),
+		BearerSecure: NewBearerSecureEndpoint(s, a.BearerAuth),
+		Unsecure:     NewUnsecureEndpoint(s),
 	}
 }
 
@@ -38,6 +40,7 @@ func NewEndpoints(s Service) *Endpoints {
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.Default = m(e.Default)
 	e.Secure = m(e.Secure)
+	e.BearerSecure = m(e.BearerSecure)
 	e.Unsecure = m(e.Unsecure)
 }
 
@@ -76,6 +79,25 @@ func NewSecureEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 			return nil, err
 		}
 		return nil, s.Secure(ctx, p)
+	}
+}
+
+// NewBearerSecureEndpoint returns an endpoint function that calls the method
+// "bearer_secure" of service "api_key_service".
+func NewBearerSecureEndpoint(s Service, authBearerFn security.AuthBearerFunc) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		p := req.(*BearerSecurePayload)
+		var err error
+		sc := security.BearerScheme{
+			Name:           "bearer",
+			Scopes:         []string{},
+			RequiredScopes: []string{},
+		}
+		ctx, err = authBearerFn(ctx, p.BearerToken, &sc)
+		if err != nil {
+			return nil, err
+		}
+		return nil, s.BearerSecure(ctx, p)
 	}
 }
 

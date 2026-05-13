@@ -20,15 +20,18 @@ type SigninResponseBody struct {
 	APIKey string `form:"api_key" json:"api_key" xml:"api_key"`
 	// OAuth2 token
 	OauthToken string `form:"oauth_token" json:"oauth_token" xml:"oauth_token"`
+	// Bearer token
+	BearerToken string `form:"bearer_token" json:"bearer_token" xml:"bearer_token"`
 }
 
 // NewSigninResponseBody builds the HTTP response body from the result of the
 // "signin" endpoint of the "secured_service" service.
 func NewSigninResponseBody(res *securedservice.Creds) *SigninResponseBody {
 	body := &SigninResponseBody{
-		JWT:        res.JWT,
-		APIKey:     res.APIKey,
-		OauthToken: res.OauthToken,
+		JWT:         res.JWT,
+		APIKey:      res.APIKey,
+		OauthToken:  res.OauthToken,
+		BearerToken: res.BearerToken,
 	}
 	return body
 }
@@ -45,6 +48,15 @@ func NewSecurePayload(fail *bool, token string) *securedservice.SecurePayload {
 	v := &securedservice.SecurePayload{}
 	v.Fail = fail
 	v.Token = token
+
+	return v
+}
+
+// NewBearerSecurePayload builds a secured_service service bearer_secure
+// endpoint payload.
+func NewBearerSecurePayload(bearerToken string) *securedservice.BearerSecurePayload {
+	v := &securedservice.BearerSecurePayload{}
+	v.BearerToken = bearerToken
 
 	return v
 }
