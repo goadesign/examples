@@ -3,7 +3,7 @@ module goa.design/examples/encodings/cbor
 go 1.26.0
 
 require (
-	github.com/fxamacker/cbor/v2 v2.5.0
+	github.com/fxamacker/cbor/v2 v2.9.2
 	goa.design/clue v1.2.5
 	goa.design/goa/v3 v3.26.0
 )
