@@ -3,7 +3,7 @@ module goa.design/examples/tus
 go 1.26.0
 
 require (
-	github.com/rs/xid v1.5.0
+	github.com/rs/xid v1.6.0
 	goa.design/goa/v3 v3.26.0
 )
 
