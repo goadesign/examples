@@ -88,6 +88,24 @@ func (s *securedServicesrvc) JWTAuth(ctx context.Context, token string, scheme *
 	return ctx, nil
 }
 
+// BearerAuth implements the authorization logic for service "secured_service"
+// for the "bearer" security scheme.
+func (s *securedServicesrvc) BearerAuth(ctx context.Context, token string, scheme *security.BearerScheme) (context.Context, error) {
+	if token != "opaque-session-token" {
+		return ctx, ErrInvalidToken
+	}
+
+	scopesInToken := []string{"api:read", "api:write"}
+	if err := scheme.Validate(scopesInToken); err != nil {
+		return ctx, securedservice.InvalidScopes(err.Error())
+	}
+
+	ctx = contextWithAuthInfo(ctx, authInfo{
+		bearer: token,
+	})
+	return ctx, nil
+}
+
 // APIKeyAuth implements the authorization logic for service "secured_service"
 // for the "api_key" security scheme.
 func (s *securedServicesrvc) APIKeyAuth(ctx context.Context, key string, scheme *security.APIKeyScheme) (context.Context, error) {
@@ -153,9 +171,10 @@ func (s *securedServicesrvc) Signin(ctx context.Context, p *securedservice.Signi
 		return nil, err
 	}
 	return &securedservice.Creds{
-		JWT:        t,
-		OauthToken: t,
-		APIKey:     "my_awesome_api_key",
+		JWT:         t,
+		OauthToken:  t,
+		APIKey:      "my_awesome_api_key",
+		BearerToken: "opaque-session-token",
 	}, nil
 }
 
@@ -169,6 +188,15 @@ func (s *securedServicesrvc) Secure(ctx context.Context, p *securedservice.Secur
 		s.logger.Printf("Uh oh! `fail` passed in parameter. Auth failed!")
 		return "", securedservice.Unauthorized("forced authentication failure")
 	}
+	return
+}
+
+// This action is secured with the bearer scheme
+func (s *securedServicesrvc) BearerSecure(ctx context.Context, p *securedservice.BearerSecurePayload) (res string, err error) {
+	res = fmt.Sprintf("User authorized using bearer token %q", p.BearerToken)
+	authInfo := contextAuthInfo(ctx)
+	s.logger.Print(res)
+	s.logger.Printf("%v", authInfo)
 	return
 }
 

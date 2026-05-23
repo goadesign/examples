@@ -25,14 +25,14 @@ import (
 func UsageCommands() []string {
 	return []string{
 		"default-service default",
-		"api-key-service (default|secure)",
+		"api-key-service (default|secure|bearer-secure)",
 	}
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "default-service default --username \"Sit doloremque inventore eius.\" --password \"Culpa alias.\"" + "\n" +
-		os.Args[0] + " " + "api-key-service default --key \"Aut delectus ipsam.\"" + "\n" +
+	return os.Args[0] + " " + "default-service default --username \"Voluptatem et.\" --password \"Libero unde.\"" + "\n" +
+		os.Args[0] + " " + "api-key-service default --key \"Quasi ex.\"" + "\n" +
 		""
 }
 
@@ -59,6 +59,9 @@ func ParseEndpoint(
 
 		apiKeyServiceSecureFlags     = flag.NewFlagSet("secure", flag.ExitOnError)
 		apiKeyServiceSecureTokenFlag = apiKeyServiceSecureFlags.String("token", "REQUIRED", "")
+
+		apiKeyServiceBearerSecureFlags           = flag.NewFlagSet("bearer-secure", flag.ExitOnError)
+		apiKeyServiceBearerSecureBearerTokenFlag = apiKeyServiceBearerSecureFlags.String("bearer-token", "REQUIRED", "")
 	)
 	defaultServiceFlags.Usage = defaultServiceUsage
 	defaultServiceDefaultFlags.Usage = defaultServiceDefaultUsage
@@ -66,6 +69,7 @@ func ParseEndpoint(
 	apiKeyServiceFlags.Usage = apiKeyServiceUsage
 	apiKeyServiceDefaultFlags.Usage = apiKeyServiceDefaultUsage
 	apiKeyServiceSecureFlags.Usage = apiKeyServiceSecureUsage
+	apiKeyServiceBearerSecureFlags.Usage = apiKeyServiceBearerSecureUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -116,6 +120,9 @@ func ParseEndpoint(
 			case "secure":
 				epf = apiKeyServiceSecureFlags
 
+			case "bearer-secure":
+				epf = apiKeyServiceBearerSecureFlags
+
 			}
 
 		}
@@ -154,6 +161,9 @@ func ParseEndpoint(
 			case "secure":
 				endpoint = c.Secure()
 				data, err = apikeyservicec.BuildSecurePayload(*apiKeyServiceSecureTokenFlag)
+			case "bearer-secure":
+				endpoint = c.BearerSecure()
+				data, err = apikeyservicec.BuildBearerSecurePayload(*apiKeyServiceBearerSecureBearerTokenFlag)
 			}
 		}
 	}
@@ -192,7 +202,7 @@ func defaultServiceDefaultUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "default-service default --username \"Sit doloremque inventore eius.\" --password \"Culpa alias.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "default-service default --username \"Voluptatem et.\" --password \"Libero unde.\"")
 }
 
 // apiKeyServiceUsage displays the usage of the api-key-service command and its
@@ -203,6 +213,7 @@ func apiKeyServiceUsage() {
 	fmt.Fprintln(os.Stderr, "COMMAND:")
 	fmt.Fprintln(os.Stderr, `    default: Default implements default.`)
 	fmt.Fprintln(os.Stderr, `    secure: This method requires a valid JWT token.`)
+	fmt.Fprintln(os.Stderr, `    bearer-secure: This method requires a bearer token.`)
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Additional help:")
 	fmt.Fprintf(os.Stderr, "    %s api-key-service COMMAND --help\n", os.Args[0])
@@ -222,7 +233,7 @@ func apiKeyServiceDefaultUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service default --key \"Aut delectus ipsam.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service default --key \"Quasi ex.\"")
 }
 
 func apiKeyServiceSecureUsage() {
@@ -240,5 +251,23 @@ func apiKeyServiceSecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service secure --token \"Quasi ex.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service secure --token \"Sit doloremque inventore eius.\"")
+}
+
+func apiKeyServiceBearerSecureUsage() {
+	// Header with flags
+	fmt.Fprintf(os.Stderr, "%s [flags] api-key-service bearer-secure", os.Args[0])
+	fmt.Fprint(os.Stderr, " -bearer-token STRING")
+	fmt.Fprintln(os.Stderr)
+
+	// Description
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprintln(os.Stderr, `This method requires a bearer token.`)
+
+	// Flags list
+	fmt.Fprintln(os.Stderr, `    -bearer-token STRING: `)
+
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprintln(os.Stderr, "Example:")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service bearer-secure --bearer-token \"Culpa alias.\"")
 }

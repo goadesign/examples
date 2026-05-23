@@ -21,6 +21,7 @@ type Server struct {
 	Mounts           []*MountPoint
 	Signin           http.Handler
 	Secure           http.Handler
+	BearerSecure     http.Handler
 	DoublySecure     http.Handler
 	AlsoDoublySecure http.Handler
 }
@@ -54,11 +55,13 @@ func New(
 		Mounts: []*MountPoint{
 			{"Signin", "POST", "/signin"},
 			{"Secure", "GET", "/secure"},
+			{"BearerSecure", "GET", "/bearer"},
 			{"DoublySecure", "PUT", "/secure"},
 			{"AlsoDoublySecure", "POST", "/secure"},
 		},
 		Signin:           NewSigninHandler(e.Signin, mux, decoder, encoder, errhandler, formatter),
 		Secure:           NewSecureHandler(e.Secure, mux, decoder, encoder, errhandler, formatter),
+		BearerSecure:     NewBearerSecureHandler(e.BearerSecure, mux, decoder, encoder, errhandler, formatter),
 		DoublySecure:     NewDoublySecureHandler(e.DoublySecure, mux, decoder, encoder, errhandler, formatter),
 		AlsoDoublySecure: NewAlsoDoublySecureHandler(e.AlsoDoublySecure, mux, decoder, encoder, errhandler, formatter),
 	}
@@ -71,6 +74,7 @@ func (s *Server) Service() string { return "secured_service" }
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.Signin = m(s.Signin)
 	s.Secure = m(s.Secure)
+	s.BearerSecure = m(s.BearerSecure)
 	s.DoublySecure = m(s.DoublySecure)
 	s.AlsoDoublySecure = m(s.AlsoDoublySecure)
 }
@@ -82,6 +86,7 @@ func (s *Server) MethodNames() []string { return securedservice.MethodNames[:] }
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountSigninHandler(mux, h.Signin)
 	MountSecureHandler(mux, h.Secure)
+	MountBearerSecureHandler(mux, h.BearerSecure)
 	MountDoublySecureHandler(mux, h.DoublySecure)
 	MountAlsoDoublySecureHandler(mux, h.AlsoDoublySecure)
 }
@@ -174,6 +179,59 @@ func NewSecureHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "secure")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "secured_service")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			if errhandler != nil {
+				errhandler(ctx, w, err)
+			}
+		}
+	})
+}
+
+// MountBearerSecureHandler configures the mux to serve the "secured_service"
+// service "bearer_secure" endpoint.
+func MountBearerSecureHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/bearer", f)
+}
+
+// NewBearerSecureHandler creates a HTTP handler which loads the HTTP request
+// and calls the "secured_service" service "bearer_secure" endpoint.
+func NewBearerSecureHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeBearerSecureRequest(mux, decoder)
+		encodeResponse = EncodeBearerSecureResponse(encoder)
+		encodeError    = EncodeBearerSecureError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "bearer_secure")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "secured_service")
 		payload, err := decodeRequest(r)
 		if err != nil {

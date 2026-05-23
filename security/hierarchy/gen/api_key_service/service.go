@@ -19,6 +19,8 @@ type Service interface {
 	Default(context.Context, *DefaultPayload) (err error)
 	// This method requires a valid JWT token.
 	Secure(context.Context, *SecurePayload) (err error)
+	// This method requires a bearer token.
+	BearerSecure(context.Context, *BearerSecurePayload) (err error)
 	// This method is not secured.
 	Unsecure(context.Context) (err error)
 }
@@ -29,6 +31,8 @@ type Auther interface {
 	APIKeyAuth(ctx context.Context, key string, schema *security.APIKeyScheme) (context.Context, error)
 	// JWTAuth implements the authorization logic for the JWT security scheme.
 	JWTAuth(ctx context.Context, token string, schema *security.JWTScheme) (context.Context, error)
+	// BearerAuth implements the authorization logic for the Bearer security scheme.
+	BearerAuth(ctx context.Context, token string, schema *security.BearerScheme) (context.Context, error)
 }
 
 // APIName is the name of the API as defined in the design.
@@ -45,7 +49,14 @@ const ServiceName = "api_key_service"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [3]string{"default", "secure", "unsecure"}
+var MethodNames = [4]string{"default", "secure", "bearer_secure", "unsecure"}
+
+// BearerSecurePayload is the payload type of the api_key_service service
+// bearer_secure method.
+type BearerSecurePayload struct {
+	// Bearer token used for authentication
+	BearerToken string
+}
 
 // DefaultPayload is the payload type of the api_key_service service default
 // method.

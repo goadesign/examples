@@ -7,6 +7,40 @@ servers:
     - url: http://localhost:80
       description: Default server for multi_auth
 paths:
+    /bearer:
+        get:
+            tags:
+                - secured_service
+            summary: bearer_secure secured_service
+            description: This action is secured with the bearer scheme
+            operationId: secured_service#bearer_secure
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Ipsum modi saepe.
+                            example: Vel et et velit rem est et.
+                "401":
+                    description: 'unauthorized: Unauthorized response.'
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Consequatur blanditiis consectetur quis.
+                            example: Dolores hic.
+                "403":
+                    description: 'invalid-scopes: Forbidden response.'
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Eaque pariatur eos laborum.
+                            example: Eaque modi sint saepe dolorem.
+            security:
+                - bearer_header_Authorization: []
     /secure:
         get:
             tags:
@@ -22,8 +56,8 @@ paths:
                   schema:
                     type: boolean
                     description: Whether to force auth failure even with a valid JWT
-                    example: false
-                  example: false
+                    example: true
+                  example: true
             responses:
                 "200":
                     description: OK response.
@@ -31,27 +65,26 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Quos ut est ipsum consequatur fugiat at.
-                            example: Consequuntur libero aliquid error dolorem deserunt.
+                                example: Delectus ratione voluptas sit quo.
+                            example: Necessitatibus aut.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Atque eum unde vero dicta minus minima.
-                            example: Ratione voluptas.
+                                example: Alias architecto quasi.
+                            example: Quis eaque.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Maiores porro alias.
-                            example: Ex nulla.
+                                example: Error et et officiis unde.
+                            example: Consequatur impedit dolorem qui reiciendis voluptatem.
             security:
-                - jwt_header_Authorization:
-                    - api:read
+                - jwt_header_Authorization: []
         post:
             tags:
                 - secured_service
@@ -65,29 +98,27 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Sed ipsam at hic optio dolores aut.
-                            example: Eaque pariatur eos laborum.
+                                example: Molestiae quo.
+                            example: Ipsum eum et id.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Amet voluptas quia.
-                            example: Ad explicabo sed.
+                                example: Quos illum praesentium dolores id ut.
+                            example: Voluptas dignissimos ut.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Rerum aut incidunt minima.
-                            example: Consequatur blanditiis consectetur quis.
+                                example: Sed quis tenetur voluptas ea.
+                            example: Velit voluptas quidem.
             security:
                 - api_key_query_k: []
-                  jwt_header_X-Authorization:
-                    - api:read
-                    - api:write
+                  jwt_header_X-Authorization: []
                 - basic_header_Authorization: []
                   oauth2_query_oauth:
                     - api:read
@@ -105,29 +136,27 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Tenetur et eaque nesciunt.
-                            example: Quo dicta error et et officiis.
+                                example: Ad explicabo sed.
+                            example: Sit delectus dolorem amet maiores.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Non nisi error ut inventore sequi.
-                            example: Soluta ipsum modi saepe.
+                                example: Nam et consequuntur nemo sit cum.
+                            example: Expedita voluptatem voluptate ducimus vel doloremque odio.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 type: string
-                                example: Repudiandae qui sed optio odit dignissimos.
-                            example: Corrupti alias architecto.
+                                example: Dolorem et totam nemo numquam eum.
+                            example: Beatae quod.
             security:
                 - api_key_query_k: []
-                  jwt_header_Authorization:
-                    - api:read
-                    - api:write
+                  jwt_header_Authorization: []
     /signin:
         post:
             tags:
@@ -144,6 +173,7 @@ paths:
                                 $ref: '#/components/schemas/Creds'
                             example:
                                 api_key: abcdef12345
+                                bearer_token: opaque-session-token
                                 jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
                                 oauth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
                 "401":
@@ -152,8 +182,8 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Aut expedita optio.
-                            example: Sunt id facere est suscipit provident veritatis.
+                                example: Error dolorem deserunt similique ex.
+                            example: Fuga distinctio.
             security:
                 - basic_header_Authorization: []
 components:
@@ -165,6 +195,10 @@ components:
                     type: string
                     description: API Key
                     example: abcdef12345
+                bearer_token:
+                    type: string
+                    description: Bearer token
+                    example: opaque-session-token
                 jwt:
                     type: string
                     description: JWT token
@@ -175,12 +209,14 @@ components:
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
             example:
                 api_key: abcdef12345
+                bearer_token: opaque-session-token
                 jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
                 oauth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
             required:
                 - jwt
                 - api_key
                 - oauth_token
+                - bearer_token
     securitySchemes:
         api_key_query_k:
             type: apiKey
@@ -191,14 +227,20 @@ components:
             type: http
             description: Basic authentication used to authenticate security principal during signin
             scheme: basic
+        bearer_header_Authorization:
+            type: http
+            description: Secures endpoint by requiring a valid bearer token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+            scheme: bearer
         jwt_header_Authorization:
             type: http
             description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
             scheme: bearer
+            bearerFormat: JWT
         jwt_header_X-Authorization:
             type: http
             description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
             scheme: bearer
+            bearerFormat: JWT
         oauth2_query_oauth:
             type: oauth2
             description: Secures endpoint by requiring a valid OAuth2 token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".

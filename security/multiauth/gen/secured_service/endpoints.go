@@ -18,6 +18,7 @@ import (
 type Endpoints struct {
 	Signin           goa.Endpoint
 	Secure           goa.Endpoint
+	BearerSecure     goa.Endpoint
 	DoublySecure     goa.Endpoint
 	AlsoDoublySecure goa.Endpoint
 }
@@ -30,6 +31,7 @@ func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
 		Signin:           NewSigninEndpoint(s, a.BasicAuth),
 		Secure:           NewSecureEndpoint(s, a.JWTAuth),
+		BearerSecure:     NewBearerSecureEndpoint(s, a.BearerAuth),
 		DoublySecure:     NewDoublySecureEndpoint(s, a.JWTAuth, a.APIKeyAuth),
 		AlsoDoublySecure: NewAlsoDoublySecureEndpoint(s, a.JWTAuth, a.APIKeyAuth, a.OAuth2Auth, a.BasicAuth),
 	}
@@ -40,6 +42,7 @@ func NewEndpoints(s Service) *Endpoints {
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.Signin = m(e.Signin)
 	e.Secure = m(e.Secure)
+	e.BearerSecure = m(e.BearerSecure)
 	e.DoublySecure = m(e.DoublySecure)
 	e.AlsoDoublySecure = m(e.AlsoDoublySecure)
 }
@@ -79,6 +82,25 @@ func NewSecureEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 			return nil, err
 		}
 		return s.Secure(ctx, p)
+	}
+}
+
+// NewBearerSecureEndpoint returns an endpoint function that calls the method
+// "bearer_secure" of service "secured_service".
+func NewBearerSecureEndpoint(s Service, authBearerFn security.AuthBearerFunc) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		p := req.(*BearerSecurePayload)
+		var err error
+		sc := security.BearerScheme{
+			Name:           "bearer",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{"api:read"},
+		}
+		ctx, err = authBearerFn(ctx, p.BearerToken, &sc)
+		if err != nil {
+			return nil, err
+		}
+		return s.BearerSecure(ctx, p)
 	}
 }
 

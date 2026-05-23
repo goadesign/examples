@@ -88,6 +88,42 @@ func DecodeSecureResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (an
 	return res, nil
 }
 
+// BuildBearerSecureFunc builds the remote method to invoke for
+// "secured_service" service "bearer_secure" endpoint.
+func BuildBearerSecureFunc(grpccli secured_servicepb.SecuredServiceClient, cliopts ...grpc.CallOption) goagrpc.RemoteFunc {
+	return func(ctx context.Context, reqpb any, opts ...grpc.CallOption) (any, error) {
+		for _, opt := range cliopts {
+			opts = append(opts, opt)
+		}
+		if reqpb != nil {
+			return grpccli.BearerSecure(ctx, reqpb.(*secured_servicepb.BearerSecureRequest), opts...)
+		}
+		return grpccli.BearerSecure(ctx, &secured_servicepb.BearerSecureRequest{}, opts...)
+	}
+}
+
+// EncodeBearerSecureRequest encodes requests sent to secured_service
+// bearer_secure endpoint.
+func EncodeBearerSecureRequest(ctx context.Context, v any, md *metadata.MD) (any, error) {
+	payload, ok := v.(*securedservice.BearerSecurePayload)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("secured_service", "bearer_secure", "*securedservice.BearerSecurePayload", v)
+	}
+	(*md).Append("authorization", payload.BearerToken)
+	return NewProtoBearerSecureRequest(), nil
+}
+
+// DecodeBearerSecureResponse decodes responses from the secured_service
+// bearer_secure endpoint.
+func DecodeBearerSecureResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
+	message, ok := v.(*secured_servicepb.BearerSecureResponse)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("secured_service", "bearer_secure", "*secured_servicepb.BearerSecureResponse", v)
+	}
+	res := NewBearerSecureResult(message)
+	return res, nil
+}
+
 // BuildDoublySecureFunc builds the remote method to invoke for
 // "secured_service" service "doubly_secure" endpoint.
 func BuildDoublySecureFunc(grpccli secured_servicepb.SecuredServiceClient, cliopts ...grpc.CallOption) goagrpc.RemoteFunc {

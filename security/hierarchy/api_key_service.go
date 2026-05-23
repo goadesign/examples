@@ -60,6 +60,26 @@ func (s *apiKeyServicesrvc) JWTAuth(ctx context.Context, token string, scheme *s
 	return ctx, fmt.Errorf("not implemented")
 }
 
+// BearerAuth implements the authorization logic for service "api_key_service"
+// for the "bearer" security scheme.
+func (s *apiKeyServicesrvc) BearerAuth(ctx context.Context, token string, scheme *security.BearerScheme) (context.Context, error) {
+	//
+	// TBD: add authorization logic.
+	//
+	// In case of authorization failure this function should return
+	// one of the generated error structs, e.g.:
+	//
+	//    return ctx, myservice.MakeUnauthorizedError("invalid token")
+	//
+	// Alternatively this function may return an instance of
+	// goa.ServiceError with a Name field value that matches one of
+	// the design error names, e.g:
+	//
+	//    return ctx, goa.PermanentError("unauthorized", "invalid token")
+	//
+	return ctx, fmt.Errorf("not implemented")
+}
+
 // Default implements default.
 func (s *apiKeyServicesrvc) Default(ctx context.Context, p *apikeyservice.DefaultPayload) (err error) {
 	s.logger.Print("apiKeyService.default")
@@ -69,6 +89,12 @@ func (s *apiKeyServicesrvc) Default(ctx context.Context, p *apikeyservice.Defaul
 // This method requires a valid JWT token.
 func (s *apiKeyServicesrvc) Secure(ctx context.Context, p *apikeyservice.SecurePayload) (err error) {
 	s.logger.Print("apiKeyService.secure")
+	return
+}
+
+// This method requires a bearer token.
+func (s *apiKeyServicesrvc) BearerSecure(ctx context.Context, p *apikeyservice.BearerSecurePayload) (err error) {
+	s.logger.Print("apiKeyService.bearer_secure")
 	return
 }
 

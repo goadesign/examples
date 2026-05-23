@@ -23,7 +23,7 @@ import (
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() []string {
 	return []string{
-		"secured-service (signin|secure|doubly-secure|also-doubly-secure)",
+		"secured-service (signin|secure|bearer-secure|doubly-secure|also-doubly-secure)",
 	}
 }
 
@@ -53,6 +53,9 @@ func ParseEndpoint(
 		securedServiceSecureFailFlag  = securedServiceSecureFlags.String("fail", "", "")
 		securedServiceSecureTokenFlag = securedServiceSecureFlags.String("token", "REQUIRED", "")
 
+		securedServiceBearerSecureFlags           = flag.NewFlagSet("bearer-secure", flag.ExitOnError)
+		securedServiceBearerSecureBearerTokenFlag = securedServiceBearerSecureFlags.String("bearer-token", "REQUIRED", "")
+
 		securedServiceDoublySecureFlags     = flag.NewFlagSet("doubly-secure", flag.ExitOnError)
 		securedServiceDoublySecureKeyFlag   = securedServiceDoublySecureFlags.String("key", "REQUIRED", "")
 		securedServiceDoublySecureTokenFlag = securedServiceDoublySecureFlags.String("token", "REQUIRED", "")
@@ -67,6 +70,7 @@ func ParseEndpoint(
 	securedServiceFlags.Usage = securedServiceUsage
 	securedServiceSigninFlags.Usage = securedServiceSigninUsage
 	securedServiceSecureFlags.Usage = securedServiceSecureUsage
+	securedServiceBearerSecureFlags.Usage = securedServiceBearerSecureUsage
 	securedServiceDoublySecureFlags.Usage = securedServiceDoublySecureUsage
 	securedServiceAlsoDoublySecureFlags.Usage = securedServiceAlsoDoublySecureUsage
 
@@ -110,6 +114,9 @@ func ParseEndpoint(
 			case "secure":
 				epf = securedServiceSecureFlags
 
+			case "bearer-secure":
+				epf = securedServiceBearerSecureFlags
+
 			case "doubly-secure":
 				epf = securedServiceDoublySecureFlags
 
@@ -147,6 +154,9 @@ func ParseEndpoint(
 			case "secure":
 				endpoint = c.Secure()
 				data, err = securedservicec.BuildSecurePayload(*securedServiceSecureFailFlag, *securedServiceSecureTokenFlag)
+			case "bearer-secure":
+				endpoint = c.BearerSecure()
+				data, err = securedservicec.BuildBearerSecurePayload(*securedServiceBearerSecureBearerTokenFlag)
 			case "doubly-secure":
 				endpoint = c.DoublySecure()
 				data, err = securedservicec.BuildDoublySecurePayload(*securedServiceDoublySecureKeyFlag, *securedServiceDoublySecureTokenFlag)
@@ -171,6 +181,7 @@ func securedServiceUsage() {
 	fmt.Fprintln(os.Stderr, "COMMAND:")
 	fmt.Fprintln(os.Stderr, `    signin: Creates a valid JWT`)
 	fmt.Fprintln(os.Stderr, `    secure: This action is secured with the jwt scheme`)
+	fmt.Fprintln(os.Stderr, `    bearer-secure: This action is secured with the bearer scheme`)
 	fmt.Fprintln(os.Stderr, `    doubly-secure: This action is secured with the jwt scheme and also requires an API key query string.`)
 	fmt.Fprintln(os.Stderr, `    also-doubly-secure: This action is secured with the jwt scheme and also requires an API key header.`)
 	fmt.Fprintln(os.Stderr)
@@ -214,7 +225,25 @@ func securedServiceSecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service secure --fail true --token \"Non itaque accusamus.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service secure --fail true --token \"Sit autem nostrum autem sint officia.\"")
+}
+
+func securedServiceBearerSecureUsage() {
+	// Header with flags
+	fmt.Fprintf(os.Stderr, "%s [flags] secured-service bearer-secure", os.Args[0])
+	fmt.Fprint(os.Stderr, " -bearer-token STRING")
+	fmt.Fprintln(os.Stderr)
+
+	// Description
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprintln(os.Stderr, `This action is secured with the bearer scheme`)
+
+	// Flags list
+	fmt.Fprintln(os.Stderr, `    -bearer-token STRING: `)
+
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprintln(os.Stderr, "Example:")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service bearer-secure --bearer-token \"Quia consequuntur assumenda magnam nostrum sed optio.\"")
 }
 
 func securedServiceDoublySecureUsage() {
@@ -260,5 +289,5 @@ func securedServiceAlsoDoublySecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service also-doubly-secure --key \"abcdef12345\" --oauth-token \"Excepturi quam.\" --token \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ\" --username \"user\" --password \"password\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service also-doubly-secure --key \"abcdef12345\" --oauth-token \"Accusantium deserunt consequatur ut modi.\" --token \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ\" --username \"user\" --password \"password\"")
 }

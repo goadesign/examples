@@ -18,6 +18,8 @@ service SecuredService {
 	rpc Signin (SigninRequest) returns (SigninResponse);
 	// This action is secured with the jwt scheme
 	rpc Secure (SecureRequest) returns (SecureResponse);
+	// This action is secured with the bearer scheme
+	rpc BearerSecure (BearerSecureRequest) returns (BearerSecureResponse);
 	// This action is secured with the jwt scheme and also requires an API key
 // query string.
 	rpc DoublySecure (DoublySecureRequest) returns (DoublySecureResponse);
@@ -36,6 +38,8 @@ message SigninResponse {
 	string api_key = 2;
 	// OAuth2 token
 	string oauth_token = 3;
+	// Bearer token
+	string bearer_token = 4;
 }
 
 message SecureRequest {
@@ -44,6 +48,13 @@ message SecureRequest {
 }
 
 message SecureResponse {
+	string field = 1;
+}
+
+message BearerSecureRequest {
+}
+
+message BearerSecureResponse {
 	string field = 1;
 }
 

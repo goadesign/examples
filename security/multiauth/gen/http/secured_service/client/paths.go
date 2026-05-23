@@ -17,6 +17,11 @@ func SecureSecuredServicePath() string {
 	return "/secure"
 }
 
+// BearerSecureSecuredServicePath returns the URL path to the secured_service service bearer_secure HTTP endpoint.
+func BearerSecureSecuredServicePath() string {
+	return "/bearer"
+}
+
 // DoublySecureSecuredServicePath returns the URL path to the secured_service service doubly_secure HTTP endpoint.
 func DoublySecureSecuredServicePath() string {
 	return "/secure"

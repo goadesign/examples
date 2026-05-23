@@ -19,6 +19,11 @@ var JWTAuth = JWTSecurity("jwt", func() {
 	Description(`Secures endpoint by requiring a valid JWT token.`)
 })
 
+// BearerAuth defines a security scheme that uses bearer tokens.
+var BearerAuth = BearerSecurity("bearer", func() {
+	Description(`Secures endpoint by requiring a bearer token.`)
+})
+
 var _ = API("hierarchy", func() {
 	Title("Security Example API")
 	Description("This API demonstrates the effect of using Security at the API, Service or Method levels")
@@ -67,6 +72,20 @@ var _ = Service("api_key_service", func() {
 		})
 
 		HTTP(func() { GET("/secure") })
+	})
+
+	Method("bearer_secure", func() {
+		Security(BearerAuth)
+		Description("This method requires a bearer token.")
+
+		Payload(func() {
+			BearerToken("bearer_token", String, func() {
+				Description("Bearer token used for authentication")
+			})
+			Required("bearer_token")
+		})
+
+		HTTP(func() { GET("/bearer") })
 	})
 
 	Method("unsecure", func() {

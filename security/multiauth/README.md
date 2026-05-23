@@ -1,16 +1,17 @@
 # MultiAuth Example
 
 The MultiAuth example defines a service that exposes one endpoint for each
-security scheme natively supported by Goa (i.e. basic auth, API key, JWT auth
-and OAuth2). The example also includes a couple of endpoints that show how to
-apply multiple security schemes to a single endpoint.
+security scheme natively supported by Goa (i.e. basic auth, API key, bearer
+auth, JWT auth and OAuth2). The example also includes a couple of endpoints that
+show how to apply multiple security schemes to a single endpoint.
 
 ## Design
 
 The key design sections for the `multi_auth` service define the various security
-requirements. The `JWTAuth`, `BasicAuth`, `APIKeyAuth` and `OAuth2Auth` variables
-define the security schemes used by the service endpoints. The `doubly_secure`
-endpoint requires both a JWT and an API key to authorize requests:
+requirements. The `JWTAuth`, `BearerAuth`, `BasicAuth`, `APIKeyAuth` and
+`OAuth2Auth` variables define the security schemes used by the service
+endpoints. The `doubly_secure` endpoint requires both a JWT and an API key to
+authorize requests:
 
 ```go
 Security(JWTAuth, APIKeyAuth, func() { // Use JWT and an API key to secure this endpoint.
@@ -20,7 +21,8 @@ Security(JWTAuth, APIKeyAuth, func() { // Use JWT and an API key to secure this 
 ```
 
 The `Payload` DSL defines two attributes `key` and `token` that hold the API key
-and JWT token respectively:
+and JWT token respectively. Bearer-secured endpoints use `BearerToken` or
+`BearerTokenField` for their token attributes:
 
 ```go
 Payload(func() {
@@ -29,6 +31,9 @@ Payload(func() {
 	})
 	Token("token", String, func() {
 		Description("JWT used for authentication")
+	})
+	BearerToken("bearer_token", String, func() {
+		Description("Bearer token used for authentication")
 	})
 })
 ```
@@ -85,5 +90,7 @@ Payload(func() {
     })
     // AccessTokenField identifies the OAuth2 access token.
     AccessTokenField(5, "oauth_token", String)
+    // BearerTokenField identifies the bearer token.
+    BearerTokenField(6, "bearer_token", String)
 })
 ```

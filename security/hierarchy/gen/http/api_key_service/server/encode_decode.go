@@ -88,3 +88,39 @@ func DecodeSecureRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 		return payload, nil
 	}
 }
+
+// EncodeBearerSecureResponse returns an encoder for responses returned by the
+// api_key_service bearer_secure endpoint.
+func EncodeBearerSecureResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
+}
+
+// DecodeBearerSecureRequest returns a decoder for requests sent to the
+// api_key_service bearer_secure endpoint.
+func DecodeBearerSecureRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*apikeyservice.BearerSecurePayload, error) {
+	return func(r *http.Request) (*apikeyservice.BearerSecurePayload, error) {
+		var payload *apikeyservice.BearerSecurePayload
+		var (
+			bearerToken string
+			err         error
+		)
+		bearerToken = r.Header.Get("Authorization")
+		if bearerToken == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("bearer_token", "header"))
+		}
+		if err != nil {
+			return payload, err
+		}
+		payload = NewBearerSecurePayload(bearerToken)
+		if strings.Contains(payload.BearerToken, " ") {
+			// Remove authorization scheme prefix (e.g. "Bearer")
+			cred := strings.SplitN(payload.BearerToken, " ", 2)[1]
+			payload.BearerToken = cred
+		}
+
+		return payload, nil
+	}
+}

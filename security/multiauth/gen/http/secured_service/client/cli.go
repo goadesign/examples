@@ -58,6 +58,19 @@ func BuildSecurePayload(securedServiceSecureFail string, securedServiceSecureTok
 	return v, nil
 }
 
+// BuildBearerSecurePayload builds the payload for the secured_service
+// bearer_secure endpoint from CLI flags.
+func BuildBearerSecurePayload(securedServiceBearerSecureBearerToken string) (*securedservice.BearerSecurePayload, error) {
+	var bearerToken string
+	{
+		bearerToken = securedServiceBearerSecureBearerToken
+	}
+	v := &securedservice.BearerSecurePayload{}
+	v.BearerToken = bearerToken
+
+	return v, nil
+}
+
 // BuildDoublySecurePayload builds the payload for the secured_service
 // doubly_secure endpoint from CLI flags.
 func BuildDoublySecurePayload(securedServiceDoublySecureKey string, securedServiceDoublySecureToken string) (*securedservice.DoublySecurePayload, error) {

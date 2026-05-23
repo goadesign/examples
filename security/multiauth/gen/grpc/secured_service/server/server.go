@@ -22,6 +22,7 @@ import (
 type Server struct {
 	SigninH           goagrpc.UnaryHandler
 	SecureH           goagrpc.UnaryHandler
+	BearerSecureH     goagrpc.UnaryHandler
 	DoublySecureH     goagrpc.UnaryHandler
 	AlsoDoublySecureH goagrpc.UnaryHandler
 	secured_servicepb.UnimplementedSecuredServiceServer
@@ -33,6 +34,7 @@ func New(e *securedservice.Endpoints, uh goagrpc.UnaryHandler) *Server {
 	return &Server{
 		SigninH:           NewSigninHandler(e.Signin, uh),
 		SecureH:           NewSecureHandler(e.Secure, uh),
+		BearerSecureH:     NewBearerSecureHandler(e.BearerSecure, uh),
 		DoublySecureH:     NewDoublySecureHandler(e.DoublySecure, uh),
 		AlsoDoublySecureH: NewAlsoDoublySecureHandler(e.AlsoDoublySecure, uh),
 	}
@@ -94,6 +96,36 @@ func (s *Server) Secure(ctx context.Context, message *secured_servicepb.SecureRe
 		return nil, goagrpc.EncodeError(err)
 	}
 	return resp.(*secured_servicepb.SecureResponse), nil
+}
+
+// NewBearerSecureHandler creates a gRPC handler which serves the
+// "secured_service" service "bearer_secure" endpoint.
+func NewBearerSecureHandler(endpoint goa.Endpoint, h goagrpc.UnaryHandler) goagrpc.UnaryHandler {
+	if h == nil {
+		h = goagrpc.NewUnaryHandler(endpoint, DecodeBearerSecureRequest, EncodeBearerSecureResponse)
+	}
+	return h
+}
+
+// BearerSecure implements the "BearerSecure" method in
+// secured_servicepb.SecuredServiceServer interface.
+func (s *Server) BearerSecure(ctx context.Context, message *secured_servicepb.BearerSecureRequest) (*secured_servicepb.BearerSecureResponse, error) {
+	ctx = context.WithValue(ctx, goa.MethodKey, "bearer_secure")
+	ctx = context.WithValue(ctx, goa.ServiceKey, "secured_service")
+	resp, err := s.BearerSecureH.Handle(ctx, message)
+	if err != nil {
+		var en goa.GoaErrorNamer
+		if errors.As(err, &en) {
+			switch en.GoaErrorName() {
+			case "invalid-scopes":
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
+			case "unauthorized":
+				return nil, goagrpc.NewStatusError(codes.Unauthenticated, err, goagrpc.NewErrorResponse(err))
+			}
+		}
+		return nil, goagrpc.EncodeError(err)
+	}
+	return resp.(*secured_servicepb.BearerSecureResponse), nil
 }
 
 // NewDoublySecureHandler creates a gRPC handler which serves the

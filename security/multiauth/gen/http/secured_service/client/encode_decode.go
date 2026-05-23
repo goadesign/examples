@@ -200,6 +200,100 @@ func DecodeSecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 	}
 }
 
+// BuildBearerSecureRequest instantiates a HTTP request object with method and
+// path set to call the "secured_service" service "bearer_secure" endpoint
+func (c *Client) BuildBearerSecureRequest(ctx context.Context, v any) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: BearerSecureSecuredServicePath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("secured_service", "bearer_secure", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeBearerSecureRequest returns an encoder for requests sent to the
+// secured_service bearer_secure server.
+func EncodeBearerSecureRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, any) error {
+	return func(req *http.Request, v any) error {
+		p, ok := v.(*securedservice.BearerSecurePayload)
+		if !ok {
+			return goahttp.ErrInvalidType("secured_service", "bearer_secure", "*securedservice.BearerSecurePayload", v)
+		}
+		{
+			head := p.BearerToken
+			if !strings.Contains(head, " ") {
+				req.Header.Set("Authorization", "Bearer "+head)
+			} else {
+				req.Header.Set("Authorization", head)
+			}
+		}
+		return nil
+	}
+}
+
+// DecodeBearerSecureResponse returns a decoder for responses returned by the
+// secured_service bearer_secure endpoint. restoreBody controls whether the
+// response body should be restored after having been read.
+// DecodeBearerSecureResponse may return the following errors:
+//   - "invalid-scopes" (type securedservice.InvalidScopes): http.StatusForbidden
+//   - "unauthorized" (type securedservice.Unauthorized): http.StatusUnauthorized
+//   - error: internal error
+func DecodeBearerSecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
+	return func(resp *http.Response) (any, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body string
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "bearer_secure", err)
+			}
+			return body, nil
+		case http.StatusForbidden:
+			var (
+				body string
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "bearer_secure", err)
+			}
+			return nil, NewBearerSecureInvalidScopes(body)
+		case http.StatusUnauthorized:
+			var (
+				body string
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "bearer_secure", err)
+			}
+			return nil, NewBearerSecureUnauthorized(body)
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("secured_service", "bearer_secure", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildDoublySecureRequest instantiates a HTTP request object with method and
 // path set to call the "secured_service" service "doubly_secure" endpoint
 func (c *Client) BuildDoublySecureRequest(ctx context.Context, v any) (*http.Request, error) {

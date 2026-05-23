@@ -27,6 +27,20 @@ paths:
                 - http
             security:
                 - basic_header_Authorization: []
+    /svc/bearer:
+        get:
+            tags:
+                - api_key_service
+            summary: bearer_secure api_key_service
+            description: This method requires a bearer token.
+            operationId: api_key_service#bearer_secure
+            responses:
+                "204":
+                    description: No Content response.
+            schemes:
+                - http
+            security:
+                - bearer_header_Authorization: []
     /svc/default:
         get:
             tags:
@@ -63,6 +77,11 @@ securityDefinitions:
     basic_header_Authorization:
         type: basic
         description: Basic authentication
+    bearer_header_Authorization:
+        type: apiKey
+        description: Secures endpoint by requiring a bearer token.
+        name: Authorization
+        in: header
     jwt_header_Authorization:
         type: apiKey
         description: Secures endpoint by requiring a valid JWT token.

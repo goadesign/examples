@@ -20,6 +20,8 @@ type Service interface {
 	Signin(context.Context, *SigninPayload) (res *Creds, err error)
 	// This action is secured with the jwt scheme
 	Secure(context.Context, *SecurePayload) (res string, err error)
+	// This action is secured with the bearer scheme
+	BearerSecure(context.Context, *BearerSecurePayload) (res string, err error)
 	// This action is secured with the jwt scheme and also requires an API key
 	// query string.
 	DoublySecure(context.Context, *DoublySecurePayload) (res string, err error)
@@ -34,6 +36,8 @@ type Auther interface {
 	BasicAuth(ctx context.Context, user, pass string, schema *security.BasicScheme) (context.Context, error)
 	// JWTAuth implements the authorization logic for the JWT security scheme.
 	JWTAuth(ctx context.Context, token string, schema *security.JWTScheme) (context.Context, error)
+	// BearerAuth implements the authorization logic for the Bearer security scheme.
+	BearerAuth(ctx context.Context, token string, schema *security.BearerScheme) (context.Context, error)
 	// APIKeyAuth implements the authorization logic for the APIKey security scheme.
 	APIKeyAuth(ctx context.Context, key string, schema *security.APIKeyScheme) (context.Context, error)
 	// OAuth2Auth implements the authorization logic for the OAuth2 security scheme.
@@ -54,7 +58,7 @@ const ServiceName = "secured_service"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [4]string{"signin", "secure", "doubly_secure", "also_doubly_secure"}
+var MethodNames = [5]string{"signin", "secure", "bearer_secure", "doubly_secure", "also_doubly_secure"}
 
 // AlsoDoublySecurePayload is the payload type of the secured_service service
 // also_doubly_secure method.
@@ -70,6 +74,13 @@ type AlsoDoublySecurePayload struct {
 	OauthToken *string
 }
 
+// BearerSecurePayload is the payload type of the secured_service service
+// bearer_secure method.
+type BearerSecurePayload struct {
+	// Bearer token used for authentication
+	BearerToken string
+}
+
 // Creds is the result type of the secured_service service signin method.
 type Creds struct {
 	// JWT token
@@ -78,6 +89,8 @@ type Creds struct {
 	APIKey string
 	// OAuth2 token
 	OauthToken string
+	// Bearer token
+	BearerToken string
 }
 
 // DoublySecurePayload is the payload type of the secured_service service

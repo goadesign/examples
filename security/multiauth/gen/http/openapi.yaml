@@ -13,6 +13,34 @@ produces:
     - application/xml
     - application/gob
 paths:
+    /bearer:
+        get:
+            tags:
+                - secured_service
+            summary: bearer_secure secured_service
+            description: |-
+                This action is secured with the bearer scheme
+
+                **Required security scopes for bearer**:
+                  * `api:read`
+            operationId: secured_service#bearer_secure
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+                "401":
+                    description: Unauthorized response.
+                    schema:
+                        type: string
+                "403":
+                    description: Forbidden response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+            security:
+                - bearer_header_Authorization: []
     /secure:
         get:
             tags:
@@ -137,6 +165,7 @@ paths:
                             - jwt
                             - api_key
                             - oauth_token
+                            - bearer_token
                 "401":
                     description: Unauthorized response.
                     schema:
@@ -154,6 +183,10 @@ definitions:
                 type: string
                 description: API Key
                 example: abcdef12345
+            bearer_token:
+                type: string
+                description: Bearer token
+                example: opaque-session-token
             jwt:
                 type: string
                 description: JWT token
@@ -164,12 +197,14 @@ definitions:
                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
         example:
             api_key: abcdef12345
+            bearer_token: opaque-session-token
             jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
             oauth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
         required:
             - jwt
             - api_key
             - oauth_token
+            - bearer_token
 securityDefinitions:
     api_key_query_k:
         type: apiKey
@@ -183,6 +218,16 @@ securityDefinitions:
 
             **Security Scopes**:
               * `api:read`: Read-only access
+    bearer_header_Authorization:
+        type: apiKey
+        description: |-
+            Secures endpoint by requiring a valid bearer token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+
+            **Security Scopes**:
+              * `api:read`: Read-only access
+              * `api:write`: Read and write access
+        name: Authorization
+        in: header
     jwt_header_Authorization:
         type: apiKey
         description: |-

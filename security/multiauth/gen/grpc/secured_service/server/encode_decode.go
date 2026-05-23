@@ -108,6 +108,46 @@ func DecodeSecureRequest(ctx context.Context, v any, md metadata.MD) (any, error
 	return payload, nil
 }
 
+// EncodeBearerSecureResponse encodes responses from the "secured_service"
+// service "bearer_secure" endpoint.
+func EncodeBearerSecureResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any, error) {
+	result, ok := v.(string)
+	if !ok {
+		return nil, goagrpc.ErrInvalidType("secured_service", "bearer_secure", "string", v)
+	}
+	resp := NewProtoBearerSecureResponse(result)
+	return resp, nil
+}
+
+// DecodeBearerSecureRequest decodes requests sent to "secured_service" service
+// "bearer_secure" endpoint.
+func DecodeBearerSecureRequest(ctx context.Context, v any, md metadata.MD) (any, error) {
+	var (
+		bearerToken string
+		err         error
+	)
+	{
+		if vals := md.Get("authorization"); len(vals) == 0 {
+			err = goa.MergeErrors(err, goa.MissingFieldError("authorization", "metadata"))
+		} else {
+			bearerToken = vals[0]
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	var payload *securedservice.BearerSecurePayload
+	{
+		payload = NewBearerSecurePayload(bearerToken)
+		if strings.Contains(payload.BearerToken, " ") {
+			// Remove authorization scheme prefix (e.g. "Bearer")
+			cred := strings.SplitN(payload.BearerToken, " ", 2)[1]
+			payload.BearerToken = cred
+		}
+	}
+	return payload, nil
+}
+
 // EncodeDoublySecureResponse encodes responses from the "secured_service"
 // service "doubly_secure" endpoint.
 func EncodeDoublySecureResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any, error) {

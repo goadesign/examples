@@ -20,6 +20,13 @@ var JWTAuth = JWTSecurity("jwt", func() {
 	Scope("api:write", "Read and write access")
 })
 
+// BearerAuth defines a security scheme that uses bearer tokens.
+var BearerAuth = BearerSecurity("bearer", func() {
+	Description(`Secures endpoint by requiring a valid bearer token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".`)
+	Scope("api:read", "Read-only access")
+	Scope("api:write", "Read and write access")
+})
+
 // APIKeyAuth defines a security scheme that uses API keys.
 var APIKeyAuth = APIKeySecurity("api_key", func() {
 	Description("Secures endpoint by requiring an API key.")
@@ -107,6 +114,36 @@ var _ = Service("secured_service", func() {
 		HTTP(func() {
 			GET("/secure")
 			Param("fail")
+			Response(StatusOK)
+			Response("invalid-scopes", StatusForbidden)
+		})
+
+		GRPC(func() {
+			Response(CodeOK)
+			Response("invalid-scopes", CodeUnauthenticated)
+		})
+	})
+
+	Method("bearer_secure", func() {
+		Description("This action is secured with the bearer scheme")
+
+		Security(BearerAuth, func() { // Use bearer token to auth requests to this endpoint.
+			Scope("api:read") // Enforce presence of "api:read" scope in token claims.
+		})
+
+		Payload(func() {
+			BearerTokenField(1, "bearer_token", String, func() {
+				Description("Bearer token used for authentication")
+			})
+			Required("bearer_token")
+		})
+
+		Result(String)
+
+		Error("invalid-scopes", String, "Token scopes are invalid")
+
+		HTTP(func() {
+			GET("/bearer")
 			Response(StatusOK)
 			Response("invalid-scopes", StatusForbidden)
 		})
@@ -227,5 +264,8 @@ var Creds = Type("Creds", func() {
 	Field(3, "oauth_token", String, "OAuth2 token", func() {
 		Example("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ")
 	})
-	Required("jwt", "api_key", "oauth_token")
+	Field(4, "bearer_token", String, "Bearer token", func() {
+		Example("opaque-session-token")
+	})
+	Required("jwt", "api_key", "oauth_token", "bearer_token")
 })

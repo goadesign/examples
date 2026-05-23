@@ -25,9 +25,10 @@ func NewSigninPayload(username string, password string) *securedservice.SigninPa
 // "signin" endpoint of the "secured_service" service.
 func NewProtoSigninResponse(result *securedservice.Creds) *secured_servicepb.SigninResponse {
 	message := &secured_servicepb.SigninResponse{
-		Jwt:        result.JWT,
-		ApiKey:     result.APIKey,
-		OauthToken: result.OauthToken,
+		Jwt:         result.JWT,
+		ApiKey:      result.APIKey,
+		OauthToken:  result.OauthToken,
+		BearerToken: result.BearerToken,
 	}
 	return message
 }
@@ -46,6 +47,22 @@ func NewSecurePayload(message *secured_servicepb.SecureRequest, token string) *s
 // "secure" endpoint of the "secured_service" service.
 func NewProtoSecureResponse(result string) *secured_servicepb.SecureResponse {
 	message := &secured_servicepb.SecureResponse{}
+	message.Field = result
+	return message
+}
+
+// NewBearerSecurePayload builds the payload of the "bearer_secure" endpoint of
+// the "secured_service" service from the gRPC request type.
+func NewBearerSecurePayload(bearerToken string) *securedservice.BearerSecurePayload {
+	v := &securedservice.BearerSecurePayload{}
+	v.BearerToken = bearerToken
+	return v
+}
+
+// NewProtoBearerSecureResponse builds the gRPC response type from the result
+// of the "bearer_secure" endpoint of the "secured_service" service.
+func NewProtoBearerSecureResponse(result string) *secured_servicepb.BearerSecureResponse {
+	message := &secured_servicepb.BearerSecureResponse{}
 	message.Field = result
 	return message
 }

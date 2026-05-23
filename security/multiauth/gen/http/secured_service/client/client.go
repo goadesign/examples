@@ -23,6 +23,10 @@ type Client struct {
 	// Secure Doer is the HTTP client used to make requests to the secure endpoint.
 	SecureDoer goahttp.Doer
 
+	// BearerSecure Doer is the HTTP client used to make requests to the
+	// bearer_secure endpoint.
+	BearerSecureDoer goahttp.Doer
+
 	// DoublySecure Doer is the HTTP client used to make requests to the
 	// doubly_secure endpoint.
 	DoublySecureDoer goahttp.Doer
@@ -54,6 +58,7 @@ func NewClient(
 	return &Client{
 		SigninDoer:           doer,
 		SecureDoer:           doer,
+		BearerSecureDoer:     doer,
 		DoublySecureDoer:     doer,
 		AlsoDoublySecureDoer: doer,
 		RestoreResponseBody:  restoreBody,
@@ -107,6 +112,30 @@ func (c *Client) Secure() goa.Endpoint {
 		resp, err := c.SecureDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("secured_service", "secure", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// BearerSecure returns an endpoint that makes HTTP requests to the
+// secured_service service bearer_secure server.
+func (c *Client) BearerSecure() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeBearerSecureRequest(c.encoder)
+		decodeResponse = DecodeBearerSecureResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildBearerSecureRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.BearerSecureDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("secured_service", "bearer_secure", err)
 		}
 		return decodeResponse(resp)
 	}

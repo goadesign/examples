@@ -138,3 +138,65 @@ func DecodeSecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 		}
 	}
 }
+
+// BuildBearerSecureRequest instantiates a HTTP request object with method and
+// path set to call the "api_key_service" service "bearer_secure" endpoint
+func (c *Client) BuildBearerSecureRequest(ctx context.Context, v any) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: BearerSecureAPIKeyServicePath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("api_key_service", "bearer_secure", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeBearerSecureRequest returns an encoder for requests sent to the
+// api_key_service bearer_secure server.
+func EncodeBearerSecureRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, any) error {
+	return func(req *http.Request, v any) error {
+		p, ok := v.(*apikeyservice.BearerSecurePayload)
+		if !ok {
+			return goahttp.ErrInvalidType("api_key_service", "bearer_secure", "*apikeyservice.BearerSecurePayload", v)
+		}
+		{
+			head := p.BearerToken
+			if !strings.Contains(head, " ") {
+				req.Header.Set("Authorization", "Bearer "+head)
+			} else {
+				req.Header.Set("Authorization", head)
+			}
+		}
+		return nil
+	}
+}
+
+// DecodeBearerSecureResponse returns a decoder for responses returned by the
+// api_key_service bearer_secure endpoint. restoreBody controls whether the
+// response body should be restored after having been read.
+func DecodeBearerSecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
+	return func(resp *http.Response) (any, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusNoContent:
+			return nil, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("api_key_service", "bearer_secure", resp.StatusCode, string(body))
+		}
+	}
+}

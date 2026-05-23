@@ -15,17 +15,19 @@ import (
 
 // Client is the "api_key_service" service client.
 type Client struct {
-	DefaultEndpoint  goa.Endpoint
-	SecureEndpoint   goa.Endpoint
-	UnsecureEndpoint goa.Endpoint
+	DefaultEndpoint      goa.Endpoint
+	SecureEndpoint       goa.Endpoint
+	BearerSecureEndpoint goa.Endpoint
+	UnsecureEndpoint     goa.Endpoint
 }
 
 // NewClient initializes a "api_key_service" service client given the endpoints.
-func NewClient(default_, secure, unsecure goa.Endpoint) *Client {
+func NewClient(default_, secure, bearerSecure, unsecure goa.Endpoint) *Client {
 	return &Client{
-		DefaultEndpoint:  default_,
-		SecureEndpoint:   secure,
-		UnsecureEndpoint: unsecure,
+		DefaultEndpoint:      default_,
+		SecureEndpoint:       secure,
+		BearerSecureEndpoint: bearerSecure,
+		UnsecureEndpoint:     unsecure,
 	}
 }
 
@@ -38,6 +40,13 @@ func (c *Client) Default(ctx context.Context, p *DefaultPayload) (err error) {
 // Secure calls the "secure" endpoint of the "api_key_service" service.
 func (c *Client) Secure(ctx context.Context, p *SecurePayload) (err error) {
 	_, err = c.SecureEndpoint(ctx, p)
+	return
+}
+
+// BearerSecure calls the "bearer_secure" endpoint of the "api_key_service"
+// service.
+func (c *Client) BearerSecure(ctx context.Context, p *BearerSecurePayload) (err error) {
+	_, err = c.BearerSecureEndpoint(ctx, p)
 	return
 }
 
