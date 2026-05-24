@@ -204,7 +204,7 @@ func ParseEndpoint(
 				err = json.Unmarshal([]byte(*storageRatePFlag), &val)
 				data = val
 				if err != nil {
-					return nil, nil, fmt.Errorf("invalid JSON for storageRatePFlag, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Iure tenetur sapiente et ut.\",\n         \"Voluptatem voluptatem voluptas veritatis.\",\n         \"Dignissimos sunt ut accusamus soluta.\"\n      ]\n   }'")
+					return nil, nil, fmt.Errorf("invalid JSON for storageRatePFlag, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Et maiores quidem.\",\n         \"Et qui.\",\n         \"Quaerat id.\",\n         \"Sed fugiat vel.\"\n      ]\n   }'")
 				}
 			case "multi-add":
 				endpoint = c.MultiAdd(storageMultiAddEncoderFn)
@@ -354,7 +354,7 @@ func storageRateUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage rate --p '{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Iure tenetur sapiente et ut.\",\n         \"Voluptatem voluptatem voluptas veritatis.\",\n         \"Dignissimos sunt ut accusamus soluta.\"\n      ]\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage rate --p '{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Et maiores quidem.\",\n         \"Et qui.\",\n         \"Quaerat id.\",\n         \"Sed fugiat vel.\"\n      ]\n   }'")
 }
 
 func storageMultiAddUsage() {
