@@ -57,6 +57,7 @@ components:
             type: http
             description: Secures endpoint by requiring a valid JWT token.
             scheme: bearer
+            bearerFormat: JWT
 tags:
     - name: api_key_service
       description: The svc service is secured with API key based authentication

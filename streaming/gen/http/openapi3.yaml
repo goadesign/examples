@@ -39,8 +39,7 @@ paths:
                                 example: Et architecto est numquam commodi rerum est.
                             example: Nihil sed.
             security:
-                - jwt_header_Authorization:
-                    - stream:write
+                - jwt_header_Authorization: []
     /history:
         get:
             tags:
@@ -86,8 +85,7 @@ paths:
                                 example: Et sed.
                             example: Quae dicta repudiandae dolorem ex a voluptatem.
             security:
-                - jwt_header_Authorization:
-                    - stream:read
+                - jwt_header_Authorization: []
     /listener:
         get:
             tags:
@@ -115,8 +113,7 @@ paths:
                                 example: Velit voluptates enim quo vel modi.
                             example: Inventore ut ut id eveniet eum eveniet.
             security:
-                - jwt_header_Authorization:
-                    - stream:write
+                - jwt_header_Authorization: []
     /login:
         post:
             tags:
@@ -179,8 +176,7 @@ paths:
                                 example: Atque et magnam blanditiis voluptates.
                             example: Nobis nesciunt eaque voluptatibus est sit aut.
             security:
-                - jwt_header_Authorization:
-                    - stream:write
+                - jwt_header_Authorization: []
     /summary:
         get:
             tags:
@@ -225,8 +221,7 @@ paths:
                                 example: Aspernatur nulla deleniti.
                             example: Optio fugit sunt quod incidunt.
             security:
-                - jwt_header_Authorization:
-                    - stream:write
+                - jwt_header_Authorization: []
 components:
     schemas:
         ChatSummaryResponse:
@@ -324,6 +319,7 @@ components:
             type: http
             description: Secures endpoint by requiring a valid JWT token. Supports scopes "stream:read" and "stream:write".
             scheme: bearer
+            bearerFormat: JWT
 tags:
     - name: chatter
       description: The chatter service implements a simple client and server chat.

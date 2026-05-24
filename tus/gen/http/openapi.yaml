@@ -73,7 +73,8 @@ paths:
                             type: string
                         Upload-Offset:
                             description: uploadOffset represents a byte offset within a resource.
-                            type: int64
+                            type: integer
+                            format: int64
                 "400":
                     description: Bad Request response.
                     headers:
@@ -169,7 +170,8 @@ paths:
                                 - creation,creation-with-upload,creation-defer-length,expiration,checksum,termination
                         Tus-Max-Size:
                             description: tusMaxSize represents the maximum allowed size of an entire upload in bytes.
-                            type: int64
+                            type: integer
+                            format: int64
                         Tus-Resumable:
                             description: tusResumable represents a tus protocol version.
                             type: string
@@ -298,18 +300,20 @@ paths:
                             pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$
                         Upload-Defer-Length:
                             description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
-                            type: int
+                            type: integer
                             enum:
                                 - 1
                         Upload-Length:
                             description: uploadLength represents the size of the entire upload in bytes.
-                            type: int64
+                            type: integer
+                            format: int64
                         Upload-Metadata:
                             description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
                             type: string
                         Upload-Offset:
                             description: uploadOffset represents a byte offset within a resource.
-                            type: int64
+                            type: integer
+                            format: int64
                 "404":
                     description: Not Found response.
                     headers:
@@ -405,7 +409,8 @@ paths:
                             type: string
                         Upload-Offset:
                             description: uploadOffset represents a byte offset within a resource.
-                            type: int64
+                            type: integer
+                            format: int64
                 "400":
                     description: Bad Request response.
                     headers:

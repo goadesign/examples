@@ -31,7 +31,8 @@ paths:
                     headers:
                         Content-Length:
                             description: Length is the downloaded content length in bytes.
-                            type: int64
+                            type: integer
+                            format: int64
                 "404":
                     description: Not Found response.
                     schema:

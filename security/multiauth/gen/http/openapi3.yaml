@@ -50,8 +50,7 @@ paths:
                                 example: Maiores porro alias.
                             example: Ex nulla.
             security:
-                - jwt_header_Authorization:
-                    - api:read
+                - jwt_header_Authorization: []
         post:
             tags:
                 - secured_service
@@ -85,9 +84,7 @@ paths:
                             example: Consequatur blanditiis consectetur quis.
             security:
                 - api_key_query_k: []
-                  jwt_header_X-Authorization:
-                    - api:read
-                    - api:write
+                  jwt_header_X-Authorization: []
                 - basic_header_Authorization: []
                   oauth2_query_oauth:
                     - api:read
@@ -125,9 +122,7 @@ paths:
                             example: Corrupti alias architecto.
             security:
                 - api_key_query_k: []
-                  jwt_header_Authorization:
-                    - api:read
-                    - api:write
+                  jwt_header_Authorization: []
     /signin:
         post:
             tags:
@@ -195,10 +190,12 @@ components:
             type: http
             description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
             scheme: bearer
+            bearerFormat: JWT
         jwt_header_X-Authorization:
             type: http
             description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
             scheme: bearer
+            bearerFormat: JWT
         oauth2_query_oauth:
             type: oauth2
             description: Secures endpoint by requiring a valid OAuth2 token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".

@@ -25,11 +25,13 @@ paths:
                   description: Left operand
                   required: true
                   type: integer
+                  format: int64
                 - name: b
                   in: path
                   description: Right operand
                   required: true
                   type: integer
+                  format: int64
             responses:
                 "200":
                     description: OK response.
