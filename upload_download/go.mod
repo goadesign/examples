@@ -2,7 +2,7 @@ module goa.design/examples/upload_download
 
 go 1.26.0
 
-require goa.design/goa/v3 v3.27.0
+require goa.design/goa/v3 v3.28.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
