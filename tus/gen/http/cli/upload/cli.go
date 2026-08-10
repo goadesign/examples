@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "tus head --id \"99homqugg35laha266s6\" --tus-resumable \"1.0.0\"" + "\n" +
+	return os.Args[0] + " " + "tus head --id \"q6rv3ofkukars65g6hq6\" --tus-resumable \"1.0.0\"" + "\n" +
 		""
 }
 
@@ -213,7 +213,7 @@ func tusHeadUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus head --id \"99homqugg35laha266s6\" --tus-resumable \"1.0.0\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus head --id \"q6rv3ofkukars65g6hq6\" --tus-resumable \"1.0.0\"")
 }
 
 func tusPatchUsage() {
@@ -239,7 +239,7 @@ func tusPatchUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus patch --id \"hmpmrpp0ls3ru16n0vkq\" --tus-resumable \"1.0.0\" --upload-offset 4913379198212964978 --upload-checksum \"sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=\" --stream \"goa.png\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus patch --id \"kbk9n1g4u0hd4fgheooj\" --tus-resumable \"1.0.0\" --upload-offset 6034095156383247232 --upload-checksum \"sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=\" --stream \"goa.png\"")
 }
 
 func tusOptionsUsage() {
@@ -285,7 +285,7 @@ func tusPostUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus post --tus-resumable \"1.0.0\" --upload-length 7471840069206534621 --upload-defer-length 1 --upload-checksum \"sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=\" --upload-metadata \"key1 val1,key2 val2\" --tus-max-size 4187081630712482631 --stream \"goa.png\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus post --tus-resumable \"1.0.0\" --upload-length 5038928809516772226 --upload-defer-length 1 --upload-checksum \"sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=\" --upload-metadata \"key1 val1,key2 val2\" --tus-max-size 3823710747799640147 --stream \"goa.png\"")
 }
 
 func tusDeleteUsage() {
@@ -305,5 +305,5 @@ func tusDeleteUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus delete --id \"fd90p6dgjhach3rv88d9\" --tus-resumable \"1.0.0\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus delete --id \"l8gvnb0heh9gmtcdonme\" --tus-resumable \"1.0.0\"")
 }

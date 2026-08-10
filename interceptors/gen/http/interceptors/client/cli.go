@@ -23,7 +23,7 @@ func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string,
 	{
 		err = json.Unmarshal([]byte(interceptorsGetBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"3d14158e-229c-4a36-a10f-52399658e40f\",\n      \"traceID\": \"5c269208-646a-4c82-ba7d-9b7a4406162b\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"c2bc78f1-a675-44df-b132-1d285e204cf2\",\n      \"traceID\": \"8909bcf0-fa7e-4ed1-bc3e-1ed689cc9896\"\n   }'")
 		}
 		if body.TraceID != nil {
 			err = goa.MergeErrors(err, goa.ValidateFormat("body.traceID", *body.TraceID, goa.FormatUUID))
@@ -79,7 +79,7 @@ func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantI
 	{
 		err = json.Unmarshal([]byte(interceptorsCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"4310df54-2c77-47dc-93de-ac96d587b947\",\n      \"traceID\": \"a9d0301f-4d44-4047-bbe6-86a10c4c0b15\",\n      \"value\": \"Et voluptatem voluptas consequuntur tempore velit optio.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"7e046fe3-fa36-4f0f-b281-f8c9e1fdf010\",\n      \"traceID\": \"831384a5-5a7d-43cc-94e4-5ec22455f386\",\n      \"value\": \"Impedit voluptatem culpa et.\"\n   }'")
 		}
 		if body.TraceID != nil {
 			err = goa.MergeErrors(err, goa.ValidateFormat("body.traceID", *body.TraceID, goa.FormatUUID))

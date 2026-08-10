@@ -21,8 +21,8 @@ paths:
                   schema:
                     type: string
                     description: Path to downloaded file.
-                    example: Architecto eos id dolores ducimus quo culpa.
-                  example: Perspiciatis est culpa sed error et.
+                    example: Qui vel non.
+                  example: Tempora in.
             responses:
                 "200":
                     description: OK response.
@@ -103,7 +103,7 @@ components:
                 fault:
                     type: boolean
                     description: Is the error a server-side fault?
-                    example: false
+                    example: true
                 id:
                     type: string
                     description: ID is a unique identifier for this particular occurrence of the problem.
@@ -119,18 +119,18 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: true
+                    example: false
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
                     example: false
             description: Error returned when the Content-Type header does not define a multipart request.
             example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: false
             required:
                 - name

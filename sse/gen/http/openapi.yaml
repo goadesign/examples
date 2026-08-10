@@ -43,8 +43,8 @@ paths:
             description: Monitor CPU and memory usage via Server-Sent Events
             operationId: monitor#monitor
             responses:
-                "101":
-                    description: Switching Protocols response.
+                "200":
+                    description: OK response.
                     schema:
                         $ref: '#/definitions/Usage'
                         required:
@@ -52,7 +52,7 @@ paths:
                             - cpu
                             - memory
             schemes:
-                - ws
+                - http
 definitions:
     Error:
         title: 'Mediatype identifier: application/vnd.goa.error; view=default'
@@ -77,19 +77,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: false
+                example: true
             timeout:
                 type: boolean
                 description: Is the error a timeout?
                 example: true
         description: Error response result type (default view)
         example:
-            fault: false
+            fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
             temporary: true
-            timeout: false
+            timeout: true
         required:
             - name
             - id
@@ -114,12 +114,12 @@ definitions:
             timestamp:
                 type: string
                 description: Timestamp of the usage report
-                example: "1986-09-20T13:57:16Z"
+                example: "1988-01-09T02:12:36Z"
                 format: date-time
         example:
             cpu: 50
             memory: 30
-            timestamp: "1976-07-27T02:35:49Z"
+            timestamp: "1988-01-09T02:12:36Z"
         required:
             - timestamp
             - cpu

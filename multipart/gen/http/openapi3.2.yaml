@@ -1,0 +1,478 @@
+openapi: 3.2.0
+info:
+    title: Goa API
+    version: 0.0.1
+servers:
+    - url: http://localhost:80
+      name: resume
+      description: Default server for resume
+paths:
+    /resumes:
+        get:
+            tags:
+                - resume
+            summary: list resume
+            description: List all stored resumes
+            operationId: resume#list
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StoredResumeCollection'
+                            example:
+                                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                                  education:
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                  experience:
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                  id: 1462454679131059051
+                                  name: Aperiam exercitationem aliquam et sint praesentium.
+                                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                                  education:
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                  experience:
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                  id: 1462454679131059051
+                                  name: Aperiam exercitationem aliquam et sint praesentium.
+                                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                                  education:
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                  experience:
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                  id: 1462454679131059051
+                                  name: Aperiam exercitationem aliquam et sint praesentium.
+                                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                                  education:
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                    - institution: Et quaerat ipsa reiciendis.
+                                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                                  experience:
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                    - company: Dolores odio quis atque deserunt.
+                                      duration: 3945418871627614791
+                                      role: Voluptas animi tempora vero.
+                                  id: 1462454679131059051
+                                  name: Aperiam exercitationem aliquam et sint praesentium.
+        post:
+            tags:
+                - resume
+            summary: add resume
+            description: Add n number of resumes and return their IDs. This is a multipart request and each part has field name 'resume' and contains the encoded resume to be added.
+            operationId: resume#add
+            requestBody:
+                description: Request body for add.
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Resume'
+                            example:
+                                - education:
+                                    - institution: Ipsum saepe quia est.
+                                      major: Fuga placeat est voluptatem sed.
+                                    - institution: Ipsum saepe quia est.
+                                      major: Fuga placeat est voluptatem sed.
+                                    - institution: Ipsum saepe quia est.
+                                      major: Fuga placeat est voluptatem sed.
+                                  experience:
+                                    - company: Saepe enim.
+                                      duration: 4129157726558553807
+                                      role: Aut sit aut dolores sed ut ut.
+                                    - company: Saepe enim.
+                                      duration: 4129157726558553807
+                                      role: Aut sit aut dolores sed ut ut.
+                                  name: Explicabo et eligendi expedita necessitatibus eius qui.
+                                - education:
+                                    - institution: Ipsum saepe quia est.
+                                      major: Fuga placeat est voluptatem sed.
+                                    - institution: Ipsum saepe quia est.
+                                      major: Fuga placeat est voluptatem sed.
+                                    - institution: Ipsum saepe quia est.
+                                      major: Fuga placeat est voluptatem sed.
+                                  experience:
+                                    - company: Saepe enim.
+                                      duration: 4129157726558553807
+                                      role: Aut sit aut dolores sed ut ut.
+                                    - company: Saepe enim.
+                                      duration: 4129157726558553807
+                                      role: Aut sit aut dolores sed ut ut.
+                                  name: Explicabo et eligendi expedita necessitatibus eius qui.
+                        example:
+                            - education:
+                                - institution: Ipsum saepe quia est.
+                                  major: Fuga placeat est voluptatem sed.
+                                - institution: Ipsum saepe quia est.
+                                  major: Fuga placeat est voluptatem sed.
+                                - institution: Ipsum saepe quia est.
+                                  major: Fuga placeat est voluptatem sed.
+                              experience:
+                                - company: Saepe enim.
+                                  duration: 4129157726558553807
+                                  role: Aut sit aut dolores sed ut ut.
+                                - company: Saepe enim.
+                                  duration: 4129157726558553807
+                                  role: Aut sit aut dolores sed ut ut.
+                              name: Explicabo et eligendi expedita necessitatibus eius qui.
+                            - education:
+                                - institution: Ipsum saepe quia est.
+                                  major: Fuga placeat est voluptatem sed.
+                                - institution: Ipsum saepe quia est.
+                                  major: Fuga placeat est voluptatem sed.
+                                - institution: Ipsum saepe quia est.
+                                  major: Fuga placeat est voluptatem sed.
+                              experience:
+                                - company: Saepe enim.
+                                  duration: 4129157726558553807
+                                  role: Aut sit aut dolores sed ut ut.
+                                - company: Saepe enim.
+                                  duration: 4129157726558553807
+                                  role: Aut sit aut dolores sed ut ut.
+                              name: Explicabo et eligendi expedita necessitatibus eius qui.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: integer
+                                    example: 1795326025593494324
+                                    format: int64
+                                example:
+                                    - 1795326025593494324
+                                    - 7046124531025578008
+                            example:
+                                - 1795326025593494324
+                                - 7046124531025578008
+components:
+    schemas:
+        Education:
+            type: object
+            properties:
+                institution:
+                    type: string
+                    description: Name of the institution
+                    example: Est enim ut odio rerum.
+                major:
+                    type: string
+                    description: Major name
+                    example: Explicabo sapiente est praesentium sunt et.
+            example:
+                institution: Est enim ut odio rerum.
+                major: Explicabo sapiente est praesentium sunt et.
+            required:
+                - institution
+                - major
+        Experience:
+            type: object
+            properties:
+                company:
+                    type: string
+                    description: Name of the company
+                    example: Eum ut.
+                duration:
+                    type: integer
+                    description: Duration (in years) in the company
+                    example: 7855387208056668376
+                    format: int64
+                role:
+                    type: string
+                    description: Name of the role in the company
+                    example: Quam minima dolorum et voluptatem velit.
+            example:
+                company: Eum ut.
+                duration: 7855387208056668376
+                role: Quam minima dolorum et voluptatem velit.
+            required:
+                - company
+                - role
+                - duration
+        GoaResume:
+            type: object
+            properties:
+                created_at:
+                    type: string
+                    description: Time when resume was created
+                    example: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                education:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Education'
+                    description: Education section in the resume
+                    example:
+                        - institution: Est enim ut odio rerum.
+                          major: Explicabo sapiente est praesentium sunt et.
+                        - institution: Est enim ut odio rerum.
+                          major: Explicabo sapiente est praesentium sunt et.
+                        - institution: Est enim ut odio rerum.
+                          major: Explicabo sapiente est praesentium sunt et.
+                experience:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Experience'
+                    description: Experience section in the resume
+                    example:
+                        - company: Eum ut.
+                          duration: 7855387208056668376
+                          role: Quam minima dolorum et voluptatem velit.
+                        - company: Eum ut.
+                          duration: 7855387208056668376
+                          role: Quam minima dolorum et voluptatem velit.
+                        - company: Eum ut.
+                          duration: 7855387208056668376
+                          role: Quam minima dolorum et voluptatem velit.
+                        - company: Eum ut.
+                          duration: 7855387208056668376
+                          role: Quam minima dolorum et voluptatem velit.
+                id:
+                    type: integer
+                    description: ID of the resume
+                    example: 1462454679131059051
+                    format: int64
+                name:
+                    type: string
+                    description: Name in the resume
+                    example: Aperiam exercitationem aliquam et sint praesentium.
+            example:
+                created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                education:
+                    - institution: Est enim ut odio rerum.
+                      major: Explicabo sapiente est praesentium sunt et.
+                    - institution: Est enim ut odio rerum.
+                      major: Explicabo sapiente est praesentium sunt et.
+                    - institution: Est enim ut odio rerum.
+                      major: Explicabo sapiente est praesentium sunt et.
+                experience:
+                    - company: Eum ut.
+                      duration: 7855387208056668376
+                      role: Quam minima dolorum et voluptatem velit.
+                    - company: Eum ut.
+                      duration: 7855387208056668376
+                      role: Quam minima dolorum et voluptatem velit.
+                    - company: Eum ut.
+                      duration: 7855387208056668376
+                      role: Quam minima dolorum et voluptatem velit.
+                    - company: Eum ut.
+                      duration: 7855387208056668376
+                      role: Quam minima dolorum et voluptatem velit.
+                id: 1462454679131059051
+                name: Aperiam exercitationem aliquam et sint praesentium.
+            required:
+                - id
+                - name
+                - experience
+                - education
+                - created_at
+        Resume:
+            type: object
+            properties:
+                education:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Education'
+                    description: Education section in the resume
+                    example:
+                        - institution: Ipsum saepe quia est.
+                          major: Fuga placeat est voluptatem sed.
+                        - institution: Ipsum saepe quia est.
+                          major: Fuga placeat est voluptatem sed.
+                        - institution: Ipsum saepe quia est.
+                          major: Fuga placeat est voluptatem sed.
+                experience:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Experience'
+                    description: Experience section in the resume
+                    example:
+                        - company: Saepe enim.
+                          duration: 4129157726558553807
+                          role: Aut sit aut dolores sed ut ut.
+                        - company: Saepe enim.
+                          duration: 4129157726558553807
+                          role: Aut sit aut dolores sed ut ut.
+                name:
+                    type: string
+                    description: Name in the resume
+                    example: Explicabo et eligendi expedita necessitatibus eius qui.
+            example:
+                education:
+                    - institution: Ipsum saepe quia est.
+                      major: Fuga placeat est voluptatem sed.
+                    - institution: Ipsum saepe quia est.
+                      major: Fuga placeat est voluptatem sed.
+                    - institution: Ipsum saepe quia est.
+                      major: Fuga placeat est voluptatem sed.
+                experience:
+                    - company: Saepe enim.
+                      duration: 4129157726558553807
+                      role: Aut sit aut dolores sed ut ut.
+                    - company: Saepe enim.
+                      duration: 4129157726558553807
+                      role: Aut sit aut dolores sed ut ut.
+                name: Explicabo et eligendi expedita necessitatibus eius qui.
+            required:
+                - name
+        StoredResumeCollection:
+            type: array
+            items:
+                $ref: '#/components/schemas/GoaResume'
+            example:
+                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                  education:
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                  experience:
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                  id: 1462454679131059051
+                  name: Aperiam exercitationem aliquam et sint praesentium.
+                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                  education:
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                  experience:
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                  id: 1462454679131059051
+                  name: Aperiam exercitationem aliquam et sint praesentium.
+                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                  education:
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                  experience:
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                  id: 1462454679131059051
+                  name: Aperiam exercitationem aliquam et sint praesentium.
+                - created_at: Sit voluptate voluptates nisi asperiores repellendus dolor.
+                  education:
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                    - institution: Et quaerat ipsa reiciendis.
+                      major: Ad neque hic ut repudiandae quibusdam incidunt.
+                  experience:
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                    - company: Dolores odio quis atque deserunt.
+                      duration: 3945418871627614791
+                      role: Voluptas animi tempora vero.
+                  id: 1462454679131059051
+                  name: Aperiam exercitationem aliquam et sint praesentium.
+tags:
+    - name: resume
+      description: The storage service makes it possible to add resumes using multipart.

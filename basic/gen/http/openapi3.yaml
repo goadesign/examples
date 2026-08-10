@@ -26,9 +26,9 @@ paths:
                   schema:
                     type: integer
                     description: Left operand
-                    example: 1918630006328122782
+                    example: 2827624921536156404
                     format: int64
-                  example: 4288748512599820841
+                  example: 1382634857916332518
                 - name: b
                   in: path
                   description: Right operand
@@ -36,9 +36,9 @@ paths:
                   schema:
                     type: integer
                     description: Right operand
-                    example: 4212629202012168060
+                    example: 5648438437472980127
                     format: int64
-                  example: 1698882017578366363
+                  example: 6509684248140511211
             responses:
                 "200":
                     description: OK response.
@@ -46,9 +46,9 @@ paths:
                         application/json:
                             schema:
                                 type: integer
-                                example: 5401762099778430809
+                                example: 4628236506152770078
                                 format: int64
-                            example: 6747375795581831989
+                            example: 4628236506152770078
     /openapi.json:
         get:
             tags:

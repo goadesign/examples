@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "concat concat --a \"In eos.\" --b \"Dolorum reiciendis rerum quae.\"" + "\n" +
+	return os.Args[0] + " " + "concat concat --a \"Minus illo ducimus rerum id.\" --b \"Quod vel occaecati autem ducimus quis vel.\"" + "\n" +
 		""
 }
 
@@ -158,5 +158,5 @@ func concatConcatUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "concat concat --a \"In eos.\" --b \"Dolorum reiciendis rerum quae.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "concat concat --a \"Minus illo ducimus rerum id.\" --b \"Quod vel occaecati autem ducimus quis vel.\"")
 }

@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "session create-session --body '{\n      \"name\": \"Ut quas sit at illum tempore ad.\"\n   }'" + "\n" +
+	return os.Args[0] + " " + "session create-session --body '{\n      \"name\": \"Et distinctio eos dolores quibusdam adipisci.\"\n   }'" + "\n" +
 		""
 }
 
@@ -162,7 +162,7 @@ func sessionCreateSessionUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session create-session --body '{\n      \"name\": \"Ut quas sit at illum tempore ad.\"\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session create-session --body '{\n      \"name\": \"Et distinctio eos dolores quibusdam adipisci.\"\n   }'")
 }
 
 func sessionUseSessionUsage() {
@@ -180,5 +180,5 @@ func sessionUseSessionUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session use-session --session-id \"Qui voluptatem dolores.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session use-session --session-id \"Porro animi illum et corporis nobis.\"")
 }

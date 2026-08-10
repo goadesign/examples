@@ -58,9 +58,9 @@ definitions:
             name:
                 type: string
                 description: Name of session
-                example: Beatae veritatis similique.
+                example: Et distinctio eos dolores quibusdam adipisci.
         example:
-            name: Eos alias omnis labore at blanditiis quia.
+            name: Et distinctio eos dolores quibusdam adipisci.
         required:
             - name
     SessionCreateSessionResponseBody:
@@ -70,9 +70,9 @@ definitions:
             message:
                 type: string
                 description: User message
-                example: Molestiae sit nihil.
+                example: Voluptatem at id delectus magnam ut consequatur.
         example:
-            message: Ut amet aspernatur.
+            message: Voluptatem at id delectus magnam ut consequatur.
         required:
             - message
     SessionUseSessionResponseBody:
@@ -82,8 +82,8 @@ definitions:
             message:
                 type: string
                 description: User message
-                example: Quibusdam quod voluptates est vitae quo quo.
+                example: Qui vitae in assumenda.
         example:
-            message: Est suscipit aliquid nam.
+            message: Qui vitae in assumenda.
         required:
             - message

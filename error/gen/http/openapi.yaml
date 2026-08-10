@@ -54,15 +54,15 @@ definitions:
         properties:
             dividend:
                 type: integer
-                example: 6836512047429743720
+                example: 1196350668178300830
                 format: int64
             divisor:
                 type: integer
-                example: 7054049476353626766
+                example: 5941732484439269441
                 format: int64
         example:
-            dividend: 5570723899899913296
-            divisor: 6513733567661029654
+            dividend: 1196350668178300830
+            divisor: 5941732484439269441
         required:
             - dividend
             - divisor
@@ -72,15 +72,15 @@ definitions:
         properties:
             quotient:
                 type: integer
-                example: 7617773024289378824
+                example: 3989696267411135677
                 format: int64
             reminder:
                 type: integer
-                example: 8614350958614154271
+                example: 6133210891814429636
                 format: int64
         example:
-            quotient: 4285228716133201605
-            reminder: 1232634558296710584
+            quotient: 3989696267411135677
+            reminder: 6133210891814429636
         required:
             - quotient
             - reminder
@@ -91,7 +91,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -111,14 +111,14 @@ definitions:
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: false
-        description: divide_timeout_response_body result type (default view)
+                example: true
+        description: Error response result type (default view)
         example:
             fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: true
+            temporary: false
             timeout: true
         required:
             - name
@@ -134,9 +134,9 @@ definitions:
             message:
                 type: string
                 description: division by zero leads to infinity.
-                example: Alias incidunt.
+                example: Eius exercitationem nemo ipsa eveniet est.
         description: division by 0
         example:
-            message: Non et.
+            message: Eius exercitationem nemo ipsa eveniet est.
         required:
             - message

@@ -13,14 +13,15 @@ paths:
             summary: divide calc
             operationId: calc#divide
             requestBody:
+                description: Request body for divide.
                 required: true
                 content:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/DivideRequestBody'
                         example:
-                            dividend: 3793862871819669726
-                            divisor: 8399553735696626949
+                            dividend: 1196350668178300830
+                            divisor: 5941732484439269441
             responses:
                 "200":
                     description: OK response.
@@ -29,8 +30,8 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DivideResponseBody'
                             example:
-                                quotient: 360622074634248926
-                                reminder: 8133055152903002499
+                                quotient: 3989696267411135677
+                                reminder: 6133210891814429636
                 "400":
                     description: 'div_by_zero: Response used for division by zero errors'
                     content:
@@ -38,7 +39,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DivByZero'
                             example:
-                                message: Minima error ullam eius odio minima ipsam.
+                                message: Eius exercitationem nemo ipsa eveniet est.
                 "504":
                     description: 'timeout: Operation timed out'
                     content:
@@ -53,10 +54,10 @@ components:
                 message:
                     type: string
                     description: division by zero leads to infinity.
-                    example: Molestiae modi quo est.
-            description: DivByZero is the error returned when using value 0 as divisor.
+                    example: Eius exercitationem nemo ipsa eveniet est.
+            description: division by 0
             example:
-                message: Eum aut adipisci temporibus laboriosam et.
+                message: Eius exercitationem nemo ipsa eveniet est.
             required:
                 - message
         DivideRequestBody:
@@ -64,15 +65,16 @@ components:
             properties:
                 dividend:
                     type: integer
-                    example: 6339444414280965279
+                    example: 1196350668178300830
                     format: int64
                 divisor:
                     type: integer
-                    example: 2998957498373416763
+                    example: 5941732484439269441
                     format: int64
+            description: Request body for divide.
             example:
-                dividend: 669093391323277721
-                divisor: 6850943989821012471
+                dividend: 1196350668178300830
+                divisor: 5941732484439269441
             required:
                 - dividend
                 - divisor
@@ -81,15 +83,15 @@ components:
             properties:
                 quotient:
                     type: integer
-                    example: 2082938806418090480
+                    example: 3989696267411135677
                     format: int64
                 reminder:
                     type: integer
-                    example: 817058348830766028
+                    example: 6133210891814429636
                     format: int64
             example:
-                quotient: 3322573843781975777
-                reminder: 499723715072376515
+                quotient: 3989696267411135677
+                reminder: 6133210891814429636
             required:
                 - quotient
                 - reminder
@@ -120,12 +122,13 @@ components:
                     type: boolean
                     description: Is the error a timeout?
                     example: true
+            description: Error response result type
             example:
                 fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
                 timeout: true
             required:
                 - name

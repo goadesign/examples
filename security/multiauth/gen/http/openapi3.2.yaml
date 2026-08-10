@@ -1,0 +1,210 @@
+openapi: 3.2.0
+info:
+    title: Security Example API
+    description: This API demonstrates the use of the goa security DSL
+    version: 0.0.1
+servers:
+    - url: http://localhost:80
+      name: multi_auth
+      description: Default server for multi_auth
+paths:
+    /secure:
+        get:
+            tags:
+                - secured_service
+            summary: secure secured_service
+            description: This action is secured with the jwt scheme
+            operationId: secured_service#secure
+            parameters:
+                - name: fail
+                  in: query
+                  description: Whether to force auth failure even with a valid JWT
+                  allowEmptyValue: true
+                  schema:
+                    type: boolean
+                    description: Whether to force auth failure even with a valid JWT
+                    example: true
+                  example: true
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Quaerat animi vel distinctio est.
+                            example: Quaerat animi vel distinctio est.
+                "401":
+                    description: 'unauthorized: Unauthorized response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Cupiditate sunt ut esse ut perspiciatis.
+                "403":
+                    description: 'invalid-scopes: Forbidden response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Saepe sit.
+            security:
+                - jwt_header_Authorization: []
+        post:
+            tags:
+                - secured_service
+            summary: also_doubly_secure secured_service
+            description: This action is secured with the jwt scheme and also requires an API key header.
+            operationId: secured_service#also_doubly_secure
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Neque qui commodi nihil.
+                            example: Neque qui commodi nihil.
+                "401":
+                    description: 'unauthorized: Unauthorized response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Officiis vel possimus consequuntur ratione provident culpa.
+                "403":
+                    description: 'invalid-scopes: Forbidden response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Molestias impedit vitae fugit ex.
+            security:
+                - api_key_query_k: []
+                  jwt_header_X-Authorization: []
+                - basic_header_Authorization: []
+                  oauth2_query_oauth:
+                    - api:read
+                    - api:write
+        put:
+            tags:
+                - secured_service
+            summary: doubly_secure secured_service
+            description: This action is secured with the jwt scheme and also requires an API key query string.
+            operationId: secured_service#doubly_secure
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Qui praesentium.
+                            example: Qui praesentium.
+                "401":
+                    description: 'unauthorized: Unauthorized response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Dolor nobis expedita id non dolorem ipsum.
+                "403":
+                    description: 'invalid-scopes: Forbidden response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Culpa a error aut quas impedit qui.
+            security:
+                - api_key_query_k: []
+                  jwt_header_Authorization: []
+    /signin:
+        post:
+            tags:
+                - secured_service
+            summary: signin secured_service
+            description: Creates a valid JWT
+            operationId: secured_service#signin
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Creds'
+                            example:
+                                api_key: abcdef12345
+                                jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+                                oauth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+                "401":
+                    description: 'unauthorized: Unauthorized response.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Unauthorized'
+                            example: Tempore dolorem ipsa.
+            security:
+                - basic_header_Authorization: []
+components:
+    schemas:
+        Creds:
+            type: object
+            properties:
+                api_key:
+                    type: string
+                    description: API Key
+                    example: abcdef12345
+                jwt:
+                    type: string
+                    description: JWT token
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+                oauth_token:
+                    type: string
+                    description: OAuth2 token
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+            example:
+                api_key: abcdef12345
+                jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+                oauth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+            required:
+                - jwt
+                - api_key
+                - oauth_token
+        Unauthorized:
+            type: string
+            description: Credentials are invalid
+            example: Tempore dolorem ipsa.
+    securitySchemes:
+        api_key_query_k:
+            type: apiKey
+            description: Secures endpoint by requiring an API key.
+            name: k
+            in: query
+        basic_header_Authorization:
+            type: http
+            description: Basic authentication used to authenticate security principal during signin
+            scheme: basic
+        jwt_header_Authorization:
+            type: http
+            description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+            scheme: bearer
+            bearerFormat: JWT
+        jwt_header_X-Authorization:
+            type: http
+            description: Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+            scheme: bearer
+            bearerFormat: JWT
+        oauth2_query_oauth:
+            type: oauth2
+            description: Secures endpoint by requiring a valid OAuth2 token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
+            flows:
+                authorizationCode:
+                    authorizationUrl: http://goa.design/authorization
+                    tokenUrl: http://goa.design/token
+                    refreshUrl: http://goa.design/refresh
+                    scopes:
+                        api:read: Read-only access
+                        api:write: Read and write access
+tags:
+    - name: secured_service
+      description: The secured service exposes endpoints that require valid authorization credentials.

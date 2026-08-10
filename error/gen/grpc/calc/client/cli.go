@@ -24,7 +24,7 @@ func BuildDividePayload(calcDivideMessage string) (*calc.DividePayload, error) {
 		if calcDivideMessage != "" {
 			err = json.Unmarshal([]byte(calcDivideMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"dividend\": 6001261670528037577,\n      \"divisor\": 5850431520333673251\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"dividend\": 7044419912256284667,\n      \"divisor\": 1003733810773493288\n   }'")
 			}
 		}
 	}

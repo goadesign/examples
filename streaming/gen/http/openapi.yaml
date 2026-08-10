@@ -188,22 +188,22 @@ definitions:
             length:
                 type: integer
                 description: Length of the message sent
-                example: 8319271940372022968
+                example: 6974027342252250665
                 format: int64
             message:
                 type: string
                 description: Message sent to the server
-                example: Autem nobis ad.
+                example: Porro velit.
             sent_at:
                 type: string
                 description: Time at which the message was sent
-                example: "1985-05-22T04:05:28Z"
+                example: "1997-08-20T21:13:26Z"
                 format: date-time
         description: ChatSummaryResponse result type (default view)
         example:
-            length: 2283824386300407154
-            message: Non voluptatum molestias optio et occaecati voluptatibus.
-            sent_at: "1999-08-10T07:59:44Z"
+            length: 6974027342252250665
+            message: Porro velit.
+            sent_at: "1997-08-20T21:13:26Z"
         required:
             - message
             - sent_at
@@ -214,18 +214,15 @@ definitions:
             $ref: '#/definitions/ChatSummaryResponse'
         description: SummaryResponseBody is the result type for an array of ChatSummaryResponse (default view)
         example:
-            - length: 1105227772908485323
-              message: Quidem et sint cupiditate at aut.
-              sent_at: "1988-11-26T16:43:27Z"
-            - length: 1105227772908485323
-              message: Quidem et sint cupiditate at aut.
-              sent_at: "1988-11-26T16:43:27Z"
-            - length: 1105227772908485323
-              message: Quidem et sint cupiditate at aut.
-              sent_at: "1988-11-26T16:43:27Z"
-            - length: 1105227772908485323
-              message: Quidem et sint cupiditate at aut.
-              sent_at: "1988-11-26T16:43:27Z"
+            - length: 6974027342252250665
+              message: Porro velit.
+              sent_at: "1997-08-20T21:13:26Z"
+            - length: 6974027342252250665
+              message: Porro velit.
+              sent_at: "1997-08-20T21:13:26Z"
+            - length: 6974027342252250665
+              message: Porro velit.
+              sent_at: "1997-08-20T21:13:26Z"
     Event:
         title: Event
         type: object
@@ -238,16 +235,16 @@ definitions:
             added_at:
                 type: string
                 description: Time at which the message was added
-                example: "1992-06-22T23:32:02Z"
+                example: "2012-03-23T20:03:18Z"
                 format: date-time
             message:
                 type: string
                 description: Message sent to the server
-                example: Explicabo delectus.
+                example: Nostrum quia asperiores et sint deleniti cumque.
         example:
             action: added
-            added_at: "1978-06-24T18:25:07Z"
-            message: Voluptas ut excepturi ullam repellendus eius.
+            added_at: "2012-03-23T20:03:18Z"
+            message: Nostrum quia asperiores et sint deleniti cumque.
         required:
             - message
             - action
@@ -259,22 +256,22 @@ definitions:
             length:
                 type: integer
                 description: Length of the message sent
-                example: 5417445078834724842
+                example: 6974027342252250665
                 format: int64
             message:
                 type: string
                 description: Message sent to the server
-                example: Qui dicta sit modi consequatur vero.
+                example: Porro velit.
             sent_at:
                 type: string
                 description: Time at which the message was sent
-                example: "1983-06-02T22:27:59Z"
+                example: "1997-08-20T21:13:26Z"
                 format: date-time
         description: HistoryResponseBody result type (default view)
         example:
-            length: 7638331942040974212
-            message: Facere labore consequatur modi repellendus delectus consequatur.
-            sent_at: "2009-12-15T23:16:45Z"
+            length: 6974027342252250665
+            message: Porro velit.
+            sent_at: "1997-08-20T21:13:26Z"
         required:
             - message
             - sent_at

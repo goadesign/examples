@@ -24,7 +24,7 @@ func BuildMultiplyPayload(calcMultiplyMessage string) (*calc.MultiplyPayload, er
 		if calcMultiplyMessage != "" {
 			err = json.Unmarshal([]byte(calcMultiplyMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 360622074634248926,\n      \"b\": 8133055152903002499\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 7452483468033160813,\n      \"b\": 6772490184910890684\n   }'")
 			}
 		}
 	}

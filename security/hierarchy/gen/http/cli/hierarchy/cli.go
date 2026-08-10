@@ -31,8 +31,8 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "default-service default --username \"Sit doloremque inventore eius.\" --password \"Culpa alias.\"" + "\n" +
-		os.Args[0] + " " + "api-key-service default --key \"Aut delectus ipsam.\"" + "\n" +
+	return os.Args[0] + " " + "default-service default --username \"Consectetur qui fugit qui voluptatibus deleniti et.\" --password \"Cupiditate est aut dolores hic numquam.\"" + "\n" +
+		os.Args[0] + " " + "api-key-service default --key \"Et ipsam velit illum repellat.\"" + "\n" +
 		""
 }
 
@@ -192,7 +192,7 @@ func defaultServiceDefaultUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "default-service default --username \"Sit doloremque inventore eius.\" --password \"Culpa alias.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "default-service default --username \"Consectetur qui fugit qui voluptatibus deleniti et.\" --password \"Cupiditate est aut dolores hic numquam.\"")
 }
 
 // apiKeyServiceUsage displays the usage of the api-key-service command and its
@@ -222,7 +222,7 @@ func apiKeyServiceDefaultUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service default --key \"Aut delectus ipsam.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service default --key \"Et ipsam velit illum repellat.\"")
 }
 
 func apiKeyServiceSecureUsage() {
@@ -240,5 +240,5 @@ func apiKeyServiceSecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service secure --token \"Quasi ex.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service secure --token \"Dolorem et deleniti voluptate enim.\"")
 }

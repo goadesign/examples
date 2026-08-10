@@ -224,7 +224,7 @@ func chatterEchoerUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter echoer --token \"Dolores nisi qui est accusamus veniam tenetur.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter echoer --token \"Impedit sunt atque delectus dicta ut numquam.\"")
 }
 
 func chatterListenerUsage() {
@@ -242,7 +242,7 @@ func chatterListenerUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter listener --token \"Tempora repudiandae ipsa aut.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter listener --token \"Assumenda eos.\"")
 }
 
 func chatterSummaryUsage() {
@@ -260,7 +260,7 @@ func chatterSummaryUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter summary --token \"Consequatur rerum.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter summary --token \"Officiis sit consectetur sunt.\"")
 }
 
 func chatterSubscribeUsage() {
@@ -278,7 +278,7 @@ func chatterSubscribeUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter subscribe --token \"Ullam quo et.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter subscribe --token \"Sed commodi.\"")
 }
 
 func chatterHistoryUsage() {
@@ -298,5 +298,5 @@ func chatterHistoryUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter history --view \"Ipsa quia quia.\" --token \"Aut corrupti iure.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "chatter history --view \"Velit similique quia eum quasi assumenda.\" --token \"Sunt adipisci aliquid animi ipsa.\"")
 }

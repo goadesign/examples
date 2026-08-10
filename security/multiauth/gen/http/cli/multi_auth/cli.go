@@ -214,7 +214,7 @@ func securedServiceSecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service secure --fail true --token \"Non itaque accusamus.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service secure --fail true --token \"Et omnis consequatur ut.\"")
 }
 
 func securedServiceDoublySecureUsage() {
@@ -260,5 +260,5 @@ func securedServiceAlsoDoublySecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service also-doubly-secure --key \"abcdef12345\" --oauth-token \"Excepturi quam.\" --token \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ\" --username \"user\" --password \"password\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service also-doubly-secure --key \"abcdef12345\" --oauth-token \"Fugiat molestiae molestiae.\" --token \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ\" --username \"user\" --password \"password\"")
 }

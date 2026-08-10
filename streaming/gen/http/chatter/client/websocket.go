@@ -163,7 +163,7 @@ func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 		return rv, err
 	}
 	res := NewSummaryChatSummaryCollectionOK(body)
-	vres := chatterviews.ChatSummaryCollection{res, "default"}
+	vres := chatterviews.ChatSummaryCollection{Projected: res, View: "default"}
 	if err := chatterviews.ValidateChatSummaryCollection(vres); err != nil {
 		return rv, goahttp.ErrValidationError("chatter", "summary", err)
 	}
@@ -236,7 +236,7 @@ func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 		return rv, err
 	}
 	res := NewHistoryChatSummaryOK(&body)
-	vres := &chatterviews.ChatSummary{res, s.view}
+	vres := &chatterviews.ChatSummary{Projected: res, View: s.view}
 	if err := chatterviews.ValidateChatSummary(vres); err != nil {
 		return rv, goahttp.ErrValidationError("chatter", "history", err)
 	}

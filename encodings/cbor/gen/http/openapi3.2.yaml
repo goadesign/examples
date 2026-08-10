@@ -1,0 +1,51 @@
+openapi: 3.2.0
+info:
+    title: Goa API
+    version: 0.0.1
+servers:
+    - url: http://localhost:80
+      name: concat
+      description: Default server for concat
+paths:
+    /concat/{a}/{b}:
+        get:
+            tags:
+                - concat
+            summary: concat concat
+            operationId: concat#concat
+            parameters:
+                - name: a
+                  in: path
+                  description: Left operand
+                  required: true
+                  schema:
+                    type: string
+                    description: Left operand
+                    example: Minus illo ducimus rerum id.
+                  example: Necessitatibus consequatur consequatur.
+                - name: b
+                  in: path
+                  description: Right operand
+                  required: true
+                  schema:
+                    type: string
+                    description: Right operand
+                    example: Quod vel occaecati autem ducimus quis vel.
+                  example: Provident quia eius quo.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: Cupiditate odit quis possimus molestias vel magni.
+                            example: Cupiditate odit quis possimus molestias vel magni.
+components: {}
+tags:
+    - name: concat
+      description: |
+        The concat service performs operations on strings.
+
+        The service uses the CBOR binary serialization standard to encode responses.
+        It supports reading requests encoded with CBOR, JSON, XML or GOB.

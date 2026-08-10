@@ -82,11 +82,6 @@ paths:
                                   id: 550e8400-e29b-41d4-a716-446655440000
                                   price: 7500
                                   venue: Madison Square Garden, New York, NY
-                                - artist: The White Stripes
-                                  date: "2024-12-25"
-                                  id: 550e8400-e29b-41d4-a716-446655440000
-                                  price: 7500
-                                  venue: Madison Square Garden, New York, NY
         post:
             tags:
                 - concerts
@@ -94,6 +89,7 @@ paths:
             description: Create a new concert entry. All fields are required to ensure complete concert information.
             operationId: concerts#create
             requestBody:
+                description: Concert information to create
                 required: true
                 content:
                     application/json:
@@ -204,6 +200,7 @@ paths:
                     format: uuid
                   example: 550e8400-e29b-41d4-a716-446655440000
             requestBody:
+                description: Request body for update.
                 required: true
                 content:
                     application/json:
@@ -304,39 +301,6 @@ components:
                 - date
                 - venue
                 - price
-        ConcertData:
-            type: object
-            properties:
-                artist:
-                    type: string
-                    description: The main performer for this concert
-                    example: The White Stripes
-                    minLength: 1
-                    maxLength: 200
-                date:
-                    type: string
-                    description: The date when the concert will take place
-                    example: "2024-12-25"
-                    format: date
-                price:
-                    type: integer
-                    description: Base ticket price in cents (e.g., 7500 = $75.00)
-                    example: 7500
-                    format: int64
-                    minimum: 0
-                    maximum: 100000
-                venue:
-                    type: string
-                    description: The venue where the concert will be held
-                    example: Madison Square Garden, New York, NY
-                    minLength: 1
-                    maxLength: 300
-            description: Concert information fields.
-            example:
-                artist: The White Stripes
-                date: "2024-12-25"
-                price: 7500
-                venue: Madison Square Garden, New York, NY
         ConcertPayload:
             type: object
             properties:
@@ -364,7 +328,7 @@ components:
                     example: Madison Square Garden, New York, NY
                     minLength: 1
                     maxLength: 300
-            description: Concert information required for creating a new concert entry.
+            description: Concert information to create
             example:
                 artist: The White Stripes
                 date: "2024-12-25"
@@ -381,7 +345,7 @@ components:
                 fault:
                     type: boolean
                     description: Is the error a server-side fault?
-                    example: true
+                    example: false
                 id:
                     type: string
                     description: ID is a unique identifier for this particular occurrence of the problem.
@@ -397,14 +361,14 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: false
+                    example: true
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
-                    example: false
+                    example: true
             description: Invalid input data provided
             example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -444,6 +408,7 @@ components:
                     example: Madison Square Garden, New York, NY
                     minLength: 1
                     maxLength: 300
+            description: Request body for update.
             example:
                 artist: The White Stripes
                 date: "2024-12-25"
