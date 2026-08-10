@@ -73,7 +73,6 @@ paths:
                 - name: Content-Type
                   in: header
                   description: Content-Type header, must define value for multipart boundary.
-                  allowEmptyValue: true
                   schema:
                     type: string
                     description: Content-Type header, must define value for multipart boundary.

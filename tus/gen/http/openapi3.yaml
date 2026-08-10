@@ -83,7 +83,6 @@ paths:
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
@@ -94,7 +93,6 @@ paths:
                 - name: Upload-Length
                   in: header
                   description: uploadLength represents the size of the entire upload in bytes.
-                  allowEmptyValue: true
                   schema:
                     type: integer
                     description: uploadLength represents the size of the entire upload in bytes.
@@ -104,7 +102,6 @@ paths:
                 - name: Upload-Defer-Length
                   in: header
                   description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
-                  allowEmptyValue: true
                   schema:
                     type: integer
                     description: The Upload-Defer-Length request and response header indicates that the size of the upload is not known currently and will be transferred later.
@@ -116,7 +113,6 @@ paths:
                 - name: Upload-Checksum
                   in: header
                   description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
-                  allowEmptyValue: true
                   schema:
                     type: string
                     description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
@@ -125,7 +121,6 @@ paths:
                 - name: Upload-Metadata
                   in: header
                   description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
-                  allowEmptyValue: true
                   schema:
                     type: string
                     description: The Client MAY supply the Upload-Metadata header to add additional metadata to the upload creation request.
@@ -134,7 +129,6 @@ paths:
                 - name: Tus-Max-Size
                   in: header
                   description: Length of the upload
-                  allowEmptyValue: true
                   schema:
                     type: integer
                     description: Length of the upload
@@ -344,7 +338,6 @@ paths:
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
@@ -486,7 +479,6 @@ paths:
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
@@ -661,7 +653,6 @@ paths:
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
@@ -672,7 +663,6 @@ paths:
                 - name: Upload-Offset
                   in: header
                   description: uploadOffset represents a byte offset within a resource.
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: integer
@@ -683,7 +673,6 @@ paths:
                 - name: Upload-Checksum
                   in: header
                   description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.
-                  allowEmptyValue: true
                   schema:
                     type: string
                     description: A Client MAY include the Upload-Checksum header in a PATCH request. Once the entire request has been received, the Server MUST verify the uploaded chunk against the provided checksum using the specified algorithm.

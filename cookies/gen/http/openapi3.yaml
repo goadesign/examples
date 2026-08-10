@@ -17,7 +17,6 @@ paths:
                 - name: SID
                   in: cookie
                   description: Session ID
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string

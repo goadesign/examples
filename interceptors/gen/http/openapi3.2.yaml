@@ -28,7 +28,6 @@ paths:
                 - name: Authorization
                   in: header
                   description: JWT auth token
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
@@ -93,7 +92,6 @@ paths:
                 - name: Authorization
                   in: header
                   description: JWT auth token
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
@@ -160,7 +158,6 @@ paths:
                 - name: Authorization
                   in: header
                   description: JWT auth token
-                  allowEmptyValue: true
                   required: true
                   schema:
                     type: string
