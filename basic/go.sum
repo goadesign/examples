@@ -57,8 +57,8 @@ go.opentelemetry.io/otel/trace v1.45.0 h1:l/mP6Uv7oNO7/TblbhpbgMidxhq1uO/rPsikOy
 go.opentelemetry.io/otel/trace v1.45.0/go.mod h1:qoJJA2xNMnxRrdISU/kLtfUH2wNeQbiv+jhs/CxI8bc=
 goa.design/clue v1.2.6 h1:ensyUkwlvEbNy8FuTGMldKuvaNouh8YoDY9QaE+EtYg=
 goa.design/clue v1.2.6/go.mod h1:Y4RS5o2k6MZiGk2PT3XbKyntjR2xkr8dYOKQ591dIDM=
-goa.design/goa/v3 v3.29.1 h1:O/FtqeWRI73e6EU6fuODelhLuSI40eSD7Cxn5fmoU5g=
-goa.design/goa/v3 v3.29.1/go.mod h1:FpTADA0Z2onOoZZD2YLWrA2IeXmaBEbs/FeFYag6hxg=
+goa.design/goa/v3 v3.29.2 h1:nabAmgYTUsE+NfG4KkMyRl6ddHN2uTAflOHC/FuaTfI=
+goa.design/goa/v3 v3.29.2/go.mod h1:CTCdFy0UYeiYuoXmFkUJXji1xGPG7K6XFsO2NqU/QaQ=
 golang.org/x/mod v0.40.0 h1:hUv+3cXcdRHz08UmSiOob7sadHig73uo5bkXxQ/tvUs=
 golang.org/x/mod v0.40.0/go.mod h1:0/weTWkPWGBikyTWAX3dkjVztMmBA5hM0DH6BElSupE=
 golang.org/x/net v0.58.0 h1:ynWG7rqYi4ccpTEuPZ2QGWHktVEM9DMCj9yzDE0Q7To=

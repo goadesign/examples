@@ -23,7 +23,9 @@ import (
 // MonitorClientStream is the interface for reading Server-Sent Events.
 type MonitorClientStream interface {
 	// Recv reads and returns the next event from the SSE stream.
-	Recv(context.Context) (*monitor.Usage, error)
+	Recv() (*monitor.Usage, error)
+	// RecvWithContext reads and returns the next event from the SSE stream with context.
+	RecvWithContext(context.Context) (*monitor.Usage, error)
 	// Close closes the SSE stream and releases resources.
 	Close() error
 }
@@ -42,6 +44,10 @@ type (
 // MonitorStreamImpl implements the MonitorClientStream interface.
 var _ MonitorClientStream = (*MonitorStreamImpl)(nil)
 
+// MonitorStreamImpl implements the service client stream
+// interface so the generated endpoint client can return it directly.
+var _ monitor.MonitorClientStream = (*MonitorStreamImpl)(nil)
+
 // NewMonitorStream creates a new MonitorClientStream.
 func NewMonitorStream(resp *http.Response, decoder func(*http.Response) goahttp.Decoder) MonitorClientStream {
 	return &MonitorStreamImpl{
@@ -51,17 +57,20 @@ func NewMonitorStream(resp *http.Response, decoder func(*http.Response) goahttp.
 	}
 }
 
-// Recv reads and returns the next event from the SSE stream, respecting context cancellation.
-func (s *MonitorStreamImpl) Recv(ctx context.Context) (event *monitor.Usage, err error) {
+// Recv reads and returns the next event from the SSE stream.
+func (s *MonitorStreamImpl) Recv() (*monitor.Usage, error) {
+	return s.RecvWithContext(context.Background())
+}
+
+// RecvWithContext reads and returns the next event from the SSE stream, respecting context cancellation.
+func (s *MonitorStreamImpl) RecvWithContext(ctx context.Context) (event *monitor.Usage, err error) {
 	var byts []byte
 	byts, err = s.readEvent(ctx)
 	if err != nil {
 		if errors.Is(err, io.EOF) || errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
-			// Clean up on EOF or context cancellation
+			// Clean up on EOF or context cancellation. io.EOF
+			// propagates to the caller to signal end of stream.
 			s.Close()
-			if errors.Is(err, io.EOF) {
-				err = nil
-			}
 		}
 		return
 	}
@@ -88,14 +97,13 @@ func (s *MonitorStreamImpl) readEvent(ctx context.Context) ([]byte, error) {
 	wasNewline := len(eventData) > 0 && eventData[len(eventData)-1] == '\n'
 	buf := make([]byte, bufSize)
 
-	// Read data in chunks until we find an event or hit EOF
+	// Read data in chunks until we find an event or hit EOF. A stream that
+	// ends mid-event (before the blank-line delimiter) discards the partial
+	// frame, per the SSE specification.
 	for {
 		// Check if context is done
 		select {
 		case <-ctx.Done():
-			if len(eventData) > 0 {
-				return eventData, nil
-			}
 			return nil, ctx.Err()
 		default:
 			// Continue processing
@@ -105,9 +113,6 @@ func (s *MonitorStreamImpl) readEvent(ctx context.Context) ([]byte, error) {
 		s.lock.Lock()
 		if s.closed {
 			s.lock.Unlock()
-			if len(eventData) > 0 {
-				return eventData, nil
-			}
 			return nil, io.EOF
 		}
 
@@ -143,11 +148,9 @@ func (s *MonitorStreamImpl) readEvent(ctx context.Context) ([]byte, error) {
 			}
 		}
 
-		// Return partial data at EOF
+		// Discard any partial frame at EOF: an event that ends before its
+		// blank-line delimiter was truncated by the transport.
 		if errors.Is(err, io.EOF) {
-			if len(eventData) > 0 {
-				return eventData, nil
-			}
 			return nil, io.EOF
 		}
 	}
@@ -170,9 +173,12 @@ func (s *MonitorStreamImpl) checkBuffer() ([]byte, bool) {
 	// Look for double newline in buffer
 	for i := 0; i < len(s.buffer)-1; i++ {
 		if s.buffer[i] == '\n' && s.buffer[i+1] == '\n' {
-			// Found complete event
+			// Found complete event. Copy it out: compacting the buffer
+			// below would otherwise overwrite the returned bytes, since
+			// both slices share the same backing array.
 			eventEnd := i + 2 // Include both newlines
-			eventData := s.buffer[:eventEnd]
+			eventData := make([]byte, eventEnd)
+			copy(eventData, s.buffer[:eventEnd])
 
 			// Save remaining data for next time
 			if eventEnd < len(s.buffer) {
@@ -185,8 +191,11 @@ func (s *MonitorStreamImpl) checkBuffer() ([]byte, bool) {
 		}
 	}
 
-	// No complete event found, return buffer contents
-	eventData := s.buffer
+	// No complete event found, return a copy of the buffer contents: the
+	// caller keeps accumulating into the returned slice while readEvent
+	// refills s.buffer, so they must not share a backing array.
+	eventData := make([]byte, len(s.buffer))
+	copy(eventData, s.buffer)
 	s.buffer = s.buffer[:0] // Clear buffer but keep capacity
 	return eventData, false
 }

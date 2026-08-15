@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/shirou/gopsutil/v3 v3.24.5
 	goa.design/clue v1.2.6
-	goa.design/goa/v3 v3.29.1
+	goa.design/goa/v3 v3.29.2
 )
 
 require (

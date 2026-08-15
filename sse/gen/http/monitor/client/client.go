@@ -55,7 +55,9 @@ func NewClient(
 // Monitor returns an endpoint that makes HTTP requests to the monitor service
 // monitor server.
 func (c *Client) Monitor() goa.Endpoint {
-	var ()
+	var (
+		decodeResponse = DecodeMonitorResponse(c.decoder, c.RestoreResponseBody)
+	)
 	return func(ctx context.Context, v any) (any, error) {
 		req, err := c.BuildMonitorRequest(ctx, v)
 		if err != nil {
@@ -68,8 +70,8 @@ func (c *Client) Monitor() goa.Endpoint {
 		}
 
 		if resp.StatusCode != http.StatusOK {
-			resp.Body.Close()
-			return nil, fmt.Errorf("unexpected status from SSE endpoint: %d", resp.StatusCode)
+			// Decode designed errors (the decoder closes the response body).
+			return decodeResponse(resp)
 		}
 
 		contentType := resp.Header.Get("Content-Type")
