@@ -6,6 +6,8 @@ This repository contains examples of microservices implemented using
 [Goa](https://github.com/goadesign/goa). Each example focuses on a specific topic as indicated by
 the directory name. The [cellar](https://github.com/goadesign/examples/tree/master/cellar) example
 provides a complete implementation of a simple microservice.
+The [retry](https://github.com/goadesign/examples/tree/master/retry) example shows how generated
+HTTP and gRPC clients safely retry temporary failures.
 
 The samples in each directory serve as templates, and you can clone them using the `gonew` command, as explained in [this blog post](https://go.dev/blog/gonew).
 

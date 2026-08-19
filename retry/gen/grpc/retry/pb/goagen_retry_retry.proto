@@ -1,0 +1,30 @@
+// Code generated with goa, DO NOT EDIT.
+//
+// retry protocol buffer definition
+//
+// Command:
+// $ goa gen goa.design/examples/retry/design
+
+syntax = "proto3";
+
+package retry;
+
+option go_package = "/retrypb";
+
+// Returns a message after demonstrating one safe retry.
+service Retry {
+	// Returns a stable message after a temporary first-attempt failure.
+	rpc GetMessage (GetMessageRequest) returns (GetMessageResponse) {
+		option idempotency_level = IDEMPOTENT;
+	}
+}
+
+message GetMessageRequest {
+	// Identifies one demonstration request.
+	string id = 1;
+}
+
+message GetMessageResponse {
+	// Message returned after the retry succeeds.
+	string message_ = 1;
+}

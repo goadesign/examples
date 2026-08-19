@@ -12,6 +12,7 @@ use (
 	./httpstatus
 	./interceptors
 	./multipart
+	./retry
 	./security/hierarchy
 	./security/multiauth
 	./sse
