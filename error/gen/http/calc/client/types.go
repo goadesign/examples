@@ -107,7 +107,7 @@ func ValidateDivideResponseBody(body *DivideResponseBody) (err error) {
 }
 
 // ValidateDivideDivByZeroResponseBody runs the validations defined on
-// divide_div_by_zero_response_body
+// DivideDivByZeroResponseBody
 func ValidateDivideDivByZeroResponseBody(body *DivideDivByZeroResponseBody) (err error) {
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
@@ -116,7 +116,7 @@ func ValidateDivideDivByZeroResponseBody(body *DivideDivByZeroResponseBody) (err
 }
 
 // ValidateDivideTimeoutResponseBody runs the validations defined on
-// divide_timeout_response_body
+// DivideTimeoutResponseBody
 func ValidateDivideTimeoutResponseBody(body *DivideTimeoutResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))

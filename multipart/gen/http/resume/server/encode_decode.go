@@ -10,6 +10,7 @@ package server
 import (
 	"context"
 	"errors"
+	"io"
 	"net/http"
 
 	resume "goa.design/examples/multipart/gen/resume"
@@ -47,13 +48,32 @@ func EncodeAddResponse(encoder func(context.Context, http.ResponseWriter) goahtt
 func DecodeAddRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) ([]*resume.Resume, error) {
 	return func(r *http.Request) ([]*resume.Resume, error) {
 		var payload []*resume.Resume
-		if err := decoder(r).Decode(&payload); err != nil {
+		var (
+			body []*ResumeRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return payload, goa.MissingPayloadError()
+			}
 			var gerr *goa.ServiceError
 			if errors.As(err, &gerr) {
 				return payload, gerr
 			}
 			return payload, goa.DecodePayloadError(err.Error())
 		}
+		for _, e := range body {
+			if e != nil {
+				if err2 := validateResumeRequestBody(e, "body[*]"); err2 != nil {
+					err = goa.MergeErrors(err, err2)
+				}
+			}
+		}
+		if err != nil {
+			return payload, err
+		}
+		payload = NewAddResume(body)
 
 		return payload, nil
 	}
@@ -61,15 +81,15 @@ func DecodeAddRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Dec
 
 // NewResumeAddDecoder returns a decoder to decode the multipart request for
 // the "resume" service "add" endpoint.
-func NewResumeAddDecoder(mux goahttp.Muxer, resumeAddDecoderFn ResumeAddDecoderFunc) func(r *http.Request) goahttp.Decoder {
+func NewResumeAddDecoder(_ goahttp.Muxer, resumeAddDecoderFn ResumeAddDecoderFunc) func(r *http.Request) goahttp.Decoder {
 	return func(r *http.Request) goahttp.Decoder {
 		return goahttp.EncodingFunc(func(v any) error {
 			mr, merr := r.MultipartReader()
 			if merr != nil {
 				return merr
 			}
-			p := v.(*[]*resume.Resume)
-			if err := resumeAddDecoderFn(mr, p); err != nil {
+			body := v.(*[]*ResumeRequestBody)
+			if err := resumeAddDecoderFn(mr, body); err != nil {
 				return err
 			}
 			return nil
@@ -150,7 +170,7 @@ func unmarshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resu
 				res.Experience[i] = nil
 				continue
 			}
-			res.Experience[i] = unmarshalExperienceRequestBodyToResumeExperience(val)
+			res.Experience[i] = unmarshalExperienceRequestBodyToResumeExperienceOptional(val)
 		}
 	}
 	if v.Education != nil {
@@ -160,16 +180,16 @@ func unmarshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resu
 				res.Education[i] = nil
 				continue
 			}
-			res.Education[i] = unmarshalEducationRequestBodyToResumeEducation(val)
+			res.Education[i] = unmarshalEducationRequestBodyToResumeEducationOptional(val)
 		}
 	}
 
 	return res
 }
 
-// unmarshalExperienceRequestBodyToResumeExperience builds a value of type
-// *resume.Experience from a value of type *ExperienceRequestBody.
-func unmarshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) *resume.Experience {
+// unmarshalExperienceRequestBodyToResumeExperienceOptional builds a value of
+// type *resume.Experience from a value of type *ExperienceRequestBody.
+func unmarshalExperienceRequestBodyToResumeExperienceOptional(v *ExperienceRequestBody) *resume.Experience {
 	if v == nil {
 		return nil
 	}
@@ -182,9 +202,9 @@ func unmarshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) 
 	return res
 }
 
-// unmarshalEducationRequestBodyToResumeEducation builds a value of type
-// *resume.Education from a value of type *EducationRequestBody.
-func unmarshalEducationRequestBodyToResumeEducation(v *EducationRequestBody) *resume.Education {
+// unmarshalEducationRequestBodyToResumeEducationOptional builds a value of
+// type *resume.Education from a value of type *EducationRequestBody.
+func unmarshalEducationRequestBodyToResumeEducationOptional(v *EducationRequestBody) *resume.Education {
 	if v == nil {
 		return nil
 	}

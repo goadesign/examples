@@ -9,6 +9,7 @@ package client
 
 import (
 	chatter "goa.design/examples/streaming/gen/chatter"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildLoginPayload builds the payload for the chatter login endpoint from CLI
@@ -84,10 +85,17 @@ func BuildSubscribePayload(chatterSubscribeToken string) (*chatter.SubscribePayl
 // BuildHistoryPayload builds the payload for the chatter history endpoint from
 // CLI flags.
 func BuildHistoryPayload(chatterHistoryView string, chatterHistoryToken string) (*chatter.HistoryPayload, error) {
+	var err error
 	var view *string
 	{
 		if chatterHistoryView != "" {
 			view = &chatterHistoryView
+			if !(chatterHistoryView == "tiny" || chatterHistoryView == "default") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", chatterHistoryView, []any{"tiny", "default"}))
+			}
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	var token string

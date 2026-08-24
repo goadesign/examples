@@ -21,8 +21,8 @@ paths:
                   schema:
                     type: string
                     description: Session ID
-                    example: Porro animi illum et corporis nobis.
-                  example: Laborum nihil sint adipisci quia porro.
+                    example: Et et et nam.
+                  example: Et et et nam.
             responses:
                 "200":
                     description: OK response.
@@ -31,7 +31,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/CreateSessionResponseBody'
                             example:
-                                message: Qui vitae in assumenda.
+                                message: Consequatur ad perspiciatis ea.
         post:
             tags:
                 - session
@@ -45,7 +45,7 @@ paths:
                         schema:
                             $ref: '#/components/schemas/CreateSessionRequestBody'
                         example:
-                            name: Et distinctio eos dolores quibusdam adipisci.
+                            name: Ea sit quis similique.
             responses:
                 "200":
                     description: OK response.
@@ -55,14 +55,14 @@ paths:
                             schema:
                                 type: string
                                 description: Session ID
-                                example: Repellendus suscipit.
-                            example: Voluptatem quia vel vel.
+                                example: Consequuntur temporibus iusto et est repudiandae deleniti.
+                            example: Consequuntur temporibus iusto et est repudiandae deleniti.
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CreateSessionResponseBody'
                             example:
-                                message: Voluptatem at id delectus magnam ut consequatur.
+                                message: Non veniam est officiis.
 components:
     schemas:
         CreateSessionRequestBody:
@@ -71,10 +71,10 @@ components:
                 name:
                     type: string
                     description: Name of session
-                    example: Et distinctio eos dolores quibusdam adipisci.
+                    example: Ea sit quis similique.
             description: Request body for create_session.
             example:
-                name: Et distinctio eos dolores quibusdam adipisci.
+                name: Ea sit quis similique.
             required:
                 - name
         CreateSessionResponseBody:
@@ -83,9 +83,9 @@ components:
                 message:
                     type: string
                     description: User message
-                    example: Voluptatem at id delectus magnam ut consequatur.
+                    example: Non veniam est officiis.
             example:
-                message: Voluptatem at id delectus magnam ut consequatur.
+                message: Non veniam est officiis.
             required:
                 - message
 tags:

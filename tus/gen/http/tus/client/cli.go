@@ -97,7 +97,8 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 	var uploadLength *int64
 	{
 		if tusPostUploadLength != "" {
-			val, err := strconv.ParseInt(tusPostUploadLength, 10, 64)
+			var val int64
+			val, err = strconv.ParseInt(tusPostUploadLength, 10, 64)
 			uploadLength = &val
 			if err != nil {
 				return nil, fmt.Errorf("invalid value for uploadLength, must be INT64")
@@ -114,8 +115,8 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 			if err != nil {
 				return nil, fmt.Errorf("invalid value for uploadDeferLength, must be INT")
 			}
-			if !(*uploadDeferLength == 1) {
-				err = goa.MergeErrors(err, goa.InvalidEnumValueError("uploadDeferLength", *uploadDeferLength, []any{1}))
+			if !(val == 1) {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("uploadDeferLength", val, []any{1}))
 			}
 			if err != nil {
 				return nil, err
@@ -137,7 +138,8 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 	var tusMaxSize *int64
 	{
 		if tusPostTusMaxSize != "" {
-			val, err := strconv.ParseInt(tusPostTusMaxSize, 10, 64)
+			var val int64
+			val, err = strconv.ParseInt(tusPostTusMaxSize, 10, 64)
 			tusMaxSize = &val
 			if err != nil {
 				return nil, fmt.Errorf("invalid value for tusMaxSize, must be INT64")

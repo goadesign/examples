@@ -74,9 +74,17 @@ paths:
                             - venue
                             - price
                 "400":
-                    description: Bad Request response.
+                    description: 'bad_request: Invalid input data provided'
                     schema:
                         $ref: '#/definitions/ConcertsCreateBadRequestResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: bad_request
+                            temporary: false
+                            timeout: false
             schemes:
                 - http
     /concerts/{concertID}:
@@ -105,9 +113,17 @@ paths:
                             - venue
                             - price
                 "404":
-                    description: Not Found response.
+                    description: 'not_found: Concert with the specified ID was not found'
                     schema:
                         $ref: '#/definitions/ConcertsShowNotFoundResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: not_found
+                            temporary: false
+                            timeout: false
             schemes:
                 - http
         put:
@@ -140,13 +156,29 @@ paths:
                             - venue
                             - price
                 "400":
-                    description: Bad Request response.
+                    description: 'bad_request: Invalid update data provided'
                     schema:
                         $ref: '#/definitions/ConcertsUpdateBadRequestResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: bad_request
+                            temporary: false
+                            timeout: false
                 "404":
-                    description: Not Found response.
+                    description: 'not_found: Concert with the specified ID was not found'
                     schema:
                         $ref: '#/definitions/ConcertsUpdateNotFoundResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: not_found
+                            temporary: false
+                            timeout: false
             schemes:
                 - http
         delete:
@@ -166,9 +198,17 @@ paths:
                 "204":
                     description: No Content response.
                 "404":
-                    description: Not Found response.
+                    description: 'not_found: Concert with the specified ID was not found'
                     schema:
                         $ref: '#/definitions/ConcertsDeleteNotFoundResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: not_found
+                            temporary: false
+                            timeout: false
             schemes:
                 - http
     /openapi3.json:
@@ -306,19 +346,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: true
-        description: Invalid input data provided (default view)
+                example: false
+        description: Error response result type (default view)
         example:
             fault: false
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: true
-            timeout: true
+            temporary: false
+            timeout: false
         required:
             - name
             - id
@@ -349,19 +389,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: true
-        description: Concert with the specified ID was not found (default view)
+                example: false
+        description: Error response result type (default view)
         example:
             fault: false
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: true
-            timeout: true
+            temporary: false
+            timeout: false
         required:
             - name
             - id
@@ -376,7 +416,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -392,19 +432,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: true
-        description: Concert with the specified ID was not found (default view)
+                example: false
+        description: Error response result type (default view)
         example:
-            fault: false
+            fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: true
-            timeout: true
+            temporary: false
+            timeout: false
         required:
             - name
             - id
@@ -419,7 +459,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -440,9 +480,9 @@ definitions:
                 type: boolean
                 description: Is the error a timeout?
                 example: true
-        description: Invalid update data provided (default view)
+        description: Error response result type (default view)
         example:
-            fault: false
+            fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
@@ -462,7 +502,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -478,18 +518,18 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: true
+                example: false
             timeout:
                 type: boolean
                 description: Is the error a timeout?
                 example: true
-        description: Concert with the specified ID was not found (default view)
+        description: Error response result type (default view)
         example:
-            fault: false
+            fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: true
+            temporary: false
             timeout: true
         required:
             - name

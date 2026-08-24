@@ -24,7 +24,7 @@ func BuildGetPayload(interceptorsGetMessage string) (*interceptors.GetPayload, e
 		if interceptorsGetMessage != "" {
 			err = json.Unmarshal([]byte(interceptorsGetMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Doloremque in beatae illo nemo nihil id.\",\n      \"recordID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"spanID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"tenantID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"traceID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\"\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"recordID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenantID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 			}
 		}
 	}

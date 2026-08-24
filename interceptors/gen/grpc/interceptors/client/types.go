@@ -13,8 +13,8 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoGetRequest builds the gRPC request type from the payload of the
-// "get" endpoint of the "interceptors" service.
+// NewProtoGetRequest builds *interceptorspb.GetRequest from
+// *interceptors.GetPayload.
 func NewProtoGetRequest(payload *interceptors.GetPayload) *interceptorspb.GetRequest {
 	message := &interceptorspb.GetRequest{
 		TenantId: string(payload.TenantID),
@@ -32,8 +32,7 @@ func NewProtoGetRequest(payload *interceptors.GetPayload) *interceptorspb.GetReq
 	return message
 }
 
-// NewGetResult builds the result type of the "get" endpoint of the
-// "interceptors" service from the gRPC response type.
+// NewGetResult builds *interceptors.GetResult from *interceptorspb.GetResponse.
 func NewGetResult(message *interceptorspb.GetResponse) *interceptors.GetResult {
 	result := &interceptors.GetResult{
 		ID:          interceptors.UUID(message.Id),

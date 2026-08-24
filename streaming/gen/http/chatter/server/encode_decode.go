@@ -322,6 +322,11 @@ func DecodeHistoryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 		if viewRaw != "" {
 			view = &viewRaw
 		}
+		if view != nil {
+			if !(*view == "tiny" || *view == "default") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []any{"tiny", "default"}))
+			}
+		}
 		token = r.Header.Get("Authorization")
 		if token == "" {
 			err = goa.MergeErrors(err, goa.MissingFieldError("token", "header"))

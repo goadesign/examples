@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -40,18 +41,24 @@ func (c *Client) BuildListRequest(ctx context.Context, v any) (*http.Request, er
 // list endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "list", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "list", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -72,7 +79,10 @@ func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			res := storage.NewStoredBottleCollection(vres)
 			return res, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "list", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "list", resp.StatusCode, string(body))
 		}
 	}
@@ -127,18 +137,24 @@ func EncodeShowRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 //   - "not_found" (type *storage.NotFound): http.StatusNotFound
 //   - error: internal error
 func DecodeShowResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "show", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "show", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -173,7 +189,10 @@ func DecodeShowResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			return nil, NewShowNotFound(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "show", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "show", resp.StatusCode, string(body))
 		}
 	}
@@ -214,18 +233,24 @@ func EncodeAddRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Re
 // add endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 func DecodeAddResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "add", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "add", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusCreated:
@@ -239,7 +264,10 @@ func DecodeAddResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody
 			}
 			return body, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "add", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "add", resp.StatusCode, string(body))
 		}
 	}
@@ -274,24 +302,33 @@ func (c *Client) BuildRemoveRequest(ctx context.Context, v any) (*http.Request, 
 // remove endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 func DecodeRemoveResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "remove", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "remove", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
 			return nil, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "remove", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "remove", resp.StatusCode, string(body))
 		}
 	}
@@ -337,24 +374,33 @@ func EncodeRateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 // rate endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 func DecodeRateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "rate", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "rate", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
 			return nil, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "rate", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "rate", resp.StatusCode, string(body))
 		}
 	}
@@ -412,18 +458,24 @@ func NewStorageMultiAddEncoder(encoderFn StorageMultiAddEncoderFunc) func(r *htt
 // storage multi_add endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 func DecodeMultiAddResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "multi_add", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "multi_add", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -437,7 +489,10 @@ func DecodeMultiAddResponse(decoder func(*http.Response) goahttp.Decoder, restor
 			}
 			return body, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "multi_add", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "multi_add", resp.StatusCode, string(body))
 		}
 	}
@@ -500,24 +555,33 @@ func NewStorageMultiUpdateEncoder(encoderFn StorageMultiUpdateEncoderFunc) func(
 // storage multi_update endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 func DecodeMultiUpdateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "multi_update", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("storage", "multi_update", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
 			return nil, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("storage", "multi_update", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("storage", "multi_update", resp.StatusCode, string(body))
 		}
 	}
@@ -559,9 +623,10 @@ func unmarshalWineryResponseBodyToStorageviewsWineryView(v *WineryResponseBody) 
 	return res
 }
 
-// unmarshalComponentResponseBodyToStorageviewsComponentView builds a value of
-// type *storageviews.ComponentView from a value of type *ComponentResponseBody.
-func unmarshalComponentResponseBodyToStorageviewsComponentView(v *ComponentResponseBody) *storageviews.ComponentView {
+// unmarshalComponentResponseBodyToStorageviewsComponentViewOptional builds a
+// value of type *storageviews.ComponentView from a value of type
+// *ComponentResponseBody.
+func unmarshalComponentResponseBodyToStorageviewsComponentViewOptional(v *ComponentResponseBody) *storageviews.ComponentView {
 	if v == nil {
 		return nil
 	}
@@ -586,9 +651,9 @@ func marshalStorageWineryToWineryRequestBody(v *storage.Winery) *WineryRequestBo
 	return res
 }
 
-// marshalStorageComponentToComponentRequestBody builds a value of type
+// marshalStorageComponentToComponentRequestBodyOptional builds a value of type
 // *ComponentRequestBody from a value of type *storage.Component.
-func marshalStorageComponentToComponentRequestBody(v *storage.Component) *ComponentRequestBody {
+func marshalStorageComponentToComponentRequestBodyOptional(v *storage.Component) *ComponentRequestBody {
 	if v == nil {
 		return nil
 	}
@@ -613,9 +678,9 @@ func marshalWineryRequestBodyToStorageWinery(v *WineryRequestBody) *storage.Wine
 	return res
 }
 
-// marshalComponentRequestBodyToStorageComponent builds a value of type
+// marshalComponentRequestBodyToStorageComponentOptional builds a value of type
 // *storage.Component from a value of type *ComponentRequestBody.
-func marshalComponentRequestBodyToStorageComponent(v *ComponentRequestBody) *storage.Component {
+func marshalComponentRequestBodyToStorageComponentOptional(v *ComponentRequestBody) *storage.Component {
 	if v == nil {
 		return nil
 	}
@@ -646,7 +711,7 @@ func marshalStorageBottleToBottleRequestBody(v *storage.Bottle) *BottleRequestBo
 				res.Composition[i] = nil
 				continue
 			}
-			res.Composition[i] = marshalStorageComponentToComponentRequestBody(val)
+			res.Composition[i] = marshalStorageComponentToComponentRequestBodyOptional(val)
 		}
 	}
 
@@ -672,7 +737,7 @@ func marshalBottleRequestBodyToStorageBottle(v *BottleRequestBody) *storage.Bott
 				res.Composition[i] = nil
 				continue
 			}
-			res.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
+			res.Composition[i] = marshalComponentRequestBodyToStorageComponentOptional(val)
 		}
 	}
 

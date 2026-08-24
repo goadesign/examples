@@ -14,37 +14,43 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoLoginRequest builds the gRPC request type from the payload of the
-// "login" endpoint of the "chatter" service.
+// NewProtoLoginRequest builds *chatterpb.LoginRequest from
+// *chatter.LoginPayload.
 func NewProtoLoginRequest() *chatterpb.LoginRequest {
 	message := &chatterpb.LoginRequest{}
 	return message
 }
 
-// NewLoginResult builds the result type of the "login" endpoint of the
-// "chatter" service from the gRPC response type.
+// NewLoginResult builds string from *chatterpb.LoginResponse.
 func NewLoginResult(message *chatterpb.LoginResponse) string {
 	result := message.Field
 	return result
 }
 
+// NewEchoerResponseEchoerResponse builds string from *chatterpb.EchoerResponse.
 func NewEchoerResponseEchoerResponse(v *chatterpb.EchoerResponse) string {
 	result := v.Field
 	return result
 }
 
+// NewProtoEchoerStreamingRequest builds *chatterpb.EchoerStreamingRequest from
+// string.
 func NewProtoEchoerStreamingRequest(spayload string) *chatterpb.EchoerStreamingRequest {
 	v := &chatterpb.EchoerStreamingRequest{}
 	v.Field = spayload
 	return v
 }
 
+// NewProtoListenerStreamingRequest builds *chatterpb.ListenerStreamingRequest
+// from string.
 func NewProtoListenerStreamingRequest(spayload string) *chatterpb.ListenerStreamingRequest {
 	v := &chatterpb.ListenerStreamingRequest{}
 	v.Field = spayload
 	return v
 }
 
+// NewChatSummaryCollectionChatSummaryCollection builds
+// chatterviews.ChatSummaryCollectionView from *chatterpb.ChatSummaryCollection.
 func NewChatSummaryCollectionChatSummaryCollection(v *chatterpb.ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
 	vresult := make([]*chatterviews.ChatSummaryView, len(v.Field))
 	for i, val := range v.Field {
@@ -60,19 +66,23 @@ func NewChatSummaryCollectionChatSummaryCollection(v *chatterpb.ChatSummaryColle
 	return vresult
 }
 
+// NewProtoSummaryStreamingRequest builds *chatterpb.SummaryStreamingRequest
+// from string.
 func NewProtoSummaryStreamingRequest(spayload string) *chatterpb.SummaryStreamingRequest {
 	v := &chatterpb.SummaryStreamingRequest{}
 	v.Field = spayload
 	return v
 }
 
-// NewProtoSubscribeRequest builds the gRPC request type from the payload of
-// the "subscribe" endpoint of the "chatter" service.
+// NewProtoSubscribeRequest builds *chatterpb.SubscribeRequest from
+// *chatter.SubscribePayload.
 func NewProtoSubscribeRequest() *chatterpb.SubscribeRequest {
 	message := &chatterpb.SubscribeRequest{}
 	return message
 }
 
+// NewSubscribeResponseEvent builds *chatter.Event from
+// *chatterpb.SubscribeResponse.
 func NewSubscribeResponseEvent(v *chatterpb.SubscribeResponse) *chatter.Event {
 	result := &chatter.Event{
 		Message: v.Message_,
@@ -82,13 +92,15 @@ func NewSubscribeResponseEvent(v *chatterpb.SubscribeResponse) *chatter.Event {
 	return result
 }
 
-// NewProtoHistoryRequest builds the gRPC request type from the payload of the
-// "history" endpoint of the "chatter" service.
+// NewProtoHistoryRequest builds *chatterpb.HistoryRequest from
+// *chatter.HistoryPayload.
 func NewProtoHistoryRequest() *chatterpb.HistoryRequest {
 	message := &chatterpb.HistoryRequest{}
 	return message
 }
 
+// NewHistoryResponseChatSummaryView builds *chatterviews.ChatSummaryView from
+// *chatterpb.HistoryResponse.
 func NewHistoryResponseChatSummaryView(v *chatterpb.HistoryResponse) *chatterviews.ChatSummaryView {
 	vresult := &chatterviews.ChatSummaryView{
 		Message: &v.Message_,
@@ -101,10 +113,19 @@ func NewHistoryResponseChatSummaryView(v *chatterpb.HistoryResponse) *chattervie
 	return vresult
 }
 
+// NewHistoryResponseChatSummaryViewTiny builds *chatterviews.ChatSummaryView
+// from *chatterpb.HistoryResponse.
+func NewHistoryResponseChatSummaryViewTiny(v *chatterpb.HistoryResponse) *chatterviews.ChatSummaryView {
+	vresult := &chatterviews.ChatSummaryView{
+		Message: &v.Message_,
+	}
+	return vresult
+}
+
 // ValidateChatSummaryCollection runs the validations defined on
 // ChatSummaryCollection.
-func ValidateChatSummaryCollection(stream *chatterpb.ChatSummaryCollection) (err error) {
-	for _, e := range stream.Field {
+func ValidateChatSummaryCollection(message *chatterpb.ChatSummaryCollection) (err error) {
+	for _, e := range message.Field {
 		if e != nil {
 			if err2 := ValidateChatSummary(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
@@ -121,16 +142,16 @@ func ValidateChatSummary(elem *chatterpb.ChatSummary) (err error) {
 }
 
 // ValidateSubscribeResponse runs the validations defined on SubscribeResponse.
-func ValidateSubscribeResponse(stream *chatterpb.SubscribeResponse) (err error) {
-	if !(stream.Action == "added") {
-		err = goa.MergeErrors(err, goa.InvalidEnumValueError("stream.action", stream.Action, []any{"added"}))
+func ValidateSubscribeResponse(message *chatterpb.SubscribeResponse) (err error) {
+	if !(message.Action == "added") {
+		err = goa.MergeErrors(err, goa.InvalidEnumValueError("message.action", message.Action, []any{"added"}))
 	}
-	err = goa.MergeErrors(err, goa.ValidateFormat("stream.added_at", stream.AddedAt, goa.FormatDateTime))
+	err = goa.MergeErrors(err, goa.ValidateFormat("message.added_at", message.AddedAt, goa.FormatDateTime))
 	return
 }
 
 // ValidateHistoryResponse runs the validations defined on HistoryResponse.
-func ValidateHistoryResponse(stream *chatterpb.HistoryResponse) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("stream.sent_at", stream.SentAt, goa.FormatDateTime))
+func ValidateHistoryResponse(message *chatterpb.HistoryResponse) (err error) {
+	err = goa.MergeErrors(err, goa.ValidateFormat("message.sent_at", message.SentAt, goa.FormatDateTime))
 	return
 }

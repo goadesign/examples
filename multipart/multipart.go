@@ -12,8 +12,9 @@ import (
 )
 
 // ResumeAddDecoderFunc implements the multipart decoder for service "resume"
-// endpoint "add". The decoder must populate the argument p after encoding.
-func ResumeAddDecoderFunc(mr *multipart.Reader, p *[]*resume.Resume) error {
+// endpoint "add". The decoder must populate the argument p after decoding the
+// request parts.
+func ResumeAddDecoderFunc(mr *multipart.Reader, p *[]*server.ResumeRequestBody) error {
 	var resumes []*server.ResumeRequestBody
 	for {
 		part, err := mr.NextPart()
@@ -30,7 +31,7 @@ func ResumeAddDecoderFunc(mr *multipart.Reader, p *[]*resume.Resume) error {
 		}
 		resumes = append(resumes, &r)
 	}
-	*p = server.NewAddResume(resumes)
+	*p = resumes
 	return nil
 }
 

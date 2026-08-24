@@ -67,7 +67,11 @@ func (s *chatterSvc) Echoer(ctx context.Context, p *chattersvc.EchoerPayload, st
 	// Listen for context cancellation and stream input simultaneously.
 	for done := false; !done; {
 		select {
-		case str := <-strCh:
+		case str, ok := <-strCh:
+			if !ok {
+				done = true
+				continue
+			}
 			s.storeMessage(str)
 			if err = stream.Send(str); err != nil {
 				return err
@@ -111,7 +115,11 @@ func (s *chatterSvc) Listener(ctx context.Context, p *chattersvc.ListenerPayload
 	// Listen for context cancellation and stream input simultaneously.
 	for done := false; !done; {
 		select {
-		case str := <-strCh:
+		case str, ok := <-strCh:
+			if !ok {
+				done = true
+				continue
+			}
 			s.storeMessage(str)
 		case err := <-errCh:
 			if err != nil {
@@ -153,7 +161,11 @@ func (s *chatterSvc) Summary(ctx context.Context, p *chattersvc.SummaryPayload, 
 	// Listen for context cancellation and stream input simultaneously.
 	for done := false; !done; {
 		select {
-		case str := <-strCh:
+		case str, ok := <-strCh:
+			if !ok {
+				done = true
+				continue
+			}
 			s.storeMessage(str)
 			lastMsg := s.storedMessages[len(s.storedMessages)-1]
 			summary = append(summary, lastMsg)

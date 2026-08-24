@@ -13,6 +13,7 @@ import (
 
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
+	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goagrpc "goa.design/goa/v3/grpc"
 	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/metadata"
@@ -143,8 +144,8 @@ func EncodeSummaryResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (
 		return nil, goagrpc.ErrInvalidType("chatter", "summary", "chatterviews.ChatSummaryCollection", v)
 	}
 	result := vres.Projected
-	(*hdr).Append("goa-view", vres.View)
 	resp := NewProtoChatSummaryCollection(result)
+	(*hdr).Append("goa-view", "default")
 	return resp, nil
 }
 
@@ -225,8 +226,16 @@ func EncodeHistoryResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (
 		return nil, goagrpc.ErrInvalidType("chatter", "history", "*chatterviews.ChatSummary", v)
 	}
 	result := vres.Projected
+	var resp *chatterpb.HistoryResponse
+	switch vres.View {
+	case "tiny":
+		resp = NewProtoHistoryResponseTiny(result)
+	case "default", "":
+		resp = NewProtoHistoryResponse(result)
+	default:
+		return nil, goa.InvalidEnumValueError("view", vres.View, []any{"tiny", "default"})
+	}
 	(*hdr).Append("goa-view", vres.View)
-	resp := NewProtoHistoryResponse(result)
 	return resp, nil
 }
 
@@ -241,6 +250,11 @@ func DecodeHistoryRequest(ctx context.Context, v any, md metadata.MD) (any, erro
 	{
 		if vals := md.Get("view"); len(vals) > 0 {
 			view = &vals[0]
+		}
+		if view != nil {
+			if !(*view == "tiny" || *view == "default") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []any{"tiny", "default"}))
+			}
 		}
 		if vals := md.Get("authorization"); len(vals) == 0 {
 			err = goa.MergeErrors(err, goa.MissingFieldError("authorization", "metadata"))

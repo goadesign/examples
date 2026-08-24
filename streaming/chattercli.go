@@ -99,10 +99,6 @@ func InteractWithStreams(data interface{}) {
 			prettyPrint(data)
 		}
 	}
-	if data != nil {
-		m, _ := json.MarshalIndent(data, "", "    ")
-		fmt.Println(string(m))
-	}
 }
 
 func prettyPrint(s interface{}) {

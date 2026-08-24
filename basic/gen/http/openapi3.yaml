@@ -11,6 +11,7 @@ servers:
       variables:
         version:
             default: v1
+            description: API version
 paths:
     /multiply/{a}/{b}:
         get:
@@ -26,9 +27,9 @@ paths:
                   schema:
                     type: integer
                     description: Left operand
-                    example: 2827624921536156404
+                    example: 8789074496583346340
                     format: int64
-                  example: 1382634857916332518
+                  example: 8789074496583346340
                 - name: b
                   in: path
                   description: Right operand
@@ -36,9 +37,9 @@ paths:
                   schema:
                     type: integer
                     description: Right operand
-                    example: 5648438437472980127
+                    example: 7413121258658775183
                     format: int64
-                  example: 6509684248140511211
+                  example: 7413121258658775183
             responses:
                 "200":
                     description: OK response.
@@ -46,9 +47,9 @@ paths:
                         application/json:
                             schema:
                                 type: integer
-                                example: 4628236506152770078
+                                example: 9089701625346839968
                                 format: int64
-                            example: 4628236506152770078
+                            example: 9089701625346839968
     /openapi.json:
         get:
             tags:

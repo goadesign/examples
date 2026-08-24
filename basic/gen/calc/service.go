@@ -7,9 +7,7 @@
 
 package calc
 
-import (
-	"context"
-)
+import "context"
 
 // The calc service performs operations on numbers
 type Service interface {

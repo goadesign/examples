@@ -16,6 +16,7 @@ import (
 	goagrpc "goa.design/goa/v3/grpc"
 	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 )
 
 // Server implements the chatterpb.ChatterServer interface.
@@ -42,7 +43,6 @@ type ListenerServerStream struct {
 // SummaryServerStream implements the chatter.SummaryServerStream interface.
 type SummaryServerStream struct {
 	stream chatterpb.Chatter_SummaryServer
-	view   string
 }
 
 // SubscribeServerStream implements the chatter.SubscribeServerStream interface.
@@ -54,6 +54,9 @@ type SubscribeServerStream struct {
 type HistoryServerStream struct {
 	stream chatterpb.Chatter_HistoryServer
 	view   string
+	// sentView is the result view named in the response header. Later sends must
+	// use the same view.
+	sentView string
 }
 
 // New instantiates the server struct with the chatter service endpoints.
@@ -393,7 +396,7 @@ func (s *ListenerServerStream) Close() error {
 // "summary" endpoint gRPC stream.
 func (s *SummaryServerStream) SendAndClose(res chatter.ChatSummaryCollection) error {
 	vres := chatter.NewViewedChatSummaryCollection(res, "default")
-	v := NewProtoChatSummaryCollectionViewChatSummaryCollection(vres.Projected)
+	v := NewProtoChatSummaryCollection(vres.Projected)
 	return s.stream.SendAndClose(v)
 }
 
@@ -424,7 +427,7 @@ func (s *SummaryServerStream) RecvWithContext(ctx context.Context) (string, erro
 // Send streams instances of "chatterpb.SubscribeResponse" to the "subscribe"
 // endpoint gRPC stream.
 func (s *SubscribeServerStream) Send(res *chatter.Event) error {
-	v := NewProtoEventSubscribeResponse(res)
+	v := NewProtoSubscribeResponse(res)
 	return s.stream.Send(v)
 }
 
@@ -442,8 +445,29 @@ func (s *SubscribeServerStream) Close() error {
 // Send streams instances of "chatterpb.HistoryResponse" to the "history"
 // endpoint gRPC stream.
 func (s *HistoryServerStream) Send(res *chatter.ChatSummary) error {
-	vres := chatter.NewViewedChatSummary(res, s.view)
-	v := NewProtoChatSummaryViewHistoryResponse(vres.Projected)
+	view := s.view
+	if view == "" {
+		view = "default"
+	}
+	if s.sentView != "" && view != s.sentView {
+		return goa.InvalidEnumValueError("view", view, []any{s.sentView})
+	}
+	vres := chatter.NewViewedChatSummary(res, view)
+	var v *chatterpb.HistoryResponse
+	switch view {
+	case "tiny":
+		v = NewProtoHistoryResponseTiny(vres.Projected)
+	case "default", "":
+		v = NewProtoHistoryResponse(vres.Projected)
+	default:
+		return goa.InvalidEnumValueError("view", view, []any{"tiny", "default"})
+	}
+	if s.sentView == "" {
+		if err := s.stream.SetHeader(metadata.Pairs("goa-view", view)); err != nil {
+			return err
+		}
+		s.sentView = view
+	}
 	return s.stream.Send(v)
 }
 

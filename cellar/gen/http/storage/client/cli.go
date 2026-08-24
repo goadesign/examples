@@ -28,8 +28,8 @@ func BuildShowPayload(storageShowID string, storageShowView string) (*storage.Sh
 	{
 		if storageShowView != "" {
 			view = &storageShowView
-			if !(*view == "default" || *view == "tiny") {
-				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []any{"default", "tiny"}))
+			if !(storageShowView == "default" || storageShowView == "tiny") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", storageShowView, []any{"default", "tiny"}))
 			}
 			if err != nil {
 				return nil, err
@@ -51,7 +51,7 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 	{
 		err = json.Unmarshal([]byte(storageAddBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 65,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 65,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 65,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 2,\n      \"vintage\": 2000,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 3,\n      \"vintage\": 2005,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 		}
 		if body.Winery == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("winery", "body"))
@@ -60,7 +60,7 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.name", body.Name, utf8.RuneCountInString(body.Name), 100, false))
 		}
 		if body.Winery != nil {
-			if err2 := ValidateWineryRequestBody(body.Winery); err2 != nil {
+			if err2 := validateWineryRequestBody(body.Winery, "body.winery"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -72,7 +72,7 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 		}
 		for _, e := range body.Composition {
 			if e != nil {
-				if err2 := ValidateComponentRequestBody(e); err2 != nil {
+				if err2 := validateComponentRequestBody(e, "body.composition[*]"); err2 != nil {
 					err = goa.MergeErrors(err, err2)
 				}
 			}
@@ -86,8 +86,6 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 			if *body.Rating < 1 {
 				err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 1, true))
 			}
-		}
-		if body.Rating != nil {
 			if *body.Rating > 5 {
 				err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 5, false))
 			}
@@ -112,7 +110,7 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 				v.Composition[i] = nil
 				continue
 			}
-			v.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
+			v.Composition[i] = marshalComponentRequestBodyToStorageComponentOptional(val)
 		}
 	}
 
@@ -140,7 +138,7 @@ func BuildMultiAddPayload(storageMultiAddBody string) ([]*storage.Bottle, error)
 	{
 		err = json.Unmarshal([]byte(storageMultiAddBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      {\n         \"composition\": [\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 2,\n         \"vintage\": 2009,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      },\n      {\n         \"composition\": [\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 2,\n         \"vintage\": 2009,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      },\n      {\n         \"composition\": [\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 65,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 2,\n         \"vintage\": 2009,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      }\n   ]'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      {\n         \"composition\": [\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 3,\n         \"vintage\": 2003,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      },\n      {\n         \"composition\": [\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 3,\n         \"vintage\": 2003,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      }\n   ]'")
 		}
 	}
 	v := make([]*storage.Bottle, len(body))
@@ -162,14 +160,14 @@ func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateId
 	{
 		err = json.Unmarshal([]byte(storageMultiUpdateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 2,\n            \"vintage\": 2009,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 2,\n            \"vintage\": 2009,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 65,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 2,\n            \"vintage\": 2009,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 		}
 		if body.Bottles == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("bottles", "body"))
 		}
 		for _, e := range body.Bottles {
 			if e != nil {
-				if err2 := ValidateBottleRequestBody(e); err2 != nil {
+				if err2 := validateBottleRequestBody(e, "body.bottles[*]"); err2 != nil {
 					err = goa.MergeErrors(err, err2)
 				}
 			}
@@ -182,7 +180,7 @@ func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateId
 	{
 		err = json.Unmarshal([]byte(storageMultiUpdateIds), &ids)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for ids, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      \"Ut non voluptatem.\",\n      \"Officia tenetur rerum possimus voluptates.\"\n   ]'")
+			return nil, fmt.Errorf("invalid JSON for ids, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      \"Deserunt itaque omnis necessitatibus enim aspernatur.\",\n      \"Tempore in voluptate asperiores.\",\n      \"Incidunt quia ut eius quibusdam rerum.\",\n      \"Consequatur architecto ratione.\"\n   ]'")
 		}
 	}
 	v := &storage.MultiUpdatePayload{}

@@ -200,5 +200,5 @@ func updownDownloadUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "updown download --p \"Hic accusamus delectus voluptatum architecto.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "updown download --p \"Amet odit illum voluptatem suscipit.\"")
 }

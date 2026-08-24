@@ -22,7 +22,7 @@ func BuildCreateSessionPayload(sessionCreateSessionBody string) (*session.Create
 	{
 		err = json.Unmarshal([]byte(sessionCreateSessionBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Et distinctio eos dolores quibusdam adipisci.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Ea sit quis similique.\"\n   }'")
 		}
 	}
 	v := &session.CreateSessionPayload{

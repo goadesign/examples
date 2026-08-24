@@ -37,8 +37,10 @@ func EncodeLoginRequest(ctx context.Context, v any, md *metadata.MD) (any, error
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "login", "*chatter.LoginPayload", v)
 	}
-	(*md).Append("user", payload.User)
-	(*md).Append("password", payload.Password)
+	userWire := payload.User
+	(*md).Append("user", userWire)
+	passwordWire := payload.Password
+	(*md).Append("password", passwordWire)
 	return NewProtoLoginRequest(), nil
 }
 
@@ -72,7 +74,8 @@ func EncodeEchoerRequest(ctx context.Context, v any, md *metadata.MD) (any, erro
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "echoer", "*chatter.EchoerPayload", v)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return nil, nil
 }
 
@@ -103,7 +106,8 @@ func EncodeListenerRequest(ctx context.Context, v any, md *metadata.MD) (any, er
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "listener", "*chatter.ListenerPayload", v)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return nil, nil
 }
 
@@ -134,21 +138,15 @@ func EncodeSummaryRequest(ctx context.Context, v any, md *metadata.MD) (any, err
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "summary", "*chatter.SummaryPayload", v)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return nil, nil
 }
 
 // DecodeSummaryResponse decodes responses from the chatter summary endpoint.
 func DecodeSummaryResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
-	var view string
-	{
-		if vals := hdr.Get("goa-view"); len(vals) > 0 {
-			view = vals[0]
-		}
-	}
 	return &SummaryClientStream{
 		stream: v.(chatterpb.Chatter_SummaryClient),
-		view:   view,
 	}, nil
 }
 
@@ -172,7 +170,8 @@ func EncodeSubscribeRequest(ctx context.Context, v any, md *metadata.MD) (any, e
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "subscribe", "*chatter.SubscribePayload", v)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return NewProtoSubscribeRequest(), nil
 }
 
@@ -205,22 +204,17 @@ func EncodeHistoryRequest(ctx context.Context, v any, md *metadata.MD) (any, err
 		return nil, goagrpc.ErrInvalidType("chatter", "history", "*chatter.HistoryPayload", v)
 	}
 	if payload.View != nil {
-		(*md).Append("view", *payload.View)
+		viewWire := *payload.View
+		(*md).Append("view", viewWire)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return NewProtoHistoryRequest(), nil
 }
 
 // DecodeHistoryResponse decodes responses from the chatter history endpoint.
 func DecodeHistoryResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
-	var view string
-	{
-		if vals := hdr.Get("goa-view"); len(vals) > 0 {
-			view = vals[0]
-		}
-	}
 	return &HistoryClientStream{
 		stream: v.(chatterpb.Chatter_HistoryClient),
-		view:   view,
 	}, nil
 }

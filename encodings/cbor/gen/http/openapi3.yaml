@@ -20,8 +20,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Minus illo ducimus rerum id.
-                  example: Necessitatibus consequatur consequatur.
+                    example: Non molestiae ipsam et possimus nesciunt.
+                  example: Non molestiae ipsam et possimus nesciunt.
                 - name: b
                   in: path
                   description: Right operand
@@ -29,8 +29,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Quod vel occaecati autem ducimus quis vel.
-                  example: Provident quia eius quo.
+                    example: Commodi inventore quos.
+                  example: Commodi inventore quos.
             responses:
                 "200":
                     description: OK response.
@@ -38,8 +38,8 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Cupiditate odit quis possimus molestias vel magni.
-                            example: Cupiditate odit quis possimus molestias vel magni.
+                                example: Atque modi odio fugiat dolor quis laboriosam.
+                            example: Atque modi odio fugiat dolor quis laboriosam.
 components: {}
 tags:
     - name: concat

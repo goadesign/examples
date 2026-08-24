@@ -13,8 +13,7 @@ import (
 	sommelierviews "goa.design/examples/cellar/gen/sommelier/views"
 )
 
-// NewPickPayload builds the payload of the "pick" endpoint of the "sommelier"
-// service from the gRPC request type.
+// NewPickPayload builds *sommelier.Criteria from *sommelierpb.PickRequest.
 func NewPickPayload(message *sommelierpb.PickRequest) *sommelier.Criteria {
 	v := &sommelier.Criteria{
 		Name:   message.Name,
@@ -29,8 +28,8 @@ func NewPickPayload(message *sommelierpb.PickRequest) *sommelier.Criteria {
 	return v
 }
 
-// NewProtoStoredBottleCollection builds the gRPC response type from the result
-// of the "pick" endpoint of the "sommelier" service.
+// NewProtoStoredBottleCollection builds *sommelierpb.StoredBottleCollection
+// from sommelierviews.StoredBottleCollectionView.
 func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollectionView) *sommelierpb.StoredBottleCollection {
 	message := &sommelierpb.StoredBottleCollection{}
 	message.Field = make([]*sommelierpb.StoredBottle, len(result))
@@ -43,7 +42,7 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			message.Field[i].Winery = svcSommelierviewsWineryViewToSommelierpbWinery(val.Winery)
+			message.Field[i].Winery = transformWineryViewToProtoWinery(val.Winery)
 		}
 		if val.Composition != nil {
 			message.Field[i].Composition = make([]*sommelierpb.Component, len(val.Composition))
@@ -58,27 +57,11 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 	return message
 }
 
-// svcSommelierviewsWineryViewToSommelierpbWinery builds a value of type
-// *sommelierpb.Winery from a value of type *sommelierviews.WineryView.
-func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
+// transformWineryViewToProtoWinery builds a value of type *sommelierpb.Winery
+// from a value of type *sommelierviews.WineryView.
+func transformWineryViewToProtoWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
 	res := &sommelierpb.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		Url:     v.URL,
-	}
-
-	return res
-}
-
-// protobufSommelierpbWineryToSommelierviewsWineryView builds a value of type
-// *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
-func protobufSommelierpbWineryToSommelierviewsWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
-	res := &sommelierviews.WineryView{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		URL:     v.Url,
+		Name: *v.Name,
 	}
 
 	return res

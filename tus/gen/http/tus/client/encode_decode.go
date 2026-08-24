@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -71,18 +72,24 @@ func EncodeHeadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 //   - "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //   - error: internal error
 func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "head", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("tus", "head", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -288,7 +295,10 @@ func DecodeHeadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			return nil, NewHeadInvalidTusResumable(tusVersion)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "head", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("tus", "head", resp.StatusCode, string(body))
 		}
 	}
@@ -362,18 +372,24 @@ func EncodePatchRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 //   - "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //   - error: internal error
 func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "patch", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("tus", "patch", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
@@ -861,7 +877,10 @@ func DecodePatchResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			}
 			return nil, NewPatchInvalidTusResumable(tusVersion)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "patch", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("tus", "patch", resp.StatusCode, string(body))
 		}
 	}
@@ -902,18 +921,24 @@ func (c *Client) BuildOptionsRequest(ctx context.Context, v any) (*http.Request,
 //   - "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //   - error: internal error
 func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "options", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("tus", "options", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
@@ -988,7 +1013,10 @@ func DecodeOptionsResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			}
 			return nil, NewOptionsInvalidTusResumable(tusVersion)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "options", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("tus", "options", resp.StatusCode, string(body))
 		}
 	}
@@ -1069,18 +1097,24 @@ func EncodePostRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 //   - "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //   - error: internal error
 func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "post", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("tus", "post", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusCreated:
@@ -1313,7 +1347,10 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 				}
 				return nil, NewPostInvalidChecksumAlgorithm(name, id, message, temporary, timeout, fault)
 			default:
-				body, _ := io.ReadAll(resp.Body)
+				body, err := io.ReadAll(resp.Body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("tus", "post", err)
+				}
 				return nil, goahttp.ErrInvalidResponse("tus", "post", resp.StatusCode, string(body))
 			}
 		case http.StatusRequestEntityTooLarge:
@@ -1458,7 +1495,10 @@ func DecodePostResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			return nil, NewPostInvalidTusResumable(tusVersion)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "post", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("tus", "post", resp.StatusCode, string(body))
 		}
 	}
@@ -1527,18 +1567,24 @@ func EncodeDeleteRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "InvalidTusResumable" (type *tus.ErrInvalidTUSResumable): http.StatusPreconditionFailed
 //   - error: internal error
 func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "delete", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("tus", "delete", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
@@ -1699,7 +1745,10 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewDeleteInvalidTusResumable(tusVersion)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("tus", "delete", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("tus", "delete", resp.StatusCode, string(body))
 		}
 	}

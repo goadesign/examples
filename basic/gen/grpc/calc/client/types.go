@@ -12,8 +12,8 @@ import (
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
 )
 
-// NewProtoMultiplyRequest builds the gRPC request type from the payload of the
-// "multiply" endpoint of the "calc" service.
+// NewProtoMultiplyRequest builds *calcpb.MultiplyRequest from
+// *calc.MultiplyPayload.
 func NewProtoMultiplyRequest(payload *calc.MultiplyPayload) *calcpb.MultiplyRequest {
 	message := &calcpb.MultiplyRequest{
 		A: int32(payload.A),
@@ -22,8 +22,7 @@ func NewProtoMultiplyRequest(payload *calc.MultiplyPayload) *calcpb.MultiplyRequ
 	return message
 }
 
-// NewMultiplyResult builds the result type of the "multiply" endpoint of the
-// "calc" service from the gRPC response type.
+// NewMultiplyResult builds int from *calcpb.MultiplyResponse.
 func NewMultiplyResult(message *calcpb.MultiplyResponse) int {
 	result := int(message.Field)
 	return result

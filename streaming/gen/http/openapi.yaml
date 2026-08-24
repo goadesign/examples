@@ -29,11 +29,11 @@ paths:
                     schema:
                         type: string
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -57,17 +57,20 @@ paths:
                   description: View to use to render the result
                   required: false
                   type: string
+                  enum:
+                    - tiny
+                    - default
             responses:
                 "101":
                     description: Switching Protocols response.
                     schema:
                         $ref: '#/definitions/GoaSummary'
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -89,11 +92,11 @@ paths:
                 "101":
                     description: Switching Protocols response.
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -113,7 +116,7 @@ paths:
                     schema:
                         type: string
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
             schemes:
@@ -141,11 +144,11 @@ paths:
                             - action
                             - added_at
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -169,11 +172,11 @@ paths:
                     schema:
                         $ref: '#/definitions/ChatterChatSummaryResponseCollection'
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -188,22 +191,22 @@ definitions:
             length:
                 type: integer
                 description: Length of the message sent
-                example: 6974027342252250665
+                example: 6468000556522877742
                 format: int64
             message:
                 type: string
                 description: Message sent to the server
-                example: Porro velit.
+                example: Distinctio omnis.
             sent_at:
                 type: string
                 description: Time at which the message was sent
-                example: "1997-08-20T21:13:26Z"
+                example: "2002-03-31T13:56:45Z"
                 format: date-time
-        description: ChatSummaryResponse result type (default view)
+        description: ChatSummary result type (default view)
         example:
-            length: 6974027342252250665
-            message: Porro velit.
-            sent_at: "1997-08-20T21:13:26Z"
+            length: 6468000556522877742
+            message: Distinctio omnis.
+            sent_at: "2002-03-31T13:56:45Z"
         required:
             - message
             - sent_at
@@ -212,17 +215,20 @@ definitions:
         type: array
         items:
             $ref: '#/definitions/ChatSummaryResponse'
-        description: SummaryResponseBody is the result type for an array of ChatSummaryResponse (default view)
+        description: SummaryResponseBody is the result type for an array of ChatSummary (default view)
         example:
-            - length: 6974027342252250665
-              message: Porro velit.
-              sent_at: "1997-08-20T21:13:26Z"
-            - length: 6974027342252250665
-              message: Porro velit.
-              sent_at: "1997-08-20T21:13:26Z"
-            - length: 6974027342252250665
-              message: Porro velit.
-              sent_at: "1997-08-20T21:13:26Z"
+            - length: 6468000556522877742
+              message: Distinctio omnis.
+              sent_at: "2002-03-31T13:56:45Z"
+            - length: 6468000556522877742
+              message: Distinctio omnis.
+              sent_at: "2002-03-31T13:56:45Z"
+            - length: 6468000556522877742
+              message: Distinctio omnis.
+              sent_at: "2002-03-31T13:56:45Z"
+            - length: 6468000556522877742
+              message: Distinctio omnis.
+              sent_at: "2002-03-31T13:56:45Z"
     Event:
         title: Event
         type: object
@@ -235,16 +241,16 @@ definitions:
             added_at:
                 type: string
                 description: Time at which the message was added
-                example: "2012-03-23T20:03:18Z"
+                example: "2001-05-15T07:30:58Z"
                 format: date-time
             message:
                 type: string
                 description: Message sent to the server
-                example: Nostrum quia asperiores et sint deleniti cumque.
+                example: Eum sequi veniam provident dolore velit.
         example:
             action: added
-            added_at: "2012-03-23T20:03:18Z"
-            message: Nostrum quia asperiores et sint deleniti cumque.
+            added_at: "2001-05-15T07:30:58Z"
+            message: Eum sequi veniam provident dolore velit.
         required:
             - message
             - action
@@ -256,22 +262,22 @@ definitions:
             length:
                 type: integer
                 description: Length of the message sent
-                example: 6974027342252250665
+                example: 2987270872186463688
                 format: int64
             message:
                 type: string
                 description: Message sent to the server
-                example: Porro velit.
+                example: Deserunt velit tempore ducimus repellat aspernatur ipsum.
             sent_at:
                 type: string
                 description: Time at which the message was sent
-                example: "1997-08-20T21:13:26Z"
+                example: "1970-02-21T15:32:11Z"
                 format: date-time
         description: HistoryResponseBody result type (default view)
         example:
-            length: 6974027342252250665
-            message: Porro velit.
-            sent_at: "1997-08-20T21:13:26Z"
+            length: 2987270872186463688
+            message: Deserunt velit tempore ducimus repellat aspernatur ipsum.
+            sent_at: "1970-02-21T15:32:11Z"
         required:
             - message
             - sent_at

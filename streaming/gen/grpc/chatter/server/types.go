@@ -13,8 +13,7 @@ import (
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 )
 
-// NewLoginPayload builds the payload of the "login" endpoint of the "chatter"
-// service from the gRPC request type.
+// NewLoginPayload builds *chatter.LoginPayload from metadata values.
 func NewLoginPayload(user string, password string) *chatter.LoginPayload {
 	v := &chatter.LoginPayload{}
 	v.User = user
@@ -22,65 +21,64 @@ func NewLoginPayload(user string, password string) *chatter.LoginPayload {
 	return v
 }
 
-// NewProtoLoginResponse builds the gRPC response type from the result of the
-// "login" endpoint of the "chatter" service.
+// NewProtoLoginResponse builds *chatterpb.LoginResponse from string.
 func NewProtoLoginResponse(result string) *chatterpb.LoginResponse {
 	message := &chatterpb.LoginResponse{}
 	message.Field = result
 	return message
 }
 
-// NewEchoerPayload builds the payload of the "echoer" endpoint of the
-// "chatter" service from the gRPC request type.
+// NewEchoerPayload builds *chatter.EchoerPayload from metadata values.
 func NewEchoerPayload(token string) *chatter.EchoerPayload {
 	v := &chatter.EchoerPayload{}
 	v.Token = token
 	return v
 }
 
-// NewProtoEchoerResponse builds the gRPC response type from the result of the
-// "echoer" endpoint of the "chatter" service.
+// NewProtoEchoerResponse builds *chatterpb.EchoerResponse from string.
 func NewProtoEchoerResponse(result string) *chatterpb.EchoerResponse {
 	message := &chatterpb.EchoerResponse{}
 	message.Field = result
 	return message
 }
 
+// NewEchoerStreamingRequestEchoerStreamingRequest builds string from
+// *chatterpb.EchoerStreamingRequest.
 func NewEchoerStreamingRequestEchoerStreamingRequest(v *chatterpb.EchoerStreamingRequest) string {
 	spayload := v.Field
 	return spayload
 }
 
-// NewListenerPayload builds the payload of the "listener" endpoint of the
-// "chatter" service from the gRPC request type.
+// NewListenerPayload builds *chatter.ListenerPayload from metadata values.
 func NewListenerPayload(token string) *chatter.ListenerPayload {
 	v := &chatter.ListenerPayload{}
 	v.Token = token
 	return v
 }
 
-// NewProtoListenerResponse builds the gRPC response type from the result of
-// the "listener" endpoint of the "chatter" service.
+// NewProtoListenerResponse builds *chatterpb.ListenerResponse from metadata
+// values.
 func NewProtoListenerResponse() *chatterpb.ListenerResponse {
 	message := &chatterpb.ListenerResponse{}
 	return message
 }
 
+// NewListenerStreamingRequestListenerStreamingRequest builds string from
+// *chatterpb.ListenerStreamingRequest.
 func NewListenerStreamingRequestListenerStreamingRequest(v *chatterpb.ListenerStreamingRequest) string {
 	spayload := v.Field
 	return spayload
 }
 
-// NewSummaryPayload builds the payload of the "summary" endpoint of the
-// "chatter" service from the gRPC request type.
+// NewSummaryPayload builds *chatter.SummaryPayload from metadata values.
 func NewSummaryPayload(token string) *chatter.SummaryPayload {
 	v := &chatter.SummaryPayload{}
 	v.Token = token
 	return v
 }
 
-// NewProtoChatSummaryCollection builds the gRPC response type from the result
-// of the "summary" endpoint of the "chatter" service.
+// NewProtoChatSummaryCollection builds *chatterpb.ChatSummaryCollection from
+// chatterviews.ChatSummaryCollectionView.
 func NewProtoChatSummaryCollection(result chatterviews.ChatSummaryCollectionView) *chatterpb.ChatSummaryCollection {
 	message := &chatterpb.ChatSummaryCollection{}
 	message.Field = make([]*chatterpb.ChatSummary, len(result))
@@ -97,37 +95,22 @@ func NewProtoChatSummaryCollection(result chatterviews.ChatSummaryCollectionView
 	return message
 }
 
-func NewProtoChatSummaryCollectionViewChatSummaryCollection(vresult chatterviews.ChatSummaryCollectionView) *chatterpb.ChatSummaryCollection {
-	v := &chatterpb.ChatSummaryCollection{}
-	v.Field = make([]*chatterpb.ChatSummary, len(vresult))
-	for i, val := range vresult {
-		v.Field[i] = &chatterpb.ChatSummary{
-			Message_: *val.Message,
-			SentAt:   *val.SentAt,
-		}
-		if val.Length != nil {
-			length := int32(*val.Length)
-			v.Field[i].Length = &length
-		}
-	}
-	return v
-}
-
+// NewSummaryStreamingRequestSummaryStreamingRequest builds string from
+// *chatterpb.SummaryStreamingRequest.
 func NewSummaryStreamingRequestSummaryStreamingRequest(v *chatterpb.SummaryStreamingRequest) string {
 	spayload := v.Field
 	return spayload
 }
 
-// NewSubscribePayload builds the payload of the "subscribe" endpoint of the
-// "chatter" service from the gRPC request type.
+// NewSubscribePayload builds *chatter.SubscribePayload from metadata values.
 func NewSubscribePayload(token string) *chatter.SubscribePayload {
 	v := &chatter.SubscribePayload{}
 	v.Token = token
 	return v
 }
 
-// NewProtoSubscribeResponse builds the gRPC response type from the result of
-// the "subscribe" endpoint of the "chatter" service.
+// NewProtoSubscribeResponse builds *chatterpb.SubscribeResponse from
+// *chatter.Event.
 func NewProtoSubscribeResponse(result *chatter.Event) *chatterpb.SubscribeResponse {
 	message := &chatterpb.SubscribeResponse{
 		Message_: result.Message,
@@ -137,26 +120,20 @@ func NewProtoSubscribeResponse(result *chatter.Event) *chatterpb.SubscribeRespon
 	return message
 }
 
-func NewProtoEventSubscribeResponse(result *chatter.Event) *chatterpb.SubscribeResponse {
-	v := &chatterpb.SubscribeResponse{
-		Message_: result.Message,
-		Action:   result.Action,
-		AddedAt:  result.AddedAt,
-	}
-	return v
-}
-
-// NewHistoryPayload builds the payload of the "history" endpoint of the
-// "chatter" service from the gRPC request type.
+// NewHistoryPayload builds *chatter.HistoryPayload from metadata values.
 func NewHistoryPayload(view *string, token string) *chatter.HistoryPayload {
 	v := &chatter.HistoryPayload{}
-	v.View = view
+	if view != nil {
+		viewService := *view
+		v.View = &viewService
+	}
+
 	v.Token = token
 	return v
 }
 
-// NewProtoHistoryResponse builds the gRPC response type from the result of the
-// "history" endpoint of the "chatter" service.
+// NewProtoHistoryResponse builds *chatterpb.HistoryResponse from
+// *chatterviews.ChatSummaryView.
 func NewProtoHistoryResponse(result *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
 	message := &chatterpb.HistoryResponse{
 		Message_: *result.Message,
@@ -169,14 +146,11 @@ func NewProtoHistoryResponse(result *chatterviews.ChatSummaryView) *chatterpb.Hi
 	return message
 }
 
-func NewProtoChatSummaryViewHistoryResponse(vresult *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
-	v := &chatterpb.HistoryResponse{
-		Message_: *vresult.Message,
-		SentAt:   *vresult.SentAt,
+// NewProtoHistoryResponseTiny builds *chatterpb.HistoryResponse from
+// *chatterviews.ChatSummaryView.
+func NewProtoHistoryResponseTiny(result *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
+	message := &chatterpb.HistoryResponse{
+		Message_: *result.Message,
 	}
-	if vresult.Length != nil {
-		length := int32(*vresult.Length)
-		v.Length = &length
-	}
-	return v
+	return message
 }

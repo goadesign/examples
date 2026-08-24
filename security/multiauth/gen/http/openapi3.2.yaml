@@ -23,8 +23,8 @@ paths:
                   schema:
                     type: boolean
                     description: Whether to force auth failure even with a valid JWT
-                    example: true
-                  example: true
+                    example: false
+                  example: false
             responses:
                 "200":
                     description: OK response.
@@ -32,22 +32,22 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Quaerat animi vel distinctio est.
-                            example: Quaerat animi vel distinctio est.
+                                example: Dolores et earum enim quo et.
+                            example: Dolores et earum enim quo et.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Cupiditate sunt ut esse ut perspiciatis.
+                            example: Inventore quo non ad.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Saepe sit.
+                            example: Nemo tenetur totam commodi nisi possimus sapiente.
             security:
                 - jwt_header_Authorization: []
         post:
@@ -63,22 +63,22 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Neque qui commodi nihil.
-                            example: Neque qui commodi nihil.
+                                example: Inventore et ad voluptas sint.
+                            example: Inventore et ad voluptas sint.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Officiis vel possimus consequuntur ratione provident culpa.
+                            example: Veniam eum quos.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Molestias impedit vitae fugit ex.
+                            example: Est illum illo laudantium iste.
             security:
                 - api_key_query_k: []
                   jwt_header_X-Authorization: []
@@ -99,22 +99,22 @@ paths:
                         application/json:
                             schema:
                                 type: string
-                                example: Qui praesentium.
-                            example: Qui praesentium.
+                                example: Est molestiae voluptatem dicta iure aliquid.
+                            example: Est molestiae voluptatem dicta iure aliquid.
                 "401":
                     description: 'unauthorized: Unauthorized response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Dolor nobis expedita id non dolorem ipsum.
+                            example: Quo fugit est nesciunt beatae voluptatem.
                 "403":
                     description: 'invalid-scopes: Forbidden response.'
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Culpa a error aut quas impedit qui.
+                            example: Qui omnis quaerat sapiente.
             security:
                 - api_key_query_k: []
                   jwt_header_Authorization: []
@@ -142,7 +142,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Unauthorized'
-                            example: Tempore dolorem ipsa.
+                            example: Quia at aut perferendis voluptatem occaecati.
             security:
                 - basic_header_Authorization: []
 components:
@@ -173,7 +173,7 @@ components:
         Unauthorized:
             type: string
             description: Credentials are invalid
-            example: Tempore dolorem ipsa.
+            example: Quia at aut perferendis voluptatem occaecati.
     securitySchemes:
         api_key_query_k:
             type: apiKey

@@ -75,7 +75,7 @@ go build -o ./cmd/monitor-cli/monitor-cli goa.design/examples/sse/cmd/monitor-cl
 #### Connect to the SSE Endpoint
 
 ```bash
-./cmd/monitor-cli/monitor-cli monitor monitor --url http://localhost:8080
+./cmd/monitor-cli/monitor-cli --url http://localhost:8080 monitor monitor
 ```
 
 You should see a stream of JSON objects representing CPU and memory usage,

@@ -20,8 +20,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Cupiditate perferendis excepturi corrupti sint aspernatur.
-                  example: Nobis inventore nesciunt ex repellendus excepturi qui.
+                    example: Dolorum molestias sed dolorem unde numquam laudantium.
+                  example: Dolorum molestias sed dolorem unde numquam laudantium.
                 - name: b
                   in: path
                   description: Right operand
@@ -29,8 +29,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Dolorem perspiciatis officiis ipsum delectus.
-                  example: Molestiae ducimus pariatur tenetur.
+                    example: Ut repudiandae velit qui rerum aut eaque.
+                  example: Ut repudiandae velit qui rerum aut eaque.
             responses:
                 "200":
                     description: OK response.
@@ -39,37 +39,31 @@ paths:
                             schema:
                                 type: string
                                 example:
-                                    - 79
-                                    - 100
-                                    - 105
-                                    - 111
-                                    - 32
-                                    - 115
+                                    - 73
+                                    - 109
+                                    - 112
                                     - 101
                                     - 100
-                                    - 32
-                                    - 111
-                                    - 109
-                                    - 110
                                     - 105
-                                    - 115
+                                    - 116
+                                    - 32
+                                    - 113
+                                    - 117
+                                    - 105
                                     - 46
                                 format: binary
                             example:
-                                - 79
-                                - 100
-                                - 105
-                                - 111
-                                - 32
-                                - 115
+                                - 73
+                                - 109
+                                - 112
                                 - 101
                                 - 100
-                                - 32
-                                - 111
-                                - 109
-                                - 110
                                 - 105
-                                - 115
+                                - 116
+                                - 32
+                                - 113
+                                - 117
+                                - 105
                                 - 46
     /concatbytesfield/{a}/{b}:
         get:
@@ -85,8 +79,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Vitae assumenda fugiat et sit repellendus.
-                  example: Suscipit at et iste laudantium ullam necessitatibus.
+                    example: Quasi itaque.
+                  example: Quasi itaque.
                 - name: b
                   in: path
                   description: Right operand
@@ -94,8 +88,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Ut tempore.
-                  example: Ut ut ex rem.
+                    example: Culpa ratione.
+                  example: Culpa ratione.
             responses:
                 "200":
                     description: OK response.
@@ -104,43 +98,33 @@ paths:
                             schema:
                                 type: string
                                 example:
-                                    - 86
+                                    - 69
+                                    - 116
+                                    - 32
                                     - 101
                                     - 110
                                     - 105
-                                    - 97
                                     - 109
                                     - 32
-                                    - 118
-                                    - 111
-                                    - 108
+                                    - 113
                                     - 117
-                                    - 112
-                                    - 116
+                                    - 105
                                     - 97
-                                    - 116
-                                    - 101
-                                    - 109
                                     - 46
                                 format: binary
                             example:
-                                - 86
+                                - 69
+                                - 116
+                                - 32
                                 - 101
                                 - 110
                                 - 105
-                                - 97
                                 - 109
                                 - 32
-                                - 118
-                                - 111
-                                - 108
+                                - 113
                                 - 117
-                                - 112
-                                - 116
+                                - 105
                                 - 97
-                                - 116
-                                - 101
-                                - 109
                                 - 46
     /concatstringfield/{a}/{b}:
         get:
@@ -156,8 +140,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Qui delectus reprehenderit laudantium tempora autem.
-                  example: Quisquam hic adipisci qui ut nisi.
+                    example: Ipsa qui expedita consectetur et et labore.
+                  example: Ipsa qui expedita consectetur et et labore.
                 - name: b
                   in: path
                   description: Right operand
@@ -165,8 +149,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Sit officia repellat.
-                  example: Recusandae aut.
+                    example: Fuga dolorum quaerat.
+                  example: Fuga dolorum quaerat.
             responses:
                 "200":
                     description: OK response.
@@ -174,8 +158,8 @@ paths:
                         text/html:
                             schema:
                                 type: string
-                                example: Eos veritatis est repudiandae distinctio at animi.
-                            example: Eos veritatis est repudiandae distinctio at animi.
+                                example: Qui exercitationem cupiditate ut ratione non consequatur.
+                            example: Qui exercitationem cupiditate ut ratione non consequatur.
     /concatstrings/{a}/{b}:
         get:
             tags:
@@ -190,8 +174,8 @@ paths:
                   schema:
                     type: string
                     description: Left operand
-                    example: Numquam unde accusantium autem tenetur.
-                  example: Laborum amet odio in.
+                    example: Nam ut eligendi quia laudantium non quia.
+                  example: Nam ut eligendi quia laudantium non quia.
                 - name: b
                   in: path
                   description: Right operand
@@ -199,8 +183,8 @@ paths:
                   schema:
                     type: string
                     description: Right operand
-                    example: Odio inventore dolorem sunt in dolorem aut.
-                  example: Magnam autem nostrum.
+                    example: Officia aliquid aut quis minus.
+                  example: Officia aliquid aut quis minus.
             responses:
                 "200":
                     description: OK response.
@@ -208,8 +192,8 @@ paths:
                         text/html:
                             schema:
                                 type: string
-                                example: At at.
-                            example: At at.
+                                example: Non repudiandae ex velit pariatur.
+                            example: Non repudiandae ex velit pariatur.
     /swagger.json:
         get:
             tags:

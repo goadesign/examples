@@ -28,7 +28,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "retry get-message --message '{\n      \"id\": \"Impedit omnis unde.\"\n   }'" + "\n" +
+	return os.Args[0] + " " + "retry get-message --message '{\n      \"id\": \"Dolores asperiores ipsam.\"\n   }'" + "\n" +
 		""
 }
 
@@ -147,5 +147,5 @@ func retryGetMessageUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "retry get-message --message '{\n      \"id\": \"Impedit omnis unde.\"\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "retry get-message --message '{\n      \"id\": \"Dolores asperiores ipsam.\"\n   }'")
 }

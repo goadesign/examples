@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "calc multiply --a 2827624921536156404 --b 5648438437472980127" + "\n" +
+	return os.Args[0] + " " + "calc multiply --a 8789074496583346340 --b 7413121258658775183" + "\n" +
 		""
 }
 
@@ -154,5 +154,5 @@ func calcMultiplyUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc multiply --a 2827624921536156404 --b 5648438437472980127")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc multiply --a 8789074496583346340 --b 7413121258658775183")
 }

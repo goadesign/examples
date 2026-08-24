@@ -38,7 +38,6 @@ type ListenerClientStream struct {
 // SummaryClientStream implements the chatter.SummaryClientStream interface.
 type SummaryClientStream struct {
 	stream chatterpb.Chatter_SummaryClient
-	view   string
 }
 
 // SubscribeClientStream implements the chatter.SubscribeClientStream interface.
@@ -48,8 +47,9 @@ type SubscribeClientStream struct {
 
 // HistoryClientStream implements the chatter.HistoryClientStream interface.
 type HistoryClientStream struct {
-	stream chatterpb.Chatter_HistoryClient
-	view   string
+	stream  chatterpb.Chatter_HistoryClient
+	view    string
+	viewSet bool
 }
 
 // NewClient instantiates gRPC client for all the chatter service servers.
@@ -328,7 +328,25 @@ func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 			return res, err
 		}
 	}
-	proj := NewHistoryResponseChatSummaryView(v)
+	if !s.viewSet {
+		hdr, err := s.stream.Header()
+		if err != nil {
+			return res, err
+		}
+		views := hdr.Get("goa-view")
+		if len(views) == 0 {
+			return res, goa.MissingFieldError("goa-view", "metadata")
+		}
+		s.view = views[0]
+		s.viewSet = true
+	}
+	var proj *chatterviews.ChatSummaryView
+	switch s.view {
+	case "tiny":
+		proj = NewHistoryResponseChatSummaryViewTiny(v)
+	case "default", "":
+		proj = NewHistoryResponseChatSummaryView(v)
+	}
 	vres := &chatterviews.ChatSummary{Projected: proj, View: s.view}
 	if err := chatterviews.ValidateChatSummary(vres); err != nil {
 		return nil, err
@@ -345,4 +363,5 @@ func (s *HistoryClientStream) RecvWithContext(ctx context.Context) (*chatter.Cha
 // SetView sets the view.
 func (s *HistoryClientStream) SetView(view string) {
 	s.view = view
+	s.viewSet = true
 }

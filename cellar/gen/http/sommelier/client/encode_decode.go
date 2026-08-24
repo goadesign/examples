@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -58,18 +59,24 @@ func EncodePickRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 //   - "no_match" (type sommelier.NoMatch): http.StatusNotFound
 //   - error: internal error
 func DecodePickResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("sommelier", "pick", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("sommelier", "pick", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -110,7 +117,10 @@ func DecodePickResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			return nil, NewPickNoMatch(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("sommelier", "pick", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("sommelier", "pick", resp.StatusCode, string(body))
 		}
 	}
@@ -135,7 +145,7 @@ func unmarshalStoredBottleResponseToSommelierviewsStoredBottleView(v *StoredBott
 				res.Composition[i] = nil
 				continue
 			}
-			res.Composition[i] = unmarshalComponentResponseToSommelierviewsComponentView(val)
+			res.Composition[i] = unmarshalComponentResponseToSommelierviewsComponentViewOptional(val)
 		}
 	}
 
@@ -152,9 +162,10 @@ func unmarshalWineryResponseTinyToSommelierviewsWineryView(v *WineryResponseTiny
 	return res
 }
 
-// unmarshalComponentResponseToSommelierviewsComponentView builds a value of
-// type *sommelierviews.ComponentView from a value of type *ComponentResponse.
-func unmarshalComponentResponseToSommelierviewsComponentView(v *ComponentResponse) *sommelierviews.ComponentView {
+// unmarshalComponentResponseToSommelierviewsComponentViewOptional builds a
+// value of type *sommelierviews.ComponentView from a value of type
+// *ComponentResponse.
+func unmarshalComponentResponseToSommelierviewsComponentViewOptional(v *ComponentResponse) *sommelierviews.ComponentView {
 	if v == nil {
 		return nil
 	}

@@ -43,18 +43,12 @@ func EncodePickRequest(ctx context.Context, v any, md *metadata.MD) (any, error)
 
 // DecodePickResponse decodes responses from the sommelier pick endpoint.
 func DecodePickResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
-	var view string
-	{
-		if vals := hdr.Get("goa-view"); len(vals) > 0 {
-			view = vals[0]
-		}
-	}
 	message, ok := v.(*sommelierpb.StoredBottleCollection)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("sommelier", "pick", "*sommelierpb.StoredBottleCollection", v)
 	}
 	res := NewPickResult(message)
-	vres := sommelierviews.StoredBottleCollection{Projected: res, View: view}
+	vres := sommelierviews.StoredBottleCollection{Projected: res, View: "default"}
 	if err := sommelierviews.ValidateStoredBottleCollection(vres); err != nil {
 		return nil, err
 	}

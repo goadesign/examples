@@ -142,7 +142,7 @@ func NewStoredBottleCollection(vres sommelierviews.StoredBottleCollection) Store
 // StoredBottleCollection from result type StoredBottleCollection using the
 // given view.
 func NewViewedStoredBottleCollection(res StoredBottleCollection, view string) sommelierviews.StoredBottleCollection {
-	var vres sommelierviews.StoredBottleCollection
+	vres := sommelierviews.StoredBottleCollection{View: view}
 	switch view {
 	case "default", "":
 		p := newStoredBottleCollectionView(res)

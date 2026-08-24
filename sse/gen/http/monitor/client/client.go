@@ -9,6 +9,7 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -76,8 +77,11 @@ func (c *Client) Monitor() goa.Endpoint {
 
 		contentType := resp.Header.Get("Content-Type")
 		if contentType != "" && !strings.HasPrefix(contentType, "text/event-stream") {
-			resp.Body.Close()
-			return nil, fmt.Errorf("unexpected content type: %s (expected text/event-stream)", contentType)
+			contentTypeErr := fmt.Errorf("unexpected content type: %s (expected text/event-stream)", contentType)
+			if err := resp.Body.Close(); err != nil {
+				return nil, errors.Join(contentTypeErr, goahttp.ErrDecodingError("monitor", "monitor", err))
+			}
+			return nil, contentTypeErr
 		}
 
 		return NewMonitorStream(resp, c.decoder), nil

@@ -30,7 +30,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "interceptors get --body '{\n      \"spanID\": \"c2bc78f1-a675-44df-b132-1d285e204cf2\",\n      \"traceID\": \"8909bcf0-fa7e-4ed1-bc3e-1ed689cc9896\"\n   }' --tenant-id \"0be14847-a562-4081-b76a-5d1ece3ec1c1\" --record-id \"ca7f30e3-8945-4edd-bcb7-7cb57ca63316\" --auth \"Beatae eum.\"" + "\n" +
+	return os.Args[0] + " " + "interceptors get --body '{\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }' --tenant-id \"bcf776fd-733a-464e-a356-95b967aabc46\" --record-id \"b8b666e3-4262-4c26-842a-872b4f00ac2e\" --auth \"Molestiae ab ipsa fuga.\"" + "\n" +
 		""
 }
 
@@ -195,7 +195,7 @@ func interceptorsGetUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors get --body '{\n      \"spanID\": \"c2bc78f1-a675-44df-b132-1d285e204cf2\",\n      \"traceID\": \"8909bcf0-fa7e-4ed1-bc3e-1ed689cc9896\"\n   }' --tenant-id \"0be14847-a562-4081-b76a-5d1ece3ec1c1\" --record-id \"ca7f30e3-8945-4edd-bcb7-7cb57ca63316\" --auth \"Beatae eum.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors get --body '{\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }' --tenant-id \"bcf776fd-733a-464e-a356-95b967aabc46\" --record-id \"b8b666e3-4262-4c26-842a-872b4f00ac2e\" --auth \"Molestiae ab ipsa fuga.\"")
 }
 
 func interceptorsCreateUsage() {
@@ -217,7 +217,7 @@ func interceptorsCreateUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors create --body '{\n      \"spanID\": \"7e046fe3-fa36-4f0f-b281-f8c9e1fdf010\",\n      \"traceID\": \"831384a5-5a7d-43cc-94e4-5ec22455f386\",\n      \"value\": \"Impedit voluptatem culpa et.\"\n   }' --tenant-id \"36e02fa8-99a9-4a74-8184-5b23fc179edd\" --auth \"Voluptatum necessitatibus.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors create --body '{\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"value\": \"Vel dolores.\"\n   }' --tenant-id \"73ce0bc2-04c1-48cd-ac98-99efcdc2b86a\" --auth \"Eaque repellendus quo blanditiis rerum harum.\"")
 }
 
 func interceptorsStreamUsage() {
@@ -237,5 +237,5 @@ func interceptorsStreamUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors stream --tenant-id \"2a36e0ce-eee4-4dc0-a9e8-3770a62bc0e1\" --auth \"Aliquid et dignissimos delectus facere nesciunt.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors stream --tenant-id \"14baa1da-faa4-460a-a0b6-b283270088d1\" --auth \"Dolore repellendus sint soluta tenetur omnis.\"")
 }

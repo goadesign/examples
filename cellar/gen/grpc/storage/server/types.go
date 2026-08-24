@@ -16,47 +16,38 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoStoredBottleCollection builds the gRPC response type from the result
-// of the "list" endpoint of the "storage" service.
+// NewProtoStoredBottleCollection builds *storagepb.StoredBottleCollection from
+// storageviews.StoredBottleCollectionView.
 func NewProtoStoredBottleCollection(result storageviews.StoredBottleCollectionView) *storagepb.StoredBottleCollection {
 	message := &storagepb.StoredBottleCollection{}
 	message.Field = make([]*storagepb.StoredBottle, len(result))
 	for i, val := range result {
 		message.Field[i] = &storagepb.StoredBottle{
-			Id:          *val.ID,
-			Name:        *val.Name,
-			Vintage:     *val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
+			Id:   *val.ID,
+			Name: *val.Name,
 		}
 		if val.Winery != nil {
-			message.Field[i].Winery = svcStorageviewsWineryViewToStoragepbWinery(val.Winery)
-		}
-		if val.Composition != nil {
-			message.Field[i].Composition = make([]*storagepb.Component, len(val.Composition))
-			for j, val := range val.Composition {
-				message.Field[i].Composition[j] = &storagepb.Component{
-					Varietal:   *val.Varietal,
-					Percentage: val.Percentage,
-				}
-			}
+			message.Field[i].Winery = transformStoredBottleCollectionViewWineryViewToProtoStoredBottleCollectionWinery(val.Winery)
 		}
 	}
 	return message
 }
 
-// NewShowPayload builds the payload of the "show" endpoint of the "storage"
-// service from the gRPC request type.
+// NewShowPayload builds *storage.ShowPayload from *storagepb.ShowRequest.
 func NewShowPayload(message *storagepb.ShowRequest, view *string) *storage.ShowPayload {
 	v := &storage.ShowPayload{
 		ID: message.Id,
 	}
-	v.View = view
+	if view != nil {
+		viewService := *view
+		v.View = &viewService
+	}
+
 	return v
 }
 
-// NewProtoShowResponse builds the gRPC response type from the result of the
-// "show" endpoint of the "storage" service.
+// NewProtoShowResponse builds *storagepb.ShowResponse from
+// *storageviews.StoredBottleView.
 func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.ShowResponse {
 	message := &storagepb.ShowResponse{
 		Id:          *result.ID,
@@ -66,7 +57,7 @@ func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.Show
 		Rating:      result.Rating,
 	}
 	if result.Winery != nil {
-		message.Winery = svcStorageviewsWineryViewToStoragepbWinery(result.Winery)
+		message.Winery = transformStoredBottleViewWineryViewToProtoShowResponseWinery(result.Winery)
 	}
 	if result.Composition != nil {
 		message.Composition = make([]*storagepb.Component, len(result.Composition))
@@ -80,8 +71,21 @@ func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.Show
 	return message
 }
 
-// NewShowNotFoundError builds the gRPC error response type from the error of
-// the "show" endpoint of the "storage" service.
+// NewProtoShowResponseTiny builds *storagepb.ShowResponse from
+// *storageviews.StoredBottleView.
+func NewProtoShowResponseTiny(result *storageviews.StoredBottleView) *storagepb.ShowResponse {
+	message := &storagepb.ShowResponse{
+		Id:   *result.ID,
+		Name: *result.Name,
+	}
+	if result.Winery != nil {
+		message.Winery = transformWineryViewToProtoWineryTiny(result.Winery)
+	}
+	return message
+}
+
+// NewShowNotFoundError builds *storagepb.ShowNotFoundError from
+// *storage.NotFound.
 func NewShowNotFoundError(er *storage.NotFound) *storagepb.ShowNotFoundError {
 	message := &storagepb.ShowNotFoundError{
 		Message_: er.Message,
@@ -90,8 +94,7 @@ func NewShowNotFoundError(er *storage.NotFound) *storagepb.ShowNotFoundError {
 	return message
 }
 
-// NewAddPayload builds the payload of the "add" endpoint of the "storage"
-// service from the gRPC request type.
+// NewAddPayload builds *storage.Bottle from *storagepb.AddRequest.
 func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 	v := &storage.Bottle{
 		Name:        message.Name,
@@ -100,7 +103,7 @@ func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 		Rating:      message.Rating,
 	}
 	if message.Winery != nil {
-		v.Winery = protobufStoragepbWineryToStorageWinery(message.Winery)
+		v.Winery = transformProtoAddRequestWineryToBottleWinery(message.Winery)
 	}
 	if message.Composition != nil {
 		v.Composition = make([]*storage.Component, len(message.Composition))
@@ -114,16 +117,14 @@ func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 	return v
 }
 
-// NewProtoAddResponse builds the gRPC response type from the result of the
-// "add" endpoint of the "storage" service.
+// NewProtoAddResponse builds *storagepb.AddResponse from string.
 func NewProtoAddResponse(result string) *storagepb.AddResponse {
 	message := &storagepb.AddResponse{}
 	message.Field = result
 	return message
 }
 
-// NewRemovePayload builds the payload of the "remove" endpoint of the
-// "storage" service from the gRPC request type.
+// NewRemovePayload builds *storage.RemovePayload from *storagepb.RemoveRequest.
 func NewRemovePayload(message *storagepb.RemoveRequest) *storage.RemovePayload {
 	v := &storage.RemovePayload{
 		ID: message.Id,
@@ -131,15 +132,13 @@ func NewRemovePayload(message *storagepb.RemoveRequest) *storage.RemovePayload {
 	return v
 }
 
-// NewProtoRemoveResponse builds the gRPC response type from the result of the
-// "remove" endpoint of the "storage" service.
+// NewProtoRemoveResponse builds *storagepb.RemoveResponse from metadata values.
 func NewProtoRemoveResponse() *storagepb.RemoveResponse {
 	message := &storagepb.RemoveResponse{}
 	return message
 }
 
-// NewRatePayload builds the payload of the "rate" endpoint of the "storage"
-// service from the gRPC request type.
+// NewRatePayload builds map[uint32][]string from *storagepb.RateRequest.
 func NewRatePayload(message *storagepb.RateRequest) map[uint32][]string {
 	v := make(map[uint32][]string, len(message.Field))
 	for key, val := range message.Field {
@@ -153,15 +152,13 @@ func NewRatePayload(message *storagepb.RateRequest) map[uint32][]string {
 	return v
 }
 
-// NewProtoRateResponse builds the gRPC response type from the result of the
-// "rate" endpoint of the "storage" service.
+// NewProtoRateResponse builds *storagepb.RateResponse from metadata values.
 func NewProtoRateResponse() *storagepb.RateResponse {
 	message := &storagepb.RateResponse{}
 	return message
 }
 
-// NewMultiAddPayload builds the payload of the "multi_add" endpoint of the
-// "storage" service from the gRPC request type.
+// NewMultiAddPayload builds []*storage.Bottle from *storagepb.MultiAddRequest.
 func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
@@ -172,7 +169,7 @@ func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			v[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
+			v[i].Winery = transformProtoMultiAddRequestWineryToMultiAddRequestWinery(val.Winery)
 		}
 		if val.Composition != nil {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
@@ -187,8 +184,7 @@ func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 	return v
 }
 
-// NewProtoMultiAddResponse builds the gRPC response type from the result of
-// the "multi_add" endpoint of the "storage" service.
+// NewProtoMultiAddResponse builds *storagepb.MultiAddResponse from []string.
 func NewProtoMultiAddResponse(result []string) *storagepb.MultiAddResponse {
 	message := &storagepb.MultiAddResponse{}
 	message.Field = make([]string, len(result))
@@ -198,8 +194,8 @@ func NewProtoMultiAddResponse(result []string) *storagepb.MultiAddResponse {
 	return message
 }
 
-// NewMultiUpdatePayload builds the payload of the "multi_update" endpoint of
-// the "storage" service from the gRPC request type.
+// NewMultiUpdatePayload builds *storage.MultiUpdatePayload from
+// *storagepb.MultiUpdateRequest.
 func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.MultiUpdatePayload {
 	v := &storage.MultiUpdatePayload{}
 	if message.Ids != nil {
@@ -218,7 +214,7 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 				Rating:      val.Rating,
 			}
 			if val.Winery != nil {
-				v.Bottles[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
+				v.Bottles[i].Winery = transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery(val.Winery)
 			}
 			if val.Composition != nil {
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
@@ -234,40 +230,11 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 	return v
 }
 
-// NewProtoMultiUpdateResponse builds the gRPC response type from the result of
-// the "multi_update" endpoint of the "storage" service.
+// NewProtoMultiUpdateResponse builds *storagepb.MultiUpdateResponse from
+// metadata values.
 func NewProtoMultiUpdateResponse() *storagepb.MultiUpdateResponse {
 	message := &storagepb.MultiUpdateResponse{}
 	return message
-}
-
-// ValidateWinery runs the validations defined on Winery.
-func ValidateWinery(winery *storagepb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", winery.Region, "[a-zA-Z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", winery.Country, "[a-zA-Z '\\.]+"))
-	if winery.Url != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
-	}
-	return
-}
-
-// ValidateComponent runs the validations defined on Component.
-func ValidateComponent(elem *storagepb.Component) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", elem.Varietal, "[A-Za-z' ]+"))
-	if utf8.RuneCountInString(elem.Varietal) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", elem.Varietal, utf8.RuneCountInString(elem.Varietal), 100, false))
-	}
-	if elem.Percentage != nil {
-		if *elem.Percentage < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 1, true))
-		}
-	}
-	if elem.Percentage != nil {
-		if *elem.Percentage > 100 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 100, false))
-		}
-	}
-	return
 }
 
 // ValidateAddRequest runs the validations defined on AddRequest.
@@ -305,10 +272,35 @@ func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
 		if *message.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", *message.Rating, 1, true))
 		}
-	}
-	if message.Rating != nil {
 		if *message.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", *message.Rating, 5, false))
+		}
+	}
+	return
+}
+
+// ValidateWinery runs the validations defined on Winery.
+func ValidateWinery(winery *storagepb.Winery) (err error) {
+	err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", winery.Region, "[a-zA-Z '\\.]+"))
+	err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", winery.Country, "[a-zA-Z '\\.]+"))
+	if winery.Url != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+	}
+	return
+}
+
+// ValidateComponent runs the validations defined on Component.
+func ValidateComponent(elem *storagepb.Component) (err error) {
+	err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", elem.Varietal, "[A-Za-z' ]+"))
+	if utf8.RuneCountInString(elem.Varietal) > 100 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", elem.Varietal, utf8.RuneCountInString(elem.Varietal), 100, false))
+	}
+	if elem.Percentage != nil {
+		if *elem.Percentage < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 1, true))
+		}
+		if *elem.Percentage > 100 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 100, false))
 		}
 	}
 	return
@@ -381,8 +373,6 @@ func ValidateBottle(elem *storagepb.Bottle) (err error) {
 		if *elem.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 1, true))
 		}
-	}
-	if elem.Rating != nil {
 		if *elem.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 5, false))
 		}
@@ -409,35 +399,40 @@ func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err erro
 	return
 }
 
-// svcStorageviewsWineryViewToStoragepbWinery builds a value of type
-// *storagepb.Winery from a value of type *storageviews.WineryView.
-func svcStorageviewsWineryViewToStoragepbWinery(v *storageviews.WineryView) *storagepb.Winery {
+// transformStoredBottleCollectionViewWineryViewToProtoStoredBottleCollectionWinery
+// builds a value of type *storagepb.Winery from a value of type
+// *storageviews.WineryView.
+func transformStoredBottleCollectionViewWineryViewToProtoStoredBottleCollectionWinery(v *storageviews.WineryView) *storagepb.Winery {
 	res := &storagepb.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		Url:     v.URL,
+		Name: *v.Name,
 	}
 
 	return res
 }
 
-// protobufStoragepbWineryToStorageviewsWineryView builds a value of type
-// *storageviews.WineryView from a value of type *storagepb.Winery.
-func protobufStoragepbWineryToStorageviewsWineryView(v *storagepb.Winery) *storageviews.WineryView {
-	res := &storageviews.WineryView{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		URL:     v.Url,
+// transformStoredBottleViewWineryViewToProtoShowResponseWinery builds a value
+// of type *storagepb.Winery from a value of type *storageviews.WineryView.
+func transformStoredBottleViewWineryViewToProtoShowResponseWinery(v *storageviews.WineryView) *storagepb.Winery {
+	res := &storagepb.Winery{
+		Name: *v.Name,
 	}
 
 	return res
 }
 
-// protobufStoragepbWineryToStorageWinery builds a value of type
+// transformWineryViewToProtoWineryTiny builds a value of type
+// *storagepb.Winery from a value of type *storageviews.WineryView.
+func transformWineryViewToProtoWineryTiny(v *storageviews.WineryView) *storagepb.Winery {
+	res := &storagepb.Winery{
+		Name: *v.Name,
+	}
+
+	return res
+}
+
+// transformProtoAddRequestWineryToBottleWinery builds a value of type
 // *storage.Winery from a value of type *storagepb.Winery.
-func protobufStoragepbWineryToStorageWinery(v *storagepb.Winery) *storage.Winery {
+func transformProtoAddRequestWineryToBottleWinery(v *storagepb.Winery) *storage.Winery {
 	res := &storage.Winery{
 		Name:    v.Name,
 		Region:  v.Region,
@@ -448,14 +443,27 @@ func protobufStoragepbWineryToStorageWinery(v *storagepb.Winery) *storage.Winery
 	return res
 }
 
-// svcStorageWineryToStoragepbWinery builds a value of type *storagepb.Winery
-// from a value of type *storage.Winery.
-func svcStorageWineryToStoragepbWinery(v *storage.Winery) *storagepb.Winery {
-	res := &storagepb.Winery{
+// transformProtoMultiAddRequestWineryToMultiAddRequestWinery builds a value of
+// type *storage.Winery from a value of type *storagepb.Winery.
+func transformProtoMultiAddRequestWineryToMultiAddRequestWinery(v *storagepb.Winery) *storage.Winery {
+	res := &storage.Winery{
 		Name:    v.Name,
 		Region:  v.Region,
 		Country: v.Country,
-		Url:     v.URL,
+		URL:     v.Url,
+	}
+
+	return res
+}
+
+// transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery builds a
+// value of type *storage.Winery from a value of type *storagepb.Winery.
+func transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery(v *storagepb.Winery) *storage.Winery {
+	res := &storage.Winery{
+		Name:    v.Name,
+		Region:  v.Region,
+		Country: v.Country,
+		URL:     v.Url,
 	}
 
 	return res

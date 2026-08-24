@@ -24,7 +24,7 @@ func BuildGetMessagePayload(retryGetMessageMessage string) (*retry.GetMessagePay
 		if retryGetMessageMessage != "" {
 			err = json.Unmarshal([]byte(retryGetMessageMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Impedit omnis unde.\"\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Dolores asperiores ipsam.\"\n   }'")
 			}
 		}
 	}

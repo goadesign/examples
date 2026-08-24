@@ -26,8 +26,8 @@ func EncodeListResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any
 		return nil, goagrpc.ErrInvalidType("storage", "list", "storageviews.StoredBottleCollection", v)
 	}
 	result := vres.Projected
-	(*hdr).Append("goa-view", vres.View)
 	resp := NewProtoStoredBottleCollection(result)
+	(*hdr).Append("goa-view", "tiny")
 	return resp, nil
 }
 
@@ -39,8 +39,16 @@ func EncodeShowResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any
 		return nil, goagrpc.ErrInvalidType("storage", "show", "*storageviews.StoredBottle", v)
 	}
 	result := vres.Projected
+	var resp *storagepb.ShowResponse
+	switch vres.View {
+	case "default", "":
+		resp = NewProtoShowResponse(result)
+	case "tiny":
+		resp = NewProtoShowResponseTiny(result)
+	default:
+		return nil, goa.InvalidEnumValueError("view", vres.View, []any{"default", "tiny"})
+	}
 	(*hdr).Append("goa-view", vres.View)
-	resp := NewProtoShowResponse(result)
 	return resp, nil
 }
 

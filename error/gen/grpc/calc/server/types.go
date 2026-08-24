@@ -12,8 +12,7 @@ import (
 	calcpb "goa.design/examples/error/gen/grpc/calc/pb"
 )
 
-// NewDividePayload builds the payload of the "divide" endpoint of the "calc"
-// service from the gRPC request type.
+// NewDividePayload builds *calc.DividePayload from *calcpb.DivideRequest.
 func NewDividePayload(message *calcpb.DivideRequest) *calc.DividePayload {
 	v := &calc.DividePayload{
 		Dividend: int(message.Dividend),
@@ -22,8 +21,7 @@ func NewDividePayload(message *calcpb.DivideRequest) *calc.DividePayload {
 	return v
 }
 
-// NewProtoDivideResponse builds the gRPC response type from the result of the
-// "divide" endpoint of the "calc" service.
+// NewProtoDivideResponse builds *calcpb.DivideResponse from *calc.DivideResult.
 func NewProtoDivideResponse(result *calc.DivideResult) *calcpb.DivideResponse {
 	message := &calcpb.DivideResponse{
 		Quotient: int32(result.Quotient),
@@ -32,8 +30,8 @@ func NewProtoDivideResponse(result *calc.DivideResult) *calcpb.DivideResponse {
 	return message
 }
 
-// NewDivideDivByZeroError builds the gRPC error response type from the error
-// of the "divide" endpoint of the "calc" service.
+// NewDivideDivByZeroError builds *calcpb.DivideDivByZeroError from
+// *calc.DivByZero.
 func NewDivideDivByZeroError(er *calc.DivByZero) *calcpb.DivideDivByZeroError {
 	message := &calcpb.DivideDivByZeroError{
 		Message_: er.Message,

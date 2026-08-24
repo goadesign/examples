@@ -7,9 +7,7 @@
 
 package monitor
 
-import (
-	"context"
-)
+import "context"
 
 // The monitor service provides real-time system monitoring via SSE
 type Service interface {

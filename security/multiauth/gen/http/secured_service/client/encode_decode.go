@@ -10,10 +10,11 @@ package client
 import (
 	"bytes"
 	"context"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
@@ -55,18 +56,24 @@ func EncodeSigninRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "unauthorized" (type securedservice.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeSigninResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "signin", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("secured_service", "signin", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -95,7 +102,10 @@ func DecodeSigninResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewSigninUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "signin", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("secured_service", "signin", resp.StatusCode, string(body))
 		}
 	}
@@ -134,7 +144,7 @@ func EncodeSecureRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 		}
 		values := req.URL.Query()
 		if p.Fail != nil {
-			values.Add("fail", fmt.Sprintf("%v", *p.Fail))
+			values.Add("fail", strconv.FormatBool(*p.Fail))
 		}
 		req.URL.RawQuery = values.Encode()
 		return nil
@@ -149,18 +159,24 @@ func EncodeSecureRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "unauthorized" (type securedservice.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeSecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "secure", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("secured_service", "secure", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -194,7 +210,10 @@ func DecodeSecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewSecureUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "secure", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("secured_service", "secure", resp.StatusCode, string(body))
 		}
 	}
@@ -246,18 +265,24 @@ func EncodeDoublySecureRequest(encoder func(*http.Request) goahttp.Encoder) func
 //   - "unauthorized" (type securedservice.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeDoublySecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "doubly_secure", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("secured_service", "doubly_secure", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -291,7 +316,10 @@ func DecodeDoublySecureResponse(decoder func(*http.Response) goahttp.Decoder, re
 			}
 			return nil, NewDoublySecureUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "doubly_secure", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("secured_service", "doubly_secure", resp.StatusCode, string(body))
 		}
 	}
@@ -350,18 +378,24 @@ func EncodeAlsoDoublySecureRequest(encoder func(*http.Request) goahttp.Encoder) 
 //   - "unauthorized" (type securedservice.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeAlsoDoublySecureResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "also_doubly_secure", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("secured_service", "also_doubly_secure", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -395,7 +429,10 @@ func DecodeAlsoDoublySecureResponse(decoder func(*http.Response) goahttp.Decoder
 			}
 			return nil, NewAlsoDoublySecureUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("secured_service", "also_doubly_secure", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("secured_service", "also_doubly_secure", resp.StatusCode, string(body))
 		}
 	}

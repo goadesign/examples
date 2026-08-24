@@ -25,8 +25,8 @@ func EncodePickResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any
 		return nil, goagrpc.ErrInvalidType("sommelier", "pick", "sommelierviews.StoredBottleCollection", v)
 	}
 	result := vres.Projected
-	(*hdr).Append("goa-view", vres.View)
 	resp := NewProtoStoredBottleCollection(result)
+	(*hdr).Append("goa-view", "default")
 	return resp, nil
 }
 

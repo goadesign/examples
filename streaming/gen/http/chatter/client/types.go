@@ -198,8 +198,7 @@ func ValidateSubscribeResponseBody(body *SubscribeResponseBody) (err error) {
 	return
 }
 
-// ValidateChatSummaryResponse runs the validations defined on
-// ChatSummaryResponse
+// ValidateChatSummaryResponse runs the validations defined on ChatSummary
 func ValidateChatSummaryResponse(body *ChatSummaryResponse) (err error) {
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))

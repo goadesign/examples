@@ -22,7 +22,7 @@ func BuildDividePayload(calcDivideBody string) (*calc.DividePayload, error) {
 	{
 		err = json.Unmarshal([]byte(calcDivideBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"dividend\": 1196350668178300830,\n      \"divisor\": 5941732484439269441\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"dividend\": 6599615662108896380,\n      \"divisor\": 6289780582187170160\n   }'")
 		}
 	}
 	v := &calc.DividePayload{

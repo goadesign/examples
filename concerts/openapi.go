@@ -1,4 +1,4 @@
-package concerts
+package concertsapi
 
 import (
 	"embed"

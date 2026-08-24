@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "text concatstrings --a \"Numquam unde accusantium autem tenetur.\" --b \"Odio inventore dolorem sunt in dolorem aut.\"" + "\n" +
+	return os.Args[0] + " " + "text concatstrings --a \"Nam ut eligendi quia laudantium non quia.\" --b \"Officia aliquid aut quis minus.\"" + "\n" +
 		""
 }
 
@@ -190,7 +190,7 @@ func textConcatstringsUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstrings --a \"Numquam unde accusantium autem tenetur.\" --b \"Odio inventore dolorem sunt in dolorem aut.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstrings --a \"Nam ut eligendi quia laudantium non quia.\" --b \"Officia aliquid aut quis minus.\"")
 }
 
 func textConcatbytesUsage() {
@@ -210,7 +210,7 @@ func textConcatbytesUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytes --a \"Cupiditate perferendis excepturi corrupti sint aspernatur.\" --b \"Dolorem perspiciatis officiis ipsum delectus.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytes --a \"Dolorum molestias sed dolorem unde numquam laudantium.\" --b \"Ut repudiandae velit qui rerum aut eaque.\"")
 }
 
 func textConcatstringfieldUsage() {
@@ -230,7 +230,7 @@ func textConcatstringfieldUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstringfield --a \"Qui delectus reprehenderit laudantium tempora autem.\" --b \"Sit officia repellat.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstringfield --a \"Ipsa qui expedita consectetur et et labore.\" --b \"Fuga dolorum quaerat.\"")
 }
 
 func textConcatbytesfieldUsage() {
@@ -250,5 +250,5 @@ func textConcatbytesfieldUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytesfield --a \"Vitae assumenda fugiat et sit repellendus.\" --b \"Ut tempore.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytesfield --a \"Quasi itaque.\" --b \"Culpa ratione.\"")
 }

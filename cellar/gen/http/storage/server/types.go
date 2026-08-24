@@ -51,7 +51,7 @@ type ShowResponseBody struct {
 	// Name of bottle
 	Name string `form:"name" json:"name" xml:"name"`
 	// Winery that produces wine
-	Winery *WineryResponseBodyTiny `form:"winery" json:"winery" xml:"winery"`
+	Winery *WineryTiny `form:"winery" json:"winery" xml:"winery"`
 	// Vintage of bottle
 	Vintage uint32 `form:"vintage" json:"vintage" xml:"vintage"`
 	// Composition is the list of grape varietals and associated percentage.
@@ -70,7 +70,7 @@ type ShowResponseBodyTiny struct {
 	// Name of bottle
 	Name string `form:"name" json:"name" xml:"name"`
 	// Winery that produces wine
-	Winery *WineryResponseBodyTiny `form:"winery" json:"winery" xml:"winery"`
+	Winery *WineryTiny `form:"winery" json:"winery" xml:"winery"`
 }
 
 // ShowNotFoundResponseBody is the type of the "storage" service "show"
@@ -89,17 +89,11 @@ type StoredBottleResponseTiny struct {
 	// Name of bottle
 	Name string `form:"name" json:"name" xml:"name"`
 	// Winery that produces wine
-	Winery *WineryResponseTiny `form:"winery" json:"winery" xml:"winery"`
+	Winery *WineryTiny `form:"winery" json:"winery" xml:"winery"`
 }
 
-// WineryResponseTiny is used to define fields on response body types.
-type WineryResponseTiny struct {
-	// Name of winery
-	Name string `form:"name" json:"name" xml:"name"`
-}
-
-// WineryResponseBodyTiny is used to define fields on response body types.
-type WineryResponseBodyTiny struct {
+// WineryTiny is used to define fields on response body types.
+type WineryTiny struct {
 	// Name of winery
 	Name string `form:"name" json:"name" xml:"name"`
 }
@@ -173,7 +167,7 @@ func NewShowResponseBody(res *storageviews.StoredBottleView) *ShowResponseBody {
 		Rating:      res.Rating,
 	}
 	if res.Winery != nil {
-		body.Winery = marshalStorageviewsWineryViewToWineryResponseBodyTiny(res.Winery)
+		body.Winery = marshalStorageviewsWineryViewToWineryTiny(res.Winery)
 	}
 	if res.Composition != nil {
 		body.Composition = make([]*ComponentResponseBody, len(res.Composition))
@@ -182,7 +176,7 @@ func NewShowResponseBody(res *storageviews.StoredBottleView) *ShowResponseBody {
 				body.Composition[i] = nil
 				continue
 			}
-			body.Composition[i] = marshalStorageviewsComponentViewToComponentResponseBody(val)
+			body.Composition[i] = marshalStorageviewsComponentViewToComponentResponseBodyOptional(val)
 		}
 	}
 	return body
@@ -196,7 +190,7 @@ func NewShowResponseBodyTiny(res *storageviews.StoredBottleView) *ShowResponseBo
 		Name: *res.Name,
 	}
 	if res.Winery != nil {
-		body.Winery = marshalStorageviewsWineryViewToWineryResponseBodyTiny(res.Winery)
+		body.Winery = marshalStorageviewsWineryViewToWineryTiny(res.Winery)
 	}
 	return body
 }
@@ -236,7 +230,7 @@ func NewAddBottle(body *AddRequestBody) *storage.Bottle {
 				v.Composition[i] = nil
 				continue
 			}
-			v.Composition[i] = unmarshalComponentRequestBodyToStorageComponent(val)
+			v.Composition[i] = unmarshalComponentRequestBodyToStorageComponentOptional(val)
 		}
 	}
 
@@ -297,7 +291,7 @@ func ValidateAddRequestBody(body *AddRequestBody) (err error) {
 		}
 	}
 	if body.Winery != nil {
-		if err2 := ValidateWineryRequestBody(body.Winery); err2 != nil {
+		if err2 := validateWineryRequestBody(body.Winery, "body.winery"); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -305,15 +299,13 @@ func ValidateAddRequestBody(body *AddRequestBody) (err error) {
 		if *body.Vintage < 1900 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.vintage", *body.Vintage, 1900, true))
 		}
-	}
-	if body.Vintage != nil {
 		if *body.Vintage > 2020 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.vintage", *body.Vintage, 2020, false))
 		}
 	}
 	for _, e := range body.Composition {
 		if e != nil {
-			if err2 := ValidateComponentRequestBody(e); err2 != nil {
+			if err2 := validateComponentRequestBody(e, "body.composition[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -327,8 +319,6 @@ func ValidateAddRequestBody(body *AddRequestBody) (err error) {
 		if *body.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 1, true))
 		}
-	}
-	if body.Rating != nil {
 		if *body.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 5, false))
 		}
@@ -337,14 +327,14 @@ func ValidateAddRequestBody(body *AddRequestBody) (err error) {
 }
 
 // ValidateMultiUpdateRequestBody runs the validations defined on
-// multi_update_request_body
+// MultiUpdateRequestBody
 func ValidateMultiUpdateRequestBody(body *MultiUpdateRequestBody) (err error) {
 	if body.Bottles == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("bottles", "body"))
 	}
 	for _, e := range body.Bottles {
 		if e != nil {
-			if err2 := ValidateBottleRequestBody(e); err2 != nil {
+			if err2 := validateBottleRequestBody(e, "body.bottles[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -352,7 +342,7 @@ func ValidateMultiUpdateRequestBody(body *MultiUpdateRequestBody) (err error) {
 	return
 }
 
-// ValidateWineryRequestBody runs the validations defined on WineryRequestBody
+// ValidateWineryRequestBody runs the validations defined on Winery
 func ValidateWineryRequestBody(body *WineryRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -375,16 +365,37 @@ func ValidateWineryRequestBody(body *WineryRequestBody) (err error) {
 	return
 }
 
-// ValidateComponentRequestBody runs the validations defined on
-// ComponentRequestBody
+// validateWineryRequestBody checks Winery and reports errors using the path
+// supplied by its caller
+func validateWineryRequestBody(body *WineryRequestBody, path string) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Region == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("region", path))
+	}
+	if body.Country == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country", path))
+	}
+	if body.Region != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".region", *body.Region, "[a-zA-Z '\\.]+"))
+	}
+	if body.Country != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".country", *body.Country, "[a-zA-Z '\\.]+"))
+	}
+	if body.URL != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".url", *body.URL, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+	}
+	return
+}
+
+// ValidateComponentRequestBody runs the validations defined on Component
 func ValidateComponentRequestBody(body *ComponentRequestBody) (err error) {
 	if body.Varietal == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "body"))
 	}
 	if body.Varietal != nil {
 		err = goa.MergeErrors(err, goa.ValidatePattern("body.varietal", *body.Varietal, "[A-Za-z' ]+"))
-	}
-	if body.Varietal != nil {
 		if utf8.RuneCountInString(*body.Varietal) > 100 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.varietal", *body.Varietal, utf8.RuneCountInString(*body.Varietal), 100, false))
 		}
@@ -393,8 +404,6 @@ func ValidateComponentRequestBody(body *ComponentRequestBody) (err error) {
 		if *body.Percentage < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.percentage", *body.Percentage, 1, true))
 		}
-	}
-	if body.Percentage != nil {
 		if *body.Percentage > 100 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.percentage", *body.Percentage, 100, false))
 		}
@@ -402,7 +411,30 @@ func ValidateComponentRequestBody(body *ComponentRequestBody) (err error) {
 	return
 }
 
-// ValidateBottleRequestBody runs the validations defined on BottleRequestBody
+// validateComponentRequestBody checks Component and reports errors using the
+// path supplied by its caller
+func validateComponentRequestBody(body *ComponentRequestBody, path string) (err error) {
+	if body.Varietal == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", path))
+	}
+	if body.Varietal != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".varietal", *body.Varietal, "[A-Za-z' ]+"))
+		if utf8.RuneCountInString(*body.Varietal) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".varietal", *body.Varietal, utf8.RuneCountInString(*body.Varietal), 100, false))
+		}
+	}
+	if body.Percentage != nil {
+		if *body.Percentage < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".percentage", *body.Percentage, 1, true))
+		}
+		if *body.Percentage > 100 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".percentage", *body.Percentage, 100, false))
+		}
+	}
+	return
+}
+
+// ValidateBottleRequestBody runs the validations defined on Bottle
 func ValidateBottleRequestBody(body *BottleRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -419,7 +451,7 @@ func ValidateBottleRequestBody(body *BottleRequestBody) (err error) {
 		}
 	}
 	if body.Winery != nil {
-		if err2 := ValidateWineryRequestBody(body.Winery); err2 != nil {
+		if err2 := validateWineryRequestBody(body.Winery, "body.winery"); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -427,15 +459,13 @@ func ValidateBottleRequestBody(body *BottleRequestBody) (err error) {
 		if *body.Vintage < 1900 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.vintage", *body.Vintage, 1900, true))
 		}
-	}
-	if body.Vintage != nil {
 		if *body.Vintage > 2020 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.vintage", *body.Vintage, 2020, false))
 		}
 	}
 	for _, e := range body.Composition {
 		if e != nil {
-			if err2 := ValidateComponentRequestBody(e); err2 != nil {
+			if err2 := validateComponentRequestBody(e, "body.composition[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -449,10 +479,61 @@ func ValidateBottleRequestBody(body *BottleRequestBody) (err error) {
 		if *body.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 1, true))
 		}
-	}
-	if body.Rating != nil {
 		if *body.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 5, false))
+		}
+	}
+	return
+}
+
+// validateBottleRequestBody checks Bottle and reports errors using the path
+// supplied by its caller
+func validateBottleRequestBody(body *BottleRequestBody, path string) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", path))
+	}
+	if body.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", path))
+	}
+	if body.Name != nil {
+		if utf8.RuneCountInString(*body.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".name", *body.Name, utf8.RuneCountInString(*body.Name), 100, false))
+		}
+	}
+	if body.Winery != nil {
+		if err2 := validateWineryRequestBody(body.Winery, path+".winery"); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if body.Vintage != nil {
+		if *body.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".vintage", *body.Vintage, 1900, true))
+		}
+		if *body.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".vintage", *body.Vintage, 2020, false))
+		}
+	}
+	for _, e := range body.Composition {
+		if e != nil {
+			if err2 := validateComponentRequestBody(e, path+".composition[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	if body.Description != nil {
+		if utf8.RuneCountInString(*body.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".description", *body.Description, utf8.RuneCountInString(*body.Description), 2000, false))
+		}
+	}
+	if body.Rating != nil {
+		if *body.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".rating", *body.Rating, 1, true))
+		}
+		if *body.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".rating", *body.Rating, 5, false))
 		}
 	}
 	return

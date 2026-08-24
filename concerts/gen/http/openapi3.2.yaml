@@ -67,7 +67,17 @@ paths:
                                       id: 550e8400-e29b-41d4-a716-446655440000
                                       price: 7500
                                       venue: Madison Square Garden, New York, NY
+                                    - artist: The White Stripes
+                                      date: "2024-12-25"
+                                      id: 550e8400-e29b-41d4-a716-446655440000
+                                      price: 7500
+                                      venue: Madison Square Garden, New York, NY
                             example:
+                                - artist: The White Stripes
+                                  date: "2024-12-25"
+                                  id: 550e8400-e29b-41d4-a716-446655440000
+                                  price: 7500
+                                  venue: Madison Square Garden, New York, NY
                                 - artist: The White Stripes
                                   date: "2024-12-25"
                                   id: 550e8400-e29b-41d4-a716-446655440000
@@ -120,6 +130,13 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: bad_request
+                                temporary: false
+                                timeout: false
     /concerts/{concertID}:
         delete:
             tags:
@@ -147,6 +164,13 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: not_found
+                                temporary: false
+                                timeout: false
         get:
             tags:
                 - concerts
@@ -183,6 +207,13 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: not_found
+                                temporary: false
+                                timeout: false
         put:
             tags:
                 - concerts
@@ -231,12 +262,26 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: bad_request
+                                temporary: false
+                                timeout: false
                 "404":
                     description: 'not_found: Concert with the specified ID was not found'
                     content:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: not_found
+                                temporary: false
+                                timeout: false
     /openapi3.json:
         get:
             tags:
@@ -362,19 +407,19 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: true
+                    example: false
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
-                    example: true
-            description: Invalid input data provided
+                    example: false
+            description: Error response result type
             example:
                 fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
+                temporary: false
+                timeout: false
             required:
                 - name
                 - id

@@ -16,8 +16,7 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoPickRequest builds the gRPC request type from the payload of the
-// "pick" endpoint of the "sommelier" service.
+// NewProtoPickRequest builds *sommelierpb.PickRequest from *sommelier.Criteria.
 func NewProtoPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 	message := &sommelierpb.PickRequest{
 		Name:   payload.Name,
@@ -32,8 +31,8 @@ func NewProtoPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 	return message
 }
 
-// NewPickResult builds the result type of the "pick" endpoint of the
-// "sommelier" service from the gRPC response type.
+// NewPickResult builds sommelierviews.StoredBottleCollectionView from
+// *sommelierpb.StoredBottleCollection.
 func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.StoredBottleCollectionView {
 	result := make([]*sommelierviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
@@ -45,7 +44,7 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			result[i].Winery = protobufSommelierpbWineryToSommelierviewsWineryView(val.Winery)
+			result[i].Winery = transformProtoWineryToWineryView(val.Winery)
 		}
 		if val.Composition != nil {
 			result[i].Composition = make([]*sommelierviews.ComponentView, len(val.Composition))
@@ -108,8 +107,6 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 		if *elem.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 1, true))
 		}
-	}
-	if elem.Rating != nil {
 		if *elem.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 5, false))
 		}
@@ -137,8 +134,6 @@ func ValidateComponent(elem *sommelierpb.Component) (err error) {
 		if *elem.Percentage < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 1, true))
 		}
-	}
-	if elem.Percentage != nil {
 		if *elem.Percentage > 100 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 100, false))
 		}
@@ -146,27 +141,11 @@ func ValidateComponent(elem *sommelierpb.Component) (err error) {
 	return
 }
 
-// svcSommelierviewsWineryViewToSommelierpbWinery builds a value of type
-// *sommelierpb.Winery from a value of type *sommelierviews.WineryView.
-func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
-	res := &sommelierpb.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		Url:     v.URL,
-	}
-
-	return res
-}
-
-// protobufSommelierpbWineryToSommelierviewsWineryView builds a value of type
+// transformProtoWineryToWineryView builds a value of type
 // *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
-func protobufSommelierpbWineryToSommelierviewsWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
+func transformProtoWineryToWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
 	res := &sommelierviews.WineryView{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		URL:     v.Url,
+		Name: &v.Name,
 	}
 
 	return res

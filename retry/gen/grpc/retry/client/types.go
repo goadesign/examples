@@ -12,8 +12,8 @@ import (
 	retry "goa.design/examples/retry/gen/retry"
 )
 
-// NewProtoGetMessageRequest builds the gRPC request type from the payload of
-// the "get_message" endpoint of the "retry" service.
+// NewProtoGetMessageRequest builds *retrypb.GetMessageRequest from
+// *retry.GetMessagePayload.
 func NewProtoGetMessageRequest(payload *retry.GetMessagePayload) *retrypb.GetMessageRequest {
 	message := &retrypb.GetMessageRequest{
 		Id: payload.ID,
@@ -21,8 +21,8 @@ func NewProtoGetMessageRequest(payload *retry.GetMessagePayload) *retrypb.GetMes
 	return message
 }
 
-// NewGetMessageResult builds the result type of the "get_message" endpoint of
-// the "retry" service from the gRPC response type.
+// NewGetMessageResult builds *retry.GetMessageResult from
+// *retrypb.GetMessageResponse.
 func NewGetMessageResult(message *retrypb.GetMessageResponse) *retry.GetMessageResult {
 	result := &retry.GetMessageResult{
 		Message: message.Message_,

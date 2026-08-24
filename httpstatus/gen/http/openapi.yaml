@@ -28,54 +28,28 @@ paths:
                 "200":
                     description: OK response.
                     schema:
-                        $ref: '#/definitions/HelloHelloOKResponseBody'
+                        $ref: '#/definitions/Hello'
                 "201":
                     description: Created response.
                     schema:
-                        $ref: '#/definitions/HelloHelloCreatedResponseBody'
+                        $ref: '#/definitions/Hello'
                 "202":
                     description: Accepted response.
                     schema:
-                        $ref: '#/definitions/HelloHelloAcceptedResponseBody'
+                        $ref: '#/definitions/Hello'
             schemes:
                 - http
 definitions:
-    HelloHelloAcceptedResponseBody:
+    Hello:
         title: 'Mediatype identifier: application/vnd.hello; view=default'
         type: object
         properties:
             greeting:
                 type: string
                 description: The greeting message
-                example: Voluptatem voluptatibus itaque omnis.
-        description: HelloAcceptedResponseBody result type (default view)
-        example:
-            greeting: Sed molestiae.
-        required:
-            - greeting
-    HelloHelloCreatedResponseBody:
-        title: 'Mediatype identifier: application/vnd.hello; view=default'
-        type: object
-        properties:
-            greeting:
-                type: string
-                description: The greeting message
-                example: Et ab soluta in.
+                example: Ea earum recusandae.
         description: HelloCreatedResponseBody result type (default view)
         example:
-            greeting: Aut officiis.
-        required:
-            - greeting
-    HelloHelloOKResponseBody:
-        title: 'Mediatype identifier: application/vnd.hello; view=default'
-        type: object
-        properties:
-            greeting:
-                type: string
-                description: The greeting message
-                example: Et cum autem ipsa laboriosam.
-        description: HelloOKResponseBody result type (default view)
-        example:
-            greeting: Reprehenderit aut quae ad voluptas.
+            greeting: Ea earum recusandae.
         required:
             - greeting

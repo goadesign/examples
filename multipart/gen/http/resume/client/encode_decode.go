@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -39,18 +40,24 @@ func (c *Client) BuildListRequest(ctx context.Context, v any) (*http.Request, er
 // list endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("resume", "list", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("resume", "list", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -71,7 +78,10 @@ func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			res := resume.NewStoredResumeCollection(vres)
 			return res, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("resume", "list", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("resume", "list", resp.StatusCode, string(body))
 		}
 	}
@@ -129,18 +139,24 @@ func NewResumeAddEncoder(encoderFn ResumeAddEncoderFunc) func(r *http.Request) g
 // endpoint. restoreBody controls whether the response body should be restored
 // after having been read.
 func DecodeAddResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("resume", "add", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("resume", "add", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -154,7 +170,10 @@ func DecodeAddResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody
 			}
 			return body, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("resume", "add", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("resume", "add", resp.StatusCode, string(body))
 		}
 	}
@@ -225,7 +244,7 @@ func marshalResumeResumeToResumeRequestBody(v *resume.Resume) *ResumeRequestBody
 				res.Experience[i] = nil
 				continue
 			}
-			res.Experience[i] = marshalResumeExperienceToExperienceRequestBody(val)
+			res.Experience[i] = marshalResumeExperienceToExperienceRequestBodyOptional(val)
 		}
 	}
 	if v.Education != nil {
@@ -235,16 +254,16 @@ func marshalResumeResumeToResumeRequestBody(v *resume.Resume) *ResumeRequestBody
 				res.Education[i] = nil
 				continue
 			}
-			res.Education[i] = marshalResumeEducationToEducationRequestBody(val)
+			res.Education[i] = marshalResumeEducationToEducationRequestBodyOptional(val)
 		}
 	}
 
 	return res
 }
 
-// marshalResumeExperienceToExperienceRequestBody builds a value of type
-// *ExperienceRequestBody from a value of type *resume.Experience.
-func marshalResumeExperienceToExperienceRequestBody(v *resume.Experience) *ExperienceRequestBody {
+// marshalResumeExperienceToExperienceRequestBodyOptional builds a value of
+// type *ExperienceRequestBody from a value of type *resume.Experience.
+func marshalResumeExperienceToExperienceRequestBodyOptional(v *resume.Experience) *ExperienceRequestBody {
 	if v == nil {
 		return nil
 	}
@@ -257,9 +276,9 @@ func marshalResumeExperienceToExperienceRequestBody(v *resume.Experience) *Exper
 	return res
 }
 
-// marshalResumeEducationToEducationRequestBody builds a value of type
+// marshalResumeEducationToEducationRequestBodyOptional builds a value of type
 // *EducationRequestBody from a value of type *resume.Education.
-func marshalResumeEducationToEducationRequestBody(v *resume.Education) *EducationRequestBody {
+func marshalResumeEducationToEducationRequestBodyOptional(v *resume.Education) *EducationRequestBody {
 	if v == nil {
 		return nil
 	}
@@ -284,7 +303,7 @@ func marshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resume
 				res.Experience[i] = nil
 				continue
 			}
-			res.Experience[i] = marshalExperienceRequestBodyToResumeExperience(val)
+			res.Experience[i] = marshalExperienceRequestBodyToResumeExperienceOptional(val)
 		}
 	}
 	if v.Education != nil {
@@ -294,16 +313,16 @@ func marshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resume
 				res.Education[i] = nil
 				continue
 			}
-			res.Education[i] = marshalEducationRequestBodyToResumeEducation(val)
+			res.Education[i] = marshalEducationRequestBodyToResumeEducationOptional(val)
 		}
 	}
 
 	return res
 }
 
-// marshalExperienceRequestBodyToResumeExperience builds a value of type
-// *resume.Experience from a value of type *ExperienceRequestBody.
-func marshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) *resume.Experience {
+// marshalExperienceRequestBodyToResumeExperienceOptional builds a value of
+// type *resume.Experience from a value of type *ExperienceRequestBody.
+func marshalExperienceRequestBodyToResumeExperienceOptional(v *ExperienceRequestBody) *resume.Experience {
 	if v == nil {
 		return nil
 	}
@@ -316,9 +335,9 @@ func marshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) *r
 	return res
 }
 
-// marshalEducationRequestBodyToResumeEducation builds a value of type
+// marshalEducationRequestBodyToResumeEducationOptional builds a value of type
 // *resume.Education from a value of type *EducationRequestBody.
-func marshalEducationRequestBodyToResumeEducation(v *EducationRequestBody) *resume.Education {
+func marshalEducationRequestBodyToResumeEducationOptional(v *EducationRequestBody) *resume.Education {
 	if v == nil {
 		return nil
 	}

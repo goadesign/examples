@@ -220,13 +220,13 @@ func (s *MonitorStreamImpl) processEvent(eventData []byte) (event *monitor.Usage
 			continue
 		}
 		if bytes.HasPrefix(line, []byte("data:")) {
-			dataLines = append(dataLines, s.trimHeader(len("data:"), line))
+			dataLines = append(dataLines, s.trimHeader(line[len("data:"):]))
 			continue
 		}
 	}
 	if len(dataLines) > 0 {
 		dataContent := strings.Join(dataLines, "\n")
-		// Decode JSON into the struct pointer directly
+		// Decode the event data into the result value returned by Recv.
 		respBody := &http.Response{
 			StatusCode: http.StatusOK,
 			Body:       io.NopCloser(bytes.NewReader([]byte(dataContent))),
@@ -239,12 +239,8 @@ func (s *MonitorStreamImpl) processEvent(eventData []byte) (event *monitor.Usage
 	return
 }
 
-// trimHeader removes the header prefix and optional leading space
-func (s *MonitorStreamImpl) trimHeader(size int, data []byte) string {
-	if len(data) < size {
-		return string(data)
-	}
-	data = data[size:]
+// trimHeader removes the optional space after an SSE field name.
+func (s *MonitorStreamImpl) trimHeader(data []byte) string {
 	if len(data) > 0 && data[0] == ' ' {
 		data = data[1:]
 	}

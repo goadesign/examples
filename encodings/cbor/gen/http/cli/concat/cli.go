@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "concat concat --a \"Minus illo ducimus rerum id.\" --b \"Quod vel occaecati autem ducimus quis vel.\"" + "\n" +
+	return os.Args[0] + " " + "concat concat --a \"Non molestiae ipsam et possimus nesciunt.\" --b \"Commodi inventore quos.\"" + "\n" +
 		""
 }
 
@@ -130,10 +130,9 @@ func ParseEndpoint(
 // concatUsage displays the usage of the concat command and its subcommands.
 func concatUsage() {
 	fmt.Fprintln(os.Stderr, `The concat service performs operations on strings.
-	
+
 	The service uses the CBOR binary serialization standard to encode responses.
-	It supports reading requests encoded with CBOR, JSON, XML or GOB.
-	`)
+	It supports reading requests encoded with CBOR, JSON, XML or GOB.`)
 	fmt.Fprintf(os.Stderr, "Usage:\n    %s [globalflags] concat COMMAND [flags]\n\n", os.Args[0])
 	fmt.Fprintln(os.Stderr, "COMMAND:")
 	fmt.Fprintln(os.Stderr, `    concat: Concat implements concat.`)
@@ -158,5 +157,5 @@ func concatConcatUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "concat concat --a \"Minus illo ducimus rerum id.\" --b \"Quod vel occaecati autem ducimus quis vel.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "concat concat --a \"Non molestiae ipsam et possimus nesciunt.\" --b \"Commodi inventore quos.\"")
 }

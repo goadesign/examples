@@ -28,7 +28,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "calc multiply --message '{\n      \"a\": 7452483468033160813,\n      \"b\": 6772490184910890684\n   }'" + "\n" +
+	return os.Args[0] + " " + "calc multiply --message '{\n      \"a\": 7630570414871587529,\n      \"b\": 2968728213815611862\n   }'" + "\n" +
 		""
 }
 
@@ -147,5 +147,5 @@ func calcMultiplyUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc multiply --message '{\n      \"a\": 7452483468033160813,\n      \"b\": 6772490184910890684\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc multiply --message '{\n      \"a\": 7630570414871587529,\n      \"b\": 2968728213815611862\n   }'")
 }

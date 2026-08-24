@@ -7,9 +7,7 @@
 
 package concat
 
-import (
-	"context"
-)
+import "context"
 
 // The concat service performs operations on strings.
 

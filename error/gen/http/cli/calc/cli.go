@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "calc divide --body '{\n      \"dividend\": 1196350668178300830,\n      \"divisor\": 5941732484439269441\n   }'" + "\n" +
+	return os.Args[0] + " " + "calc divide --body '{\n      \"dividend\": 6599615662108896380,\n      \"divisor\": 6289780582187170160\n   }'" + "\n" +
 		""
 }
 
@@ -151,5 +151,5 @@ func calcDivideUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc divide --body '{\n      \"dividend\": 1196350668178300830,\n      \"divisor\": 5941732484439269441\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc divide --body '{\n      \"dividend\": 6599615662108896380,\n      \"divisor\": 6289780582187170160\n   }'")
 }

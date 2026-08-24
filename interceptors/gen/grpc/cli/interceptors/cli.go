@@ -29,7 +29,7 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "interceptors get --message '{\n      \"auth\": \"Doloremque in beatae illo nemo nihil id.\",\n      \"recordID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"spanID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"tenantID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"traceID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\"\n   }'" + "\n" +
+	return os.Args[0] + " " + "interceptors get --message '{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"recordID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenantID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'" + "\n" +
 		""
 }
 
@@ -153,5 +153,5 @@ func interceptorsGetUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors get --message '{\n      \"auth\": \"Doloremque in beatae illo nemo nihil id.\",\n      \"recordID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"spanID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"tenantID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"traceID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\"\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors get --message '{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"recordID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenantID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 }

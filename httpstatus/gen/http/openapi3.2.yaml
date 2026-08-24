@@ -1,9 +1,10 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
     title: Goa API
     version: 0.0.1
 servers:
     - url: http://localhost:80
+      name: hello
       description: Default server for hello
 paths:
     /hello/{greeting}:

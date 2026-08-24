@@ -20,24 +20,29 @@ import (
 type ClientInterceptors interface {
 	// Client-side interceptor which writes the tenant ID to the signed JWT
 	// contained in the Authorization header
-	EncodeTenant(ctx context.Context, info *EncodeTenantInfo, next goa.Endpoint) (any, error)
+	EncodeTenant(ctx context.Context, info EncodeTenantInfo, next goa.Endpoint) (any, error)
 	// Client-side interceptor which implements smart retry logic with exponential
 	// backoff
-	Retry(ctx context.Context, info *RetryInfo, next goa.Endpoint) (any, error)
+	Retry(ctx context.Context, info RetryInfo, next goa.Endpoint) (any, error)
 	// Server-side and client-side interceptor that adds trace context to the
 	// bidirectional stream payload
-	TraceBidirectionalStream(ctx context.Context, info *TraceBidirectionalStreamInfo, next goa.Endpoint) (any, error)
+	TraceBidirectionalStream(ctx context.Context, info TraceBidirectionalStreamInfo, next goa.Endpoint) (any, error)
 }
 
 // Access interfaces for interceptor payloads and results
 type (
-	// EncodeTenantInfo provides metadata about the current interception.
-	// It includes service name, method name, and access to the endpoint.
-	EncodeTenantInfo struct {
-		service    string
-		method     string
-		callType   goa.InterceptorCallType
-		rawPayload any
+	// EncodeTenantInfo describes the service call currently passed to the interceptor.
+	EncodeTenantInfo interface {
+		// Service returns the service selected for this call.
+		Service() string
+		// Method returns the method selected for this call.
+		Method() string
+		// CallType returns whether this is an endpoint call, stream send, or stream receive.
+		CallType() goa.InterceptorCallType
+		// RawPayload returns the value passed to the interceptor.
+		RawPayload() any
+		// Payload returns the selected fields from the method payload.
+		Payload() EncodeTenantPayload
 	}
 
 	// EncodeTenantPayload provides type-safe access to the method payload.
@@ -47,13 +52,18 @@ type (
 		TenantID() UUID
 		SetAuth(string)
 	}
-	// RetryInfo provides metadata about the current interception.
-	// It includes service name, method name, and access to the endpoint.
-	RetryInfo struct {
-		service    string
-		method     string
-		callType   goa.InterceptorCallType
-		rawPayload any
+	// RetryInfo describes the service call currently passed to the interceptor.
+	RetryInfo interface {
+		// Service returns the service selected for this call.
+		Service() string
+		// Method returns the method selected for this call.
+		Method() string
+		// CallType returns whether this is an endpoint call, stream send, or stream receive.
+		CallType() goa.InterceptorCallType
+		// RawPayload returns the value passed to the interceptor.
+		RawPayload() any
+		// Result returns the selected fields from the method result.
+		Result(any) RetryResult
 	}
 
 	// RetryResult provides type-safe access to the method result.
@@ -66,8 +76,38 @@ type (
 	}
 )
 
-// Private implementation types
+// Types used to provide information about each service call
 type (
+	encodeTenantGetInfo struct {
+		rawPayload any
+	}
+	encodeTenantGetClientUnaryInfo struct {
+		*encodeTenantGetInfo
+	}
+	encodeTenantCreateInfo struct {
+		rawPayload any
+	}
+	encodeTenantCreateClientUnaryInfo struct {
+		*encodeTenantCreateInfo
+	}
+	encodeTenantStreamInfo struct {
+		rawPayload any
+	}
+	encodeTenantStreamClientUnaryInfo struct {
+		*encodeTenantStreamInfo
+	}
+	retryGetInfo struct {
+		rawPayload any
+	}
+	retryGetClientUnaryInfo struct {
+		*retryGetInfo
+	}
+	retryCreateInfo struct {
+		rawPayload any
+	}
+	retryCreateClientUnaryInfo struct {
+		*retryCreateInfo
+	}
 	encodeTenantGetPayload struct {
 		payload *GetPayload
 	}
@@ -115,75 +155,134 @@ func WrapStreamClientEndpoint(endpoint goa.Endpoint, i ClientInterceptors) goa.E
 	return endpoint
 }
 
-// Public accessor methods for Info types
+// Methods that provide information about each service call
 
-// Service returns the name of the service handling the request.
-func (info *EncodeTenantInfo) Service() string {
-	return info.service
+// Service returns the service selected for this interceptor call.
+func (info *encodeTenantGetInfo) Service() string {
+	return "interceptors"
 }
 
-// Method returns the name of the method handling the request.
-func (info *EncodeTenantInfo) Method() string {
-	return info.method
+// Method returns the method selected for this interceptor call.
+func (info *encodeTenantGetInfo) Method() string {
+	return "Get"
 }
 
-// CallType returns the type of call the interceptor is handling.
-func (info *EncodeTenantInfo) CallType() goa.InterceptorCallType {
-	return info.callType
-}
-
-// RawPayload returns the raw payload of the request.
-func (info *EncodeTenantInfo) RawPayload() any {
+// RawPayload returns the payload supplied for this interceptor call.
+func (info *encodeTenantGetInfo) RawPayload() any {
 	return info.rawPayload
 }
 
-// Payload returns a type-safe accessor for the method payload.
-func (info *EncodeTenantInfo) Payload() EncodeTenantPayload {
-	switch info.Method() {
-	case "Get":
-		return &encodeTenantGetPayload{payload: info.RawPayload().(*GetPayload)}
-	case "Create":
-		return &encodeTenantCreatePayload{payload: info.RawPayload().(*CreatePayload)}
-	case "Stream":
-		return &encodeTenantStreamPayload{payload: info.RawPayload().(*StreamPayload)}
-	default:
-		return nil
-	}
+// CallType reports that this is a client endpoint call.
+func (info *encodeTenantGetClientUnaryInfo) CallType() goa.InterceptorCallType {
+	return goa.InterceptorUnary
 }
 
-// Service returns the name of the service handling the request.
-func (info *RetryInfo) Service() string {
-	return info.service
+// Payload returns this method's payload fields.
+func (info *encodeTenantGetInfo) Payload() EncodeTenantPayload {
+	return &encodeTenantGetPayload{payload: info.rawPayload.(*GetPayload)}
 }
 
-// Method returns the name of the method handling the request.
-func (info *RetryInfo) Method() string {
-	return info.method
+// Service returns the service selected for this interceptor call.
+func (info *encodeTenantCreateInfo) Service() string {
+	return "interceptors"
 }
 
-// CallType returns the type of call the interceptor is handling.
-func (info *RetryInfo) CallType() goa.InterceptorCallType {
-	return info.callType
+// Method returns the method selected for this interceptor call.
+func (info *encodeTenantCreateInfo) Method() string {
+	return "Create"
 }
 
-// RawPayload returns the raw payload of the request.
-func (info *RetryInfo) RawPayload() any {
+// RawPayload returns the payload supplied for this interceptor call.
+func (info *encodeTenantCreateInfo) RawPayload() any {
 	return info.rawPayload
 }
 
-// Result returns a type-safe accessor for the method result.
-func (info *RetryInfo) Result(res any) RetryResult {
-	switch info.Method() {
-	case "Get":
-		return &retryGetResult{result: res.(*GetResult)}
-	case "Create":
-		return &retryCreateResult{result: res.(*CreateResult)}
-	default:
-		return nil
-	}
+// CallType reports that this is a client endpoint call.
+func (info *encodeTenantCreateClientUnaryInfo) CallType() goa.InterceptorCallType {
+	return goa.InterceptorUnary
 }
 
-// Private implementation methods
+// Payload returns this method's payload fields.
+func (info *encodeTenantCreateInfo) Payload() EncodeTenantPayload {
+	return &encodeTenantCreatePayload{payload: info.rawPayload.(*CreatePayload)}
+}
+
+// Service returns the service selected for this interceptor call.
+func (info *encodeTenantStreamInfo) Service() string {
+	return "interceptors"
+}
+
+// Method returns the method selected for this interceptor call.
+func (info *encodeTenantStreamInfo) Method() string {
+	return "Stream"
+}
+
+// RawPayload returns the payload supplied for this interceptor call.
+func (info *encodeTenantStreamInfo) RawPayload() any {
+	return info.rawPayload
+}
+
+// CallType reports that this is a client endpoint call.
+func (info *encodeTenantStreamClientUnaryInfo) CallType() goa.InterceptorCallType {
+	return goa.InterceptorUnary
+}
+
+// Payload returns this method's payload fields.
+func (info *encodeTenantStreamInfo) Payload() EncodeTenantPayload {
+	return &encodeTenantStreamPayload{payload: info.rawPayload.(*StreamPayload)}
+}
+
+// Service returns the service selected for this interceptor call.
+func (info *retryGetInfo) Service() string {
+	return "interceptors"
+}
+
+// Method returns the method selected for this interceptor call.
+func (info *retryGetInfo) Method() string {
+	return "Get"
+}
+
+// RawPayload returns the payload supplied for this interceptor call.
+func (info *retryGetInfo) RawPayload() any {
+	return info.rawPayload
+}
+
+// CallType reports that this is a client endpoint call.
+func (info *retryGetClientUnaryInfo) CallType() goa.InterceptorCallType {
+	return goa.InterceptorUnary
+}
+
+// Result returns this method's result fields.
+func (info *retryGetInfo) Result(res any) RetryResult {
+	return &retryGetResult{result: res.(*GetResult)}
+}
+
+// Service returns the service selected for this interceptor call.
+func (info *retryCreateInfo) Service() string {
+	return "interceptors"
+}
+
+// Method returns the method selected for this interceptor call.
+func (info *retryCreateInfo) Method() string {
+	return "Create"
+}
+
+// RawPayload returns the payload supplied for this interceptor call.
+func (info *retryCreateInfo) RawPayload() any {
+	return info.rawPayload
+}
+
+// CallType reports that this is a client endpoint call.
+func (info *retryCreateClientUnaryInfo) CallType() goa.InterceptorCallType {
+	return goa.InterceptorUnary
+}
+
+// Result returns this method's result fields.
+func (info *retryCreateInfo) Result(res any) RetryResult {
+	return &retryCreateResult{result: res.(*CreateResult)}
+}
+
+// Methods that read and write the selected payload and result fields
 
 func (p *encodeTenantGetPayload) TenantID() UUID {
 	return p.payload.TenantID

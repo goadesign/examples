@@ -124,6 +124,13 @@ func NewMonitorHandler(
 		}
 		_, err = endpoint(ctx, v)
 		if err != nil {
+			stream := v.Stream.(*MonitorServerStream)
+			if stream.attempted {
+				if errhandler != nil {
+					errhandler(ctx, w, err)
+				}
+				return
+			}
 			if err := encodeError(ctx, w, err); err != nil && errhandler != nil {
 				errhandler(ctx, w, err)
 			}
@@ -132,23 +139,21 @@ func NewMonitorHandler(
 	})
 }
 
-// appendFS is a custom implementation of fs.FS that appends a specified prefix
-// to the file paths before delegating the Open call to the underlying fs.FS.
+// appendFS adds a fixed directory to file paths before opening them.
 type appendFS struct {
 	prefix string
 	fs     http.FileSystem
 }
 
 // Open opens the named file, appending the prefix to the file path before
-// passing it to the underlying fs.FS.
+// passing it to the underlying file system.
 func (s appendFS) Open(name string) (http.File, error) {
 	switch name {
 	}
 	return s.fs.Open(path.Join(s.prefix, name))
 }
 
-// appendPrefix returns a new fs.FS that appends the specified prefix to file paths
-// before delegating to the provided embed.FS.
+// appendPrefix returns a file system that adds prefix before opening each path.
 func appendPrefix(fsys http.FileSystem, prefix string) http.FileSystem {
 	return appendFS{prefix: prefix, fs: fsys}
 }

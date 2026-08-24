@@ -49,7 +49,7 @@ paths:
                         type: array
                         items:
                             type: integer
-                            example: 5765309117005200142
+                            example: 6256991813360998249
                             format: int64
             schemes:
                 - http
@@ -61,14 +61,14 @@ definitions:
             institution:
                 type: string
                 description: Name of the institution
-                example: Est enim ut odio rerum.
+                example: Vitae eaque autem in.
             major:
                 type: string
                 description: Major name
-                example: Explicabo sapiente est praesentium sunt et.
+                example: Qui nostrum quas velit nihil.
         example:
-            institution: Est enim ut odio rerum.
-            major: Explicabo sapiente est praesentium sunt et.
+            institution: Vitae eaque autem in.
+            major: Qui nostrum quas velit nihil.
         required:
             - institution
             - major
@@ -79,20 +79,20 @@ definitions:
             company:
                 type: string
                 description: Name of the company
-                example: Eum ut.
+                example: Dolor dicta dignissimos eius facere enim quae.
             duration:
                 type: integer
                 description: Duration (in years) in the company
-                example: 7855387208056668376
+                example: 6839028381351029038
                 format: int64
             role:
                 type: string
                 description: Name of the role in the company
-                example: Quam minima dolorum et voluptatem velit.
+                example: Enim quia recusandae nostrum animi nam.
         example:
-            company: Eum ut.
-            duration: 7855387208056668376
-            role: Quam minima dolorum et voluptatem velit.
+            company: Dolor dicta dignissimos eius facere enim quae.
+            duration: 6839028381351029038
+            role: Enim quia recusandae nostrum animi nam.
         required:
             - company
             - role
@@ -107,44 +107,40 @@ definitions:
                     $ref: '#/definitions/Education'
                 description: Education section in the resume
                 example:
-                    - institution: Ipsum saepe quia est.
-                      major: Fuga placeat est voluptatem sed.
-                    - institution: Ipsum saepe quia est.
-                      major: Fuga placeat est voluptatem sed.
-                    - institution: Ipsum saepe quia est.
-                      major: Fuga placeat est voluptatem sed.
+                    - institution: Vitae eaque autem in.
+                      major: Qui nostrum quas velit nihil.
+                    - institution: Vitae eaque autem in.
+                      major: Qui nostrum quas velit nihil.
             experience:
                 type: array
                 items:
                     $ref: '#/definitions/Experience'
                 description: Experience section in the resume
                 example:
-                    - company: Saepe enim.
-                      duration: 4129157726558553807
-                      role: Aut sit aut dolores sed ut ut.
-                    - company: Saepe enim.
-                      duration: 4129157726558553807
-                      role: Aut sit aut dolores sed ut ut.
+                    - company: Dolor dicta dignissimos eius facere enim quae.
+                      duration: 6839028381351029038
+                      role: Enim quia recusandae nostrum animi nam.
+                    - company: Dolor dicta dignissimos eius facere enim quae.
+                      duration: 6839028381351029038
+                      role: Enim quia recusandae nostrum animi nam.
             name:
                 type: string
                 description: Name in the resume
-                example: Explicabo et eligendi expedita necessitatibus eius qui.
+                example: Voluptas et.
         example:
             education:
-                - institution: Ipsum saepe quia est.
-                  major: Fuga placeat est voluptatem sed.
-                - institution: Ipsum saepe quia est.
-                  major: Fuga placeat est voluptatem sed.
-                - institution: Ipsum saepe quia est.
-                  major: Fuga placeat est voluptatem sed.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
             experience:
-                - company: Saepe enim.
-                  duration: 4129157726558553807
-                  role: Aut sit aut dolores sed ut ut.
-                - company: Saepe enim.
-                  duration: 4129157726558553807
-                  role: Aut sit aut dolores sed ut ut.
-            name: Explicabo et eligendi expedita necessitatibus eius qui.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+            name: Voluptas et.
         required:
             - name
     ResumeStoredResumeResponseCollection:
@@ -152,42 +148,48 @@ definitions:
         type: array
         items:
             $ref: '#/definitions/StoredResumeResponse'
-        description: ListResponseBody is the result type for an array of StoredResumeResponse (default view)
+        description: ListResponseBody is the result type for an array of StoredResume (default view)
         example:
-            - created_at: Eum corrupti sed ducimus non rem veniam.
+            - created_at: Non sequi eos.
               education:
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
               experience:
-                - company: Eum ut.
-                  duration: 7855387208056668376
-                  role: Quam minima dolorum et voluptatem velit.
-                - company: Eum ut.
-                  duration: 7855387208056668376
-                  role: Quam minima dolorum et voluptatem velit.
-              id: 3129448934659270285
-              name: Neque rerum quibusdam.
-            - created_at: Eum corrupti sed ducimus non rem veniam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+              id: 4215431722801319674
+              name: Voluptas quae modi saepe et impedit aliquam.
+            - created_at: Non sequi eos.
               education:
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
               experience:
-                - company: Eum ut.
-                  duration: 7855387208056668376
-                  role: Quam minima dolorum et voluptatem velit.
-                - company: Eum ut.
-                  duration: 7855387208056668376
-                  role: Quam minima dolorum et voluptatem velit.
-              id: 3129448934659270285
-              name: Neque rerum quibusdam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+              id: 4215431722801319674
+              name: Voluptas quae modi saepe et impedit aliquam.
     StoredResumeResponse:
         title: 'Mediatype identifier: application/vnd.goa.resume; view=default'
         type: object
@@ -195,59 +197,65 @@ definitions:
             created_at:
                 type: string
                 description: Time when resume was created
-                example: Eum corrupti sed ducimus non rem veniam.
+                example: Non sequi eos.
             education:
                 type: array
                 items:
                     $ref: '#/definitions/Education'
                 description: Education section in the resume
                 example:
-                    - institution: Est enim ut odio rerum.
-                      major: Explicabo sapiente est praesentium sunt et.
-                    - institution: Est enim ut odio rerum.
-                      major: Explicabo sapiente est praesentium sunt et.
-                    - institution: Est enim ut odio rerum.
-                      major: Explicabo sapiente est praesentium sunt et.
+                    - institution: Vitae eaque autem in.
+                      major: Qui nostrum quas velit nihil.
+                    - institution: Vitae eaque autem in.
+                      major: Qui nostrum quas velit nihil.
+                    - institution: Vitae eaque autem in.
+                      major: Qui nostrum quas velit nihil.
             experience:
                 type: array
                 items:
                     $ref: '#/definitions/Experience'
                 description: Experience section in the resume
                 example:
-                    - company: Eum ut.
-                      duration: 7855387208056668376
-                      role: Quam minima dolorum et voluptatem velit.
-                    - company: Eum ut.
-                      duration: 7855387208056668376
-                      role: Quam minima dolorum et voluptatem velit.
+                    - company: Dolor dicta dignissimos eius facere enim quae.
+                      duration: 6839028381351029038
+                      role: Enim quia recusandae nostrum animi nam.
+                    - company: Dolor dicta dignissimos eius facere enim quae.
+                      duration: 6839028381351029038
+                      role: Enim quia recusandae nostrum animi nam.
+                    - company: Dolor dicta dignissimos eius facere enim quae.
+                      duration: 6839028381351029038
+                      role: Enim quia recusandae nostrum animi nam.
             id:
                 type: integer
                 description: ID of the resume
-                example: 3129448934659270285
+                example: 4215431722801319674
                 format: int64
             name:
                 type: string
                 description: Name in the resume
-                example: Neque rerum quibusdam.
-        description: StoredResumeResponse result type (default view)
+                example: Voluptas quae modi saepe et impedit aliquam.
+        description: StoredResume result type (default view)
         example:
-            created_at: Eum corrupti sed ducimus non rem veniam.
+            created_at: Non sequi eos.
             education:
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
-                - institution: Est enim ut odio rerum.
-                  major: Explicabo sapiente est praesentium sunt et.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
+                - institution: Vitae eaque autem in.
+                  major: Qui nostrum quas velit nihil.
             experience:
-                - company: Eum ut.
-                  duration: 7855387208056668376
-                  role: Quam minima dolorum et voluptatem velit.
-                - company: Eum ut.
-                  duration: 7855387208056668376
-                  role: Quam minima dolorum et voluptatem velit.
-            id: 3129448934659270285
-            name: Neque rerum quibusdam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+                - company: Dolor dicta dignissimos eius facere enim quae.
+                  duration: 6839028381351029038
+                  role: Enim quia recusandae nostrum animi nam.
+            id: 4215431722801319674
+            name: Voluptas quae modi saepe et impedit aliquam.
         required:
             - id
             - name

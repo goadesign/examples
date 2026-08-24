@@ -10,6 +10,7 @@ package storage
 import (
 	"context"
 
+	storageviews "goa.design/examples/cellar/gen/storage/views"
 	goa "goa.design/goa/v3/pkg"
 )
 
@@ -57,6 +58,9 @@ func NewListEndpoint(s Service) goa.Endpoint {
 			return nil, err
 		}
 		vres := NewViewedStoredBottleCollection(res, "tiny")
+		if err := storageviews.ValidateStoredBottleCollection(vres); err != nil {
+			return nil, err
+		}
 		return vres, nil
 	}
 }
@@ -71,6 +75,9 @@ func NewShowEndpoint(s Service) goa.Endpoint {
 			return nil, err
 		}
 		vres := NewViewedStoredBottle(res, view)
+		if err := storageviews.ValidateStoredBottle(vres); err != nil {
+			return nil, err
+		}
 		return vres, nil
 	}
 }

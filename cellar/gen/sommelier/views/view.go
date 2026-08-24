@@ -172,8 +172,6 @@ func ValidateStoredBottleView(result *StoredBottleView) (err error) {
 		if *result.Vintage < 1900 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("result.vintage", *result.Vintage, 1900, true))
 		}
-	}
-	if result.Vintage != nil {
 		if *result.Vintage > 2020 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("result.vintage", *result.Vintage, 2020, false))
 		}
@@ -194,11 +192,12 @@ func ValidateStoredBottleView(result *StoredBottleView) (err error) {
 		if *result.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("result.rating", *result.Rating, 1, true))
 		}
-	}
-	if result.Rating != nil {
 		if *result.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("result.rating", *result.Rating, 5, false))
 		}
+	}
+	if result.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "result"))
 	}
 	if result.Winery != nil {
 		if err2 := ValidateWineryViewTiny(result.Winery); err2 != nil {
@@ -221,6 +220,9 @@ func ValidateStoredBottleViewTiny(result *StoredBottleView) (err error) {
 		if utf8.RuneCountInString(*result.Name) > 100 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("result.name", *result.Name, utf8.RuneCountInString(*result.Name), 100, false))
 		}
+	}
+	if result.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "result"))
 	}
 	if result.Winery != nil {
 		if err2 := ValidateWineryViewTiny(result.Winery); err2 != nil {
@@ -270,8 +272,6 @@ func ValidateComponentView(result *ComponentView) (err error) {
 	}
 	if result.Varietal != nil {
 		err = goa.MergeErrors(err, goa.ValidatePattern("result.varietal", *result.Varietal, "[A-Za-z' ]+"))
-	}
-	if result.Varietal != nil {
 		if utf8.RuneCountInString(*result.Varietal) > 100 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("result.varietal", *result.Varietal, utf8.RuneCountInString(*result.Varietal), 100, false))
 		}
@@ -280,8 +280,6 @@ func ValidateComponentView(result *ComponentView) (err error) {
 		if *result.Percentage < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("result.percentage", *result.Percentage, 1, true))
 		}
-	}
-	if result.Percentage != nil {
 		if *result.Percentage > 100 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("result.percentage", *result.Percentage, 100, false))
 		}

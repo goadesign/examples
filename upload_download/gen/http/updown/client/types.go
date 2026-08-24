@@ -188,7 +188,7 @@ func NewDownloadInternalError(body *DownloadInternalErrorResponseBody) *goa.Serv
 }
 
 // ValidateUploadInvalidMediaTypeResponseBody runs the validations defined on
-// upload_invalid_media_type_response_body
+// UploadInvalidMediaTypeResponseBody
 func ValidateUploadInvalidMediaTypeResponseBody(body *UploadInvalidMediaTypeResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -212,7 +212,7 @@ func ValidateUploadInvalidMediaTypeResponseBody(body *UploadInvalidMediaTypeResp
 }
 
 // ValidateUploadInvalidMultipartRequestResponseBody runs the validations
-// defined on upload_invalid_multipart_request_response_body
+// defined on UploadInvalidMultipartRequestResponseBody
 func ValidateUploadInvalidMultipartRequestResponseBody(body *UploadInvalidMultipartRequestResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -236,7 +236,7 @@ func ValidateUploadInvalidMultipartRequestResponseBody(body *UploadInvalidMultip
 }
 
 // ValidateUploadInternalErrorResponseBody runs the validations defined on
-// upload_internal_error_response_body
+// UploadInternalErrorResponseBody
 func ValidateUploadInternalErrorResponseBody(body *UploadInternalErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -260,7 +260,7 @@ func ValidateUploadInternalErrorResponseBody(body *UploadInternalErrorResponseBo
 }
 
 // ValidateDownloadInvalidFilePathResponseBody runs the validations defined on
-// download_invalid_file_path_response_body
+// DownloadInvalidFilePathResponseBody
 func ValidateDownloadInvalidFilePathResponseBody(body *DownloadInvalidFilePathResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -284,7 +284,7 @@ func ValidateDownloadInvalidFilePathResponseBody(body *DownloadInvalidFilePathRe
 }
 
 // ValidateDownloadInternalErrorResponseBody runs the validations defined on
-// download_internal_error_response_body
+// DownloadInternalErrorResponseBody
 func ValidateDownloadInternalErrorResponseBody(body *DownloadInternalErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))

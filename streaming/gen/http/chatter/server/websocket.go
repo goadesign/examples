@@ -17,6 +17,7 @@ import (
 	"github.com/gorilla/websocket"
 	chatter "goa.design/examples/streaming/gen/chatter"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // ConnConfigurer holds the websocket connection configurer functions for the
@@ -130,6 +131,9 @@ type HistoryServerStream struct {
 	// view is the view to render chatter.ChatSummary result type before sending to
 	// the websocket connection.
 	view string
+	// sentView is the result view named during the WebSocket upgrade. Later sends
+	// must use the same view.
+	sentView string
 }
 
 // NewConnConfigurer initializes the websocket connection configurer function
@@ -399,13 +403,26 @@ func (s *SubscribeServerStream) Close() error {
 // Send streams instances of "chatter.ChatSummary" to the "history" endpoint
 // websocket connection.
 func (s *HistoryServerStream) Send(v *chatter.ChatSummary) error {
+	view := s.view
+	if view == "" {
+		view = "default"
+	}
+	if s.sentView != "" && view != s.sentView {
+		return goa.InvalidEnumValueError("view", view, []any{s.sentView})
+	}
+	switch view {
+	case "tiny":
+	case "default":
+	default:
+		return goa.InvalidEnumValueError("view", view, []any{"tiny", "default"})
+	}
 	var err error
 	// Upgrade the HTTP connection to a websocket connection only once. Connection
 	// upgrade is done here so that authorization logic in the endpoint is executed
 	// before calling the actual service method which may call Send().
 	s.once.Do(func() {
 		respHdr := make(http.Header)
-		respHdr.Add("goa-view", s.view)
+		respHdr.Add("goa-view", view)
 		var conn *websocket.Conn
 		conn, err = s.upgrader.Upgrade(s.w, s.r, respHdr)
 		if err != nil {
@@ -420,15 +437,19 @@ func (s *HistoryServerStream) Send(v *chatter.ChatSummary) error {
 	if s.upgradeErr != nil {
 		return s.upgradeErr
 	}
-	res := chatter.NewViewedChatSummary(v, s.view)
-	var body any
-	switch s.view {
-	case "tiny":
-		body = NewHistoryResponseBodyTiny(res.Projected)
-	case "default", "":
-		body = NewHistoryResponseBody(res.Projected)
+	if s.sentView == "" {
+		s.sentView = view
 	}
-	return s.conn.WriteJSON(body)
+	switch view {
+	case "tiny":
+		res := chatter.NewViewedChatSummary(v, "tiny")
+		return s.conn.WriteJSON(NewHistoryResponseBodyTiny(res.Projected))
+	case "default", "":
+		res := chatter.NewViewedChatSummary(v, "default")
+		return s.conn.WriteJSON(NewHistoryResponseBody(res.Projected))
+	default:
+		return goa.InvalidEnumValueError("view", view, []any{"tiny", "default"})
+	}
 }
 
 // SendWithContext streams instances of "chatter.ChatSummary" to the "history"

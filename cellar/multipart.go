@@ -13,8 +13,8 @@ import (
 
 // StorageMultiAddDecoderFunc implements the multipart decoder for service
 // "storage" endpoint "multi_add". The decoder must populate the argument p
-// after encoding.
-func StorageMultiAddDecoderFunc(mr *multipart.Reader, p *[]*storage.Bottle) error {
+// after decoding the request parts.
+func StorageMultiAddDecoderFunc(mr *multipart.Reader, p *[]*storages.BottleRequestBody) error {
 	var bottles []*storages.BottleRequestBody
 	for {
 		part, err := mr.NextPart()
@@ -31,7 +31,7 @@ func StorageMultiAddDecoderFunc(mr *multipart.Reader, p *[]*storage.Bottle) erro
 		}
 		bottles = append(bottles, &bottle)
 	}
-	*p = storages.NewMultiAddBottle(bottles)
+	*p = bottles
 	return nil
 }
 
@@ -53,8 +53,8 @@ func StorageMultiAddEncoderFunc(mw *multipart.Writer, p []*storage.Bottle) error
 
 // StorageMultiUpdateDecoderFunc implements the multipart decoder for service
 // "storage" endpoint "multi_update". The decoder must populate the argument p
-// after encoding.
-func StorageMultiUpdateDecoderFunc(mr *multipart.Reader, p **storage.MultiUpdatePayload) error {
+// after decoding the request parts.
+func StorageMultiUpdateDecoderFunc(mr *multipart.Reader, p *storages.MultiUpdateRequestBody) error {
 	var bottles []*storages.BottleRequestBody
 	for {
 		part, err := mr.NextPart()
@@ -71,8 +71,7 @@ func StorageMultiUpdateDecoderFunc(mr *multipart.Reader, p **storage.MultiUpdate
 		}
 		bottles = append(bottles, &bottle)
 	}
-	reqBody := storages.MultiUpdateRequestBody{Bottles: bottles}
-	*p = storages.NewMultiUpdatePayload(&reqBody, []string{})
+	p.Bottles = bottles
 	return nil
 }
 

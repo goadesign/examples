@@ -36,11 +36,11 @@ paths:
                     schema:
                         type: string
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -68,11 +68,11 @@ paths:
                     schema:
                         type: string
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -105,11 +105,11 @@ paths:
                     schema:
                         type: string
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
                 "403":
-                    description: Forbidden response.
+                    description: 'invalid-scopes: Forbidden response.'
                     schema:
                         type: string
             schemes:
@@ -138,7 +138,7 @@ paths:
                             - api_key
                             - oauth_token
                 "401":
-                    description: Unauthorized response.
+                    description: 'unauthorized: Unauthorized response.'
                     schema:
                         type: string
             schemes:
