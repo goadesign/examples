@@ -172,6 +172,7 @@ func DecodePatchRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.D
 		var payload *tus.PatchPayload
 		var (
 			id             string
+			contentType    string
 			tusResumable   string
 			uploadOffset   int64
 			uploadChecksum *string
@@ -181,6 +182,10 @@ func DecodePatchRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.D
 		)
 		id = params["id"]
 		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
+		contentType = r.Header.Get("Content-Type")
+		if contentType == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("contentType", "header"))
+		}
 		tusResumable = r.Header.Get("Tus-Resumable")
 		if tusResumable == "" {
 			err = goa.MergeErrors(err, goa.MissingFieldError("tusResumable", "header"))
@@ -204,7 +209,7 @@ func DecodePatchRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.D
 		if err != nil {
 			return payload, err
 		}
-		payload = NewPatchPayload(id, tusResumable, uploadOffset, uploadChecksum)
+		payload = NewPatchPayload(id, contentType, tusResumable, uploadOffset, uploadChecksum)
 
 		return payload, nil
 	}

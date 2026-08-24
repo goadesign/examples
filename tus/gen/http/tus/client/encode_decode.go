@@ -342,6 +342,10 @@ func EncodePatchRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 		}
 		p := data.Payload
 		{
+			head := p.ContentType
+			req.Header.Set("Content-Type", head)
+		}
+		{
 			head := p.TusResumable
 			req.Header.Set("Tus-Resumable", head)
 		}

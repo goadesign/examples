@@ -651,6 +651,15 @@ paths:
                     example: 7pc6esaasn4ffl7qlrcf
                     pattern: '[0-9a-v]{20}'
                   example: 7pc6esaasn4ffl7qlrcf
+                - name: Content-Type
+                  in: header
+                  description: Media type of the uploaded bytes.
+                  required: true
+                  schema:
+                    type: string
+                    description: Media type of the uploaded bytes.
+                    example: application/offset+octet-stream
+                  example: application/offset+octet-stream
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.

@@ -43,7 +43,7 @@ func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string) (*tus.HeadPa
 
 // BuildPatchPayload builds the payload for the tus patch endpoint from CLI
 // flags.
-func BuildPatchPayload(tusPatchID string, tusPatchTusResumable string, tusPatchUploadOffset string, tusPatchUploadChecksum string) (*tus.PatchPayload, error) {
+func BuildPatchPayload(tusPatchID string, tusPatchContentType string, tusPatchTusResumable string, tusPatchUploadOffset string, tusPatchUploadChecksum string) (*tus.PatchPayload, error) {
 	var err error
 	var id string
 	{
@@ -52,6 +52,10 @@ func BuildPatchPayload(tusPatchID string, tusPatchTusResumable string, tusPatchU
 		if err != nil {
 			return nil, err
 		}
+	}
+	var contentType string
+	{
+		contentType = tusPatchContentType
 	}
 	var tusResumable string
 	{
@@ -76,6 +80,7 @@ func BuildPatchPayload(tusPatchID string, tusPatchTusResumable string, tusPatchU
 	}
 	v := &tus.PatchPayload{}
 	v.ID = id
+	v.ContentType = contentType
 	v.TusResumable = tusResumable
 	v.UploadOffset = uploadOffset
 	v.UploadChecksum = uploadChecksum

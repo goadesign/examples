@@ -12,7 +12,6 @@ import (
 	"goa.design/examples/tus/gen/http/tus/server"
 	"goa.design/examples/tus/gen/tus"
 	"goa.design/examples/tus/persist"
-	goahttp "goa.design/goa/v3/http"
 )
 
 // upload service
@@ -76,8 +75,7 @@ func (s *tussvc) Patch(ctx context.Context, p *tus.PatchPayload, body io.ReadClo
 	// All PATCH requests MUST use Content-Type:
 	// application/offset+octet-stream, otherwise the server SHOULD return a 415
 	// Unsupported Media Type status.
-	ct := ctx.Value(goahttp.ContentTypeKey).(string)
-	if ct != "application/offset+octet-stream" {
+	if p.ContentType != "application/offset+octet-stream" {
 		return nil, tus.MakeInvalidContentType(fmt.Errorf("Content-Type header must be application/offset+octet-stream"))
 	}
 
@@ -119,7 +117,7 @@ func (s *tussvc) Options(ctx context.Context) (res *tus.OptionsResult, err error
 	res = &tus.OptionsResult{
 		TusVersion:           TusResumable,
 		TusExtension:         "creation,creation-with-upload,creation-defer-length,expiration,checksum,termination",
-		TusChecksumAlgorithm: "sha1,md5,crc32",
+		TusChecksumAlgorithm: "md5,sha1,crc32",
 	}
 	if s.maxSize > 0 {
 		res.TusMaxSize = &s.maxSize
@@ -199,12 +197,7 @@ func (s *tussvc) Delete(ctx context.Context, p *tus.DeletePayload) (res *tus.Del
 	if up == nil {
 		return nil, tus.MakeNotFound(fmt.Errorf("no ongoing upload with id %q or upload expired", p.ID))
 	}
-	if !up.Active() {
-		return nil, tus.MakeGone(fmt.Errorf("upload with id %q %s", p.ID, up.Status.String()))
-	}
-
-	up.Status = persist.Completed
-	if err := s.store.Save(p.ID, up); err != nil {
+	if err := s.store.Save(p.ID, nil); err != nil {
 		return nil, tus.MakeInternal(err)
 	}
 

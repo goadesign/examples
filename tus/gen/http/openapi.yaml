@@ -393,6 +393,11 @@ paths:
                   required: true
                   type: string
                   pattern: '[0-9a-v]{20}'
+                - name: Content-Type
+                  in: header
+                  description: Media type of the uploaded bytes.
+                  required: true
+                  type: string
                 - name: Tus-Resumable
                   in: header
                   description: tusResumable represents a tus protocol version.

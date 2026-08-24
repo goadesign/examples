@@ -51,6 +51,7 @@ func ParseEndpoint(
 
 		tusPatchFlags              = flag.NewFlagSet("patch", flag.ExitOnError)
 		tusPatchIDFlag             = tusPatchFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
+		tusPatchContentTypeFlag    = tusPatchFlags.String("content-type", "REQUIRED", "")
 		tusPatchTusResumableFlag   = tusPatchFlags.String("tus-resumable", "REQUIRED", "")
 		tusPatchUploadOffsetFlag   = tusPatchFlags.String("upload-offset", "REQUIRED", "")
 		tusPatchUploadChecksumFlag = tusPatchFlags.String("upload-checksum", "", "")
@@ -157,7 +158,7 @@ func ParseEndpoint(
 				data, err = tusc.BuildHeadPayload(*tusHeadIDFlag, *tusHeadTusResumableFlag)
 			case "patch":
 				endpoint = c.Patch()
-				data, err = tusc.BuildPatchPayload(*tusPatchIDFlag, *tusPatchTusResumableFlag, *tusPatchUploadOffsetFlag, *tusPatchUploadChecksumFlag)
+				data, err = tusc.BuildPatchPayload(*tusPatchIDFlag, *tusPatchContentTypeFlag, *tusPatchTusResumableFlag, *tusPatchUploadOffsetFlag, *tusPatchUploadChecksumFlag)
 				if err == nil {
 					data, err = tusc.BuildPatchStreamPayload(data, *tusPatchStreamFlag)
 				}
@@ -220,6 +221,7 @@ func tusPatchUsage() {
 	// Header with flags
 	fmt.Fprintf(os.Stderr, "%s [flags] tus patch", os.Args[0])
 	fmt.Fprint(os.Stderr, " -id STRING")
+	fmt.Fprint(os.Stderr, " -content-type STRING")
 	fmt.Fprint(os.Stderr, " -tus-resumable STRING")
 	fmt.Fprint(os.Stderr, " -upload-offset INT64")
 	fmt.Fprint(os.Stderr, " -upload-checksum STRING")
@@ -232,6 +234,7 @@ func tusPatchUsage() {
 
 	// Flags list
 	fmt.Fprintln(os.Stderr, `    -id STRING: IDs are generated using Xid: https://github.com/rs/xid`)
+	fmt.Fprintln(os.Stderr, `    -content-type STRING: `)
 	fmt.Fprintln(os.Stderr, `    -tus-resumable STRING: `)
 	fmt.Fprintln(os.Stderr, `    -upload-offset INT64: `)
 	fmt.Fprintln(os.Stderr, `    -upload-checksum STRING: `)
@@ -239,7 +242,7 @@ func tusPatchUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus patch --id \"7pc6esaasn4ffl7qlrcf\" --tus-resumable \"1.0.0\" --upload-offset 2754385183630855775 --upload-checksum \"sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=\" --stream \"goa.png\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "tus patch --id \"7pc6esaasn4ffl7qlrcf\" --content-type \"application/offset+octet-stream\" --tus-resumable \"1.0.0\" --upload-offset 2754385183630855775 --upload-checksum \"sha1 Kq5sNclPz7QV2+lfQIuc6R7oRu0=\" --stream \"goa.png\"")
 }
 
 func tusOptionsUsage() {
