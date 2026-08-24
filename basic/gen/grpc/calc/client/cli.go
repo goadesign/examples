@@ -8,11 +8,11 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildMultiplyPayload builds the payload for the calc multiply endpoint from
@@ -22,7 +22,7 @@ func BuildMultiplyPayload(calcMultiplyMessage string) (*calc.MultiplyPayload, er
 	var message calcpb.MultiplyRequest
 	{
 		if calcMultiplyMessage != "" {
-			err = json.Unmarshal([]byte(calcMultiplyMessage), &message)
+			err = protojson.Unmarshal([]byte(calcMultiplyMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 7630570414871587529,\n      \"b\": 2968728213815611862\n   }'")
 			}

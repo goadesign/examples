@@ -204,7 +204,7 @@ func ParseEndpoint(
 				err = json.Unmarshal([]byte(*storageRatePFlag), &val)
 				data = val
 				if err != nil {
-					return nil, nil, fmt.Errorf("invalid JSON for storageRatePFlag, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Similique officia.\",\n         \"Reprehenderit ut similique iste velit.\",\n         \"Expedita quia.\"\n      ]\n   }'")
+					return nil, nil, fmt.Errorf("invalid JSON for storageRatePFlag, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"2205736647\": [\n         \"Aliquam occaecati voluptas neque vel.\",\n         \"Omnis ducimus ut voluptatum expedita aut id.\",\n         \"Nostrum magnam fugiat maiores.\"\n      ],\n      \"2592953118\": [\n         \"Similique officia.\",\n         \"Reprehenderit ut similique iste velit.\",\n         \"Expedita quia.\"\n      ],\n      \"95281316\": [\n         \"Velit et ab occaecati dolorum.\",\n         \"Optio molestiae vel dolores.\"\n      ]\n   }'")
 				}
 			case "multi-add":
 				endpoint = c.MultiAdd(storageMultiAddEncoderFn)
@@ -354,7 +354,7 @@ func storageRateUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage rate --p '{\n      \"\\u003cuint32 Value\\u003e\": [\n         \"Similique officia.\",\n         \"Reprehenderit ut similique iste velit.\",\n         \"Expedita quia.\"\n      ]\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage rate --p '{\n      \"2205736647\": [\n         \"Aliquam occaecati voluptas neque vel.\",\n         \"Omnis ducimus ut voluptatum expedita aut id.\",\n         \"Nostrum magnam fugiat maiores.\"\n      ],\n      \"2592953118\": [\n         \"Similique officia.\",\n         \"Reprehenderit ut similique iste velit.\",\n         \"Expedita quia.\"\n      ],\n      \"95281316\": [\n         \"Velit et ab occaecati dolorum.\",\n         \"Optio molestiae vel dolores.\"\n      ]\n   }'")
 }
 
 func storageMultiAddUsage() {

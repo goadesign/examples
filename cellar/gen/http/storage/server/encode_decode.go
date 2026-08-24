@@ -13,7 +13,6 @@ import (
 	"io"
 	"net/http"
 	"strconv"
-	"strings"
 
 	storage "goa.design/examples/cellar/gen/storage"
 	storageviews "goa.design/examples/cellar/gen/storage/views"
@@ -203,28 +202,17 @@ func DecodeRateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.De
 			if len(queryRaw) == 0 {
 				err = goa.MergeErrors(err, goa.MissingFieldError("query", "query string"))
 			}
+			if query == nil {
+				query = make(map[uint32][]string)
+			}
 			for keyRaw, valRaw := range queryRaw {
-				if strings.HasPrefix(keyRaw, "query[") {
-					if query == nil {
-						query = make(map[uint32][]string)
-					}
-					var keya uint32
-					{
-						openIdx := strings.IndexRune(keyRaw, '[')
-						closeIdx := strings.IndexRune(keyRaw, ']')
-						if openIdx == -1 || closeIdx == -1 || closeIdx <= openIdx {
-							err = goa.MergeErrors(err, goa.DecodePayloadError("invalid query string: malformed brackets"))
-						} else {
-							keyaRaw := keyRaw[openIdx+1 : closeIdx]
-							v, err2 := strconv.ParseUint(keyaRaw, 10, 32)
-							if err2 != nil {
-								err = goa.MergeErrors(err, goa.InvalidFieldTypeError("query", keyaRaw, "unsigned integer"))
-							}
-							keya = uint32(v)
-						}
-					}
-					query[keya] = valRaw
+				var key uint32
+				v, err2 := strconv.ParseUint(keyRaw, 10, 32)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("query", keyRaw, "unsigned integer"))
 				}
+				key = uint32(v)
+				query[key] = valRaw
 			}
 		}
 		if err != nil {

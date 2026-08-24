@@ -8,11 +8,11 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	calc "goa.design/examples/error/gen/calc"
 	calcpb "goa.design/examples/error/gen/grpc/calc/pb"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildDividePayload builds the payload for the calc divide endpoint from CLI
@@ -22,7 +22,7 @@ func BuildDividePayload(calcDivideMessage string) (*calc.DividePayload, error) {
 	var message calcpb.DivideRequest
 	{
 		if calcDivideMessage != "" {
-			err = json.Unmarshal([]byte(calcDivideMessage), &message)
+			err = protojson.Unmarshal([]byte(calcDivideMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"dividend\": 2120767999786333776,\n      \"divisor\": 6535528958544806582\n   }'")
 			}

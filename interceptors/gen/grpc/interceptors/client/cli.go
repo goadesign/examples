@@ -8,11 +8,11 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	interceptorspb "goa.design/examples/interceptors/gen/grpc/interceptors/pb"
 	interceptors "goa.design/examples/interceptors/gen/interceptors"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildGetPayload builds the payload for the interceptors get endpoint from
@@ -22,9 +22,9 @@ func BuildGetPayload(interceptorsGetMessage string) (*interceptors.GetPayload, e
 	var message interceptorspb.GetRequest
 	{
 		if interceptorsGetMessage != "" {
-			err = json.Unmarshal([]byte(interceptorsGetMessage), &message)
+			err = protojson.Unmarshal([]byte(interceptorsGetMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"recordID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenantID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"record_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"span_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenant_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"trace_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 			}
 		}
 	}

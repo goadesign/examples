@@ -38,33 +38,9 @@ paths:
                         text/html:
                             schema:
                                 type: string
-                                example:
-                                    - 73
-                                    - 109
-                                    - 112
-                                    - 101
-                                    - 100
-                                    - 105
-                                    - 116
-                                    - 32
-                                    - 113
-                                    - 117
-                                    - 105
-                                    - 46
+                                example: SW1wZWRpdCBxdWku
                                 format: binary
-                            example:
-                                - 73
-                                - 109
-                                - 112
-                                - 101
-                                - 100
-                                - 105
-                                - 116
-                                - 32
-                                - 113
-                                - 117
-                                - 105
-                                - 46
+                            example: SW1wZWRpdCBxdWku
     /concatbytesfield/{a}/{b}:
         get:
             tags:
@@ -97,35 +73,9 @@ paths:
                         text/html:
                             schema:
                                 type: string
-                                example:
-                                    - 69
-                                    - 116
-                                    - 32
-                                    - 101
-                                    - 110
-                                    - 105
-                                    - 109
-                                    - 32
-                                    - 113
-                                    - 117
-                                    - 105
-                                    - 97
-                                    - 46
+                                example: RXQgZW5pbSBxdWlhLg==
                                 format: binary
-                            example:
-                                - 69
-                                - 116
-                                - 32
-                                - 101
-                                - 110
-                                - 105
-                                - 109
-                                - 32
-                                - 113
-                                - 117
-                                - 105
-                                - 97
-                                - 46
+                            example: RXQgZW5pbSBxdWlhLg==
     /concatstringfield/{a}/{b}:
         get:
             tags:

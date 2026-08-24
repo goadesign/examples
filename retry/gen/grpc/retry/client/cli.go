@@ -8,11 +8,11 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	retrypb "goa.design/examples/retry/gen/grpc/retry/pb"
 	retry "goa.design/examples/retry/gen/retry"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildGetMessagePayload builds the payload for the retry get_message endpoint
@@ -22,7 +22,7 @@ func BuildGetMessagePayload(retryGetMessageMessage string) (*retry.GetMessagePay
 	var message retrypb.GetMessageRequest
 	{
 		if retryGetMessageMessage != "" {
-			err = json.Unmarshal([]byte(retryGetMessageMessage), &message)
+			err = protojson.Unmarshal([]byte(retryGetMessageMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Dolores asperiores ipsam.\"\n   }'")
 			}

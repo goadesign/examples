@@ -8,11 +8,11 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	secured_servicepb "goa.design/examples/security/multiauth/gen/grpc/secured_service/pb"
 	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildSigninPayload builds the payload for the secured_service signin
@@ -40,7 +40,7 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 	var message secured_servicepb.SecureRequest
 	{
 		if securedServiceSecureMessage != "" {
-			err = json.Unmarshal([]byte(securedServiceSecureMessage), &message)
+			err = protojson.Unmarshal([]byte(securedServiceSecureMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"fail\": false\n   }'")
 			}
@@ -65,7 +65,7 @@ func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedS
 	var message secured_servicepb.DoublySecureRequest
 	{
 		if securedServiceDoublySecureMessage != "" {
-			err = json.Unmarshal([]byte(securedServiceDoublySecureMessage), &message)
+			err = protojson.Unmarshal([]byte(securedServiceDoublySecureMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"key\": \"abcdef12345\"\n   }'")
 			}
@@ -90,7 +90,7 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage string, 
 	var message secured_servicepb.AlsoDoublySecureRequest
 	{
 		if securedServiceAlsoDoublySecureMessage != "" {
-			err = json.Unmarshal([]byte(securedServiceAlsoDoublySecureMessage), &message)
+			err = protojson.Unmarshal([]byte(securedServiceAlsoDoublySecureMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"key\": \"abcdef12345\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }'")
 			}

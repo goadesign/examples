@@ -8,12 +8,12 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	storage "goa.design/examples/cellar/gen/storage"
 	goa "goa.design/goa/v3/pkg"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildShowPayload builds the payload for the storage show endpoint from CLI
@@ -23,7 +23,7 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 	var message storagepb.ShowRequest
 	{
 		if storageShowMessage != "" {
-			err = json.Unmarshal([]byte(storageShowMessage), &message)
+			err = protojson.Unmarshal([]byte(storageShowMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Neque voluptas molestias.\"\n   }'")
 			}
@@ -56,7 +56,7 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 	var message storagepb.AddRequest
 	{
 		if storageAddMessage != "" {
-			err = json.Unmarshal([]byte(storageAddMessage), &message)
+			err = protojson.Unmarshal([]byte(storageAddMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 2,\n      \"vintage\": 1918,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 			}
@@ -91,7 +91,7 @@ func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, er
 	var message storagepb.RemoveRequest
 	{
 		if storageRemoveMessage != "" {
-			err = json.Unmarshal([]byte(storageRemoveMessage), &message)
+			err = protojson.Unmarshal([]byte(storageRemoveMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Consectetur quaerat neque sed.\"\n   }'")
 			}
@@ -111,7 +111,7 @@ func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
 	var message storagepb.RateRequest
 	{
 		if storageRateMessage != "" {
-			err = json.Unmarshal([]byte(storageRateMessage), &message)
+			err = protojson.Unmarshal([]byte(storageRateMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": {\n         \"3188487350\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"507886676\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"890945719\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         }\n      }\n   }'")
 			}
@@ -136,7 +136,7 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 	var message storagepb.MultiAddRequest
 	{
 		if storageMultiAddMessage != "" {
-			err = json.Unmarshal([]byte(storageMultiAddMessage), &message)
+			err = protojson.Unmarshal([]byte(storageMultiAddMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 			}
@@ -173,7 +173,7 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 	var message storagepb.MultiUpdateRequest
 	{
 		if storageMultiUpdateMessage != "" {
-			err = json.Unmarshal([]byte(storageMultiUpdateMessage), &message)
+			err = protojson.Unmarshal([]byte(storageMultiUpdateMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Nihil voluptatibus aut mollitia ipsam.\",\n         \"Qui optio non voluptate rem adipisci soluta.\",\n         \"Omnis corporis quod veritatis temporibus dolores.\",\n         \"Dolores voluptatem sunt architecto consequatur non.\"\n      ]\n   }'")
 			}

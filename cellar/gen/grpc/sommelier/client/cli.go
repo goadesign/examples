@@ -8,11 +8,11 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	sommelier "goa.design/examples/cellar/gen/sommelier"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildPickPayload builds the payload for the sommelier pick endpoint from CLI
@@ -22,7 +22,7 @@ func BuildPickPayload(sommelierPickMessage string) (*sommelier.Criteria, error) 
 	var message sommelierpb.PickRequest
 	{
 		if sommelierPickMessage != "" {
-			err = json.Unmarshal([]byte(sommelierPickMessage), &message)
+			err = protojson.Unmarshal([]byte(sommelierPickMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Blue\\'s Cuvee\",\n      \"varietal\": [\n         \"pinot noir\",\n         \"merlot\",\n         \"cabernet franc\"\n      ],\n      \"winery\": \"longoria\"\n   }'")
 			}
