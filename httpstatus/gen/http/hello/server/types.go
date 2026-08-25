@@ -17,7 +17,6 @@ import (
 type HelloCreatedResponseBody struct {
 	// The greeting message
 	Greeting string `form:"greeting" json:"greeting" xml:"greeting"`
-	Outcome  string `json:"-"`
 }
 
 // HelloAcceptedResponseBody is the type of the "hello" service "hello"
@@ -25,7 +24,6 @@ type HelloCreatedResponseBody struct {
 type HelloAcceptedResponseBody struct {
 	// The greeting message
 	Greeting string `form:"greeting" json:"greeting" xml:"greeting"`
-	Outcome  string `json:"-"`
 }
 
 // HelloOKResponseBody is the type of the "hello" service "hello" endpoint HTTP
@@ -33,7 +31,7 @@ type HelloAcceptedResponseBody struct {
 type HelloOKResponseBody struct {
 	// The greeting message
 	Greeting string `form:"greeting" json:"greeting" xml:"greeting"`
-	Outcome  string `json:"-"`
+	Outcome  string `form:"outcome" json:"outcome" xml:"outcome"`
 }
 
 // NewHelloCreatedResponseBody builds the HTTP response body from the result of
@@ -41,7 +39,6 @@ type HelloOKResponseBody struct {
 func NewHelloCreatedResponseBody(res *helloviews.HelloView) *HelloCreatedResponseBody {
 	body := &HelloCreatedResponseBody{
 		Greeting: *res.Greeting,
-		Outcome:  *res.Outcome,
 	}
 	return body
 }
@@ -51,7 +48,6 @@ func NewHelloCreatedResponseBody(res *helloviews.HelloView) *HelloCreatedRespons
 func NewHelloAcceptedResponseBody(res *helloviews.HelloView) *HelloAcceptedResponseBody {
 	body := &HelloAcceptedResponseBody{
 		Greeting: *res.Greeting,
-		Outcome:  *res.Outcome,
 	}
 	return body
 }

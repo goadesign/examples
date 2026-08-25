@@ -23,39 +23,35 @@ func BuildListPayload(concertsListPage string, concertsListLimit string) (*conce
 	var err error
 	var page int
 	{
-		if concertsListPage != "" {
-			var v int64
-			v, err = strconv.ParseInt(concertsListPage, 10, strconv.IntSize)
-			page = int(v)
-			if err != nil {
-				return nil, fmt.Errorf("invalid value for page, must be INT")
-			}
-			if page < 1 {
-				err = goa.MergeErrors(err, goa.InvalidRangeError("page", page, 1, true))
-			}
-			if err != nil {
-				return nil, err
-			}
+		var v int64
+		v, err = strconv.ParseInt(concertsListPage, 10, strconv.IntSize)
+		page = int(v)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for page, must be INT")
+		}
+		if page < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("page", page, 1, true))
+		}
+		if err != nil {
+			return nil, err
 		}
 	}
 	var limit int
 	{
-		if concertsListLimit != "" {
-			var v int64
-			v, err = strconv.ParseInt(concertsListLimit, 10, strconv.IntSize)
-			limit = int(v)
-			if err != nil {
-				return nil, fmt.Errorf("invalid value for limit, must be INT")
-			}
-			if limit < 1 {
-				err = goa.MergeErrors(err, goa.InvalidRangeError("limit", limit, 1, true))
-			}
-			if limit > 100 {
-				err = goa.MergeErrors(err, goa.InvalidRangeError("limit", limit, 100, false))
-			}
-			if err != nil {
-				return nil, err
-			}
+		var v int64
+		v, err = strconv.ParseInt(concertsListLimit, 10, strconv.IntSize)
+		limit = int(v)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for limit, must be INT")
+		}
+		if limit < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("limit", limit, 1, true))
+		}
+		if limit > 100 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("limit", limit, 100, false))
+		}
+		if err != nil {
+			return nil, err
 		}
 	}
 	v := &concerts.ListPayload{}
@@ -67,11 +63,14 @@ func BuildListPayload(concertsListPage string, concertsListLimit string) (*conce
 
 // BuildCreatePayload builds the payload for the concerts create endpoint from
 // CLI flags.
-func BuildCreatePayload(concertsCreateBody string) (*concerts.ConcertPayload, error) {
+func BuildCreatePayload(concertsCreateBody *string) (*concerts.ConcertPayload, error) {
 	var err error
 	var body CreateRequestBody
 	{
-		err = json.Unmarshal([]byte(concertsCreateBody), &body)
+		if concertsCreateBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*concertsCreateBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"artist\": \"The White Stripes\",\n      \"date\": \"2024-12-25\",\n      \"price\": 7500,\n      \"venue\": \"Madison Square Garden, New York, NY\"\n   }'")
 		}
@@ -110,11 +109,14 @@ func BuildCreatePayload(concertsCreateBody string) (*concerts.ConcertPayload, er
 
 // BuildShowPayload builds the payload for the concerts show endpoint from CLI
 // flags.
-func BuildShowPayload(concertsShowConcertID string) (*concerts.ShowPayload, error) {
+func BuildShowPayload(concertsShowConcertID *string) (*concerts.ShowPayload, error) {
 	var err error
 	var concertID string
 	{
-		concertID = concertsShowConcertID
+		if concertsShowConcertID == nil {
+			return nil, fmt.Errorf("missing required flag --concert-id")
+		}
+		concertID = *concertsShowConcertID
 		err = goa.MergeErrors(err, goa.ValidateFormat("concertID", concertID, goa.FormatUUID))
 		if err != nil {
 			return nil, err
@@ -128,11 +130,14 @@ func BuildShowPayload(concertsShowConcertID string) (*concerts.ShowPayload, erro
 
 // BuildUpdatePayload builds the payload for the concerts update endpoint from
 // CLI flags.
-func BuildUpdatePayload(concertsUpdateBody string, concertsUpdateConcertID string) (*concerts.UpdatePayload, error) {
+func BuildUpdatePayload(concertsUpdateBody *string, concertsUpdateConcertID *string) (*concerts.UpdatePayload, error) {
 	var err error
 	var body UpdateRequestBody
 	{
-		err = json.Unmarshal([]byte(concertsUpdateBody), &body)
+		if concertsUpdateBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*concertsUpdateBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"artist\": \"The White Stripes\",\n      \"date\": \"2024-12-25\",\n      \"price\": 7500,\n      \"venue\": \"Madison Square Garden, New York, NY\"\n   }'")
 		}
@@ -169,7 +174,10 @@ func BuildUpdatePayload(concertsUpdateBody string, concertsUpdateConcertID strin
 	}
 	var concertID string
 	{
-		concertID = concertsUpdateConcertID
+		if concertsUpdateConcertID == nil {
+			return nil, fmt.Errorf("missing required flag --concert-id")
+		}
+		concertID = *concertsUpdateConcertID
 		err = goa.MergeErrors(err, goa.ValidateFormat("concertID", concertID, goa.FormatUUID))
 		if err != nil {
 			return nil, err
@@ -188,11 +196,14 @@ func BuildUpdatePayload(concertsUpdateBody string, concertsUpdateConcertID strin
 
 // BuildDeletePayload builds the payload for the concerts delete endpoint from
 // CLI flags.
-func BuildDeletePayload(concertsDeleteConcertID string) (*concerts.DeletePayload, error) {
+func BuildDeletePayload(concertsDeleteConcertID *string) (*concerts.DeletePayload, error) {
 	var err error
 	var concertID string
 	{
-		concertID = concertsDeleteConcertID
+		if concertsDeleteConcertID == nil {
+			return nil, fmt.Errorf("missing required flag --concert-id")
+		}
+		concertID = *concertsDeleteConcertID
 		err = goa.MergeErrors(err, goa.ValidateFormat("concertID", concertID, goa.FormatUUID))
 		if err != nil {
 			return nil, err

@@ -397,6 +397,10 @@ func DecodeSummaryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("chatter", "summary", err)
 			}
+			err = ValidateChatSummaryResponseCollection(body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("chatter", "summary", err)
+			}
 			p := NewSummaryChatSummaryCollectionOK(body)
 			view := "default"
 			vres := chatterviews.ChatSummaryCollection{Projected: p, View: view}
@@ -633,6 +637,10 @@ func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("chatter", "history", err)
+			}
+			err = ValidateHistoryResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("chatter", "history", err)
 			}
 			p := NewHistoryChatSummaryOK(&body)
 			view := resp.Header.Get("goa-view")

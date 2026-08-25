@@ -30,6 +30,34 @@ type MonitorServerStream struct {
 	attempted bool
 }
 
+// start writes the headers that identify a successful SSE response.
+func (s *MonitorServerStream) start() {
+	s.once.Do(func() {
+		header := s.w.Header()
+		if header.Get("Content-Type") == "" {
+			header.Set("Content-Type", "text/event-stream")
+		}
+		if header.Get("Cache-Control") == "" {
+			header.Set("Cache-Control", "no-cache")
+		}
+		if header.Get("Connection") == "" {
+			header.Set("Connection", "keep-alive")
+		}
+		s.w.WriteHeader(http.StatusOK)
+		s.attempted = true
+	})
+}
+
+// finish writes an empty successful SSE response when the service sent no
+// events.
+func (s *MonitorServerStream) finish() error {
+	if s.attempted {
+		return nil
+	}
+	s.start()
+	return nil
+}
+
 // Send Send streams instances of "monitor.Usage" to the "monitor" endpoint SSE
 // connection.
 func (s *MonitorServerStream) Send(v *monitor.Usage) error {
@@ -49,22 +77,27 @@ func (s *MonitorServerStream) SendWithContext(ctx context.Context, v *monitor.Us
 		return err
 	}
 	data = string(byts)
-	s.once.Do(func() {
-		header := s.w.Header()
-		if header.Get("Content-Type") == "" {
-			header.Set("Content-Type", "text/event-stream")
-		}
-		if header.Get("Cache-Control") == "" {
-			header.Set("Cache-Control", "no-cache")
-		}
-		if header.Get("Connection") == "" {
-			header.Set("Connection", "keep-alive")
-		}
-		s.w.WriteHeader(http.StatusOK)
-		s.attempted = true
-	})
+	s.start()
 
-	if _, err := fmt.Fprintf(s.w, "data: %s\n\n", data); err != nil {
+	remaining := data
+	for {
+		lineEnd := 0
+		for lineEnd < len(remaining) && remaining[lineEnd] != '\r' && remaining[lineEnd] != '\n' {
+			lineEnd++
+		}
+		if _, err := fmt.Fprintf(s.w, "data: %s\n", remaining[:lineEnd]); err != nil {
+			return err
+		}
+		if lineEnd == len(remaining) {
+			break
+		}
+		next := lineEnd + 1
+		if remaining[lineEnd] == '\r' && next < len(remaining) && remaining[next] == '\n' {
+			next++
+		}
+		remaining = remaining[next:]
+	}
+	if _, err := fmt.Fprintln(s.w); err != nil {
 		return err
 	}
 

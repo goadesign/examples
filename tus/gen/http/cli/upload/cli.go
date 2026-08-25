@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -46,32 +65,50 @@ func ParseEndpoint(
 		tusFlags = flag.NewFlagSet("tus", flag.ContinueOnError)
 
 		tusHeadFlags            = flag.NewFlagSet("head", flag.ExitOnError)
-		tusHeadIDFlag           = tusHeadFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
-		tusHeadTusResumableFlag = tusHeadFlags.String("tus-resumable", "REQUIRED", "")
+		tusHeadIDFlag           = new(cliStringFlag)
+		tusHeadTusResumableFlag = new(cliStringFlag)
 
 		tusPatchFlags              = flag.NewFlagSet("patch", flag.ExitOnError)
-		tusPatchIDFlag             = tusPatchFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
-		tusPatchContentTypeFlag    = tusPatchFlags.String("content-type", "REQUIRED", "")
-		tusPatchTusResumableFlag   = tusPatchFlags.String("tus-resumable", "REQUIRED", "")
-		tusPatchUploadOffsetFlag   = tusPatchFlags.String("upload-offset", "REQUIRED", "")
-		tusPatchUploadChecksumFlag = tusPatchFlags.String("upload-checksum", "", "")
-		tusPatchStreamFlag         = tusPatchFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
+		tusPatchIDFlag             = new(cliStringFlag)
+		tusPatchContentTypeFlag    = new(cliStringFlag)
+		tusPatchTusResumableFlag   = new(cliStringFlag)
+		tusPatchUploadOffsetFlag   = new(cliStringFlag)
+		tusPatchUploadChecksumFlag = new(cliStringFlag)
+		tusPatchStreamFlag         = new(cliStringFlag)
 
 		tusOptionsFlags = flag.NewFlagSet("options", flag.ExitOnError)
 
 		tusPostFlags                 = flag.NewFlagSet("post", flag.ExitOnError)
-		tusPostTusResumableFlag      = tusPostFlags.String("tus-resumable", "REQUIRED", "")
-		tusPostUploadLengthFlag      = tusPostFlags.String("upload-length", "", "")
-		tusPostUploadDeferLengthFlag = tusPostFlags.String("upload-defer-length", "", "")
-		tusPostUploadChecksumFlag    = tusPostFlags.String("upload-checksum", "", "")
-		tusPostUploadMetadataFlag    = tusPostFlags.String("upload-metadata", "", "")
-		tusPostTusMaxSizeFlag        = tusPostFlags.String("tus-max-size", "", "")
-		tusPostStreamFlag            = tusPostFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
+		tusPostTusResumableFlag      = new(cliStringFlag)
+		tusPostUploadLengthFlag      = new(cliStringFlag)
+		tusPostUploadDeferLengthFlag = new(cliStringFlag)
+		tusPostUploadChecksumFlag    = new(cliStringFlag)
+		tusPostUploadMetadataFlag    = new(cliStringFlag)
+		tusPostTusMaxSizeFlag        = new(cliStringFlag)
+		tusPostStreamFlag            = new(cliStringFlag)
 
 		tusDeleteFlags            = flag.NewFlagSet("delete", flag.ExitOnError)
-		tusDeleteIDFlag           = tusDeleteFlags.String("id", "REQUIRED", "IDs are generated using Xid: https://github.com/rs/xid")
-		tusDeleteTusResumableFlag = tusDeleteFlags.String("tus-resumable", "REQUIRED", "")
+		tusDeleteIDFlag           = new(cliStringFlag)
+		tusDeleteTusResumableFlag = new(cliStringFlag)
 	)
+	tusHeadFlags.Var(tusHeadIDFlag, "id", "IDs are generated using Xid: https://github.com/rs/xid")
+	tusHeadFlags.Var(tusHeadTusResumableFlag, "tus-resumable", "")
+	tusPatchFlags.Var(tusPatchIDFlag, "id", "IDs are generated using Xid: https://github.com/rs/xid")
+	tusPatchFlags.Var(tusPatchContentTypeFlag, "content-type", "")
+	tusPatchFlags.Var(tusPatchTusResumableFlag, "tus-resumable", "")
+	tusPatchFlags.Var(tusPatchUploadOffsetFlag, "upload-offset", "")
+	tusPatchFlags.Var(tusPatchUploadChecksumFlag, "upload-checksum", "")
+	tusPatchFlags.Var(tusPatchStreamFlag, "stream", "path to file containing the streamed request body")
+	tusPostFlags.Var(tusPostTusResumableFlag, "tus-resumable", "")
+	tusPostFlags.Var(tusPostUploadLengthFlag, "upload-length", "")
+	tusPostFlags.Var(tusPostUploadDeferLengthFlag, "upload-defer-length", "")
+	tusPostFlags.Var(tusPostUploadChecksumFlag, "upload-checksum", "")
+	tusPostFlags.Var(tusPostUploadMetadataFlag, "upload-metadata", "")
+	tusPostFlags.Var(tusPostTusMaxSizeFlag, "tus-max-size", "")
+	tusPostFlags.Var(tusPostStreamFlag, "stream", "path to file containing the streamed request body")
+	tusDeleteFlags.Var(tusDeleteIDFlag, "id", "IDs are generated using Xid: https://github.com/rs/xid")
+	tusDeleteFlags.Var(tusDeleteTusResumableFlag, "tus-resumable", "")
+
 	tusFlags.Usage = tusUsage
 	tusHeadFlags.Usage = tusHeadUsage
 	tusPatchFlags.Usage = tusPatchUsage
@@ -155,24 +192,32 @@ func ParseEndpoint(
 			switch epn {
 			case "head":
 				endpoint = c.Head()
-				data, err = tusc.BuildHeadPayload(*tusHeadIDFlag, *tusHeadTusResumableFlag)
+				data, err = tusc.BuildHeadPayload(tusHeadIDFlag.value, tusHeadTusResumableFlag.value)
 			case "patch":
 				endpoint = c.Patch()
-				data, err = tusc.BuildPatchPayload(*tusPatchIDFlag, *tusPatchContentTypeFlag, *tusPatchTusResumableFlag, *tusPatchUploadOffsetFlag, *tusPatchUploadChecksumFlag)
+				data, err = tusc.BuildPatchPayload(tusPatchIDFlag.value, tusPatchContentTypeFlag.value, tusPatchTusResumableFlag.value, tusPatchUploadOffsetFlag.value, tusPatchUploadChecksumFlag.value)
 				if err == nil {
-					data, err = tusc.BuildPatchStreamPayload(data, *tusPatchStreamFlag)
+					if tusPatchStreamFlag.value == nil {
+						err = fmt.Errorf("missing required flag --stream")
+					} else {
+						data, err = tusc.BuildPatchStreamPayload(data, *tusPatchStreamFlag.value)
+					}
 				}
 			case "options":
 				endpoint = c.Options()
 			case "post":
 				endpoint = c.Post()
-				data, err = tusc.BuildPostPayload(*tusPostTusResumableFlag, *tusPostUploadLengthFlag, *tusPostUploadDeferLengthFlag, *tusPostUploadChecksumFlag, *tusPostUploadMetadataFlag, *tusPostTusMaxSizeFlag)
+				data, err = tusc.BuildPostPayload(tusPostTusResumableFlag.value, tusPostUploadLengthFlag.value, tusPostUploadDeferLengthFlag.value, tusPostUploadChecksumFlag.value, tusPostUploadMetadataFlag.value, tusPostTusMaxSizeFlag.value)
 				if err == nil {
-					data, err = tusc.BuildPostStreamPayload(data, *tusPostStreamFlag)
+					if tusPostStreamFlag.value == nil {
+						err = fmt.Errorf("missing required flag --stream")
+					} else {
+						data, err = tusc.BuildPostStreamPayload(data, *tusPostStreamFlag.value)
+					}
 				}
 			case "delete":
 				endpoint = c.Delete()
-				data, err = tusc.BuildDeletePayload(*tusDeleteIDFlag, *tusDeleteTusResumableFlag)
+				data, err = tusc.BuildDeletePayload(tusDeleteIDFlag.value, tusDeleteTusResumableFlag.value)
 			}
 		}
 	}

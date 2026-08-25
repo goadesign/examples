@@ -175,6 +175,19 @@ func NewHistoryUnauthorized(body string) chatter.Unauthorized {
 	return v
 }
 
+// ValidateChatSummaryResponseCollection runs the validations defined on
+// ChatSummaryResponseCollection
+func ValidateChatSummaryResponseCollection(body ChatSummaryResponseCollection) (err error) {
+	for _, e := range body {
+		if e != nil {
+			if err2 := validateChatSummaryResponse(e, "body[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // ValidateSubscribeResponseBody runs the validations defined on
 // SubscribeResponseBody
 func ValidateSubscribeResponseBody(body *SubscribeResponseBody) (err error) {
@@ -198,6 +211,21 @@ func ValidateSubscribeResponseBody(body *SubscribeResponseBody) (err error) {
 	return
 }
 
+// ValidateHistoryResponseBody runs the validations defined on
+// HistoryResponseBody
+func ValidateHistoryResponseBody(body *HistoryResponseBody) (err error) {
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.SentAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("sent_at", "body"))
+	}
+	if body.SentAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.sent_at", *body.SentAt, goa.FormatDateTime))
+	}
+	return
+}
+
 // ValidateChatSummaryResponse runs the validations defined on ChatSummary
 func ValidateChatSummaryResponse(body *ChatSummaryResponse) (err error) {
 	if body.Message == nil {
@@ -208,6 +236,21 @@ func ValidateChatSummaryResponse(body *ChatSummaryResponse) (err error) {
 	}
 	if body.SentAt != nil {
 		err = goa.MergeErrors(err, goa.ValidateFormat("body.sent_at", *body.SentAt, goa.FormatDateTime))
+	}
+	return
+}
+
+// validateChatSummaryResponse checks ChatSummary and reports errors using the
+// path supplied by its caller
+func validateChatSummaryResponse(body *ChatSummaryResponse, path string) (err error) {
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", path))
+	}
+	if body.SentAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("sent_at", path))
+	}
+	if body.SentAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat(path+".sent_at", *body.SentAt, goa.FormatDateTime))
 	}
 	return
 }

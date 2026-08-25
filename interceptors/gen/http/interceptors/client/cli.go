@@ -17,11 +17,14 @@ import (
 
 // BuildGetPayload builds the payload for the interceptors get endpoint from
 // CLI flags.
-func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string, interceptorsGetRecordID string, interceptorsGetAuth string) (*interceptors.GetPayload, error) {
+func BuildGetPayload(interceptorsGetBody *string, interceptorsGetTenantID *string, interceptorsGetRecordID *string, interceptorsGetAuth *string) (*interceptors.GetPayload, error) {
 	var err error
 	var body GetRequestBody
 	{
-		err = json.Unmarshal([]byte(interceptorsGetBody), &body)
+		if interceptorsGetBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*interceptorsGetBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 		}
@@ -37,7 +40,10 @@ func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string,
 	}
 	var tenantID string
 	{
-		tenantID = interceptorsGetTenantID
+		if interceptorsGetTenantID == nil {
+			return nil, fmt.Errorf("missing required flag --tenant-id")
+		}
+		tenantID = *interceptorsGetTenantID
 		err = goa.MergeErrors(err, goa.ValidateFormat("tenantID", tenantID, goa.FormatUUID))
 		if err != nil {
 			return nil, err
@@ -45,7 +51,10 @@ func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string,
 	}
 	var recordID string
 	{
-		recordID = interceptorsGetRecordID
+		if interceptorsGetRecordID == nil {
+			return nil, fmt.Errorf("missing required flag --record-id")
+		}
+		recordID = *interceptorsGetRecordID
 		err = goa.MergeErrors(err, goa.ValidateFormat("recordID", recordID, goa.FormatUUID))
 		if err != nil {
 			return nil, err
@@ -53,7 +62,10 @@ func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string,
 	}
 	var auth string
 	{
-		auth = interceptorsGetAuth
+		if interceptorsGetAuth == nil {
+			return nil, fmt.Errorf("missing required flag --auth")
+		}
+		auth = *interceptorsGetAuth
 	}
 	v := &interceptors.GetPayload{}
 	if body.TraceID != nil {
@@ -73,11 +85,14 @@ func BuildGetPayload(interceptorsGetBody string, interceptorsGetTenantID string,
 
 // BuildCreatePayload builds the payload for the interceptors create endpoint
 // from CLI flags.
-func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantID string, interceptorsCreateAuth string) (*interceptors.CreatePayload, error) {
+func BuildCreatePayload(interceptorsCreateBody *string, interceptorsCreateTenantID *string, interceptorsCreateAuth *string) (*interceptors.CreatePayload, error) {
 	var err error
 	var body CreateRequestBody
 	{
-		err = json.Unmarshal([]byte(interceptorsCreateBody), &body)
+		if interceptorsCreateBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*interceptorsCreateBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"spanID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"traceID\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"value\": \"Vel dolores.\"\n   }'")
 		}
@@ -93,7 +108,10 @@ func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantI
 	}
 	var tenantID string
 	{
-		tenantID = interceptorsCreateTenantID
+		if interceptorsCreateTenantID == nil {
+			return nil, fmt.Errorf("missing required flag --tenant-id")
+		}
+		tenantID = *interceptorsCreateTenantID
 		err = goa.MergeErrors(err, goa.ValidateFormat("tenantID", tenantID, goa.FormatUUID))
 		if err != nil {
 			return nil, err
@@ -101,7 +119,10 @@ func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantI
 	}
 	var auth string
 	{
-		auth = interceptorsCreateAuth
+		if interceptorsCreateAuth == nil {
+			return nil, fmt.Errorf("missing required flag --auth")
+		}
+		auth = *interceptorsCreateAuth
 	}
 	v := &interceptors.CreatePayload{
 		Value: body.Value,
@@ -122,11 +143,14 @@ func BuildCreatePayload(interceptorsCreateBody string, interceptorsCreateTenantI
 
 // BuildStreamPayload builds the payload for the interceptors stream endpoint
 // from CLI flags.
-func BuildStreamPayload(interceptorsStreamTenantID string, interceptorsStreamAuth string) (*interceptors.StreamPayload, error) {
+func BuildStreamPayload(interceptorsStreamTenantID *string, interceptorsStreamAuth *string) (*interceptors.StreamPayload, error) {
 	var err error
 	var tenantID string
 	{
-		tenantID = interceptorsStreamTenantID
+		if interceptorsStreamTenantID == nil {
+			return nil, fmt.Errorf("missing required flag --tenant-id")
+		}
+		tenantID = *interceptorsStreamTenantID
 		err = goa.MergeErrors(err, goa.ValidateFormat("tenantID", tenantID, goa.FormatUUID))
 		if err != nil {
 			return nil, err
@@ -134,7 +158,10 @@ func BuildStreamPayload(interceptorsStreamTenantID string, interceptorsStreamAut
 	}
 	var auth string
 	{
-		auth = interceptorsStreamAuth
+		if interceptorsStreamAuth == nil {
+			return nil, fmt.Errorf("missing required flag --auth")
+		}
+		auth = *interceptorsStreamAuth
 	}
 	v := &interceptors.StreamPayload{}
 	v.TenantID = interceptors.UUID(tenantID)

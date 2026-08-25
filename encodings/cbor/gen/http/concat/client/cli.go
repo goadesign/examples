@@ -8,19 +8,27 @@
 package client
 
 import (
+	"fmt"
+
 	concat "goa.design/examples/encodings/cbor/gen/concat"
 )
 
 // BuildConcatPayload builds the payload for the concat concat endpoint from
 // CLI flags.
-func BuildConcatPayload(concatConcatA string, concatConcatB string) (*concat.ConcatPayload, error) {
+func BuildConcatPayload(concatConcatA *string, concatConcatB *string) (*concat.ConcatPayload, error) {
 	var a string
 	{
-		a = concatConcatA
+		if concatConcatA == nil {
+			return nil, fmt.Errorf("missing required flag --a")
+		}
+		a = *concatConcatA
 	}
 	var b string
 	{
-		b = concatConcatB
+		if concatConcatB == nil {
+			return nil, fmt.Errorf("missing required flag --b")
+		}
+		b = *concatConcatB
 	}
 	v := &concat.ConcatPayload{}
 	v.A = a

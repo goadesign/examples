@@ -16,11 +16,14 @@ import (
 
 // BuildCreateSessionPayload builds the payload for the session create_session
 // endpoint from CLI flags.
-func BuildCreateSessionPayload(sessionCreateSessionBody string) (*session.CreateSessionPayload, error) {
+func BuildCreateSessionPayload(sessionCreateSessionBody *string) (*session.CreateSessionPayload, error) {
 	var err error
 	var body CreateSessionRequestBody
 	{
-		err = json.Unmarshal([]byte(sessionCreateSessionBody), &body)
+		if sessionCreateSessionBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*sessionCreateSessionBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Ea sit quis similique.\"\n   }'")
 		}
@@ -34,10 +37,13 @@ func BuildCreateSessionPayload(sessionCreateSessionBody string) (*session.Create
 
 // BuildUseSessionPayload builds the payload for the session use_session
 // endpoint from CLI flags.
-func BuildUseSessionPayload(sessionUseSessionSessionID string) (*session.UseSessionPayload, error) {
+func BuildUseSessionPayload(sessionUseSessionSessionID *string) (*session.UseSessionPayload, error) {
 	var sessionID string
 	{
-		sessionID = sessionUseSessionSessionID
+		if sessionUseSessionSessionID == nil {
+			return nil, fmt.Errorf("missing required flag --session-id")
+		}
+		sessionID = *sessionUseSessionSessionID
 	}
 	v := &session.UseSessionPayload{}
 	v.SessionID = sessionID

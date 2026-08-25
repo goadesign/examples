@@ -8,26 +8,29 @@
 package client
 
 import (
+	"fmt"
+
 	updown "goa.design/examples/upload_download/gen/updown"
 	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildUploadPayload builds the payload for the updown upload endpoint from
 // CLI flags.
-func BuildUploadPayload(updownUploadDir string, updownUploadContentType string) (*updown.UploadPayload, error) {
+func BuildUploadPayload(updownUploadDir *string, updownUploadContentType string) (*updown.UploadPayload, error) {
 	var err error
 	var dir string
 	{
-		dir = updownUploadDir
+		if updownUploadDir == nil {
+			return nil, fmt.Errorf("missing required flag --dir")
+		}
+		dir = *updownUploadDir
 	}
 	var contentType string
 	{
-		if updownUploadContentType != "" {
-			contentType = updownUploadContentType
-			err = goa.MergeErrors(err, goa.ValidatePattern("content_type", contentType, "multipart/[^;]+; boundary=.+"))
-			if err != nil {
-				return nil, err
-			}
+		contentType = updownUploadContentType
+		err = goa.MergeErrors(err, goa.ValidatePattern("content_type", contentType, "multipart/[^;]+; boundary=.+"))
+		if err != nil {
+			return nil, err
 		}
 	}
 	v := &updown.UploadPayload{}

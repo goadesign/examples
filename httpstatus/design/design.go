@@ -7,7 +7,6 @@ import (
 var GreetingResult = ResultType("application/vnd.hello", func() {
 	Attribute("greeting", String, "The greeting message")
 	Attribute("outcome", func() {
-		Meta("struct:tag:json", "-")     // hide from response
 		Meta("swagger:example", "false") // hide from swagger
 		Meta("swagger:generate", "false")
 	})

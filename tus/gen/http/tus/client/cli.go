@@ -16,11 +16,14 @@ import (
 )
 
 // BuildHeadPayload builds the payload for the tus head endpoint from CLI flags.
-func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string) (*tus.HeadPayload, error) {
+func BuildHeadPayload(tusHeadID *string, tusHeadTusResumable *string) (*tus.HeadPayload, error) {
 	var err error
 	var id string
 	{
-		id = tusHeadID
+		if tusHeadID == nil {
+			return nil, fmt.Errorf("missing required flag --id")
+		}
+		id = *tusHeadID
 		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
 		if err != nil {
 			return nil, err
@@ -28,7 +31,10 @@ func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string) (*tus.HeadPa
 	}
 	var tusResumable string
 	{
-		tusResumable = tusHeadTusResumable
+		if tusHeadTusResumable == nil {
+			return nil, fmt.Errorf("missing required flag --tus-resumable")
+		}
+		tusResumable = *tusHeadTusResumable
 		err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 		if err != nil {
 			return nil, err
@@ -43,11 +49,14 @@ func BuildHeadPayload(tusHeadID string, tusHeadTusResumable string) (*tus.HeadPa
 
 // BuildPatchPayload builds the payload for the tus patch endpoint from CLI
 // flags.
-func BuildPatchPayload(tusPatchID string, tusPatchContentType string, tusPatchTusResumable string, tusPatchUploadOffset string, tusPatchUploadChecksum string) (*tus.PatchPayload, error) {
+func BuildPatchPayload(tusPatchID *string, tusPatchContentType *string, tusPatchTusResumable *string, tusPatchUploadOffset *string, tusPatchUploadChecksum *string) (*tus.PatchPayload, error) {
 	var err error
 	var id string
 	{
-		id = tusPatchID
+		if tusPatchID == nil {
+			return nil, fmt.Errorf("missing required flag --id")
+		}
+		id = *tusPatchID
 		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
 		if err != nil {
 			return nil, err
@@ -55,11 +64,17 @@ func BuildPatchPayload(tusPatchID string, tusPatchContentType string, tusPatchTu
 	}
 	var contentType string
 	{
-		contentType = tusPatchContentType
+		if tusPatchContentType == nil {
+			return nil, fmt.Errorf("missing required flag --content-type")
+		}
+		contentType = *tusPatchContentType
 	}
 	var tusResumable string
 	{
-		tusResumable = tusPatchTusResumable
+		if tusPatchTusResumable == nil {
+			return nil, fmt.Errorf("missing required flag --tus-resumable")
+		}
+		tusResumable = *tusPatchTusResumable
 		err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 		if err != nil {
 			return nil, err
@@ -67,15 +82,18 @@ func BuildPatchPayload(tusPatchID string, tusPatchContentType string, tusPatchTu
 	}
 	var uploadOffset int64
 	{
-		uploadOffset, err = strconv.ParseInt(tusPatchUploadOffset, 10, 64)
+		if tusPatchUploadOffset == nil {
+			return nil, fmt.Errorf("missing required flag --upload-offset")
+		}
+		uploadOffset, err = strconv.ParseInt(*tusPatchUploadOffset, 10, 64)
 		if err != nil {
 			return nil, fmt.Errorf("invalid value for uploadOffset, must be INT64")
 		}
 	}
 	var uploadChecksum *string
 	{
-		if tusPatchUploadChecksum != "" {
-			uploadChecksum = &tusPatchUploadChecksum
+		if tusPatchUploadChecksum != nil {
+			uploadChecksum = tusPatchUploadChecksum
 		}
 	}
 	v := &tus.PatchPayload{}
@@ -89,11 +107,14 @@ func BuildPatchPayload(tusPatchID string, tusPatchContentType string, tusPatchTu
 }
 
 // BuildPostPayload builds the payload for the tus post endpoint from CLI flags.
-func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tusPostUploadDeferLength string, tusPostUploadChecksum string, tusPostUploadMetadata string, tusPostTusMaxSize string) (*tus.PostPayload, error) {
+func BuildPostPayload(tusPostTusResumable *string, tusPostUploadLength *string, tusPostUploadDeferLength *string, tusPostUploadChecksum *string, tusPostUploadMetadata *string, tusPostTusMaxSize *string) (*tus.PostPayload, error) {
 	var err error
 	var tusResumable string
 	{
-		tusResumable = tusPostTusResumable
+		if tusPostTusResumable == nil {
+			return nil, fmt.Errorf("missing required flag --tus-resumable")
+		}
+		tusResumable = *tusPostTusResumable
 		err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 		if err != nil {
 			return nil, err
@@ -101,9 +122,9 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 	}
 	var uploadLength *int64
 	{
-		if tusPostUploadLength != "" {
+		if tusPostUploadLength != nil {
 			var val int64
-			val, err = strconv.ParseInt(tusPostUploadLength, 10, 64)
+			val, err = strconv.ParseInt(*tusPostUploadLength, 10, 64)
 			uploadLength = &val
 			if err != nil {
 				return nil, fmt.Errorf("invalid value for uploadLength, must be INT64")
@@ -112,9 +133,9 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 	}
 	var uploadDeferLength *int
 	{
-		if tusPostUploadDeferLength != "" {
+		if tusPostUploadDeferLength != nil {
 			var v int64
-			v, err = strconv.ParseInt(tusPostUploadDeferLength, 10, strconv.IntSize)
+			v, err = strconv.ParseInt(*tusPostUploadDeferLength, 10, strconv.IntSize)
 			val := int(v)
 			uploadDeferLength = &val
 			if err != nil {
@@ -130,21 +151,21 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 	}
 	var uploadChecksum *string
 	{
-		if tusPostUploadChecksum != "" {
-			uploadChecksum = &tusPostUploadChecksum
+		if tusPostUploadChecksum != nil {
+			uploadChecksum = tusPostUploadChecksum
 		}
 	}
 	var uploadMetadata *string
 	{
-		if tusPostUploadMetadata != "" {
-			uploadMetadata = &tusPostUploadMetadata
+		if tusPostUploadMetadata != nil {
+			uploadMetadata = tusPostUploadMetadata
 		}
 	}
 	var tusMaxSize *int64
 	{
-		if tusPostTusMaxSize != "" {
+		if tusPostTusMaxSize != nil {
 			var val int64
-			val, err = strconv.ParseInt(tusPostTusMaxSize, 10, 64)
+			val, err = strconv.ParseInt(*tusPostTusMaxSize, 10, 64)
 			tusMaxSize = &val
 			if err != nil {
 				return nil, fmt.Errorf("invalid value for tusMaxSize, must be INT64")
@@ -164,11 +185,14 @@ func BuildPostPayload(tusPostTusResumable string, tusPostUploadLength string, tu
 
 // BuildDeletePayload builds the payload for the tus delete endpoint from CLI
 // flags.
-func BuildDeletePayload(tusDeleteID string, tusDeleteTusResumable string) (*tus.DeletePayload, error) {
+func BuildDeletePayload(tusDeleteID *string, tusDeleteTusResumable *string) (*tus.DeletePayload, error) {
 	var err error
 	var id string
 	{
-		id = tusDeleteID
+		if tusDeleteID == nil {
+			return nil, fmt.Errorf("missing required flag --id")
+		}
+		id = *tusDeleteID
 		err = goa.MergeErrors(err, goa.ValidatePattern("id", id, "[0-9a-v]{20}"))
 		if err != nil {
 			return nil, err
@@ -176,7 +200,10 @@ func BuildDeletePayload(tusDeleteID string, tusDeleteTusResumable string) (*tus.
 	}
 	var tusResumable string
 	{
-		tusResumable = tusDeleteTusResumable
+		if tusDeleteTusResumable == nil {
+			return nil, fmt.Errorf("missing required flag --tus-resumable")
+		}
+		tusResumable = *tusDeleteTusResumable
 		err = goa.MergeErrors(err, goa.ValidatePattern("tusResumable", tusResumable, "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(\\.(0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\\+[0-9a-zA-Z-]+(\\.[0-9a-zA-Z-]+)*)?$"))
 		if err != nil {
 			return nil, err

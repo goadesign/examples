@@ -251,6 +251,74 @@ func NewShowNotFound(body *ShowNotFoundResponseBody) *storage.NotFound {
 	return v
 }
 
+// ValidateStoredBottleResponseTinyCollection runs the validations defined on
+// StoredBottleResponseTinyCollection
+func ValidateStoredBottleResponseTinyCollection(body StoredBottleResponseTinyCollection) (err error) {
+	for _, e := range body {
+		if e != nil {
+			if err2 := validateStoredBottleResponseTiny(e, "body[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateShowResponseBody runs the validations defined on ShowResponseBody
+func ValidateShowResponseBody(body *ShowResponseBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "body"))
+	}
+	if body.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "body"))
+	}
+	if body.Name != nil {
+		if utf8.RuneCountInString(*body.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("body.name", *body.Name, utf8.RuneCountInString(*body.Name), 100, false))
+		}
+	}
+	if body.Winery != nil {
+		if err2 := validateWineryResponseBody(body.Winery, "body.winery"); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if body.Vintage != nil {
+		if *body.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.vintage", *body.Vintage, 1900, true))
+		}
+		if *body.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.vintage", *body.Vintage, 2020, false))
+		}
+	}
+	for _, e := range body.Composition {
+		if e != nil {
+			if err2 := validateComponentResponseBody(e, "body.composition[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	if body.Description != nil {
+		if utf8.RuneCountInString(*body.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("body.description", *body.Description, utf8.RuneCountInString(*body.Description), 2000, false))
+		}
+	}
+	if body.Rating != nil {
+		if *body.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 1, true))
+		}
+		if *body.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 5, false))
+		}
+	}
+	return
+}
+
 // ValidateShowNotFoundResponseBody runs the validations defined on
 // ShowNotFoundResponseBody
 func ValidateShowNotFoundResponseBody(body *ShowNotFoundResponseBody) (err error) {
@@ -282,6 +350,31 @@ func ValidateStoredBottleResponseTiny(body *StoredBottleResponseTiny) (err error
 	}
 	if body.Winery != nil {
 		if err2 := validateWineryResponseTiny(body.Winery, "body.winery"); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
+// validateStoredBottleResponseTiny checks StoredBottleTiny and reports errors
+// using the path supplied by its caller
+func validateStoredBottleResponseTiny(body *StoredBottleResponseTiny, path string) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", path))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", path))
+	}
+	if body.Name != nil {
+		if utf8.RuneCountInString(*body.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".name", *body.Name, utf8.RuneCountInString(*body.Name), 100, false))
+		}
+	}
+	if body.Winery != nil {
+		if err2 := validateWineryResponseTiny(body.Winery, path+".winery"); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -328,6 +421,30 @@ func ValidateWineryResponseBody(body *WineryResponseBody) (err error) {
 	return
 }
 
+// validateWineryResponseBody checks Winery and reports errors using the path
+// supplied by its caller
+func validateWineryResponseBody(body *WineryResponseBody, path string) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Region == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("region", path))
+	}
+	if body.Country == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country", path))
+	}
+	if body.Region != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".region", *body.Region, "[a-zA-Z '\\.]+"))
+	}
+	if body.Country != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".country", *body.Country, "[a-zA-Z '\\.]+"))
+	}
+	if body.URL != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".url", *body.URL, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+	}
+	return
+}
+
 // ValidateComponentResponseBody runs the validations defined on Component
 func ValidateComponentResponseBody(body *ComponentResponseBody) (err error) {
 	if body.Varietal == nil {
@@ -345,6 +462,29 @@ func ValidateComponentResponseBody(body *ComponentResponseBody) (err error) {
 		}
 		if *body.Percentage > 100 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.percentage", *body.Percentage, 100, false))
+		}
+	}
+	return
+}
+
+// validateComponentResponseBody checks Component and reports errors using the
+// path supplied by its caller
+func validateComponentResponseBody(body *ComponentResponseBody, path string) (err error) {
+	if body.Varietal == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", path))
+	}
+	if body.Varietal != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern(path+".varietal", *body.Varietal, "[A-Za-z' ]+"))
+		if utf8.RuneCountInString(*body.Varietal) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".varietal", *body.Varietal, utf8.RuneCountInString(*body.Varietal), 100, false))
+		}
+	}
+	if body.Percentage != nil {
+		if *body.Percentage < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".percentage", *body.Percentage, 1, true))
+		}
+		if *body.Percentage > 100 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".percentage", *body.Percentage, 100, false))
 		}
 	}
 	return

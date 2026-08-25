@@ -17,12 +17,12 @@ import (
 
 // BuildMultiplyPayload builds the payload for the calc multiply endpoint from
 // CLI flags.
-func BuildMultiplyPayload(calcMultiplyMessage string) (*calc.MultiplyPayload, error) {
+func BuildMultiplyPayload(calcMultiplyMessage *string) (*calc.MultiplyPayload, error) {
 	var err error
 	var message calcpb.MultiplyRequest
 	{
-		if calcMultiplyMessage != "" {
-			err = protojson.Unmarshal([]byte(calcMultiplyMessage), &message)
+		if calcMultiplyMessage != nil {
+			err = protojson.Unmarshal([]byte(*calcMultiplyMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 7630570414871587529,\n      \"b\": 2968728213815611862\n   }'")
 			}

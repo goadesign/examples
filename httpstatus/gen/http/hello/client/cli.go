@@ -8,15 +8,20 @@
 package client
 
 import (
+	"fmt"
+
 	hello "goa.design/examples/httpstatus/gen/hello"
 )
 
 // BuildHelloPayload builds the payload for the hello hello endpoint from CLI
 // flags.
-func BuildHelloPayload(helloHelloGreeting string) (*hello.HelloPayload, error) {
+func BuildHelloPayload(helloHelloGreeting *string) (*hello.HelloPayload, error) {
 	var greeting string
 	{
-		greeting = helloHelloGreeting
+		if helloHelloGreeting == nil {
+			return nil, fmt.Errorf("missing required flag --greeting")
+		}
+		greeting = *helloHelloGreeting
 	}
 	v := &hello.HelloPayload{}
 	v.Greeting = greeting

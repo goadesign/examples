@@ -8,20 +8,28 @@
 package client
 
 import (
+	"fmt"
+
 	chatter "goa.design/examples/streaming/gen/chatter"
 	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildLoginPayload builds the payload for the chatter login endpoint from CLI
 // flags.
-func BuildLoginPayload(chatterLoginUser string, chatterLoginPassword string) (*chatter.LoginPayload, error) {
+func BuildLoginPayload(chatterLoginUser *string, chatterLoginPassword *string) (*chatter.LoginPayload, error) {
 	var user string
 	{
-		user = chatterLoginUser
+		if chatterLoginUser == nil {
+			return nil, fmt.Errorf("missing required flag --user")
+		}
+		user = *chatterLoginUser
 	}
 	var password string
 	{
-		password = chatterLoginPassword
+		if chatterLoginPassword == nil {
+			return nil, fmt.Errorf("missing required flag --password")
+		}
+		password = *chatterLoginPassword
 	}
 	v := &chatter.LoginPayload{}
 	v.User = user
@@ -32,10 +40,13 @@ func BuildLoginPayload(chatterLoginUser string, chatterLoginPassword string) (*c
 
 // BuildEchoerPayload builds the payload for the chatter echoer endpoint from
 // CLI flags.
-func BuildEchoerPayload(chatterEchoerToken string) (*chatter.EchoerPayload, error) {
+func BuildEchoerPayload(chatterEchoerToken *string) (*chatter.EchoerPayload, error) {
 	var token string
 	{
-		token = chatterEchoerToken
+		if chatterEchoerToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *chatterEchoerToken
 	}
 	v := &chatter.EchoerPayload{}
 	v.Token = token
@@ -45,10 +56,13 @@ func BuildEchoerPayload(chatterEchoerToken string) (*chatter.EchoerPayload, erro
 
 // BuildListenerPayload builds the payload for the chatter listener endpoint
 // from CLI flags.
-func BuildListenerPayload(chatterListenerToken string) (*chatter.ListenerPayload, error) {
+func BuildListenerPayload(chatterListenerToken *string) (*chatter.ListenerPayload, error) {
 	var token string
 	{
-		token = chatterListenerToken
+		if chatterListenerToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *chatterListenerToken
 	}
 	v := &chatter.ListenerPayload{}
 	v.Token = token
@@ -58,10 +72,13 @@ func BuildListenerPayload(chatterListenerToken string) (*chatter.ListenerPayload
 
 // BuildSummaryPayload builds the payload for the chatter summary endpoint from
 // CLI flags.
-func BuildSummaryPayload(chatterSummaryToken string) (*chatter.SummaryPayload, error) {
+func BuildSummaryPayload(chatterSummaryToken *string) (*chatter.SummaryPayload, error) {
 	var token string
 	{
-		token = chatterSummaryToken
+		if chatterSummaryToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *chatterSummaryToken
 	}
 	v := &chatter.SummaryPayload{}
 	v.Token = token
@@ -71,10 +88,13 @@ func BuildSummaryPayload(chatterSummaryToken string) (*chatter.SummaryPayload, e
 
 // BuildSubscribePayload builds the payload for the chatter subscribe endpoint
 // from CLI flags.
-func BuildSubscribePayload(chatterSubscribeToken string) (*chatter.SubscribePayload, error) {
+func BuildSubscribePayload(chatterSubscribeToken *string) (*chatter.SubscribePayload, error) {
 	var token string
 	{
-		token = chatterSubscribeToken
+		if chatterSubscribeToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *chatterSubscribeToken
 	}
 	v := &chatter.SubscribePayload{}
 	v.Token = token
@@ -84,14 +104,14 @@ func BuildSubscribePayload(chatterSubscribeToken string) (*chatter.SubscribePayl
 
 // BuildHistoryPayload builds the payload for the chatter history endpoint from
 // CLI flags.
-func BuildHistoryPayload(chatterHistoryView string, chatterHistoryToken string) (*chatter.HistoryPayload, error) {
+func BuildHistoryPayload(chatterHistoryView *string, chatterHistoryToken *string) (*chatter.HistoryPayload, error) {
 	var err error
 	var view *string
 	{
-		if chatterHistoryView != "" {
-			view = &chatterHistoryView
-			if !(chatterHistoryView == "tiny" || chatterHistoryView == "default") {
-				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", chatterHistoryView, []any{"tiny", "default"}))
+		if chatterHistoryView != nil {
+			view = chatterHistoryView
+			if !(*chatterHistoryView == "tiny" || *chatterHistoryView == "default") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *chatterHistoryView, []any{"tiny", "default"}))
 			}
 			if err != nil {
 				return nil, err
@@ -100,7 +120,10 @@ func BuildHistoryPayload(chatterHistoryView string, chatterHistoryToken string) 
 	}
 	var token string
 	{
-		token = chatterHistoryToken
+		if chatterHistoryToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *chatterHistoryToken
 	}
 	v := &chatter.HistoryPayload{}
 	v.View = view

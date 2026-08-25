@@ -21,7 +21,7 @@ type Hello struct {
 type HelloView struct {
 	// The greeting message
 	Greeting *string
-	Outcome  *string `json:"-"`
+	Outcome  *string
 }
 
 var (

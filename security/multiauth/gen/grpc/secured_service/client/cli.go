@@ -17,14 +17,20 @@ import (
 
 // BuildSigninPayload builds the payload for the secured_service signin
 // endpoint from CLI flags.
-func BuildSigninPayload(securedServiceSigninUsername string, securedServiceSigninPassword string) (*securedservice.SigninPayload, error) {
+func BuildSigninPayload(securedServiceSigninUsername *string, securedServiceSigninPassword *string) (*securedservice.SigninPayload, error) {
 	var username string
 	{
-		username = securedServiceSigninUsername
+		if securedServiceSigninUsername == nil {
+			return nil, fmt.Errorf("missing required flag --username")
+		}
+		username = *securedServiceSigninUsername
 	}
 	var password string
 	{
-		password = securedServiceSigninPassword
+		if securedServiceSigninPassword == nil {
+			return nil, fmt.Errorf("missing required flag --password")
+		}
+		password = *securedServiceSigninPassword
 	}
 	v := &securedservice.SigninPayload{}
 	v.Username = username
@@ -35,12 +41,12 @@ func BuildSigninPayload(securedServiceSigninUsername string, securedServiceSigni
 
 // BuildSecurePayload builds the payload for the secured_service secure
 // endpoint from CLI flags.
-func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecureToken string) (*securedservice.SecurePayload, error) {
+func BuildSecurePayload(securedServiceSecureMessage *string, securedServiceSecureToken *string) (*securedservice.SecurePayload, error) {
 	var err error
 	var message secured_servicepb.SecureRequest
 	{
-		if securedServiceSecureMessage != "" {
-			err = protojson.Unmarshal([]byte(securedServiceSecureMessage), &message)
+		if securedServiceSecureMessage != nil {
+			err = protojson.Unmarshal([]byte(*securedServiceSecureMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"fail\": false\n   }'")
 			}
@@ -48,7 +54,10 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 	}
 	var token string
 	{
-		token = securedServiceSecureToken
+		if securedServiceSecureToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *securedServiceSecureToken
 	}
 	v := &securedservice.SecurePayload{
 		Fail: message.Fail,
@@ -60,12 +69,12 @@ func BuildSecurePayload(securedServiceSecureMessage string, securedServiceSecure
 
 // BuildDoublySecurePayload builds the payload for the secured_service
 // doubly_secure endpoint from CLI flags.
-func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedServiceDoublySecureToken string) (*securedservice.DoublySecurePayload, error) {
+func BuildDoublySecurePayload(securedServiceDoublySecureMessage *string, securedServiceDoublySecureToken *string) (*securedservice.DoublySecurePayload, error) {
 	var err error
 	var message secured_servicepb.DoublySecureRequest
 	{
-		if securedServiceDoublySecureMessage != "" {
-			err = protojson.Unmarshal([]byte(securedServiceDoublySecureMessage), &message)
+		if securedServiceDoublySecureMessage != nil {
+			err = protojson.Unmarshal([]byte(*securedServiceDoublySecureMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"key\": \"abcdef12345\"\n   }'")
 			}
@@ -73,7 +82,10 @@ func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedS
 	}
 	var token string
 	{
-		token = securedServiceDoublySecureToken
+		if securedServiceDoublySecureToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *securedServiceDoublySecureToken
 	}
 	if err := ValidateDoublySecureRequest(&message); err != nil {
 		var zero *securedservice.DoublySecurePayload
@@ -89,12 +101,12 @@ func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedS
 
 // BuildAlsoDoublySecurePayload builds the payload for the secured_service
 // also_doubly_secure endpoint from CLI flags.
-func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage string, securedServiceAlsoDoublySecureOauthToken string, securedServiceAlsoDoublySecureToken string) (*securedservice.AlsoDoublySecurePayload, error) {
+func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage *string, securedServiceAlsoDoublySecureOauthToken *string, securedServiceAlsoDoublySecureToken *string) (*securedservice.AlsoDoublySecurePayload, error) {
 	var err error
 	var message secured_servicepb.AlsoDoublySecureRequest
 	{
-		if securedServiceAlsoDoublySecureMessage != "" {
-			err = protojson.Unmarshal([]byte(securedServiceAlsoDoublySecureMessage), &message)
+		if securedServiceAlsoDoublySecureMessage != nil {
+			err = protojson.Unmarshal([]byte(*securedServiceAlsoDoublySecureMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"key\": \"abcdef12345\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }'")
 			}
@@ -102,14 +114,14 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage string, 
 	}
 	var oauthToken *string
 	{
-		if securedServiceAlsoDoublySecureOauthToken != "" {
-			oauthToken = &securedServiceAlsoDoublySecureOauthToken
+		if securedServiceAlsoDoublySecureOauthToken != nil {
+			oauthToken = securedServiceAlsoDoublySecureOauthToken
 		}
 	}
 	var token *string
 	{
-		if securedServiceAlsoDoublySecureToken != "" {
-			token = &securedServiceAlsoDoublySecureToken
+		if securedServiceAlsoDoublySecureToken != nil {
+			token = securedServiceAlsoDoublySecureToken
 		}
 	}
 	v := &securedservice.AlsoDoublySecurePayload{

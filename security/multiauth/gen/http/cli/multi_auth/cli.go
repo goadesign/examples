@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -46,24 +65,36 @@ func ParseEndpoint(
 		securedServiceFlags = flag.NewFlagSet("secured-service", flag.ContinueOnError)
 
 		securedServiceSigninFlags        = flag.NewFlagSet("signin", flag.ExitOnError)
-		securedServiceSigninUsernameFlag = securedServiceSigninFlags.String("username", "REQUIRED", "Username used to perform signin")
-		securedServiceSigninPasswordFlag = securedServiceSigninFlags.String("password", "REQUIRED", "Password used to perform signin")
+		securedServiceSigninUsernameFlag = new(cliStringFlag)
+		securedServiceSigninPasswordFlag = new(cliStringFlag)
 
 		securedServiceSecureFlags     = flag.NewFlagSet("secure", flag.ExitOnError)
-		securedServiceSecureFailFlag  = securedServiceSecureFlags.String("fail", "", "")
-		securedServiceSecureTokenFlag = securedServiceSecureFlags.String("token", "REQUIRED", "")
+		securedServiceSecureFailFlag  = new(cliStringFlag)
+		securedServiceSecureTokenFlag = new(cliStringFlag)
 
 		securedServiceDoublySecureFlags     = flag.NewFlagSet("doubly-secure", flag.ExitOnError)
-		securedServiceDoublySecureKeyFlag   = securedServiceDoublySecureFlags.String("key", "REQUIRED", "")
-		securedServiceDoublySecureTokenFlag = securedServiceDoublySecureFlags.String("token", "REQUIRED", "")
+		securedServiceDoublySecureKeyFlag   = new(cliStringFlag)
+		securedServiceDoublySecureTokenFlag = new(cliStringFlag)
 
 		securedServiceAlsoDoublySecureFlags          = flag.NewFlagSet("also-doubly-secure", flag.ExitOnError)
-		securedServiceAlsoDoublySecureKeyFlag        = securedServiceAlsoDoublySecureFlags.String("key", "", "")
-		securedServiceAlsoDoublySecureOauthTokenFlag = securedServiceAlsoDoublySecureFlags.String("oauth-token", "", "")
-		securedServiceAlsoDoublySecureTokenFlag      = securedServiceAlsoDoublySecureFlags.String("token", "", "")
-		securedServiceAlsoDoublySecureUsernameFlag   = securedServiceAlsoDoublySecureFlags.String("username", "", "Username used to perform signin")
-		securedServiceAlsoDoublySecurePasswordFlag   = securedServiceAlsoDoublySecureFlags.String("password", "", "Password used to perform signin")
+		securedServiceAlsoDoublySecureKeyFlag        = new(cliStringFlag)
+		securedServiceAlsoDoublySecureOauthTokenFlag = new(cliStringFlag)
+		securedServiceAlsoDoublySecureTokenFlag      = new(cliStringFlag)
+		securedServiceAlsoDoublySecureUsernameFlag   = new(cliStringFlag)
+		securedServiceAlsoDoublySecurePasswordFlag   = new(cliStringFlag)
 	)
+	securedServiceSigninFlags.Var(securedServiceSigninUsernameFlag, "username", "Username used to perform signin")
+	securedServiceSigninFlags.Var(securedServiceSigninPasswordFlag, "password", "Password used to perform signin")
+	securedServiceSecureFlags.Var(securedServiceSecureFailFlag, "fail", "")
+	securedServiceSecureFlags.Var(securedServiceSecureTokenFlag, "token", "")
+	securedServiceDoublySecureFlags.Var(securedServiceDoublySecureKeyFlag, "key", "")
+	securedServiceDoublySecureFlags.Var(securedServiceDoublySecureTokenFlag, "token", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureKeyFlag, "key", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureOauthTokenFlag, "oauth-token", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureTokenFlag, "token", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureUsernameFlag, "username", "Username used to perform signin")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecurePasswordFlag, "password", "Password used to perform signin")
+
 	securedServiceFlags.Usage = securedServiceUsage
 	securedServiceSigninFlags.Usage = securedServiceSigninUsage
 	securedServiceSecureFlags.Usage = securedServiceSecureUsage
@@ -143,16 +174,16 @@ func ParseEndpoint(
 			switch epn {
 			case "signin":
 				endpoint = c.Signin()
-				data, err = securedservicec.BuildSigninPayload(*securedServiceSigninUsernameFlag, *securedServiceSigninPasswordFlag)
+				data, err = securedservicec.BuildSigninPayload(securedServiceSigninUsernameFlag.value, securedServiceSigninPasswordFlag.value)
 			case "secure":
 				endpoint = c.Secure()
-				data, err = securedservicec.BuildSecurePayload(*securedServiceSecureFailFlag, *securedServiceSecureTokenFlag)
+				data, err = securedservicec.BuildSecurePayload(securedServiceSecureFailFlag.value, securedServiceSecureTokenFlag.value)
 			case "doubly-secure":
 				endpoint = c.DoublySecure()
-				data, err = securedservicec.BuildDoublySecurePayload(*securedServiceDoublySecureKeyFlag, *securedServiceDoublySecureTokenFlag)
+				data, err = securedservicec.BuildDoublySecurePayload(securedServiceDoublySecureKeyFlag.value, securedServiceDoublySecureTokenFlag.value)
 			case "also-doubly-secure":
 				endpoint = c.AlsoDoublySecure()
-				data, err = securedservicec.BuildAlsoDoublySecurePayload(*securedServiceAlsoDoublySecureKeyFlag, *securedServiceAlsoDoublySecureOauthTokenFlag, *securedServiceAlsoDoublySecureTokenFlag, *securedServiceAlsoDoublySecureUsernameFlag, *securedServiceAlsoDoublySecurePasswordFlag)
+				data, err = securedservicec.BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureKeyFlag.value, securedServiceAlsoDoublySecureOauthTokenFlag.value, securedServiceAlsoDoublySecureTokenFlag.value, securedServiceAlsoDoublySecureUsernameFlag.value, securedServiceAlsoDoublySecurePasswordFlag.value)
 			}
 		}
 	}

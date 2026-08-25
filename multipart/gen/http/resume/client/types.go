@@ -106,6 +106,19 @@ func NewListStoredResumeCollectionOK(body StoredResumeResponseCollection) resume
 	return v
 }
 
+// ValidateStoredResumeResponseCollection runs the validations defined on
+// StoredResumeResponseCollection
+func ValidateStoredResumeResponseCollection(body StoredResumeResponseCollection) (err error) {
+	for _, e := range body {
+		if e != nil {
+			if err2 := validateStoredResumeResponse(e, "body[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // ValidateStoredResumeResponse runs the validations defined on StoredResume
 func ValidateStoredResumeResponse(body *StoredResumeResponse) (err error) {
 	if body.ID == nil {
@@ -133,6 +146,41 @@ func ValidateStoredResumeResponse(body *StoredResumeResponse) (err error) {
 	for _, e := range body.Education {
 		if e != nil {
 			if err2 := validateEducationResponse(e, "body.education[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// validateStoredResumeResponse checks StoredResume and reports errors using
+// the path supplied by its caller
+func validateStoredResumeResponse(body *StoredResumeResponse, path string) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", path))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Experience == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("experience", path))
+	}
+	if body.Education == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("education", path))
+	}
+	if body.CreatedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("created_at", path))
+	}
+	for _, e := range body.Experience {
+		if e != nil {
+			if err2 := validateExperienceResponse(e, path+".experience[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	for _, e := range body.Education {
+		if e != nil {
+			if err2 := validateEducationResponse(e, path+".education[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}

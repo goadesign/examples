@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -46,9 +65,12 @@ func ParseEndpoint(
 		concatFlags = flag.NewFlagSet("concat", flag.ContinueOnError)
 
 		concatConcatFlags = flag.NewFlagSet("concat", flag.ExitOnError)
-		concatConcatAFlag = concatConcatFlags.String("a", "REQUIRED", "Left operand")
-		concatConcatBFlag = concatConcatFlags.String("b", "REQUIRED", "Right operand")
+		concatConcatAFlag = new(cliStringFlag)
+		concatConcatBFlag = new(cliStringFlag)
 	)
+	concatConcatFlags.Var(concatConcatAFlag, "a", "Left operand")
+	concatConcatFlags.Var(concatConcatBFlag, "b", "Right operand")
+
 	concatFlags.Usage = concatUsage
 	concatConcatFlags.Usage = concatConcatUsage
 
@@ -116,7 +138,7 @@ func ParseEndpoint(
 			switch epn {
 			case "concat":
 				endpoint = c.Concat()
-				data, err = concatc.BuildConcatPayload(*concatConcatAFlag, *concatConcatBFlag)
+				data, err = concatc.BuildConcatPayload(concatConcatAFlag.value, concatConcatBFlag.value)
 			}
 		}
 	}

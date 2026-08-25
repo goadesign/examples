@@ -18,12 +18,12 @@ import (
 
 // BuildShowPayload builds the payload for the storage show endpoint from CLI
 // flags.
-func BuildShowPayload(storageShowMessage string, storageShowView string) (*storage.ShowPayload, error) {
+func BuildShowPayload(storageShowMessage *string, storageShowView *string) (*storage.ShowPayload, error) {
 	var err error
 	var message storagepb.ShowRequest
 	{
-		if storageShowMessage != "" {
-			err = protojson.Unmarshal([]byte(storageShowMessage), &message)
+		if storageShowMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageShowMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Neque voluptas molestias.\"\n   }'")
 			}
@@ -31,10 +31,10 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 	}
 	var view *string
 	{
-		if storageShowView != "" {
-			view = &storageShowView
-			if !(storageShowView == "default" || storageShowView == "tiny") {
-				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", storageShowView, []any{"default", "tiny"}))
+		if storageShowView != nil {
+			view = storageShowView
+			if !(*storageShowView == "default" || *storageShowView == "tiny") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *storageShowView, []any{"default", "tiny"}))
 			}
 			if err != nil {
 				return nil, err
@@ -55,12 +55,12 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 
 // BuildAddPayload builds the payload for the storage add endpoint from CLI
 // flags.
-func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
+func BuildAddPayload(storageAddMessage *string) (*storage.Bottle, error) {
 	var err error
 	var message storagepb.AddRequest
 	{
-		if storageAddMessage != "" {
-			err = protojson.Unmarshal([]byte(storageAddMessage), &message)
+		if storageAddMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageAddMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 2,\n      \"vintage\": 1918,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 			}
@@ -94,12 +94,12 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 
 // BuildRemovePayload builds the payload for the storage remove endpoint from
 // CLI flags.
-func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, error) {
+func BuildRemovePayload(storageRemoveMessage *string) (*storage.RemovePayload, error) {
 	var err error
 	var message storagepb.RemoveRequest
 	{
-		if storageRemoveMessage != "" {
-			err = protojson.Unmarshal([]byte(storageRemoveMessage), &message)
+		if storageRemoveMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageRemoveMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Consectetur quaerat neque sed.\"\n   }'")
 			}
@@ -118,12 +118,12 @@ func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, er
 
 // BuildRatePayload builds the payload for the storage rate endpoint from CLI
 // flags.
-func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
+func BuildRatePayload(storageRateMessage *string) (map[uint32][]string, error) {
 	var err error
 	var message storagepb.RateRequest
 	{
-		if storageRateMessage != "" {
-			err = protojson.Unmarshal([]byte(storageRateMessage), &message)
+		if storageRateMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageRateMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": {\n         \"3188487350\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"507886676\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"890945719\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         }\n      }\n   }'")
 			}
@@ -146,12 +146,12 @@ func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
 
 // BuildMultiAddPayload builds the payload for the storage multi_add endpoint
 // from CLI flags.
-func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, error) {
+func BuildMultiAddPayload(storageMultiAddMessage *string) ([]*storage.Bottle, error) {
 	var err error
 	var message storagepb.MultiAddRequest
 	{
-		if storageMultiAddMessage != "" {
-			err = protojson.Unmarshal([]byte(storageMultiAddMessage), &message)
+		if storageMultiAddMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageMultiAddMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 			}
@@ -187,12 +187,12 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 
 // BuildMultiUpdatePayload builds the payload for the storage multi_update
 // endpoint from CLI flags.
-func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUpdatePayload, error) {
+func BuildMultiUpdatePayload(storageMultiUpdateMessage *string) (*storage.MultiUpdatePayload, error) {
 	var err error
 	var message storagepb.MultiUpdateRequest
 	{
-		if storageMultiUpdateMessage != "" {
-			err = protojson.Unmarshal([]byte(storageMultiUpdateMessage), &message)
+		if storageMultiUpdateMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageMultiUpdateMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Nihil voluptatibus aut mollitia ipsam.\",\n         \"Qui optio non voluptate rem adipisci soluta.\",\n         \"Omnis corporis quod veritatis temporibus dolores.\",\n         \"Dolores voluptatem sunt architecto consequatur non.\"\n      ]\n   }'")
 			}

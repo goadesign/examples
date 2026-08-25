@@ -9,6 +9,7 @@ package client
 
 import (
 	helloviews "goa.design/examples/httpstatus/gen/hello/views"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // HelloCreatedResponseBody is the type of the "hello" service "hello" endpoint
@@ -16,7 +17,6 @@ import (
 type HelloCreatedResponseBody struct {
 	// The greeting message
 	Greeting *string `form:"greeting,omitempty" json:"greeting,omitempty" xml:"greeting,omitempty"`
-	Outcome  *string `json:"-"`
 }
 
 // HelloAcceptedResponseBody is the type of the "hello" service "hello"
@@ -24,7 +24,6 @@ type HelloCreatedResponseBody struct {
 type HelloAcceptedResponseBody struct {
 	// The greeting message
 	Greeting *string `form:"greeting,omitempty" json:"greeting,omitempty" xml:"greeting,omitempty"`
-	Outcome  *string `json:"-"`
 }
 
 // HelloOKResponseBody is the type of the "hello" service "hello" endpoint HTTP
@@ -32,7 +31,7 @@ type HelloAcceptedResponseBody struct {
 type HelloOKResponseBody struct {
 	// The greeting message
 	Greeting *string `form:"greeting,omitempty" json:"greeting,omitempty" xml:"greeting,omitempty"`
-	Outcome  *string `json:"-"`
+	Outcome  *string `form:"outcome,omitempty" json:"outcome,omitempty" xml:"outcome,omitempty"`
 }
 
 // NewHelloViewCreated builds a "hello" service "hello" endpoint result from a
@@ -40,7 +39,6 @@ type HelloOKResponseBody struct {
 func NewHelloViewCreated(body *HelloCreatedResponseBody) *helloviews.HelloView {
 	v := &helloviews.HelloView{
 		Greeting: body.Greeting,
-		Outcome:  body.Outcome,
 	}
 
 	return v
@@ -51,7 +49,6 @@ func NewHelloViewCreated(body *HelloCreatedResponseBody) *helloviews.HelloView {
 func NewHelloViewAccepted(body *HelloAcceptedResponseBody) *helloviews.HelloView {
 	v := &helloviews.HelloView{
 		Greeting: body.Greeting,
-		Outcome:  body.Outcome,
 	}
 
 	return v
@@ -66,4 +63,34 @@ func NewHelloViewOK(body *HelloOKResponseBody) *helloviews.HelloView {
 	}
 
 	return v
+}
+
+// ValidateHelloCreatedResponseBody runs the validations defined on
+// HelloCreatedResponseBody
+func ValidateHelloCreatedResponseBody(body *HelloCreatedResponseBody) (err error) {
+	if body.Greeting == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("greeting", "body"))
+	}
+	return
+}
+
+// ValidateHelloAcceptedResponseBody runs the validations defined on
+// HelloAcceptedResponseBody
+func ValidateHelloAcceptedResponseBody(body *HelloAcceptedResponseBody) (err error) {
+	if body.Greeting == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("greeting", "body"))
+	}
+	return
+}
+
+// ValidateHelloOKResponseBody runs the validations defined on
+// HelloOKResponseBody
+func ValidateHelloOKResponseBody(body *HelloOKResponseBody) (err error) {
+	if body.Outcome == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("outcome", "body"))
+	}
+	if body.Greeting == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("greeting", "body"))
+	}
+	return
 }

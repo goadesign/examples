@@ -35,6 +35,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -45,31 +64,40 @@ func ParseEndpoint(
 		sommelierFlags = flag.NewFlagSet("sommelier", flag.ContinueOnError)
 
 		sommelierPickFlags       = flag.NewFlagSet("pick", flag.ExitOnError)
-		sommelierPickMessageFlag = sommelierPickFlags.String("message", "", "")
+		sommelierPickMessageFlag = new(cliStringFlag)
 
 		storageFlags = flag.NewFlagSet("storage", flag.ContinueOnError)
 
 		storageListFlags = flag.NewFlagSet("list", flag.ExitOnError)
 
 		storageShowFlags       = flag.NewFlagSet("show", flag.ExitOnError)
-		storageShowMessageFlag = storageShowFlags.String("message", "", "")
-		storageShowViewFlag    = storageShowFlags.String("view", "", "")
+		storageShowMessageFlag = new(cliStringFlag)
+		storageShowViewFlag    = new(cliStringFlag)
 
 		storageAddFlags       = flag.NewFlagSet("add", flag.ExitOnError)
-		storageAddMessageFlag = storageAddFlags.String("message", "", "")
+		storageAddMessageFlag = new(cliStringFlag)
 
 		storageRemoveFlags       = flag.NewFlagSet("remove", flag.ExitOnError)
-		storageRemoveMessageFlag = storageRemoveFlags.String("message", "", "")
+		storageRemoveMessageFlag = new(cliStringFlag)
 
 		storageRateFlags       = flag.NewFlagSet("rate", flag.ExitOnError)
-		storageRateMessageFlag = storageRateFlags.String("message", "", "")
+		storageRateMessageFlag = new(cliStringFlag)
 
 		storageMultiAddFlags       = flag.NewFlagSet("multi-add", flag.ExitOnError)
-		storageMultiAddMessageFlag = storageMultiAddFlags.String("message", "", "")
+		storageMultiAddMessageFlag = new(cliStringFlag)
 
 		storageMultiUpdateFlags       = flag.NewFlagSet("multi-update", flag.ExitOnError)
-		storageMultiUpdateMessageFlag = storageMultiUpdateFlags.String("message", "", "")
+		storageMultiUpdateMessageFlag = new(cliStringFlag)
 	)
+	sommelierPickFlags.Var(sommelierPickMessageFlag, "message", "")
+	storageShowFlags.Var(storageShowMessageFlag, "message", "")
+	storageShowFlags.Var(storageShowViewFlag, "view", "")
+	storageAddFlags.Var(storageAddMessageFlag, "message", "")
+	storageRemoveFlags.Var(storageRemoveMessageFlag, "message", "")
+	storageRateFlags.Var(storageRateMessageFlag, "message", "")
+	storageMultiAddFlags.Var(storageMultiAddMessageFlag, "message", "")
+	storageMultiUpdateFlags.Var(storageMultiUpdateMessageFlag, "message", "")
+
 	sommelierFlags.Usage = sommelierUsage
 	sommelierPickFlags.Usage = sommelierPickUsage
 
@@ -173,7 +201,7 @@ func ParseEndpoint(
 			switch epn {
 			case "pick":
 				endpoint = c.Pick()
-				data, err = sommelierc.BuildPickPayload(*sommelierPickMessageFlag)
+				data, err = sommelierc.BuildPickPayload(sommelierPickMessageFlag.value)
 			}
 		case "storage":
 			c := storagec.NewClient(cc, opts...)
@@ -182,22 +210,22 @@ func ParseEndpoint(
 				endpoint = c.List()
 			case "show":
 				endpoint = c.Show()
-				data, err = storagec.BuildShowPayload(*storageShowMessageFlag, *storageShowViewFlag)
+				data, err = storagec.BuildShowPayload(storageShowMessageFlag.value, storageShowViewFlag.value)
 			case "add":
 				endpoint = c.Add()
-				data, err = storagec.BuildAddPayload(*storageAddMessageFlag)
+				data, err = storagec.BuildAddPayload(storageAddMessageFlag.value)
 			case "remove":
 				endpoint = c.Remove()
-				data, err = storagec.BuildRemovePayload(*storageRemoveMessageFlag)
+				data, err = storagec.BuildRemovePayload(storageRemoveMessageFlag.value)
 			case "rate":
 				endpoint = c.Rate()
-				data, err = storagec.BuildRatePayload(*storageRateMessageFlag)
+				data, err = storagec.BuildRatePayload(storageRateMessageFlag.value)
 			case "multi-add":
 				endpoint = c.MultiAdd()
-				data, err = storagec.BuildMultiAddPayload(*storageMultiAddMessageFlag)
+				data, err = storagec.BuildMultiAddPayload(storageMultiAddMessageFlag.value)
 			case "multi-update":
 				endpoint = c.MultiUpdate()
-				data, err = storagec.BuildMultiUpdatePayload(*storageMultiUpdateMessageFlag)
+				data, err = storagec.BuildMultiUpdatePayload(storageMultiUpdateMessageFlag.value)
 			}
 		}
 	}

@@ -70,6 +70,10 @@ func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("storage", "list", err)
 			}
+			err = ValidateStoredBottleResponseTinyCollection(body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("storage", "list", err)
+			}
 			p := NewListStoredBottleCollectionOK(body)
 			view := "tiny"
 			vres := storageviews.StoredBottleCollection{Projected: p, View: view}
@@ -165,6 +169,10 @@ func DecodeShowResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("storage", "show", err)
+			}
+			err = ValidateShowResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("storage", "show", err)
 			}
 			p := NewShowStoredBottleOK(&body)
 			view := resp.Header.Get("goa-view")

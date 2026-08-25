@@ -17,12 +17,12 @@ import (
 
 // BuildGetPayload builds the payload for the interceptors get endpoint from
 // CLI flags.
-func BuildGetPayload(interceptorsGetMessage string) (*interceptors.GetPayload, error) {
+func BuildGetPayload(interceptorsGetMessage *string) (*interceptors.GetPayload, error) {
 	var err error
 	var message interceptorspb.GetRequest
 	{
-		if interceptorsGetMessage != "" {
-			err = protojson.Unmarshal([]byte(interceptorsGetMessage), &message)
+		if interceptorsGetMessage != nil {
+			err = protojson.Unmarshal([]byte(*interceptorsGetMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"record_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"span_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenant_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"trace_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 			}

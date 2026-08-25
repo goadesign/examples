@@ -34,6 +34,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -50,20 +69,30 @@ func ParseEndpoint(
 		interceptorsFlags = flag.NewFlagSet("interceptors", flag.ContinueOnError)
 
 		interceptorsGetFlags        = flag.NewFlagSet("get", flag.ExitOnError)
-		interceptorsGetBodyFlag     = interceptorsGetFlags.String("body", "REQUIRED", "")
-		interceptorsGetTenantIDFlag = interceptorsGetFlags.String("tenant-id", "REQUIRED", "Tenant ID for the request")
-		interceptorsGetRecordIDFlag = interceptorsGetFlags.String("record-id", "REQUIRED", "ID of the record to retrieve")
-		interceptorsGetAuthFlag     = interceptorsGetFlags.String("auth", "REQUIRED", "")
+		interceptorsGetBodyFlag     = new(cliStringFlag)
+		interceptorsGetTenantIDFlag = new(cliStringFlag)
+		interceptorsGetRecordIDFlag = new(cliStringFlag)
+		interceptorsGetAuthFlag     = new(cliStringFlag)
 
 		interceptorsCreateFlags        = flag.NewFlagSet("create", flag.ExitOnError)
-		interceptorsCreateBodyFlag     = interceptorsCreateFlags.String("body", "REQUIRED", "")
-		interceptorsCreateTenantIDFlag = interceptorsCreateFlags.String("tenant-id", "REQUIRED", "Tenant ID for the request")
-		interceptorsCreateAuthFlag     = interceptorsCreateFlags.String("auth", "REQUIRED", "")
+		interceptorsCreateBodyFlag     = new(cliStringFlag)
+		interceptorsCreateTenantIDFlag = new(cliStringFlag)
+		interceptorsCreateAuthFlag     = new(cliStringFlag)
 
 		interceptorsStreamFlags        = flag.NewFlagSet("stream", flag.ExitOnError)
-		interceptorsStreamTenantIDFlag = interceptorsStreamFlags.String("tenant-id", "REQUIRED", "Tenant ID for the request")
-		interceptorsStreamAuthFlag     = interceptorsStreamFlags.String("auth", "REQUIRED", "")
+		interceptorsStreamTenantIDFlag = new(cliStringFlag)
+		interceptorsStreamAuthFlag     = new(cliStringFlag)
 	)
+	interceptorsGetFlags.Var(interceptorsGetBodyFlag, "body", "")
+	interceptorsGetFlags.Var(interceptorsGetTenantIDFlag, "tenant-id", "Tenant ID for the request")
+	interceptorsGetFlags.Var(interceptorsGetRecordIDFlag, "record-id", "ID of the record to retrieve")
+	interceptorsGetFlags.Var(interceptorsGetAuthFlag, "auth", "")
+	interceptorsCreateFlags.Var(interceptorsCreateBodyFlag, "body", "")
+	interceptorsCreateFlags.Var(interceptorsCreateTenantIDFlag, "tenant-id", "Tenant ID for the request")
+	interceptorsCreateFlags.Var(interceptorsCreateAuthFlag, "auth", "")
+	interceptorsStreamFlags.Var(interceptorsStreamTenantIDFlag, "tenant-id", "Tenant ID for the request")
+	interceptorsStreamFlags.Var(interceptorsStreamAuthFlag, "auth", "")
+
 	interceptorsFlags.Usage = interceptorsUsage
 	interceptorsGetFlags.Usage = interceptorsGetUsage
 	interceptorsCreateFlags.Usage = interceptorsCreateUsage
@@ -140,15 +169,15 @@ func ParseEndpoint(
 			case "get":
 				endpoint = c.Get()
 				endpoint = interceptors.WrapGetClientEndpoint(endpoint, interceptorsInter)
-				data, err = interceptorsc.BuildGetPayload(*interceptorsGetBodyFlag, *interceptorsGetTenantIDFlag, *interceptorsGetRecordIDFlag, *interceptorsGetAuthFlag)
+				data, err = interceptorsc.BuildGetPayload(interceptorsGetBodyFlag.value, interceptorsGetTenantIDFlag.value, interceptorsGetRecordIDFlag.value, interceptorsGetAuthFlag.value)
 			case "create":
 				endpoint = c.Create()
 				endpoint = interceptors.WrapCreateClientEndpoint(endpoint, interceptorsInter)
-				data, err = interceptorsc.BuildCreatePayload(*interceptorsCreateBodyFlag, *interceptorsCreateTenantIDFlag, *interceptorsCreateAuthFlag)
+				data, err = interceptorsc.BuildCreatePayload(interceptorsCreateBodyFlag.value, interceptorsCreateTenantIDFlag.value, interceptorsCreateAuthFlag.value)
 			case "stream":
 				endpoint = c.Stream()
 				endpoint = interceptors.WrapStreamClientEndpoint(endpoint, interceptorsInter)
-				data, err = interceptorsc.BuildStreamPayload(*interceptorsStreamTenantIDFlag, *interceptorsStreamAuthFlag)
+				data, err = interceptorsc.BuildStreamPayload(interceptorsStreamTenantIDFlag.value, interceptorsStreamAuthFlag.value)
 			}
 		}
 	}

@@ -123,6 +123,10 @@ func NewMonitorHandler(
 			},
 		}
 		_, err = endpoint(ctx, v)
+		if err == nil {
+			stream := v.Stream.(*MonitorServerStream)
+			err = stream.finish()
+		}
 		if err != nil {
 			stream := v.Stream.(*MonitorServerStream)
 			if stream.attempted {

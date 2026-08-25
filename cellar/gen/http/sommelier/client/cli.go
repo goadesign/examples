@@ -16,11 +16,14 @@ import (
 
 // BuildPickPayload builds the payload for the sommelier pick endpoint from CLI
 // flags.
-func BuildPickPayload(sommelierPickBody string) (*sommelier.Criteria, error) {
+func BuildPickPayload(sommelierPickBody *string) (*sommelier.Criteria, error) {
 	var err error
 	var body PickRequestBody
 	{
-		err = json.Unmarshal([]byte(sommelierPickBody), &body)
+		if sommelierPickBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*sommelierPickBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Blue\\'s Cuvee\",\n      \"varietal\": [\n         \"pinot noir\",\n         \"merlot\",\n         \"cabernet franc\"\n      ],\n      \"winery\": \"longoria\"\n   }'")
 		}

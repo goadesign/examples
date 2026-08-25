@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -50,18 +69,24 @@ func ParseEndpoint(
 		concertsListLimitFlag = concertsListFlags.String("limit", "10", "")
 
 		concertsCreateFlags    = flag.NewFlagSet("create", flag.ExitOnError)
-		concertsCreateBodyFlag = concertsCreateFlags.String("body", "REQUIRED", "")
+		concertsCreateBodyFlag = new(cliStringFlag)
 
 		concertsShowFlags         = flag.NewFlagSet("show", flag.ExitOnError)
-		concertsShowConcertIDFlag = concertsShowFlags.String("concert-id", "REQUIRED", "Unique concert identifier")
+		concertsShowConcertIDFlag = new(cliStringFlag)
 
 		concertsUpdateFlags         = flag.NewFlagSet("update", flag.ExitOnError)
-		concertsUpdateBodyFlag      = concertsUpdateFlags.String("body", "REQUIRED", "")
-		concertsUpdateConcertIDFlag = concertsUpdateFlags.String("concert-id", "REQUIRED", "ID of the concert to update")
+		concertsUpdateBodyFlag      = new(cliStringFlag)
+		concertsUpdateConcertIDFlag = new(cliStringFlag)
 
 		concertsDeleteFlags         = flag.NewFlagSet("delete", flag.ExitOnError)
-		concertsDeleteConcertIDFlag = concertsDeleteFlags.String("concert-id", "REQUIRED", "ID of the concert to remove")
+		concertsDeleteConcertIDFlag = new(cliStringFlag)
 	)
+	concertsCreateFlags.Var(concertsCreateBodyFlag, "body", "")
+	concertsShowFlags.Var(concertsShowConcertIDFlag, "concert-id", "Unique concert identifier")
+	concertsUpdateFlags.Var(concertsUpdateBodyFlag, "body", "")
+	concertsUpdateFlags.Var(concertsUpdateConcertIDFlag, "concert-id", "ID of the concert to update")
+	concertsDeleteFlags.Var(concertsDeleteConcertIDFlag, "concert-id", "ID of the concert to remove")
+
 	concertsFlags.Usage = concertsUsage
 	concertsListFlags.Usage = concertsListUsage
 	concertsCreateFlags.Usage = concertsCreateUsage
@@ -148,16 +173,16 @@ func ParseEndpoint(
 				data, err = concertsc.BuildListPayload(*concertsListPageFlag, *concertsListLimitFlag)
 			case "create":
 				endpoint = c.Create()
-				data, err = concertsc.BuildCreatePayload(*concertsCreateBodyFlag)
+				data, err = concertsc.BuildCreatePayload(concertsCreateBodyFlag.value)
 			case "show":
 				endpoint = c.Show()
-				data, err = concertsc.BuildShowPayload(*concertsShowConcertIDFlag)
+				data, err = concertsc.BuildShowPayload(concertsShowConcertIDFlag.value)
 			case "update":
 				endpoint = c.Update()
-				data, err = concertsc.BuildUpdatePayload(*concertsUpdateBodyFlag, *concertsUpdateConcertIDFlag)
+				data, err = concertsc.BuildUpdatePayload(concertsUpdateBodyFlag.value, concertsUpdateConcertIDFlag.value)
 			case "delete":
 				endpoint = c.Delete()
-				data, err = concertsc.BuildDeletePayload(*concertsDeleteConcertIDFlag)
+				data, err = concertsc.BuildDeletePayload(concertsDeleteConcertIDFlag.value)
 			}
 		}
 	}

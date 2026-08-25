@@ -8,15 +8,20 @@
 package client
 
 import (
+	"fmt"
+
 	apikeyservice "goa.design/examples/security/hierarchy/gen/api_key_service"
 )
 
 // BuildDefaultPayload builds the payload for the api_key_service default
 // endpoint from CLI flags.
-func BuildDefaultPayload(apiKeyServiceDefaultKey string) (*apikeyservice.DefaultPayload, error) {
+func BuildDefaultPayload(apiKeyServiceDefaultKey *string) (*apikeyservice.DefaultPayload, error) {
 	var key string
 	{
-		key = apiKeyServiceDefaultKey
+		if apiKeyServiceDefaultKey == nil {
+			return nil, fmt.Errorf("missing required flag --key")
+		}
+		key = *apiKeyServiceDefaultKey
 	}
 	v := &apikeyservice.DefaultPayload{}
 	v.Key = key
@@ -26,10 +31,13 @@ func BuildDefaultPayload(apiKeyServiceDefaultKey string) (*apikeyservice.Default
 
 // BuildSecurePayload builds the payload for the api_key_service secure
 // endpoint from CLI flags.
-func BuildSecurePayload(apiKeyServiceSecureToken string) (*apikeyservice.SecurePayload, error) {
+func BuildSecurePayload(apiKeyServiceSecureToken *string) (*apikeyservice.SecurePayload, error) {
 	var token string
 	{
-		token = apiKeyServiceSecureToken
+		if apiKeyServiceSecureToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *apiKeyServiceSecureToken
 	}
 	v := &apikeyservice.SecurePayload{}
 	v.Token = token

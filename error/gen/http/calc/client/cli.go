@@ -16,11 +16,14 @@ import (
 
 // BuildDividePayload builds the payload for the calc divide endpoint from CLI
 // flags.
-func BuildDividePayload(calcDivideBody string) (*calc.DividePayload, error) {
+func BuildDividePayload(calcDivideBody *string) (*calc.DividePayload, error) {
 	var err error
 	var body DivideRequestBody
 	{
-		err = json.Unmarshal([]byte(calcDivideBody), &body)
+		if calcDivideBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*calcDivideBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"dividend\": 6599615662108896380,\n      \"divisor\": 6289780582187170160\n   }'")
 		}

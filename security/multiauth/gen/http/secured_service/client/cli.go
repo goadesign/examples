@@ -16,14 +16,20 @@ import (
 
 // BuildSigninPayload builds the payload for the secured_service signin
 // endpoint from CLI flags.
-func BuildSigninPayload(securedServiceSigninUsername string, securedServiceSigninPassword string) (*securedservice.SigninPayload, error) {
+func BuildSigninPayload(securedServiceSigninUsername *string, securedServiceSigninPassword *string) (*securedservice.SigninPayload, error) {
 	var username string
 	{
-		username = securedServiceSigninUsername
+		if securedServiceSigninUsername == nil {
+			return nil, fmt.Errorf("missing required flag --username")
+		}
+		username = *securedServiceSigninUsername
 	}
 	var password string
 	{
-		password = securedServiceSigninPassword
+		if securedServiceSigninPassword == nil {
+			return nil, fmt.Errorf("missing required flag --password")
+		}
+		password = *securedServiceSigninPassword
 	}
 	v := &securedservice.SigninPayload{}
 	v.Username = username
@@ -34,13 +40,13 @@ func BuildSigninPayload(securedServiceSigninUsername string, securedServiceSigni
 
 // BuildSecurePayload builds the payload for the secured_service secure
 // endpoint from CLI flags.
-func BuildSecurePayload(securedServiceSecureFail string, securedServiceSecureToken string) (*securedservice.SecurePayload, error) {
+func BuildSecurePayload(securedServiceSecureFail *string, securedServiceSecureToken *string) (*securedservice.SecurePayload, error) {
 	var err error
 	var fail *bool
 	{
-		if securedServiceSecureFail != "" {
+		if securedServiceSecureFail != nil {
 			var val bool
-			val, err = strconv.ParseBool(securedServiceSecureFail)
+			val, err = strconv.ParseBool(*securedServiceSecureFail)
 			fail = &val
 			if err != nil {
 				return nil, fmt.Errorf("invalid value for fail, must be BOOL")
@@ -49,7 +55,10 @@ func BuildSecurePayload(securedServiceSecureFail string, securedServiceSecureTok
 	}
 	var token string
 	{
-		token = securedServiceSecureToken
+		if securedServiceSecureToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *securedServiceSecureToken
 	}
 	v := &securedservice.SecurePayload{}
 	v.Fail = fail
@@ -60,14 +69,20 @@ func BuildSecurePayload(securedServiceSecureFail string, securedServiceSecureTok
 
 // BuildDoublySecurePayload builds the payload for the secured_service
 // doubly_secure endpoint from CLI flags.
-func BuildDoublySecurePayload(securedServiceDoublySecureKey string, securedServiceDoublySecureToken string) (*securedservice.DoublySecurePayload, error) {
+func BuildDoublySecurePayload(securedServiceDoublySecureKey *string, securedServiceDoublySecureToken *string) (*securedservice.DoublySecurePayload, error) {
 	var key string
 	{
-		key = securedServiceDoublySecureKey
+		if securedServiceDoublySecureKey == nil {
+			return nil, fmt.Errorf("missing required flag --key")
+		}
+		key = *securedServiceDoublySecureKey
 	}
 	var token string
 	{
-		token = securedServiceDoublySecureToken
+		if securedServiceDoublySecureToken == nil {
+			return nil, fmt.Errorf("missing required flag --token")
+		}
+		token = *securedServiceDoublySecureToken
 	}
 	v := &securedservice.DoublySecurePayload{}
 	v.Key = key
@@ -78,35 +93,35 @@ func BuildDoublySecurePayload(securedServiceDoublySecureKey string, securedServi
 
 // BuildAlsoDoublySecurePayload builds the payload for the secured_service
 // also_doubly_secure endpoint from CLI flags.
-func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureKey string, securedServiceAlsoDoublySecureOauthToken string, securedServiceAlsoDoublySecureToken string, securedServiceAlsoDoublySecureUsername string, securedServiceAlsoDoublySecurePassword string) (*securedservice.AlsoDoublySecurePayload, error) {
+func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureKey *string, securedServiceAlsoDoublySecureOauthToken *string, securedServiceAlsoDoublySecureToken *string, securedServiceAlsoDoublySecureUsername *string, securedServiceAlsoDoublySecurePassword *string) (*securedservice.AlsoDoublySecurePayload, error) {
 	var key *string
 	{
-		if securedServiceAlsoDoublySecureKey != "" {
-			key = &securedServiceAlsoDoublySecureKey
+		if securedServiceAlsoDoublySecureKey != nil {
+			key = securedServiceAlsoDoublySecureKey
 		}
 	}
 	var oauthToken *string
 	{
-		if securedServiceAlsoDoublySecureOauthToken != "" {
-			oauthToken = &securedServiceAlsoDoublySecureOauthToken
+		if securedServiceAlsoDoublySecureOauthToken != nil {
+			oauthToken = securedServiceAlsoDoublySecureOauthToken
 		}
 	}
 	var token *string
 	{
-		if securedServiceAlsoDoublySecureToken != "" {
-			token = &securedServiceAlsoDoublySecureToken
+		if securedServiceAlsoDoublySecureToken != nil {
+			token = securedServiceAlsoDoublySecureToken
 		}
 	}
 	var username *string
 	{
-		if securedServiceAlsoDoublySecureUsername != "" {
-			username = &securedServiceAlsoDoublySecureUsername
+		if securedServiceAlsoDoublySecureUsername != nil {
+			username = securedServiceAlsoDoublySecureUsername
 		}
 	}
 	var password *string
 	{
-		if securedServiceAlsoDoublySecurePassword != "" {
-			password = &securedServiceAlsoDoublySecurePassword
+		if securedServiceAlsoDoublySecurePassword != nil {
+			password = securedServiceAlsoDoublySecurePassword
 		}
 	}
 	v := &securedservice.AlsoDoublySecurePayload{}

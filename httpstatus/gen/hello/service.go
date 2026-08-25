@@ -39,7 +39,7 @@ var MethodNames = [1]string{"hello"}
 type Hello struct {
 	// The greeting message
 	Greeting string
-	Outcome  string `json:"-"`
+	Outcome  string
 }
 
 // HelloPayload is the payload type of the hello service hello method.

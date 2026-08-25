@@ -8,19 +8,27 @@
 package client
 
 import (
+	"fmt"
+
 	defaultservice "goa.design/examples/security/hierarchy/gen/default_service"
 )
 
 // BuildDefaultPayload builds the payload for the default_service default
 // endpoint from CLI flags.
-func BuildDefaultPayload(defaultServiceDefaultUsername string, defaultServiceDefaultPassword string) (*defaultservice.DefaultPayload, error) {
+func BuildDefaultPayload(defaultServiceDefaultUsername *string, defaultServiceDefaultPassword *string) (*defaultservice.DefaultPayload, error) {
 	var username string
 	{
-		username = defaultServiceDefaultUsername
+		if defaultServiceDefaultUsername == nil {
+			return nil, fmt.Errorf("missing required flag --username")
+		}
+		username = *defaultServiceDefaultUsername
 	}
 	var password string
 	{
-		password = defaultServiceDefaultPassword
+		if defaultServiceDefaultPassword == nil {
+			return nil, fmt.Errorf("missing required flag --password")
+		}
+		password = *defaultServiceDefaultPassword
 	}
 	v := &defaultservice.DefaultPayload{}
 	v.Username = username

@@ -17,12 +17,12 @@ import (
 
 // BuildPickPayload builds the payload for the sommelier pick endpoint from CLI
 // flags.
-func BuildPickPayload(sommelierPickMessage string) (*sommelier.Criteria, error) {
+func BuildPickPayload(sommelierPickMessage *string) (*sommelier.Criteria, error) {
 	var err error
 	var message sommelierpb.PickRequest
 	{
-		if sommelierPickMessage != "" {
-			err = protojson.Unmarshal([]byte(sommelierPickMessage), &message)
+		if sommelierPickMessage != nil {
+			err = protojson.Unmarshal([]byte(*sommelierPickMessage), &message)
 			if err != nil {
 				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Blue\\'s Cuvee\",\n      \"varietal\": [\n         \"pinot noir\",\n         \"merlot\",\n         \"cabernet franc\"\n      ],\n      \"winery\": \"longoria\"\n   }'")
 			}

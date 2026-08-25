@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -48,25 +67,34 @@ func ParseEndpoint(
 		chatterFlags = flag.NewFlagSet("chatter", flag.ContinueOnError)
 
 		chatterLoginFlags        = flag.NewFlagSet("login", flag.ExitOnError)
-		chatterLoginUserFlag     = chatterLoginFlags.String("user", "REQUIRED", "")
-		chatterLoginPasswordFlag = chatterLoginFlags.String("password", "REQUIRED", "")
+		chatterLoginUserFlag     = new(cliStringFlag)
+		chatterLoginPasswordFlag = new(cliStringFlag)
 
 		chatterEchoerFlags     = flag.NewFlagSet("echoer", flag.ExitOnError)
-		chatterEchoerTokenFlag = chatterEchoerFlags.String("token", "REQUIRED", "")
+		chatterEchoerTokenFlag = new(cliStringFlag)
 
 		chatterListenerFlags     = flag.NewFlagSet("listener", flag.ExitOnError)
-		chatterListenerTokenFlag = chatterListenerFlags.String("token", "REQUIRED", "")
+		chatterListenerTokenFlag = new(cliStringFlag)
 
 		chatterSummaryFlags     = flag.NewFlagSet("summary", flag.ExitOnError)
-		chatterSummaryTokenFlag = chatterSummaryFlags.String("token", "REQUIRED", "")
+		chatterSummaryTokenFlag = new(cliStringFlag)
 
 		chatterSubscribeFlags     = flag.NewFlagSet("subscribe", flag.ExitOnError)
-		chatterSubscribeTokenFlag = chatterSubscribeFlags.String("token", "REQUIRED", "")
+		chatterSubscribeTokenFlag = new(cliStringFlag)
 
 		chatterHistoryFlags     = flag.NewFlagSet("history", flag.ExitOnError)
-		chatterHistoryViewFlag  = chatterHistoryFlags.String("view", "", "")
-		chatterHistoryTokenFlag = chatterHistoryFlags.String("token", "REQUIRED", "")
+		chatterHistoryViewFlag  = new(cliStringFlag)
+		chatterHistoryTokenFlag = new(cliStringFlag)
 	)
+	chatterLoginFlags.Var(chatterLoginUserFlag, "user", "")
+	chatterLoginFlags.Var(chatterLoginPasswordFlag, "password", "")
+	chatterEchoerFlags.Var(chatterEchoerTokenFlag, "token", "")
+	chatterListenerFlags.Var(chatterListenerTokenFlag, "token", "")
+	chatterSummaryFlags.Var(chatterSummaryTokenFlag, "token", "")
+	chatterSubscribeFlags.Var(chatterSubscribeTokenFlag, "token", "")
+	chatterHistoryFlags.Var(chatterHistoryViewFlag, "view", "")
+	chatterHistoryFlags.Var(chatterHistoryTokenFlag, "token", "")
+
 	chatterFlags.Usage = chatterUsage
 	chatterLoginFlags.Usage = chatterLoginUsage
 	chatterEchoerFlags.Usage = chatterEchoerUsage
@@ -154,22 +182,22 @@ func ParseEndpoint(
 			switch epn {
 			case "login":
 				endpoint = c.Login()
-				data, err = chatterc.BuildLoginPayload(*chatterLoginUserFlag, *chatterLoginPasswordFlag)
+				data, err = chatterc.BuildLoginPayload(chatterLoginUserFlag.value, chatterLoginPasswordFlag.value)
 			case "echoer":
 				endpoint = c.Echoer()
-				data, err = chatterc.BuildEchoerPayload(*chatterEchoerTokenFlag)
+				data, err = chatterc.BuildEchoerPayload(chatterEchoerTokenFlag.value)
 			case "listener":
 				endpoint = c.Listener()
-				data, err = chatterc.BuildListenerPayload(*chatterListenerTokenFlag)
+				data, err = chatterc.BuildListenerPayload(chatterListenerTokenFlag.value)
 			case "summary":
 				endpoint = c.Summary()
-				data, err = chatterc.BuildSummaryPayload(*chatterSummaryTokenFlag)
+				data, err = chatterc.BuildSummaryPayload(chatterSummaryTokenFlag.value)
 			case "subscribe":
 				endpoint = c.Subscribe()
-				data, err = chatterc.BuildSubscribePayload(*chatterSubscribeTokenFlag)
+				data, err = chatterc.BuildSubscribePayload(chatterSubscribeTokenFlag.value)
 			case "history":
 				endpoint = c.History()
-				data, err = chatterc.BuildHistoryPayload(*chatterHistoryViewFlag, *chatterHistoryTokenFlag)
+				data, err = chatterc.BuildHistoryPayload(chatterHistoryViewFlag.value, chatterHistoryTokenFlag.value)
 			}
 		}
 	}

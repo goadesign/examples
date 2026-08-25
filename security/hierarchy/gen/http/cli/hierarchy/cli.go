@@ -36,6 +36,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -49,17 +68,22 @@ func ParseEndpoint(
 		defaultServiceFlags = flag.NewFlagSet("default-service", flag.ContinueOnError)
 
 		defaultServiceDefaultFlags        = flag.NewFlagSet("default", flag.ExitOnError)
-		defaultServiceDefaultUsernameFlag = defaultServiceDefaultFlags.String("username", "REQUIRED", "")
-		defaultServiceDefaultPasswordFlag = defaultServiceDefaultFlags.String("password", "REQUIRED", "")
+		defaultServiceDefaultUsernameFlag = new(cliStringFlag)
+		defaultServiceDefaultPasswordFlag = new(cliStringFlag)
 
 		apiKeyServiceFlags = flag.NewFlagSet("api-key-service", flag.ContinueOnError)
 
 		apiKeyServiceDefaultFlags   = flag.NewFlagSet("default", flag.ExitOnError)
-		apiKeyServiceDefaultKeyFlag = apiKeyServiceDefaultFlags.String("key", "REQUIRED", "")
+		apiKeyServiceDefaultKeyFlag = new(cliStringFlag)
 
 		apiKeyServiceSecureFlags     = flag.NewFlagSet("secure", flag.ExitOnError)
-		apiKeyServiceSecureTokenFlag = apiKeyServiceSecureFlags.String("token", "REQUIRED", "")
+		apiKeyServiceSecureTokenFlag = new(cliStringFlag)
 	)
+	defaultServiceDefaultFlags.Var(defaultServiceDefaultUsernameFlag, "username", "")
+	defaultServiceDefaultFlags.Var(defaultServiceDefaultPasswordFlag, "password", "")
+	apiKeyServiceDefaultFlags.Var(apiKeyServiceDefaultKeyFlag, "key", "")
+	apiKeyServiceSecureFlags.Var(apiKeyServiceSecureTokenFlag, "token", "")
+
 	defaultServiceFlags.Usage = defaultServiceUsage
 	defaultServiceDefaultFlags.Usage = defaultServiceDefaultUsage
 
@@ -143,17 +167,17 @@ func ParseEndpoint(
 			switch epn {
 			case "default":
 				endpoint = c.Default()
-				data, err = defaultservicec.BuildDefaultPayload(*defaultServiceDefaultUsernameFlag, *defaultServiceDefaultPasswordFlag)
+				data, err = defaultservicec.BuildDefaultPayload(defaultServiceDefaultUsernameFlag.value, defaultServiceDefaultPasswordFlag.value)
 			}
 		case "api-key-service":
 			c := apikeyservicec.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "default":
 				endpoint = c.Default()
-				data, err = apikeyservicec.BuildDefaultPayload(*apiKeyServiceDefaultKeyFlag)
+				data, err = apikeyservicec.BuildDefaultPayload(apiKeyServiceDefaultKeyFlag.value)
 			case "secure":
 				endpoint = c.Secure()
-				data, err = apikeyservicec.BuildSecurePayload(*apiKeyServiceSecureTokenFlag)
+				data, err = apikeyservicec.BuildSecurePayload(apiKeyServiceSecureTokenFlag.value)
 			}
 		}
 	}

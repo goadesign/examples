@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -46,13 +65,17 @@ func ParseEndpoint(
 		updownFlags = flag.NewFlagSet("updown", flag.ContinueOnError)
 
 		updownUploadFlags           = flag.NewFlagSet("upload", flag.ExitOnError)
-		updownUploadDirFlag         = updownUploadFlags.String("dir", "REQUIRED", "Dir is the relative path to the file directory where the uploaded content is saved.")
+		updownUploadDirFlag         = new(cliStringFlag)
 		updownUploadContentTypeFlag = updownUploadFlags.String("content-type", "multipart/form-data; boundary=goa", "")
-		updownUploadStreamFlag      = updownUploadFlags.String("stream", "REQUIRED", "path to file containing the streamed request body")
+		updownUploadStreamFlag      = new(cliStringFlag)
 
 		updownDownloadFlags = flag.NewFlagSet("download", flag.ExitOnError)
-		updownDownloadPFlag = updownDownloadFlags.String("p", "REQUIRED", "Path to downloaded file.")
+		updownDownloadPFlag = new(cliStringFlag)
 	)
+	updownUploadFlags.Var(updownUploadDirFlag, "dir", "Dir is the relative path to the file directory where the uploaded content is saved.")
+	updownUploadFlags.Var(updownUploadStreamFlag, "stream", "path to file containing the streamed request body")
+	updownDownloadFlags.Var(updownDownloadPFlag, "p", "Path to downloaded file.")
+
 	updownFlags.Usage = updownUsage
 	updownUploadFlags.Usage = updownUploadUsage
 	updownDownloadFlags.Usage = updownDownloadUsage
@@ -124,13 +147,20 @@ func ParseEndpoint(
 			switch epn {
 			case "upload":
 				endpoint = c.Upload()
-				data, err = updownc.BuildUploadPayload(*updownUploadDirFlag, *updownUploadContentTypeFlag)
+				data, err = updownc.BuildUploadPayload(updownUploadDirFlag.value, *updownUploadContentTypeFlag)
 				if err == nil {
-					data, err = updownc.BuildUploadStreamPayload(data, *updownUploadStreamFlag)
+					if updownUploadStreamFlag.value == nil {
+						err = fmt.Errorf("missing required flag --stream")
+					} else {
+						data, err = updownc.BuildUploadStreamPayload(data, *updownUploadStreamFlag.value)
+					}
 				}
 			case "download":
 				endpoint = c.Download()
-				data = *updownDownloadPFlag
+				if updownDownloadPFlag.value == nil {
+					return nil, nil, fmt.Errorf("missing required flag --p")
+				}
+				data = *updownDownloadPFlag.value
 			}
 		}
 	}

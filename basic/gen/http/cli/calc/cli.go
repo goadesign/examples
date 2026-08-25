@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -46,9 +65,12 @@ func ParseEndpoint(
 		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
 
 		calcMultiplyFlags = flag.NewFlagSet("multiply", flag.ExitOnError)
-		calcMultiplyAFlag = calcMultiplyFlags.String("a", "REQUIRED", "Left operand")
-		calcMultiplyBFlag = calcMultiplyFlags.String("b", "REQUIRED", "Right operand")
+		calcMultiplyAFlag = new(cliStringFlag)
+		calcMultiplyBFlag = new(cliStringFlag)
 	)
+	calcMultiplyFlags.Var(calcMultiplyAFlag, "a", "Left operand")
+	calcMultiplyFlags.Var(calcMultiplyBFlag, "b", "Right operand")
+
 	calcFlags.Usage = calcUsage
 	calcMultiplyFlags.Usage = calcMultiplyUsage
 
@@ -116,7 +138,7 @@ func ParseEndpoint(
 			switch epn {
 			case "multiply":
 				endpoint = c.Multiply()
-				data, err = calcc.BuildMultiplyPayload(*calcMultiplyAFlag, *calcMultiplyBFlag)
+				data, err = calcc.BuildMultiplyPayload(calcMultiplyAFlag.value, calcMultiplyBFlag.value)
 			}
 		}
 	}

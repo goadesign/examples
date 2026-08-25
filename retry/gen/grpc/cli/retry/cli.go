@@ -32,6 +32,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -42,8 +61,10 @@ func ParseEndpoint(
 		retryFlags = flag.NewFlagSet("retry", flag.ContinueOnError)
 
 		retryGetMessageFlags       = flag.NewFlagSet("get-message", flag.ExitOnError)
-		retryGetMessageMessageFlag = retryGetMessageFlags.String("message", "", "")
+		retryGetMessageMessageFlag = new(cliStringFlag)
 	)
+	retryGetMessageFlags.Var(retryGetMessageMessageFlag, "message", "")
+
 	retryFlags.Usage = retryUsage
 	retryGetMessageFlags.Usage = retryGetMessageUsage
 
@@ -111,7 +132,7 @@ func ParseEndpoint(
 			switch epn {
 			case "get-message":
 				endpoint = c.GetMessage()
-				data, err = retryc.BuildGetMessagePayload(*retryGetMessageMessageFlag)
+				data, err = retryc.BuildGetMessagePayload(retryGetMessageMessageFlag.value)
 			}
 		}
 	}

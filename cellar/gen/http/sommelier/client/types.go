@@ -107,6 +107,19 @@ func NewPickNoMatch(body string) sommelier.NoMatch {
 	return v
 }
 
+// ValidateStoredBottleResponseCollection runs the validations defined on
+// StoredBottleResponseCollection
+func ValidateStoredBottleResponseCollection(body StoredBottleResponseCollection) (err error) {
+	for _, e := range body {
+		if e != nil {
+			if err2 := validateStoredBottleResponse(e, "body[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // ValidateStoredBottleResponse runs the validations defined on StoredBottle
 func ValidateStoredBottleResponse(body *StoredBottleResponse) (err error) {
 	if body.ID == nil {
@@ -157,6 +170,62 @@ func ValidateStoredBottleResponse(body *StoredBottleResponse) (err error) {
 		}
 		if *body.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 5, false))
+		}
+	}
+	return
+}
+
+// validateStoredBottleResponse checks StoredBottle and reports errors using
+// the path supplied by its caller
+func validateStoredBottleResponse(body *StoredBottleResponse, path string) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", path))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", path))
+	}
+	if body.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", path))
+	}
+	if body.Name != nil {
+		if utf8.RuneCountInString(*body.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".name", *body.Name, utf8.RuneCountInString(*body.Name), 100, false))
+		}
+	}
+	if body.Winery != nil {
+		if err2 := validateWineryResponseTiny(body.Winery, path+".winery"); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if body.Vintage != nil {
+		if *body.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".vintage", *body.Vintage, 1900, true))
+		}
+		if *body.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".vintage", *body.Vintage, 2020, false))
+		}
+	}
+	for _, e := range body.Composition {
+		if e != nil {
+			if err2 := validateComponentResponse(e, path+".composition[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	if body.Description != nil {
+		if utf8.RuneCountInString(*body.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(path+".description", *body.Description, utf8.RuneCountInString(*body.Description), 2000, false))
+		}
+	}
+	if body.Rating != nil {
+		if *body.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".rating", *body.Rating, 1, true))
+		}
+		if *body.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(path+".rating", *body.Rating, 5, false))
 		}
 	}
 	return

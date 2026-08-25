@@ -18,18 +18,21 @@ import (
 
 // BuildShowPayload builds the payload for the storage show endpoint from CLI
 // flags.
-func BuildShowPayload(storageShowID string, storageShowView string) (*storage.ShowPayload, error) {
+func BuildShowPayload(storageShowID *string, storageShowView *string) (*storage.ShowPayload, error) {
 	var err error
 	var id string
 	{
-		id = storageShowID
+		if storageShowID == nil {
+			return nil, fmt.Errorf("missing required flag --id")
+		}
+		id = *storageShowID
 	}
 	var view *string
 	{
-		if storageShowView != "" {
-			view = &storageShowView
-			if !(storageShowView == "default" || storageShowView == "tiny") {
-				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", storageShowView, []any{"default", "tiny"}))
+		if storageShowView != nil {
+			view = storageShowView
+			if !(*storageShowView == "default" || *storageShowView == "tiny") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *storageShowView, []any{"default", "tiny"}))
 			}
 			if err != nil {
 				return nil, err
@@ -45,11 +48,14 @@ func BuildShowPayload(storageShowID string, storageShowView string) (*storage.Sh
 
 // BuildAddPayload builds the payload for the storage add endpoint from CLI
 // flags.
-func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
+func BuildAddPayload(storageAddBody *string) (*storage.Bottle, error) {
 	var err error
 	var body AddRequestBody
 	{
-		err = json.Unmarshal([]byte(storageAddBody), &body)
+		if storageAddBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*storageAddBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 3,\n      \"vintage\": 2005,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 		}
@@ -119,10 +125,13 @@ func BuildAddPayload(storageAddBody string) (*storage.Bottle, error) {
 
 // BuildRemovePayload builds the payload for the storage remove endpoint from
 // CLI flags.
-func BuildRemovePayload(storageRemoveID string) (*storage.RemovePayload, error) {
+func BuildRemovePayload(storageRemoveID *string) (*storage.RemovePayload, error) {
 	var id string
 	{
-		id = storageRemoveID
+		if storageRemoveID == nil {
+			return nil, fmt.Errorf("missing required flag --id")
+		}
+		id = *storageRemoveID
 	}
 	v := &storage.RemovePayload{}
 	v.ID = id
@@ -132,11 +141,14 @@ func BuildRemovePayload(storageRemoveID string) (*storage.RemovePayload, error) 
 
 // BuildMultiAddPayload builds the payload for the storage multi_add endpoint
 // from CLI flags.
-func BuildMultiAddPayload(storageMultiAddBody string) ([]*storage.Bottle, error) {
+func BuildMultiAddPayload(storageMultiAddBody *string) ([]*storage.Bottle, error) {
 	var err error
 	var body []*BottleRequestBody
 	{
-		err = json.Unmarshal([]byte(storageMultiAddBody), &body)
+		if storageMultiAddBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*storageMultiAddBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      {\n         \"composition\": [\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 3,\n         \"vintage\": 2003,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      },\n      {\n         \"composition\": [\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            },\n            {\n               \"percentage\": 8,\n               \"varietal\": \"Syrah\"\n            }\n         ],\n         \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n         \"name\": \"Blue\\'s Cuvee\",\n         \"rating\": 3,\n         \"vintage\": 2003,\n         \"winery\": {\n            \"country\": \"USA\",\n            \"name\": \"Longoria\",\n            \"region\": \"Central Coast, California\",\n            \"url\": \"http://www.longoriawine.com/\"\n         }\n      }\n   ]'")
 		}
@@ -154,11 +166,14 @@ func BuildMultiAddPayload(storageMultiAddBody string) ([]*storage.Bottle, error)
 
 // BuildMultiUpdatePayload builds the payload for the storage multi_update
 // endpoint from CLI flags.
-func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateIds string) (*storage.MultiUpdatePayload, error) {
+func BuildMultiUpdatePayload(storageMultiUpdateBody *string, storageMultiUpdateIds *string) (*storage.MultiUpdatePayload, error) {
 	var err error
 	var body MultiUpdateRequestBody
 	{
-		err = json.Unmarshal([]byte(storageMultiUpdateBody), &body)
+		if storageMultiUpdateBody == nil {
+			return nil, fmt.Errorf("missing required flag --body")
+		}
+		err = json.Unmarshal([]byte(*storageMultiUpdateBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 		}
@@ -178,7 +193,10 @@ func BuildMultiUpdatePayload(storageMultiUpdateBody string, storageMultiUpdateId
 	}
 	var ids []string
 	{
-		err = json.Unmarshal([]byte(storageMultiUpdateIds), &ids)
+		if storageMultiUpdateIds == nil {
+			return nil, fmt.Errorf("missing required flag --ids")
+		}
+		err = json.Unmarshal([]byte(*storageMultiUpdateIds), &ids)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for ids, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      \"Deserunt itaque omnis necessitatibus enim aspernatur.\",\n      \"Tempore in voluptate asperiores.\",\n      \"Incidunt quia ut eius quibusdam rerum.\",\n      \"Consequatur architecto ratione.\"\n   ]'")
 		}

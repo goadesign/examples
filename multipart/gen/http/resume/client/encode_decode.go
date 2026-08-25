@@ -69,6 +69,10 @@ func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("resume", "list", err)
 			}
+			err = ValidateStoredResumeResponseCollection(body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("resume", "list", err)
+			}
 			p := NewListStoredResumeCollectionOK(body)
 			view := "default"
 			vres := resumeviews.StoredResumeCollection{Projected: p, View: view}
