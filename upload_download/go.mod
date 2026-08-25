@@ -2,7 +2,7 @@ module goa.design/examples/upload_download
 
 go 1.26.0
 
-require goa.design/goa/v3 v3.30.1-0.20260825202211-245bb1440866
+require goa.design/goa/v3 v3.30.1-0.20260825203937-95933f068ade
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
