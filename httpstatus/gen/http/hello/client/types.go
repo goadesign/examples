@@ -35,9 +35,9 @@ type HelloOKResponseBody struct {
 	Outcome  *string `json:"-"`
 }
 
-// NewHelloHelloCreated builds a "hello" service "hello" endpoint result from a
+// NewHelloViewCreated builds a "hello" service "hello" endpoint result from a
 // HTTP "Created" response.
-func NewHelloHelloCreated(body *HelloCreatedResponseBody) *helloviews.HelloView {
+func NewHelloViewCreated(body *HelloCreatedResponseBody) *helloviews.HelloView {
 	v := &helloviews.HelloView{
 		Greeting: body.Greeting,
 		Outcome:  body.Outcome,
@@ -46,9 +46,9 @@ func NewHelloHelloCreated(body *HelloCreatedResponseBody) *helloviews.HelloView 
 	return v
 }
 
-// NewHelloHelloAccepted builds a "hello" service "hello" endpoint result from
-// a HTTP "Accepted" response.
-func NewHelloHelloAccepted(body *HelloAcceptedResponseBody) *helloviews.HelloView {
+// NewHelloViewAccepted builds a "hello" service "hello" endpoint result from a
+// HTTP "Accepted" response.
+func NewHelloViewAccepted(body *HelloAcceptedResponseBody) *helloviews.HelloView {
 	v := &helloviews.HelloView{
 		Greeting: body.Greeting,
 		Outcome:  body.Outcome,
@@ -57,9 +57,9 @@ func NewHelloHelloAccepted(body *HelloAcceptedResponseBody) *helloviews.HelloVie
 	return v
 }
 
-// NewHelloHelloOK builds a "hello" service "hello" endpoint result from a HTTP
+// NewHelloViewOK builds a "hello" service "hello" endpoint result from a HTTP
 // "OK" response.
-func NewHelloHelloOK(body *HelloOKResponseBody) *helloviews.HelloView {
+func NewHelloViewOK(body *HelloOKResponseBody) *helloviews.HelloView {
 	v := &helloviews.HelloView{
 		Greeting: body.Greeting,
 		Outcome:  body.Outcome,

@@ -78,7 +78,7 @@ func DecodeHelloResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("hello", "hello", err)
 			}
-			p := NewHelloHelloCreated(&body)
+			p := NewHelloViewCreated(&body)
 			tmp := "created"
 			p.Outcome = &tmp
 			view := "default"
@@ -97,7 +97,7 @@ func DecodeHelloResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("hello", "hello", err)
 			}
-			p := NewHelloHelloAccepted(&body)
+			p := NewHelloViewAccepted(&body)
 			tmp := "accepted"
 			p.Outcome = &tmp
 			view := "default"
@@ -116,7 +116,7 @@ func DecodeHelloResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("hello", "hello", err)
 			}
-			p := NewHelloHelloOK(&body)
+			p := NewHelloViewOK(&body)
 			view := "default"
 			vres := &helloviews.Hello{Projected: p, View: view}
 			if err = helloviews.ValidateHello(vres); err != nil {
