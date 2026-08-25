@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/boltdb/bolt v1.3.1
-	goa.design/goa/v3 v3.30.1-0.20260825005549-6e7f0cbd9e6c
+	goa.design/goa/v3 v3.30.1-0.20260825014826-1b7182f77f9a
 	google.golang.org/grpc v1.83.1
 	google.golang.org/protobuf v1.36.12
 )
