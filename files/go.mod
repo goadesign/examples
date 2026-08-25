@@ -2,7 +2,7 @@ module goa.design/examples/files
 
 go 1.26.0
 
-require goa.design/goa/v3 v3.30.1-0.20260825014826-1b7182f77f9a
+require goa.design/goa/v3 v3.30.1-0.20260825034953-833f95e1fdc8
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
