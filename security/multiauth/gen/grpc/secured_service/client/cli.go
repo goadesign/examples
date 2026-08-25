@@ -75,8 +75,12 @@ func BuildDoublySecurePayload(securedServiceDoublySecureMessage string, securedS
 	{
 		token = securedServiceDoublySecureToken
 	}
+	if err := ValidateDoublySecureRequest(&message); err != nil {
+		var zero *securedservice.DoublySecurePayload
+		return zero, err
+	}
 	v := &securedservice.DoublySecurePayload{
-		Key: message.Key,
+		Key: *message.Key,
 	}
 	v.Token = token
 

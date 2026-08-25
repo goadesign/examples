@@ -35,7 +35,7 @@ type wrappedStreamClientStream struct {
 func wrapGetCache(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &cacheGetServerUnaryInfo{
-			cacheGetInfo: &cacheGetInfo{rawPayload: req},
+			cacheGetInfo: cacheGetInfo{rawPayload: req},
 		}
 		return i.Cache(ctx, info, endpoint)
 	}
@@ -45,7 +45,7 @@ func wrapGetCache(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 func wrapGetJWTAuth(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &jwtAuthGetServerUnaryInfo{
-			jwtAuthGetInfo: &jwtAuthGetInfo{rawPayload: req},
+			jwtAuthGetInfo: jwtAuthGetInfo{rawPayload: req},
 		}
 		return i.JWTAuth(ctx, info, endpoint)
 	}
@@ -55,7 +55,7 @@ func wrapGetJWTAuth(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 func wrapCreateJWTAuth(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &jwtAuthCreateServerUnaryInfo{
-			jwtAuthCreateInfo: &jwtAuthCreateInfo{rawPayload: req},
+			jwtAuthCreateInfo: jwtAuthCreateInfo{rawPayload: req},
 		}
 		return i.JWTAuth(ctx, info, endpoint)
 	}
@@ -65,7 +65,7 @@ func wrapCreateJWTAuth(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint
 func wrapStreamJWTAuth(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &jwtAuthStreamServerUnaryInfo{
-			jwtAuthStreamInfo: &jwtAuthStreamInfo{rawPayload: req},
+			jwtAuthStreamInfo: jwtAuthStreamInfo{rawPayload: req},
 		}
 		return i.JWTAuth(ctx, info, endpoint)
 	}
@@ -75,7 +75,7 @@ func wrapStreamJWTAuth(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint
 func wrapGetRequestAudit(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &requestAuditGetServerUnaryInfo{
-			requestAuditGetInfo: &requestAuditGetInfo{rawPayload: req},
+			requestAuditGetInfo: requestAuditGetInfo{rawPayload: req},
 		}
 		return i.RequestAudit(ctx, info, endpoint)
 	}
@@ -86,7 +86,7 @@ func wrapGetRequestAudit(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoi
 func wrapCreateRequestAudit(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &requestAuditCreateServerUnaryInfo{
-			requestAuditCreateInfo: &requestAuditCreateInfo{rawPayload: req},
+			requestAuditCreateInfo: requestAuditCreateInfo{rawPayload: req},
 		}
 		return i.RequestAudit(ctx, info, endpoint)
 	}
@@ -96,7 +96,7 @@ func wrapCreateRequestAudit(endpoint goa.Endpoint, i ServerInterceptors) goa.End
 func wrapGetSetDeadline(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &setDeadlineGetServerUnaryInfo{
-			setDeadlineGetInfo: &setDeadlineGetInfo{rawPayload: req},
+			setDeadlineGetInfo: setDeadlineGetInfo{rawPayload: req},
 		}
 		return i.SetDeadline(ctx, info, endpoint)
 	}
@@ -107,7 +107,7 @@ func wrapGetSetDeadline(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoin
 func wrapCreateSetDeadline(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &setDeadlineCreateServerUnaryInfo{
-			setDeadlineCreateInfo: &setDeadlineCreateInfo{rawPayload: req},
+			setDeadlineCreateInfo: setDeadlineCreateInfo{rawPayload: req},
 		}
 		return i.SetDeadline(ctx, info, endpoint)
 	}
@@ -118,7 +118,7 @@ func wrapCreateSetDeadline(endpoint goa.Endpoint, i ServerInterceptors) goa.Endp
 func wrapStreamSetDeadline(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &setDeadlineStreamServerUnaryInfo{
-			setDeadlineStreamInfo: &setDeadlineStreamInfo{rawPayload: req},
+			setDeadlineStreamInfo: setDeadlineStreamInfo{rawPayload: req},
 		}
 		return i.SetDeadline(ctx, info, endpoint)
 	}
@@ -133,7 +133,7 @@ func wrapStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ServerIntercept
 			ctx: ctx,
 			sendWithContext: func(ctx context.Context, req *StreamResult) error {
 				info := &traceBidirectionalStreamStreamStreamingSendInfo{
-					traceBidirectionalStreamStreamInfo: &traceBidirectionalStreamStreamInfo{rawPayload: req},
+					traceBidirectionalStreamStreamInfo: traceBidirectionalStreamStreamInfo{rawPayload: req},
 				}
 				_, err := i.TraceBidirectionalStream(ctx, info, func(ctx context.Context, req any) (any, error) {
 					castReq, _ := req.(*StreamResult)
@@ -143,7 +143,7 @@ func wrapStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ServerIntercept
 			},
 			recvWithContext: func(ctx context.Context) (*StreamStreamingPayload, error) {
 				info := &traceBidirectionalStreamStreamStreamingRecvInfo{
-					traceBidirectionalStreamStreamInfo: &traceBidirectionalStreamStreamInfo{},
+					traceBidirectionalStreamStreamInfo: traceBidirectionalStreamStreamInfo{},
 				}
 				res, err := i.TraceBidirectionalStream(ctx, info, func(ctx context.Context, _ any) (any, error) {
 					return stream.RecvWithContext(ctx)
@@ -161,7 +161,7 @@ func wrapStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ServerIntercept
 func wrapGetTraceRequest(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &traceRequestGetServerUnaryInfo{
-			traceRequestGetInfo: &traceRequestGetInfo{rawPayload: req},
+			traceRequestGetInfo: traceRequestGetInfo{rawPayload: req},
 		}
 		return i.TraceRequest(ctx, info, endpoint)
 	}
@@ -172,7 +172,7 @@ func wrapGetTraceRequest(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoi
 func wrapCreateTraceRequest(endpoint goa.Endpoint, i ServerInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &traceRequestCreateServerUnaryInfo{
-			traceRequestCreateInfo: &traceRequestCreateInfo{rawPayload: req},
+			traceRequestCreateInfo: traceRequestCreateInfo{rawPayload: req},
 		}
 		return i.TraceRequest(ctx, info, endpoint)
 	}
@@ -183,7 +183,7 @@ func wrapCreateTraceRequest(endpoint goa.Endpoint, i ServerInterceptors) goa.End
 func wrapClientGetEncodeTenant(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &encodeTenantGetClientUnaryInfo{
-			encodeTenantGetInfo: &encodeTenantGetInfo{rawPayload: req},
+			encodeTenantGetInfo: encodeTenantGetInfo{rawPayload: req},
 		}
 		return i.EncodeTenant(ctx, info, endpoint)
 	}
@@ -194,7 +194,7 @@ func wrapClientGetEncodeTenant(endpoint goa.Endpoint, i ClientInterceptors) goa.
 func wrapClientCreateEncodeTenant(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &encodeTenantCreateClientUnaryInfo{
-			encodeTenantCreateInfo: &encodeTenantCreateInfo{rawPayload: req},
+			encodeTenantCreateInfo: encodeTenantCreateInfo{rawPayload: req},
 		}
 		return i.EncodeTenant(ctx, info, endpoint)
 	}
@@ -205,7 +205,7 @@ func wrapClientCreateEncodeTenant(endpoint goa.Endpoint, i ClientInterceptors) g
 func wrapClientStreamEncodeTenant(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &encodeTenantStreamClientUnaryInfo{
-			encodeTenantStreamInfo: &encodeTenantStreamInfo{rawPayload: req},
+			encodeTenantStreamInfo: encodeTenantStreamInfo{rawPayload: req},
 		}
 		return i.EncodeTenant(ctx, info, endpoint)
 	}
@@ -215,7 +215,7 @@ func wrapClientStreamEncodeTenant(endpoint goa.Endpoint, i ClientInterceptors) g
 func wrapClientGetRetry(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &retryGetClientUnaryInfo{
-			retryGetInfo: &retryGetInfo{rawPayload: req},
+			retryGetInfo: retryGetInfo{rawPayload: req},
 		}
 		return i.Retry(ctx, info, endpoint)
 	}
@@ -225,7 +225,7 @@ func wrapClientGetRetry(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoin
 func wrapClientCreateRetry(endpoint goa.Endpoint, i ClientInterceptors) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		info := &retryCreateClientUnaryInfo{
-			retryCreateInfo: &retryCreateInfo{rawPayload: req},
+			retryCreateInfo: retryCreateInfo{rawPayload: req},
 		}
 		return i.Retry(ctx, info, endpoint)
 	}
@@ -244,7 +244,7 @@ func wrapClientStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ClientInt
 			ctx: ctx,
 			sendWithContext: func(ctx context.Context, req *StreamStreamingPayload) error {
 				info := &traceBidirectionalStreamStreamStreamingSendInfo{
-					traceBidirectionalStreamStreamInfo: &traceBidirectionalStreamStreamInfo{rawPayload: req},
+					traceBidirectionalStreamStreamInfo: traceBidirectionalStreamStreamInfo{rawPayload: req},
 				}
 				_, err := i.TraceBidirectionalStream(ctx, info, func(ctx context.Context, req any) (any, error) {
 					castReq, _ := req.(*StreamStreamingPayload)
@@ -254,7 +254,7 @@ func wrapClientStreamTraceBidirectionalStream(endpoint goa.Endpoint, i ClientInt
 			},
 			recvWithContext: func(ctx context.Context) (*StreamResult, error) {
 				info := &traceBidirectionalStreamStreamStreamingRecvInfo{
-					traceBidirectionalStreamStreamInfo: &traceBidirectionalStreamStreamInfo{},
+					traceBidirectionalStreamStreamInfo: traceBidirectionalStreamStreamInfo{},
 				}
 				res, err := i.TraceBidirectionalStream(ctx, info, func(ctx context.Context, _ any) (any, error) {
 					return stream.RecvWithContext(ctx)

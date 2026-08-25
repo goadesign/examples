@@ -23,8 +23,8 @@ func NewProtoStoredBottleCollection(result storageviews.StoredBottleCollectionVi
 	message.Field = make([]*storagepb.StoredBottle, len(result))
 	for i, val := range result {
 		message.Field[i] = &storagepb.StoredBottle{
-			Id:   *val.ID,
-			Name: *val.Name,
+			Id:   val.ID,
+			Name: val.Name,
 		}
 		if val.Winery != nil {
 			message.Field[i].Winery = transformStoredBottleCollectionViewWineryViewToProtoStoredBottleCollectionWinery(val.Winery)
@@ -36,7 +36,7 @@ func NewProtoStoredBottleCollection(result storageviews.StoredBottleCollectionVi
 // NewShowPayload builds *storage.ShowPayload from *storagepb.ShowRequest.
 func NewShowPayload(message *storagepb.ShowRequest, view *string) *storage.ShowPayload {
 	v := &storage.ShowPayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 	if view != nil {
 		viewService := *view
@@ -50,9 +50,9 @@ func NewShowPayload(message *storagepb.ShowRequest, view *string) *storage.ShowP
 // *storageviews.StoredBottleView.
 func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.ShowResponse {
 	message := &storagepb.ShowResponse{
-		Id:          *result.ID,
-		Name:        *result.Name,
-		Vintage:     *result.Vintage,
+		Id:          result.ID,
+		Name:        result.Name,
+		Vintage:     result.Vintage,
 		Description: result.Description,
 		Rating:      result.Rating,
 	}
@@ -63,7 +63,7 @@ func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.Show
 		message.Composition = make([]*storagepb.Component, len(result.Composition))
 		for i, val := range result.Composition {
 			message.Composition[i] = &storagepb.Component{
-				Varietal:   *val.Varietal,
+				Varietal:   val.Varietal,
 				Percentage: val.Percentage,
 			}
 		}
@@ -75,8 +75,8 @@ func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.Show
 // *storageviews.StoredBottleView.
 func NewProtoShowResponseTiny(result *storageviews.StoredBottleView) *storagepb.ShowResponse {
 	message := &storagepb.ShowResponse{
-		Id:   *result.ID,
-		Name: *result.Name,
+		Id:   result.ID,
+		Name: result.Name,
 	}
 	if result.Winery != nil {
 		message.Winery = transformWineryViewToProtoWineryTiny(result.Winery)
@@ -88,8 +88,8 @@ func NewProtoShowResponseTiny(result *storageviews.StoredBottleView) *storagepb.
 // *storage.NotFound.
 func NewShowNotFoundError(er *storage.NotFound) *storagepb.ShowNotFoundError {
 	message := &storagepb.ShowNotFoundError{
-		Message_: er.Message,
-		Id:       er.ID,
+		Message_: &er.Message,
+		Id:       &er.ID,
 	}
 	return message
 }
@@ -97,8 +97,8 @@ func NewShowNotFoundError(er *storage.NotFound) *storagepb.ShowNotFoundError {
 // NewAddPayload builds *storage.Bottle from *storagepb.AddRequest.
 func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 	v := &storage.Bottle{
-		Name:        message.Name,
-		Vintage:     message.Vintage,
+		Name:        *message.Name,
+		Vintage:     *message.Vintage,
 		Description: message.Description,
 		Rating:      message.Rating,
 	}
@@ -109,7 +109,7 @@ func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
 			v.Composition[i] = &storage.Component{
-				Varietal:   val.Varietal,
+				Varietal:   *val.Varietal,
 				Percentage: val.Percentage,
 			}
 		}
@@ -120,14 +120,15 @@ func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 // NewProtoAddResponse builds *storagepb.AddResponse from string.
 func NewProtoAddResponse(result string) *storagepb.AddResponse {
 	message := &storagepb.AddResponse{}
-	message.Field = result
+	message.Field = new(string)
+	*message.Field = result
 	return message
 }
 
 // NewRemovePayload builds *storage.RemovePayload from *storagepb.RemoveRequest.
 func NewRemovePayload(message *storagepb.RemoveRequest) *storage.RemovePayload {
 	v := &storage.RemovePayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 	return v
 }
@@ -143,9 +144,12 @@ func NewRatePayload(message *storagepb.RateRequest) map[uint32][]string {
 	v := make(map[uint32][]string, len(message.Field))
 	for key, val := range message.Field {
 		tk := key
-		tv := make([]string, len(val.Field))
-		for i, val := range val.Field {
-			tv[i] = val
+		var tv []string
+		if val != nil {
+			tv = make([]string, len(val.Field))
+			for i, val := range val.Field {
+				tv[i] = val
+			}
 		}
 		v[tk] = tv
 	}
@@ -163,8 +167,8 @@ func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
 		v[i] = &storage.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
+			Name:        *val.Name,
+			Vintage:     *val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
@@ -175,7 +179,7 @@ func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				v[i].Composition[j] = &storage.Component{
-					Varietal:   val.Varietal,
+					Varietal:   *val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -208,8 +212,8 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 		for i, val := range message.Bottles {
 			v.Bottles[i] = &storage.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
+				Name:        *val.Name,
+				Vintage:     *val.Vintage,
 				Description: val.Description,
 				Rating:      val.Rating,
 			}
@@ -220,7 +224,7 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
 				for j, val := range val.Composition {
 					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   val.Varietal,
+						Varietal:   *val.Varietal,
 						Percentage: val.Percentage,
 					}
 				}
@@ -237,24 +241,42 @@ func NewProtoMultiUpdateResponse() *storagepb.MultiUpdateResponse {
 	return message
 }
 
+// ValidateShowRequest runs the validations defined on ShowRequest.
+func ValidateShowRequest(message *storagepb.ShowRequest) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
+	}
+	return
+}
+
 // ValidateAddRequest runs the validations defined on AddRequest.
 func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
+	if message.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "message"))
+	}
 	if message.Winery == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "message"))
 	}
-	if utf8.RuneCountInString(message.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", message.Name, utf8.RuneCountInString(message.Name), 100, false))
+	if message.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "message"))
+	}
+	if message.Name != nil {
+		if utf8.RuneCountInString(*message.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", *message.Name, utf8.RuneCountInString(*message.Name), 100, false))
+		}
 	}
 	if message.Winery != nil {
 		if err2 := ValidateWinery(message.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if message.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 1900, true))
-	}
-	if message.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 2020, false))
+	if message.Vintage != nil {
+		if *message.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", *message.Vintage, 1900, true))
+		}
+		if *message.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", *message.Vintage, 2020, false))
+		}
 	}
 	for _, e := range message.Composition {
 		if e != nil {
@@ -281,8 +303,21 @@ func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
 
 // ValidateWinery runs the validations defined on Winery.
 func ValidateWinery(winery *storagepb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", winery.Region, "[a-zA-Z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", winery.Country, "[a-zA-Z '\\.]+"))
+	if winery.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
+	}
+	if winery.Region == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("region", "winery"))
+	}
+	if winery.Country == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country", "winery"))
+	}
+	if winery.Region != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", *winery.Region, "[a-zA-Z '\\.]+"))
+	}
+	if winery.Country != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", *winery.Country, "[a-zA-Z '\\.]+"))
+	}
 	if winery.Url != nil {
 		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
 	}
@@ -291,9 +326,14 @@ func ValidateWinery(winery *storagepb.Winery) (err error) {
 
 // ValidateComponent runs the validations defined on Component.
 func ValidateComponent(elem *storagepb.Component) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", elem.Varietal, "[A-Za-z' ]+"))
-	if utf8.RuneCountInString(elem.Varietal) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", elem.Varietal, utf8.RuneCountInString(elem.Varietal), 100, false))
+	if elem.Varietal == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "elem"))
+	}
+	if elem.Varietal != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", *elem.Varietal, "[A-Za-z' ]+"))
+		if utf8.RuneCountInString(*elem.Varietal) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", *elem.Varietal, utf8.RuneCountInString(*elem.Varietal), 100, false))
+		}
 	}
 	if elem.Percentage != nil {
 		if *elem.Percentage < 1 {
@@ -306,22 +346,10 @@ func ValidateComponent(elem *storagepb.Component) (err error) {
 	return
 }
 
-// ValidateRateRequest runs the validations defined on RateRequest.
-func ValidateRateRequest(message *storagepb.RateRequest) (err error) {
-	for _, v := range message.Field {
-		if v != nil {
-			if err2 := ValidateArrayOfString(v); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// ValidateArrayOfString runs the validations defined on ArrayOfString.
-func ValidateArrayOfString(val *storagepb.ArrayOfString) (err error) {
-	if val.Field == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("field", "val"))
+// ValidateRemoveRequest runs the validations defined on RemoveRequest.
+func ValidateRemoveRequest(message *storagepb.RemoveRequest) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
 	}
 	return
 }
@@ -340,22 +368,32 @@ func ValidateMultiAddRequest(message *storagepb.MultiAddRequest) (err error) {
 
 // ValidateBottle runs the validations defined on Bottle.
 func ValidateBottle(elem *storagepb.Bottle) (err error) {
+	if elem.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "elem"))
+	}
 	if elem.Winery == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "elem"))
 	}
-	if utf8.RuneCountInString(elem.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", elem.Name, utf8.RuneCountInString(elem.Name), 100, false))
+	if elem.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "elem"))
+	}
+	if elem.Name != nil {
+		if utf8.RuneCountInString(*elem.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", *elem.Name, utf8.RuneCountInString(*elem.Name), 100, false))
+		}
 	}
 	if elem.Winery != nil {
 		if err2 := ValidateWinery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if elem.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 1900, true))
-	}
-	if elem.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 2020, false))
+	if elem.Vintage != nil {
+		if *elem.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 1900, true))
+		}
+		if *elem.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 2020, false))
+		}
 	}
 	for _, e := range elem.Composition {
 		if e != nil {
@@ -404,7 +442,7 @@ func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err erro
 // *storageviews.WineryView.
 func transformStoredBottleCollectionViewWineryViewToProtoStoredBottleCollectionWinery(v *storageviews.WineryView) *storagepb.Winery {
 	res := &storagepb.Winery{
-		Name: *v.Name,
+		Name: v.Name,
 	}
 
 	return res
@@ -414,7 +452,7 @@ func transformStoredBottleCollectionViewWineryViewToProtoStoredBottleCollectionW
 // of type *storagepb.Winery from a value of type *storageviews.WineryView.
 func transformStoredBottleViewWineryViewToProtoShowResponseWinery(v *storageviews.WineryView) *storagepb.Winery {
 	res := &storagepb.Winery{
-		Name: *v.Name,
+		Name: v.Name,
 	}
 
 	return res
@@ -424,7 +462,7 @@ func transformStoredBottleViewWineryViewToProtoShowResponseWinery(v *storageview
 // *storagepb.Winery from a value of type *storageviews.WineryView.
 func transformWineryViewToProtoWineryTiny(v *storageviews.WineryView) *storagepb.Winery {
 	res := &storagepb.Winery{
-		Name: *v.Name,
+		Name: v.Name,
 	}
 
 	return res
@@ -434,9 +472,9 @@ func transformWineryViewToProtoWineryTiny(v *storageviews.WineryView) *storagepb
 // *storage.Winery from a value of type *storagepb.Winery.
 func transformProtoAddRequestWineryToBottleWinery(v *storagepb.Winery) *storage.Winery {
 	res := &storage.Winery{
-		Name:    v.Name,
-		Region:  v.Region,
-		Country: v.Country,
+		Name:    *v.Name,
+		Region:  *v.Region,
+		Country: *v.Country,
 		URL:     v.Url,
 	}
 
@@ -447,9 +485,9 @@ func transformProtoAddRequestWineryToBottleWinery(v *storagepb.Winery) *storage.
 // type *storage.Winery from a value of type *storagepb.Winery.
 func transformProtoMultiAddRequestWineryToMultiAddRequestWinery(v *storagepb.Winery) *storage.Winery {
 	res := &storage.Winery{
-		Name:    v.Name,
-		Region:  v.Region,
-		Country: v.Country,
+		Name:    *v.Name,
+		Region:  *v.Region,
+		Country: *v.Country,
 		URL:     v.Url,
 	}
 
@@ -460,9 +498,9 @@ func transformProtoMultiAddRequestWineryToMultiAddRequestWinery(v *storagepb.Win
 // value of type *storage.Winery from a value of type *storagepb.Winery.
 func transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery(v *storagepb.Winery) *storage.Winery {
 	res := &storage.Winery{
-		Name:    v.Name,
-		Region:  v.Region,
-		Country: v.Country,
+		Name:    *v.Name,
+		Region:  *v.Region,
+		Country: *v.Country,
 		URL:     v.Url,
 	}
 

@@ -28,9 +28,13 @@ func BuildDividePayload(calcDivideMessage string) (*calc.DividePayload, error) {
 			}
 		}
 	}
+	if err := ValidateDivideRequest(&message); err != nil {
+		var zero *calc.DividePayload
+		return zero, err
+	}
 	v := &calc.DividePayload{
-		Dividend: int(message.Dividend),
-		Divisor:  int(message.Divisor),
+		Dividend: int(*message.Dividend),
+		Divisor:  int(*message.Divisor),
 	}
 
 	return v, nil

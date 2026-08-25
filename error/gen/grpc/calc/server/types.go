@@ -10,23 +10,25 @@ package server
 import (
 	calc "goa.design/examples/error/gen/calc"
 	calcpb "goa.design/examples/error/gen/grpc/calc/pb"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewDividePayload builds *calc.DividePayload from *calcpb.DivideRequest.
 func NewDividePayload(message *calcpb.DivideRequest) *calc.DividePayload {
 	v := &calc.DividePayload{
-		Dividend: int(message.Dividend),
-		Divisor:  int(message.Divisor),
+		Dividend: int(*message.Dividend),
+		Divisor:  int(*message.Divisor),
 	}
 	return v
 }
 
 // NewProtoDivideResponse builds *calcpb.DivideResponse from *calc.DivideResult.
 func NewProtoDivideResponse(result *calc.DivideResult) *calcpb.DivideResponse {
-	message := &calcpb.DivideResponse{
-		Quotient: int32(result.Quotient),
-		Reminder: int32(result.Reminder),
-	}
+	message := &calcpb.DivideResponse{}
+	quotient := int32(result.Quotient)
+	message.Quotient = &quotient
+	reminder := int32(result.Reminder)
+	message.Reminder = &reminder
 	return message
 }
 
@@ -34,7 +36,18 @@ func NewProtoDivideResponse(result *calc.DivideResult) *calcpb.DivideResponse {
 // *calc.DivByZero.
 func NewDivideDivByZeroError(er *calc.DivByZero) *calcpb.DivideDivByZeroError {
 	message := &calcpb.DivideDivByZeroError{
-		Message_: er.Message,
+		Message_: &er.Message,
 	}
 	return message
+}
+
+// ValidateDivideRequest runs the validations defined on DivideRequest.
+func ValidateDivideRequest(message *calcpb.DivideRequest) (err error) {
+	if message.Dividend == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("dividend", "message"))
+	}
+	if message.Divisor == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("divisor", "message"))
+	}
+	return
 }

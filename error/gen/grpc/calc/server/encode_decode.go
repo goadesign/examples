@@ -38,6 +38,9 @@ func DecodeDivideRequest(ctx context.Context, v any, md metadata.MD) (any, error
 		if message, ok = v.(*calcpb.DivideRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("calc", "divide", "*calcpb.DivideRequest", v)
 		}
+		if err := ValidateDivideRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *calc.DividePayload
 	{

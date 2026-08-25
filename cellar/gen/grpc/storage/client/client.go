@@ -63,6 +63,9 @@ func (c *Client) Show() goa.Endpoint {
 			resp := goagrpc.DecodeError(err)
 			switch message := resp.(type) {
 			case *storagepb.ShowNotFoundError:
+				if err := ValidateShowNotFoundError(message); err != nil {
+					return nil, err
+				}
 				return nil, NewShowNotFoundError(message)
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)

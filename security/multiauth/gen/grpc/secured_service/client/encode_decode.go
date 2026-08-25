@@ -51,6 +51,9 @@ func DecodeSigninResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (an
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "signin", "*secured_servicepb.SigninResponse", v)
 	}
+	if err := ValidateSigninResponse(message); err != nil {
+		return nil, err
+	}
 	res := NewSigninResult(message)
 	return res, nil
 }
@@ -86,6 +89,9 @@ func DecodeSecureResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (an
 	message, ok := v.(*secured_servicepb.SecureResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "secure", "*secured_servicepb.SecureResponse", v)
+	}
+	if err := ValidateSecureResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewSecureResult(message)
 	return res, nil
@@ -123,6 +129,9 @@ func DecodeDoublySecureResponse(ctx context.Context, v any, hdr, trlr metadata.M
 	message, ok := v.(*secured_servicepb.DoublySecureResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "doubly_secure", "*secured_servicepb.DoublySecureResponse", v)
+	}
+	if err := ValidateDoublySecureResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewDoublySecureResult(message)
 	return res, nil
@@ -166,6 +175,9 @@ func DecodeAlsoDoublySecureResponse(ctx context.Context, v any, hdr, trlr metada
 	message, ok := v.(*secured_servicepb.AlsoDoublySecureResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "also_doubly_secure", "*secured_servicepb.AlsoDoublySecureResponse", v)
+	}
+	if err := ValidateAlsoDoublySecureResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewAlsoDoublySecureResult(message)
 	return res, nil

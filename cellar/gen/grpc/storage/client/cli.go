@@ -41,8 +41,12 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 			}
 		}
 	}
+	if err := ValidateShowRequest(&message); err != nil {
+		var zero *storage.ShowPayload
+		return zero, err
+	}
 	v := &storage.ShowPayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 	v.View = view
 
@@ -62,9 +66,13 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 			}
 		}
 	}
+	if err := ValidateAddRequest(&message); err != nil {
+		var zero *storage.Bottle
+		return zero, err
+	}
 	v := &storage.Bottle{
-		Name:        message.Name,
-		Vintage:     message.Vintage,
+		Name:        *message.Name,
+		Vintage:     *message.Vintage,
 		Description: message.Description,
 		Rating:      message.Rating,
 	}
@@ -75,7 +83,7 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
 			v.Composition[i] = &storage.Component{
-				Varietal:   val.Varietal,
+				Varietal:   *val.Varietal,
 				Percentage: val.Percentage,
 			}
 		}
@@ -97,8 +105,12 @@ func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, er
 			}
 		}
 	}
+	if err := ValidateRemoveRequest(&message); err != nil {
+		var zero *storage.RemovePayload
+		return zero, err
+	}
 	v := &storage.RemovePayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 
 	return v, nil
@@ -120,9 +132,12 @@ func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
 	v := make(map[uint32][]string, len(message.Field))
 	for key, val := range message.Field {
 		tk := key
-		tv := make([]string, len(val.Field))
-		for i, val := range val.Field {
-			tv[i] = val
+		var tv []string
+		if val != nil {
+			tv = make([]string, len(val.Field))
+			for i, val := range val.Field {
+				tv[i] = val
+			}
 		}
 		v[tk] = tv
 	}
@@ -142,11 +157,15 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 			}
 		}
 	}
+	if err := ValidateMultiAddRequest(&message); err != nil {
+		var zero []*storage.Bottle
+		return zero, err
+	}
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
 		v[i] = &storage.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
+			Name:        *val.Name,
+			Vintage:     *val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
@@ -157,7 +176,7 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				v[i].Composition[j] = &storage.Component{
-					Varietal:   val.Varietal,
+					Varietal:   *val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -179,6 +198,10 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 			}
 		}
 	}
+	if err := ValidateMultiUpdateRequest(&message); err != nil {
+		var zero *storage.MultiUpdatePayload
+		return zero, err
+	}
 	v := &storage.MultiUpdatePayload{}
 	if message.Ids != nil {
 		v.Ids = make([]string, len(message.Ids))
@@ -190,8 +213,8 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 		for i, val := range message.Bottles {
 			v.Bottles[i] = &storage.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
+				Name:        *val.Name,
+				Vintage:     *val.Vintage,
 				Description: val.Description,
 				Rating:      val.Rating,
 			}
@@ -202,7 +225,7 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
 				for j, val := range val.Composition {
 					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   val.Varietal,
+						Varietal:   *val.Varietal,
 						Percentage: val.Percentage,
 					}
 				}

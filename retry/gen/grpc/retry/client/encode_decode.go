@@ -47,6 +47,9 @@ func DecodeGetMessageResponse(ctx context.Context, v any, hdr, trlr metadata.MD)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("retry", "get_message", "*retrypb.GetMessageResponse", v)
 	}
+	if err := ValidateGetMessageResponse(message); err != nil {
+		return nil, err
+	}
 	res := NewGetMessageResult(message)
 	return res, nil
 }

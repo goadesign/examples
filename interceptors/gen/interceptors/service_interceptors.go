@@ -39,14 +39,7 @@ type ServerInterceptors interface {
 type (
 	// CacheInfo describes the service call currently passed to the interceptor.
 	CacheInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// Payload returns the selected fields from the method payload.
 		Payload() CachePayload
 		// Result returns the selected fields from the method result.
@@ -68,14 +61,7 @@ type (
 	}
 	// JWTAuthInfo describes the service call currently passed to the interceptor.
 	JWTAuthInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// Payload returns the selected fields from the method payload.
 		Payload() JWTAuthPayload
 	}
@@ -89,14 +75,7 @@ type (
 	}
 	// RequestAuditInfo describes the service call currently passed to the interceptor.
 	RequestAuditInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// Result returns the selected fields from the method result.
 		Result(any) RequestAuditResult
 	}
@@ -111,25 +90,11 @@ type (
 	}
 	// SetDeadlineInfo describes the service call currently passed to the interceptor.
 	SetDeadlineInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 	}
 	// TraceBidirectionalStreamInfo describes the service call currently passed to the interceptor.
 	TraceBidirectionalStreamInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// ClientStreamingPayload returns selected fields from the outgoing stream payload.
 		ClientStreamingPayload() TraceBidirectionalStreamStreamingPayload
 		// ServerStreamingPayload returns selected fields from the incoming stream payload.
@@ -161,14 +126,7 @@ type (
 	}
 	// TraceRequestInfo describes the service call currently passed to the interceptor.
 	TraceRequestInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// Payload returns the selected fields from the method payload.
 		Payload() TraceRequestPayload
 	}
@@ -188,76 +146,76 @@ type (
 		rawPayload any
 	}
 	cacheGetServerUnaryInfo struct {
-		*cacheGetInfo
+		cacheGetInfo
 	}
 	jwtAuthGetInfo struct {
 		rawPayload any
 	}
 	jwtAuthGetServerUnaryInfo struct {
-		*jwtAuthGetInfo
+		jwtAuthGetInfo
 	}
 	jwtAuthCreateInfo struct {
 		rawPayload any
 	}
 	jwtAuthCreateServerUnaryInfo struct {
-		*jwtAuthCreateInfo
+		jwtAuthCreateInfo
 	}
 	jwtAuthStreamInfo struct {
 		rawPayload any
 	}
 	jwtAuthStreamServerUnaryInfo struct {
-		*jwtAuthStreamInfo
+		jwtAuthStreamInfo
 	}
 	requestAuditGetInfo struct {
 		rawPayload any
 	}
 	requestAuditGetServerUnaryInfo struct {
-		*requestAuditGetInfo
+		requestAuditGetInfo
 	}
 	requestAuditCreateInfo struct {
 		rawPayload any
 	}
 	requestAuditCreateServerUnaryInfo struct {
-		*requestAuditCreateInfo
+		requestAuditCreateInfo
 	}
 	setDeadlineGetInfo struct {
 		rawPayload any
 	}
 	setDeadlineGetServerUnaryInfo struct {
-		*setDeadlineGetInfo
+		setDeadlineGetInfo
 	}
 	setDeadlineCreateInfo struct {
 		rawPayload any
 	}
 	setDeadlineCreateServerUnaryInfo struct {
-		*setDeadlineCreateInfo
+		setDeadlineCreateInfo
 	}
 	setDeadlineStreamInfo struct {
 		rawPayload any
 	}
 	setDeadlineStreamServerUnaryInfo struct {
-		*setDeadlineStreamInfo
+		setDeadlineStreamInfo
 	}
 	traceBidirectionalStreamStreamInfo struct {
 		rawPayload any
 	}
 	traceBidirectionalStreamStreamStreamingSendInfo struct {
-		*traceBidirectionalStreamStreamInfo
+		traceBidirectionalStreamStreamInfo
 	}
 	traceBidirectionalStreamStreamStreamingRecvInfo struct {
-		*traceBidirectionalStreamStreamInfo
+		traceBidirectionalStreamStreamInfo
 	}
 	traceRequestGetInfo struct {
 		rawPayload any
 	}
 	traceRequestGetServerUnaryInfo struct {
-		*traceRequestGetInfo
+		traceRequestGetInfo
 	}
 	traceRequestCreateInfo struct {
 		rawPayload any
 	}
 	traceRequestCreateServerUnaryInfo struct {
-		*traceRequestCreateInfo
+		traceRequestCreateInfo
 	}
 	cacheGetPayload struct {
 		payload *GetPayload

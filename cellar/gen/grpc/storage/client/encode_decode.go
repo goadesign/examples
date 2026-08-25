@@ -38,6 +38,9 @@ func DecodeListResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any,
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("storage", "list", "*storagepb.StoredBottleCollection", v)
 	}
+	if err := ValidateStoredBottleCollectionTiny(message); err != nil {
+		return nil, err
+	}
 	res := NewListResult(message)
 	vres := storageviews.StoredBottleCollection{Projected: res, View: "tiny"}
 	if err := storageviews.ValidateStoredBottleCollection(vres); err != nil {
@@ -88,8 +91,14 @@ func DecodeShowResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any,
 	var res *storageviews.StoredBottleView
 	switch view {
 	case "default", "":
+		if err := ValidateShowResponse(message); err != nil {
+			return nil, err
+		}
 		res = NewShowResult(message)
 	case "tiny":
+		if err := ValidateShowResponseTiny(message); err != nil {
+			return nil, err
+		}
 		res = NewShowResultTiny(message)
 	}
 	vres := &storageviews.StoredBottle{Projected: res, View: view}
@@ -127,6 +136,9 @@ func DecodeAddResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, 
 	message, ok := v.(*storagepb.AddResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("storage", "add", "*storagepb.AddResponse", v)
+	}
+	if err := ValidateAddResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewAddResult(message)
 	return res, nil

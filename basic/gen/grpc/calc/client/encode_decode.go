@@ -46,6 +46,9 @@ func DecodeMultiplyResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("calc", "multiply", "*calcpb.MultiplyResponse", v)
 	}
+	if err := ValidateMultiplyResponse(message); err != nil {
+		return nil, err
+	}
 	res := NewMultiplyResult(message)
 	return res, nil
 }

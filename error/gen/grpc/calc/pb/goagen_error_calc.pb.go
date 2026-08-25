@@ -31,7 +31,7 @@ const (
 type DivideDivByZeroError struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// division by zero leads to infinity.
-	Message_      string `protobuf:"bytes,1,opt,name=message_,json=message,proto3" json:"message_,omitempty"`
+	Message_      *string `protobuf:"bytes,1,opt,name=message_,json=message,proto3,oneof" json:"message_,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,16 +67,16 @@ func (*DivideDivByZeroError) Descriptor() ([]byte, []int) {
 }
 
 func (x *DivideDivByZeroError) GetMessage_() string {
-	if x != nil {
-		return x.Message_
+	if x != nil && x.Message_ != nil {
+		return *x.Message_
 	}
 	return ""
 }
 
 type DivideRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dividend      int32                  `protobuf:"zigzag32,1,opt,name=dividend,proto3" json:"dividend,omitempty"`
-	Divisor       int32                  `protobuf:"zigzag32,2,opt,name=divisor,proto3" json:"divisor,omitempty"`
+	Dividend      *int32                 `protobuf:"zigzag32,1,opt,name=dividend,proto3,oneof" json:"dividend,omitempty"`
+	Divisor       *int32                 `protobuf:"zigzag32,2,opt,name=divisor,proto3,oneof" json:"divisor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -112,23 +112,23 @@ func (*DivideRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *DivideRequest) GetDividend() int32 {
-	if x != nil {
-		return x.Dividend
+	if x != nil && x.Dividend != nil {
+		return *x.Dividend
 	}
 	return 0
 }
 
 func (x *DivideRequest) GetDivisor() int32 {
-	if x != nil {
-		return x.Divisor
+	if x != nil && x.Divisor != nil {
+		return *x.Divisor
 	}
 	return 0
 }
 
 type DivideResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Quotient      int32                  `protobuf:"zigzag32,1,opt,name=quotient,proto3" json:"quotient,omitempty"`
-	Reminder      int32                  `protobuf:"zigzag32,2,opt,name=reminder,proto3" json:"reminder,omitempty"`
+	Quotient      *int32                 `protobuf:"zigzag32,1,opt,name=quotient,proto3,oneof" json:"quotient,omitempty"`
+	Reminder      *int32                 `protobuf:"zigzag32,2,opt,name=reminder,proto3,oneof" json:"reminder,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -164,15 +164,15 @@ func (*DivideResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *DivideResponse) GetQuotient() int32 {
-	if x != nil {
-		return x.Quotient
+	if x != nil && x.Quotient != nil {
+		return *x.Quotient
 	}
 	return 0
 }
 
 func (x *DivideResponse) GetReminder() int32 {
-	if x != nil {
-		return x.Reminder
+	if x != nil && x.Reminder != nil {
+		return *x.Reminder
 	}
 	return 0
 }
@@ -181,15 +181,21 @@ var File_goagen_error_calc_proto protoreflect.FileDescriptor
 
 const file_goagen_error_calc_proto_rawDesc = "" +
 	"\n" +
-	"\x17goagen_error_calc.proto\x12\x04calc\"1\n" +
-	"\x14DivideDivByZeroError\x12\x19\n" +
-	"\bmessage_\x18\x01 \x01(\tR\amessage\"E\n" +
-	"\rDivideRequest\x12\x1a\n" +
-	"\bdividend\x18\x01 \x01(\x11R\bdividend\x12\x18\n" +
-	"\adivisor\x18\x02 \x01(\x11R\adivisor\"H\n" +
-	"\x0eDivideResponse\x12\x1a\n" +
-	"\bquotient\x18\x01 \x01(\x11R\bquotient\x12\x1a\n" +
-	"\breminder\x18\x02 \x01(\x11R\breminder2;\n" +
+	"\x17goagen_error_calc.proto\x12\x04calc\"C\n" +
+	"\x14DivideDivByZeroError\x12\x1e\n" +
+	"\bmessage_\x18\x01 \x01(\tH\x00R\amessage\x88\x01\x01B\v\n" +
+	"\t_message_\"h\n" +
+	"\rDivideRequest\x12\x1f\n" +
+	"\bdividend\x18\x01 \x01(\x11H\x00R\bdividend\x88\x01\x01\x12\x1d\n" +
+	"\adivisor\x18\x02 \x01(\x11H\x01R\adivisor\x88\x01\x01B\v\n" +
+	"\t_dividendB\n" +
+	"\n" +
+	"\b_divisor\"l\n" +
+	"\x0eDivideResponse\x12\x1f\n" +
+	"\bquotient\x18\x01 \x01(\x11H\x00R\bquotient\x88\x01\x01\x12\x1f\n" +
+	"\breminder\x18\x02 \x01(\x11H\x01R\breminder\x88\x01\x01B\v\n" +
+	"\t_quotientB\v\n" +
+	"\t_reminder2;\n" +
 	"\x04Calc\x123\n" +
 	"\x06Divide\x12\x13.calc.DivideRequest\x1a\x14.calc.DivideResponseB\tZ\a/calcpbb\x06proto3"
 
@@ -226,6 +232,9 @@ func file_goagen_error_calc_proto_init() {
 	if File_goagen_error_calc_proto != nil {
 		return
 	}
+	file_goagen_error_calc_proto_msgTypes[0].OneofWrappers = []any{}
+	file_goagen_error_calc_proto_msgTypes[1].OneofWrappers = []any{}
+	file_goagen_error_calc_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

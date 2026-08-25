@@ -139,13 +139,13 @@ func (x *StoredBottleCollection) GetField() []*StoredBottle {
 type StoredBottle struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID is the unique id of the bottle.
-	Id string `protobuf:"bytes,8,opt,name=id,proto3" json:"id,omitempty"`
+	Id *string `protobuf:"bytes,8,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// Name of bottle
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Winery that produces wine
 	Winery *Winery `protobuf:"bytes,3,opt,name=winery,proto3" json:"winery,omitempty"`
 	// Vintage of bottle
-	Vintage uint32 `protobuf:"varint,4,opt,name=vintage,proto3" json:"vintage,omitempty"`
+	Vintage *uint32 `protobuf:"varint,4,opt,name=vintage,proto3,oneof" json:"vintage,omitempty"`
 	// Composition is the list of grape varietals and associated percentage.
 	Composition []*Component `protobuf:"bytes,5,rep,name=composition,proto3" json:"composition,omitempty"`
 	// Description of bottle
@@ -187,15 +187,15 @@ func (*StoredBottle) Descriptor() ([]byte, []int) {
 }
 
 func (x *StoredBottle) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *StoredBottle) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -208,8 +208,8 @@ func (x *StoredBottle) GetWinery() *Winery {
 }
 
 func (x *StoredBottle) GetVintage() uint32 {
-	if x != nil {
-		return x.Vintage
+	if x != nil && x.Vintage != nil {
+		return *x.Vintage
 	}
 	return 0
 }
@@ -238,11 +238,11 @@ func (x *StoredBottle) GetRating() uint32 {
 type Winery struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Name of winery
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Region of winery
-	Region string `protobuf:"bytes,2,opt,name=region,proto3" json:"region,omitempty"`
+	Region *string `protobuf:"bytes,2,opt,name=region,proto3,oneof" json:"region,omitempty"`
 	// Country of winery
-	Country string `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
+	Country *string `protobuf:"bytes,3,opt,name=country,proto3,oneof" json:"country,omitempty"`
 	// Winery website URL
 	Url           *string `protobuf:"bytes,4,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -280,22 +280,22 @@ func (*Winery) Descriptor() ([]byte, []int) {
 }
 
 func (x *Winery) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *Winery) GetRegion() string {
-	if x != nil {
-		return x.Region
+	if x != nil && x.Region != nil {
+		return *x.Region
 	}
 	return ""
 }
 
 func (x *Winery) GetCountry() string {
-	if x != nil {
-		return x.Country
+	if x != nil && x.Country != nil {
+		return *x.Country
 	}
 	return ""
 }
@@ -310,7 +310,7 @@ func (x *Winery) GetUrl() string {
 type Component struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Grape varietal
-	Varietal string `protobuf:"bytes,1,opt,name=varietal,proto3" json:"varietal,omitempty"`
+	Varietal *string `protobuf:"bytes,1,opt,name=varietal,proto3,oneof" json:"varietal,omitempty"`
 	// Percentage of varietal in wine
 	Percentage    *uint32 `protobuf:"varint,2,opt,name=percentage,proto3,oneof" json:"percentage,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -348,8 +348,8 @@ func (*Component) Descriptor() ([]byte, []int) {
 }
 
 func (x *Component) GetVarietal() string {
-	if x != nil {
-		return x.Varietal
+	if x != nil && x.Varietal != nil {
+		return *x.Varietal
 	}
 	return ""
 }
@@ -373,28 +373,37 @@ const file_goagen_cellar_sommelier_proto_rawDesc = "" +
 	"\x05_nameB\t\n" +
 	"\a_winery\"G\n" +
 	"\x16StoredBottleCollection\x12-\n" +
-	"\x05field\x18\x01 \x03(\v2\x17.sommelier.StoredBottleR\x05field\"\x8e\x02\n" +
-	"\fStoredBottle\x12\x0e\n" +
-	"\x02id\x18\b \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12)\n" +
-	"\x06winery\x18\x03 \x01(\v2\x11.sommelier.WineryR\x06winery\x12\x18\n" +
-	"\avintage\x18\x04 \x01(\rR\avintage\x126\n" +
+	"\x05field\x18\x01 \x03(\v2\x17.sommelier.StoredBottleR\x05field\"\xb9\x02\n" +
+	"\fStoredBottle\x12\x13\n" +
+	"\x02id\x18\b \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12)\n" +
+	"\x06winery\x18\x03 \x01(\v2\x11.sommelier.WineryR\x06winery\x12\x1d\n" +
+	"\avintage\x18\x04 \x01(\rH\x02R\avintage\x88\x01\x01\x126\n" +
 	"\vcomposition\x18\x05 \x03(\v2\x14.sommelier.ComponentR\vcomposition\x12%\n" +
-	"\vdescription\x18\x06 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1b\n" +
-	"\x06rating\x18\a \x01(\rH\x01R\x06rating\x88\x01\x01B\x0e\n" +
-	"\f_descriptionB\t\n" +
-	"\a_rating\"m\n" +
-	"\x06Winery\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06region\x18\x02 \x01(\tR\x06region\x12\x18\n" +
-	"\acountry\x18\x03 \x01(\tR\acountry\x12\x15\n" +
-	"\x03url\x18\x04 \x01(\tH\x00R\x03url\x88\x01\x01B\x06\n" +
-	"\x04_url\"[\n" +
-	"\tComponent\x12\x1a\n" +
-	"\bvarietal\x18\x01 \x01(\tR\bvarietal\x12#\n" +
+	"\vdescription\x18\x06 \x01(\tH\x03R\vdescription\x88\x01\x01\x12\x1b\n" +
+	"\x06rating\x18\a \x01(\rH\x04R\x06rating\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_nameB\n" +
 	"\n" +
-	"percentage\x18\x02 \x01(\rH\x00R\n" +
-	"percentage\x88\x01\x01B\r\n" +
+	"\b_vintageB\x0e\n" +
+	"\f_descriptionB\t\n" +
+	"\a_rating\"\x9c\x01\n" +
+	"\x06Winery\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06region\x18\x02 \x01(\tH\x01R\x06region\x88\x01\x01\x12\x1d\n" +
+	"\acountry\x18\x03 \x01(\tH\x02R\acountry\x88\x01\x01\x12\x15\n" +
+	"\x03url\x18\x04 \x01(\tH\x03R\x03url\x88\x01\x01B\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_regionB\n" +
+	"\n" +
+	"\b_countryB\x06\n" +
+	"\x04_url\"m\n" +
+	"\tComponent\x12\x1f\n" +
+	"\bvarietal\x18\x01 \x01(\tH\x00R\bvarietal\x88\x01\x01\x12#\n" +
+	"\n" +
+	"percentage\x18\x02 \x01(\rH\x01R\n" +
+	"percentage\x88\x01\x01B\v\n" +
+	"\t_varietalB\r\n" +
 	"\v_percentage2N\n" +
 	"\tSommelier\x12A\n" +
 	"\x04Pick\x12\x16.sommelier.PickRequest\x1a!.sommelier.StoredBottleCollectionB\x0eZ\f/sommelierpbb\x06proto3"

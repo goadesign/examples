@@ -10,20 +10,41 @@ package client
 import (
 	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewProtoMultiplyRequest builds *calcpb.MultiplyRequest from
 // *calc.MultiplyPayload.
 func NewProtoMultiplyRequest(payload *calc.MultiplyPayload) *calcpb.MultiplyRequest {
-	message := &calcpb.MultiplyRequest{
-		A: int32(payload.A),
-		B: int32(payload.B),
-	}
+	message := &calcpb.MultiplyRequest{}
+	a := int32(payload.A)
+	message.A = &a
+	b := int32(payload.B)
+	message.B = &b
 	return message
 }
 
 // NewMultiplyResult builds int from *calcpb.MultiplyResponse.
 func NewMultiplyResult(message *calcpb.MultiplyResponse) int {
-	result := int(message.Field)
+	result := int(*message.Field)
 	return result
+}
+
+// ValidateMultiplyRequest runs the validations defined on MultiplyRequest.
+func ValidateMultiplyRequest(message *calcpb.MultiplyRequest) (err error) {
+	if message.A == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("a", "message"))
+	}
+	if message.B == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("b", "message"))
+	}
+	return
+}
+
+// ValidateMultiplyResponse runs the validations defined on MultiplyResponse.
+func ValidateMultiplyResponse(message *calcpb.MultiplyResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
 }

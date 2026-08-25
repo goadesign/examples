@@ -38,6 +38,9 @@ func DecodeMultiplyRequest(ctx context.Context, v any, md metadata.MD) (any, err
 		if message, ok = v.(*calcpb.MultiplyRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("calc", "multiply", "*calcpb.MultiplyRequest", v)
 		}
+		if err := ValidateMultiplyRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *calc.MultiplyPayload
 	{

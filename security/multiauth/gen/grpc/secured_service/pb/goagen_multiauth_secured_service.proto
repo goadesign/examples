@@ -31,11 +31,11 @@ message SigninRequest {
 
 message SigninResponse {
 	// JWT token
-	string jwt = 1;
+	optional string jwt = 1;
 	// API Key
-	string api_key = 2;
+	optional string api_key = 2;
 	// OAuth2 token
-	string oauth_token = 3;
+	optional string oauth_token = 3;
 }
 
 message SecureRequest {
@@ -44,16 +44,16 @@ message SecureRequest {
 }
 
 message SecureResponse {
-	string field = 1;
+	optional string field = 1;
 }
 
 message DoublySecureRequest {
 	// API key
-	string key = 1;
+	optional string key = 1;
 }
 
 message DoublySecureResponse {
-	string field = 1;
+	optional string field = 1;
 }
 
 message AlsoDoublySecureRequest {
@@ -66,5 +66,5 @@ message AlsoDoublySecureRequest {
 }
 
 message AlsoDoublySecureResponse {
-	string field = 1;
+	optional string field = 1;
 }

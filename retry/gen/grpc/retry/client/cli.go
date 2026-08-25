@@ -28,8 +28,12 @@ func BuildGetMessagePayload(retryGetMessageMessage string) (*retry.GetMessagePay
 			}
 		}
 	}
+	if err := ValidateGetMessageRequest(&message); err != nil {
+		var zero *retry.GetMessagePayload
+		return zero, err
+	}
 	v := &retry.GetMessagePayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 
 	return v, nil

@@ -79,6 +79,9 @@ func DecodeShowRequest(ctx context.Context, v any, md metadata.MD) (any, error) 
 		if message, ok = v.(*storagepb.ShowRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("storage", "show", "*storagepb.ShowRequest", v)
 		}
+		if err = ValidateShowRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *storage.ShowPayload
 	{
@@ -137,6 +140,9 @@ func DecodeRemoveRequest(ctx context.Context, v any, md metadata.MD) (any, error
 		if message, ok = v.(*storagepb.RemoveRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("storage", "remove", "*storagepb.RemoveRequest", v)
 		}
+		if err := ValidateRemoveRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *storage.RemovePayload
 	{
@@ -161,9 +167,6 @@ func DecodeRateRequest(ctx context.Context, v any, md metadata.MD) (any, error) 
 	{
 		if message, ok = v.(*storagepb.RateRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("storage", "rate", "*storagepb.RateRequest", v)
-		}
-		if err := ValidateRateRequest(message); err != nil {
-			return nil, err
 		}
 	}
 	var payload map[uint32][]string

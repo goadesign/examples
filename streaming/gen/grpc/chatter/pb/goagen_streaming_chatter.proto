@@ -31,26 +31,26 @@ message LoginRequest {
 }
 
 message LoginResponse {
-	string field = 1;
+	optional string field = 1;
 }
 
 message EchoerStreamingRequest {
-	string field = 1;
+	optional string field = 1;
 }
 
 message EchoerResponse {
-	string field = 1;
+	optional string field = 1;
 }
 
 message ListenerStreamingRequest {
-	string field = 1;
+	optional string field = 1;
 }
 
 message ListenerResponse {
 }
 
 message SummaryStreamingRequest {
-	string field = 1;
+	optional string field = 1;
 }
 
 message ChatSummaryCollection {
@@ -59,11 +59,11 @@ message ChatSummaryCollection {
 
 message ChatSummary {
 	// Message sent to the server
-	string message_ = 1;
+	optional string message_ = 1;
 	// Length of the message sent
 	optional sint32 length = 2;
 	// Time at which the message was sent
-	string sent_at = 3;
+	optional string sent_at = 3;
 }
 
 message SubscribeRequest {
@@ -71,10 +71,10 @@ message SubscribeRequest {
 
 message SubscribeResponse {
 	// Message sent to the server
-	string message_ = 1;
-	string action = 2;
+	optional string message_ = 1;
+	optional string action = 2;
 	// Time at which the message was added
-	string added_at = 3;
+	optional string added_at = 3;
 }
 
 message HistoryRequest {
@@ -82,9 +82,9 @@ message HistoryRequest {
 
 message HistoryResponse {
 	// Message sent to the server
-	string message_ = 1;
+	optional string message_ = 1;
 	// Length of the message sent
 	optional sint32 length = 2;
 	// Time at which the message was sent
-	string sent_at = 3;
+	optional string sent_at = 3;
 }

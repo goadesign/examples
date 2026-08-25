@@ -201,6 +201,9 @@ func (s *EchoerClientStream) Recv() (string, error) {
 			return res, err
 		}
 	}
+	if err = ValidateEchoerResponse(v); err != nil {
+		return res, err
+	}
 	return NewEchoerResponseEchoerResponse(v), nil
 }
 
@@ -260,6 +263,9 @@ func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 		default:
 			return res, err
 		}
+	}
+	if err := ValidateChatSummaryCollection(v); err != nil {
+		return res, err
 	}
 	proj := NewChatSummaryCollectionChatSummaryCollection(v)
 	vres := chatterviews.ChatSummaryCollection{Projected: proj, View: "default"}
@@ -343,8 +349,14 @@ func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 	var proj *chatterviews.ChatSummaryView
 	switch s.view {
 	case "tiny":
+		if err := ValidateHistoryResponseTiny(v); err != nil {
+			return res, err
+		}
 		proj = NewHistoryResponseChatSummaryViewTiny(v)
 	case "default", "":
+		if err := ValidateHistoryResponse(v); err != nil {
+			return res, err
+		}
 		proj = NewHistoryResponseChatSummaryView(v)
 	}
 	vres := &chatterviews.ChatSummary{Projected: proj, View: s.view}

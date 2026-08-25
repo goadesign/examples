@@ -144,6 +144,9 @@ func DecodeDoublySecureRequest(ctx context.Context, v any, md metadata.MD) (any,
 		if message, ok = v.(*secured_servicepb.DoublySecureRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("secured_service", "doubly_secure", "*secured_servicepb.DoublySecureRequest", v)
 		}
+		if err = ValidateDoublySecureRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *securedservice.DoublySecurePayload
 	{

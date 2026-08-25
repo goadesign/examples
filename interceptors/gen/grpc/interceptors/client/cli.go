@@ -28,10 +28,14 @@ func BuildGetPayload(interceptorsGetMessage string) (*interceptors.GetPayload, e
 			}
 		}
 	}
+	if err := ValidateGetRequest(&message); err != nil {
+		var zero *interceptors.GetPayload
+		return zero, err
+	}
 	v := &interceptors.GetPayload{
-		TenantID: interceptors.UUID(message.TenantId),
-		RecordID: interceptors.UUID(message.RecordId),
-		Auth:     message.Auth,
+		TenantID: interceptors.UUID(*message.TenantId),
+		RecordID: interceptors.UUID(*message.RecordId),
+		Auth:     *message.Auth,
 	}
 	if message.TraceId != nil {
 		traceID := interceptors.UUID(*message.TraceId)

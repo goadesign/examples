@@ -28,9 +28,13 @@ func BuildMultiplyPayload(calcMultiplyMessage string) (*calc.MultiplyPayload, er
 			}
 		}
 	}
+	if err := ValidateMultiplyRequest(&message); err != nil {
+		var zero *calc.MultiplyPayload
+		return zero, err
+	}
 	v := &calc.MultiplyPayload{
-		A: int(message.A),
-		B: int(message.B),
+		A: int(*message.A),
+		B: int(*message.B),
 	}
 
 	return v, nil

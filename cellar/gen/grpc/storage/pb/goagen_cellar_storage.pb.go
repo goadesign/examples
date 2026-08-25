@@ -112,13 +112,13 @@ func (x *StoredBottleCollection) GetField() []*StoredBottle {
 type StoredBottle struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID is the unique id of the bottle.
-	Id string `protobuf:"bytes,8,opt,name=id,proto3" json:"id,omitempty"`
+	Id *string `protobuf:"bytes,8,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// Name of bottle
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Winery that produces wine
 	Winery *Winery `protobuf:"bytes,3,opt,name=winery,proto3" json:"winery,omitempty"`
 	// Vintage of bottle
-	Vintage uint32 `protobuf:"varint,4,opt,name=vintage,proto3" json:"vintage,omitempty"`
+	Vintage *uint32 `protobuf:"varint,4,opt,name=vintage,proto3,oneof" json:"vintage,omitempty"`
 	// Composition is the list of grape varietals and associated percentage.
 	Composition []*Component `protobuf:"bytes,5,rep,name=composition,proto3" json:"composition,omitempty"`
 	// Description of bottle
@@ -160,15 +160,15 @@ func (*StoredBottle) Descriptor() ([]byte, []int) {
 }
 
 func (x *StoredBottle) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *StoredBottle) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -181,8 +181,8 @@ func (x *StoredBottle) GetWinery() *Winery {
 }
 
 func (x *StoredBottle) GetVintage() uint32 {
-	if x != nil {
-		return x.Vintage
+	if x != nil && x.Vintage != nil {
+		return *x.Vintage
 	}
 	return 0
 }
@@ -211,11 +211,11 @@ func (x *StoredBottle) GetRating() uint32 {
 type Winery struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Name of winery
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Region of winery
-	Region string `protobuf:"bytes,2,opt,name=region,proto3" json:"region,omitempty"`
+	Region *string `protobuf:"bytes,2,opt,name=region,proto3,oneof" json:"region,omitempty"`
 	// Country of winery
-	Country string `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
+	Country *string `protobuf:"bytes,3,opt,name=country,proto3,oneof" json:"country,omitempty"`
 	// Winery website URL
 	Url           *string `protobuf:"bytes,4,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -253,22 +253,22 @@ func (*Winery) Descriptor() ([]byte, []int) {
 }
 
 func (x *Winery) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *Winery) GetRegion() string {
-	if x != nil {
-		return x.Region
+	if x != nil && x.Region != nil {
+		return *x.Region
 	}
 	return ""
 }
 
 func (x *Winery) GetCountry() string {
-	if x != nil {
-		return x.Country
+	if x != nil && x.Country != nil {
+		return *x.Country
 	}
 	return ""
 }
@@ -283,7 +283,7 @@ func (x *Winery) GetUrl() string {
 type Component struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Grape varietal
-	Varietal string `protobuf:"bytes,1,opt,name=varietal,proto3" json:"varietal,omitempty"`
+	Varietal *string `protobuf:"bytes,1,opt,name=varietal,proto3,oneof" json:"varietal,omitempty"`
 	// Percentage of varietal in wine
 	Percentage    *uint32 `protobuf:"varint,2,opt,name=percentage,proto3,oneof" json:"percentage,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -321,8 +321,8 @@ func (*Component) Descriptor() ([]byte, []int) {
 }
 
 func (x *Component) GetVarietal() string {
-	if x != nil {
-		return x.Varietal
+	if x != nil && x.Varietal != nil {
+		return *x.Varietal
 	}
 	return ""
 }
@@ -337,9 +337,9 @@ func (x *Component) GetPercentage() uint32 {
 type ShowNotFoundError struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Message of error
-	Message_ string `protobuf:"bytes,1,opt,name=message_,json=message,proto3" json:"message_,omitempty"`
+	Message_ *string `protobuf:"bytes,1,opt,name=message_,json=message,proto3,oneof" json:"message_,omitempty"`
 	// ID of missing bottle
-	Id            string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string `protobuf:"bytes,2,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -375,15 +375,15 @@ func (*ShowNotFoundError) Descriptor() ([]byte, []int) {
 }
 
 func (x *ShowNotFoundError) GetMessage_() string {
-	if x != nil {
-		return x.Message_
+	if x != nil && x.Message_ != nil {
+		return *x.Message_
 	}
 	return ""
 }
 
 func (x *ShowNotFoundError) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -391,7 +391,7 @@ func (x *ShowNotFoundError) GetId() string {
 type ShowRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of bottle to show
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -427,8 +427,8 @@ func (*ShowRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ShowRequest) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -436,13 +436,13 @@ func (x *ShowRequest) GetId() string {
 type ShowResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID is the unique id of the bottle.
-	Id string `protobuf:"bytes,8,opt,name=id,proto3" json:"id,omitempty"`
+	Id *string `protobuf:"bytes,8,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// Name of bottle
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Winery that produces wine
 	Winery *Winery `protobuf:"bytes,3,opt,name=winery,proto3" json:"winery,omitempty"`
 	// Vintage of bottle
-	Vintage uint32 `protobuf:"varint,4,opt,name=vintage,proto3" json:"vintage,omitempty"`
+	Vintage *uint32 `protobuf:"varint,4,opt,name=vintage,proto3,oneof" json:"vintage,omitempty"`
 	// Composition is the list of grape varietals and associated percentage.
 	Composition []*Component `protobuf:"bytes,5,rep,name=composition,proto3" json:"composition,omitempty"`
 	// Description of bottle
@@ -484,15 +484,15 @@ func (*ShowResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *ShowResponse) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *ShowResponse) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -505,8 +505,8 @@ func (x *ShowResponse) GetWinery() *Winery {
 }
 
 func (x *ShowResponse) GetVintage() uint32 {
-	if x != nil {
-		return x.Vintage
+	if x != nil && x.Vintage != nil {
+		return *x.Vintage
 	}
 	return 0
 }
@@ -535,11 +535,11 @@ func (x *ShowResponse) GetRating() uint32 {
 type AddRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Name of bottle
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Winery that produces wine
 	Winery *Winery `protobuf:"bytes,2,opt,name=winery,proto3" json:"winery,omitempty"`
 	// Vintage of bottle
-	Vintage uint32 `protobuf:"varint,3,opt,name=vintage,proto3" json:"vintage,omitempty"`
+	Vintage *uint32 `protobuf:"varint,3,opt,name=vintage,proto3,oneof" json:"vintage,omitempty"`
 	// Composition is the list of grape varietals and associated percentage.
 	Composition []*Component `protobuf:"bytes,4,rep,name=composition,proto3" json:"composition,omitempty"`
 	// Description of bottle
@@ -581,8 +581,8 @@ func (*AddRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *AddRequest) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -595,8 +595,8 @@ func (x *AddRequest) GetWinery() *Winery {
 }
 
 func (x *AddRequest) GetVintage() uint32 {
-	if x != nil {
-		return x.Vintage
+	if x != nil && x.Vintage != nil {
+		return *x.Vintage
 	}
 	return 0
 }
@@ -624,7 +624,7 @@ func (x *AddRequest) GetRating() uint32 {
 
 type AddResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -660,8 +660,8 @@ func (*AddResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *AddResponse) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
@@ -669,7 +669,7 @@ func (x *AddResponse) GetField() string {
 type RemoveRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of bottle to remove
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -705,8 +705,8 @@ func (*RemoveRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *RemoveRequest) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -919,11 +919,11 @@ func (x *MultiAddRequest) GetField() []*Bottle {
 type Bottle struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Name of bottle
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Winery that produces wine
 	Winery *Winery `protobuf:"bytes,2,opt,name=winery,proto3" json:"winery,omitempty"`
 	// Vintage of bottle
-	Vintage uint32 `protobuf:"varint,3,opt,name=vintage,proto3" json:"vintage,omitempty"`
+	Vintage *uint32 `protobuf:"varint,3,opt,name=vintage,proto3,oneof" json:"vintage,omitempty"`
 	// Composition is the list of grape varietals and associated percentage.
 	Composition []*Component `protobuf:"bytes,4,rep,name=composition,proto3" json:"composition,omitempty"`
 	// Description of bottle
@@ -965,8 +965,8 @@ func (*Bottle) Descriptor() ([]byte, []int) {
 }
 
 func (x *Bottle) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
@@ -979,8 +979,8 @@ func (x *Bottle) GetWinery() *Winery {
 }
 
 func (x *Bottle) GetVintage() uint32 {
-	if x != nil {
-		return x.Vintage
+	if x != nil && x.Vintage != nil {
+		return *x.Vintage
 	}
 	return 0
 }
@@ -1147,58 +1147,79 @@ const file_goagen_cellar_storage_proto_rawDesc = "" +
 	"\x1bgoagen_cellar_storage.proto\x12\astorage\"\r\n" +
 	"\vListRequest\"E\n" +
 	"\x16StoredBottleCollection\x12+\n" +
-	"\x05field\x18\x01 \x03(\v2\x15.storage.StoredBottleR\x05field\"\x8a\x02\n" +
-	"\fStoredBottle\x12\x0e\n" +
-	"\x02id\x18\b \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12'\n" +
-	"\x06winery\x18\x03 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x18\n" +
-	"\avintage\x18\x04 \x01(\rR\avintage\x124\n" +
+	"\x05field\x18\x01 \x03(\v2\x15.storage.StoredBottleR\x05field\"\xb5\x02\n" +
+	"\fStoredBottle\x12\x13\n" +
+	"\x02id\x18\b \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12'\n" +
+	"\x06winery\x18\x03 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x1d\n" +
+	"\avintage\x18\x04 \x01(\rH\x02R\avintage\x88\x01\x01\x124\n" +
 	"\vcomposition\x18\x05 \x03(\v2\x12.storage.ComponentR\vcomposition\x12%\n" +
-	"\vdescription\x18\x06 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1b\n" +
-	"\x06rating\x18\a \x01(\rH\x01R\x06rating\x88\x01\x01B\x0e\n" +
-	"\f_descriptionB\t\n" +
-	"\a_rating\"m\n" +
-	"\x06Winery\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06region\x18\x02 \x01(\tR\x06region\x12\x18\n" +
-	"\acountry\x18\x03 \x01(\tR\acountry\x12\x15\n" +
-	"\x03url\x18\x04 \x01(\tH\x00R\x03url\x88\x01\x01B\x06\n" +
-	"\x04_url\"[\n" +
-	"\tComponent\x12\x1a\n" +
-	"\bvarietal\x18\x01 \x01(\tR\bvarietal\x12#\n" +
+	"\vdescription\x18\x06 \x01(\tH\x03R\vdescription\x88\x01\x01\x12\x1b\n" +
+	"\x06rating\x18\a \x01(\rH\x04R\x06rating\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_nameB\n" +
 	"\n" +
-	"percentage\x18\x02 \x01(\rH\x00R\n" +
-	"percentage\x88\x01\x01B\r\n" +
-	"\v_percentage\">\n" +
-	"\x11ShowNotFoundError\x12\x19\n" +
-	"\bmessage_\x18\x01 \x01(\tR\amessage\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id\"\x1d\n" +
-	"\vShowRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x8a\x02\n" +
-	"\fShowResponse\x12\x0e\n" +
-	"\x02id\x18\b \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12'\n" +
-	"\x06winery\x18\x03 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x18\n" +
-	"\avintage\x18\x04 \x01(\rR\avintage\x124\n" +
+	"\b_vintageB\x0e\n" +
+	"\f_descriptionB\t\n" +
+	"\a_rating\"\x9c\x01\n" +
+	"\x06Winery\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1b\n" +
+	"\x06region\x18\x02 \x01(\tH\x01R\x06region\x88\x01\x01\x12\x1d\n" +
+	"\acountry\x18\x03 \x01(\tH\x02R\acountry\x88\x01\x01\x12\x15\n" +
+	"\x03url\x18\x04 \x01(\tH\x03R\x03url\x88\x01\x01B\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_regionB\n" +
+	"\n" +
+	"\b_countryB\x06\n" +
+	"\x04_url\"m\n" +
+	"\tComponent\x12\x1f\n" +
+	"\bvarietal\x18\x01 \x01(\tH\x00R\bvarietal\x88\x01\x01\x12#\n" +
+	"\n" +
+	"percentage\x18\x02 \x01(\rH\x01R\n" +
+	"percentage\x88\x01\x01B\v\n" +
+	"\t_varietalB\r\n" +
+	"\v_percentage\"\\\n" +
+	"\x11ShowNotFoundError\x12\x1e\n" +
+	"\bmessage_\x18\x01 \x01(\tH\x00R\amessage\x88\x01\x01\x12\x13\n" +
+	"\x02id\x18\x02 \x01(\tH\x01R\x02id\x88\x01\x01B\v\n" +
+	"\t_message_B\x05\n" +
+	"\x03_id\")\n" +
+	"\vShowRequest\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
+	"\x03_id\"\xb5\x02\n" +
+	"\fShowResponse\x12\x13\n" +
+	"\x02id\x18\b \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12'\n" +
+	"\x06winery\x18\x03 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x1d\n" +
+	"\avintage\x18\x04 \x01(\rH\x02R\avintage\x88\x01\x01\x124\n" +
 	"\vcomposition\x18\x05 \x03(\v2\x12.storage.ComponentR\vcomposition\x12%\n" +
-	"\vdescription\x18\x06 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1b\n" +
-	"\x06rating\x18\a \x01(\rH\x01R\x06rating\x88\x01\x01B\x0e\n" +
-	"\f_descriptionB\t\n" +
-	"\a_rating\"\xf8\x01\n" +
+	"\vdescription\x18\x06 \x01(\tH\x03R\vdescription\x88\x01\x01\x12\x1b\n" +
+	"\x06rating\x18\a \x01(\rH\x04R\x06rating\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_nameB\n" +
 	"\n" +
-	"AddRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12'\n" +
-	"\x06winery\x18\x02 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x18\n" +
-	"\avintage\x18\x03 \x01(\rR\avintage\x124\n" +
+	"\b_vintageB\x0e\n" +
+	"\f_descriptionB\t\n" +
+	"\a_rating\"\x97\x02\n" +
+	"\n" +
+	"AddRequest\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12'\n" +
+	"\x06winery\x18\x02 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x1d\n" +
+	"\avintage\x18\x03 \x01(\rH\x01R\avintage\x88\x01\x01\x124\n" +
 	"\vcomposition\x18\x04 \x03(\v2\x12.storage.ComponentR\vcomposition\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1b\n" +
-	"\x06rating\x18\x06 \x01(\rH\x01R\x06rating\x88\x01\x01B\x0e\n" +
+	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12\x1b\n" +
+	"\x06rating\x18\x06 \x01(\rH\x03R\x06rating\x88\x01\x01B\a\n" +
+	"\x05_nameB\n" +
+	"\n" +
+	"\b_vintageB\x0e\n" +
 	"\f_descriptionB\t\n" +
-	"\a_rating\"#\n" +
-	"\vAddResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"\x1f\n" +
-	"\rRemoveRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x10\n" +
+	"\a_rating\"2\n" +
+	"\vAddResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"+\n" +
+	"\rRemoveRequest\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
+	"\x03_id\"\x10\n" +
 	"\x0eRemoveResponse\"\x96\x01\n" +
 	"\vRateRequest\x125\n" +
 	"\x05field\x18\x01 \x03(\v2\x1f.storage.RateRequest.FieldEntryR\x05field\x1aP\n" +
@@ -1210,14 +1231,17 @@ const file_goagen_cellar_storage_proto_rawDesc = "" +
 	"\x05field\x18\x01 \x03(\tR\x05field\"\x0e\n" +
 	"\fRateResponse\"8\n" +
 	"\x0fMultiAddRequest\x12%\n" +
-	"\x05field\x18\x01 \x03(\v2\x0f.storage.BottleR\x05field\"\xf4\x01\n" +
-	"\x06Bottle\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12'\n" +
-	"\x06winery\x18\x02 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x18\n" +
-	"\avintage\x18\x03 \x01(\rR\avintage\x124\n" +
+	"\x05field\x18\x01 \x03(\v2\x0f.storage.BottleR\x05field\"\x93\x02\n" +
+	"\x06Bottle\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12'\n" +
+	"\x06winery\x18\x02 \x01(\v2\x0f.storage.WineryR\x06winery\x12\x1d\n" +
+	"\avintage\x18\x03 \x01(\rH\x01R\avintage\x88\x01\x01\x124\n" +
 	"\vcomposition\x18\x04 \x03(\v2\x12.storage.ComponentR\vcomposition\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1b\n" +
-	"\x06rating\x18\x06 \x01(\rH\x01R\x06rating\x88\x01\x01B\x0e\n" +
+	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12\x1b\n" +
+	"\x06rating\x18\x06 \x01(\rH\x03R\x06rating\x88\x01\x01B\a\n" +
+	"\x05_nameB\n" +
+	"\n" +
+	"\b_vintageB\x0e\n" +
 	"\f_descriptionB\t\n" +
 	"\a_rating\"(\n" +
 	"\x10MultiAddResponse\x12\x14\n" +
@@ -1315,8 +1339,12 @@ func file_goagen_cellar_storage_proto_init() {
 	file_goagen_cellar_storage_proto_msgTypes[2].OneofWrappers = []any{}
 	file_goagen_cellar_storage_proto_msgTypes[3].OneofWrappers = []any{}
 	file_goagen_cellar_storage_proto_msgTypes[4].OneofWrappers = []any{}
+	file_goagen_cellar_storage_proto_msgTypes[5].OneofWrappers = []any{}
+	file_goagen_cellar_storage_proto_msgTypes[6].OneofWrappers = []any{}
 	file_goagen_cellar_storage_proto_msgTypes[7].OneofWrappers = []any{}
 	file_goagen_cellar_storage_proto_msgTypes[8].OneofWrappers = []any{}
+	file_goagen_cellar_storage_proto_msgTypes[9].OneofWrappers = []any{}
+	file_goagen_cellar_storage_proto_msgTypes[10].OneofWrappers = []any{}
 	file_goagen_cellar_storage_proto_msgTypes[16].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

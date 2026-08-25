@@ -50,6 +50,9 @@ func DecodeLoginResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("chatter", "login", "*chatterpb.LoginResponse", v)
 	}
+	if err := ValidateLoginResponse(message); err != nil {
+		return nil, err
+	}
 	res := NewLoginResult(message)
 	return res, nil
 }

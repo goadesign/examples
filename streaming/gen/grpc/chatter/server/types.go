@@ -11,6 +11,7 @@ import (
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewLoginPayload builds *chatter.LoginPayload from metadata values.
@@ -24,7 +25,8 @@ func NewLoginPayload(user string, password string) *chatter.LoginPayload {
 // NewProtoLoginResponse builds *chatterpb.LoginResponse from string.
 func NewProtoLoginResponse(result string) *chatterpb.LoginResponse {
 	message := &chatterpb.LoginResponse{}
-	message.Field = result
+	message.Field = new(string)
+	*message.Field = result
 	return message
 }
 
@@ -38,14 +40,15 @@ func NewEchoerPayload(token string) *chatter.EchoerPayload {
 // NewProtoEchoerResponse builds *chatterpb.EchoerResponse from string.
 func NewProtoEchoerResponse(result string) *chatterpb.EchoerResponse {
 	message := &chatterpb.EchoerResponse{}
-	message.Field = result
+	message.Field = new(string)
+	*message.Field = result
 	return message
 }
 
 // NewEchoerStreamingRequestEchoerStreamingRequest builds string from
 // *chatterpb.EchoerStreamingRequest.
 func NewEchoerStreamingRequestEchoerStreamingRequest(v *chatterpb.EchoerStreamingRequest) string {
-	spayload := v.Field
+	spayload := *v.Field
 	return spayload
 }
 
@@ -66,7 +69,7 @@ func NewProtoListenerResponse() *chatterpb.ListenerResponse {
 // NewListenerStreamingRequestListenerStreamingRequest builds string from
 // *chatterpb.ListenerStreamingRequest.
 func NewListenerStreamingRequestListenerStreamingRequest(v *chatterpb.ListenerStreamingRequest) string {
-	spayload := v.Field
+	spayload := *v.Field
 	return spayload
 }
 
@@ -84,8 +87,8 @@ func NewProtoChatSummaryCollection(result chatterviews.ChatSummaryCollectionView
 	message.Field = make([]*chatterpb.ChatSummary, len(result))
 	for i, val := range result {
 		message.Field[i] = &chatterpb.ChatSummary{
-			Message_: *val.Message,
-			SentAt:   *val.SentAt,
+			Message_: val.Message,
+			SentAt:   val.SentAt,
 		}
 		if val.Length != nil {
 			length := int32(*val.Length)
@@ -98,7 +101,7 @@ func NewProtoChatSummaryCollection(result chatterviews.ChatSummaryCollectionView
 // NewSummaryStreamingRequestSummaryStreamingRequest builds string from
 // *chatterpb.SummaryStreamingRequest.
 func NewSummaryStreamingRequestSummaryStreamingRequest(v *chatterpb.SummaryStreamingRequest) string {
-	spayload := v.Field
+	spayload := *v.Field
 	return spayload
 }
 
@@ -113,9 +116,9 @@ func NewSubscribePayload(token string) *chatter.SubscribePayload {
 // *chatter.Event.
 func NewProtoSubscribeResponse(result *chatter.Event) *chatterpb.SubscribeResponse {
 	message := &chatterpb.SubscribeResponse{
-		Message_: result.Message,
-		Action:   result.Action,
-		AddedAt:  result.AddedAt,
+		Message_: &result.Message,
+		Action:   &result.Action,
+		AddedAt:  &result.AddedAt,
 	}
 	return message
 }
@@ -136,8 +139,8 @@ func NewHistoryPayload(view *string, token string) *chatter.HistoryPayload {
 // *chatterviews.ChatSummaryView.
 func NewProtoHistoryResponse(result *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
 	message := &chatterpb.HistoryResponse{
-		Message_: *result.Message,
-		SentAt:   *result.SentAt,
+		Message_: result.Message,
+		SentAt:   result.SentAt,
 	}
 	if result.Length != nil {
 		length := int32(*result.Length)
@@ -150,7 +153,34 @@ func NewProtoHistoryResponse(result *chatterviews.ChatSummaryView) *chatterpb.Hi
 // *chatterviews.ChatSummaryView.
 func NewProtoHistoryResponseTiny(result *chatterviews.ChatSummaryView) *chatterpb.HistoryResponse {
 	message := &chatterpb.HistoryResponse{
-		Message_: *result.Message,
+		Message_: result.Message,
 	}
 	return message
+}
+
+// ValidateEchoerStreamingRequest runs the validations defined on
+// EchoerStreamingRequest.
+func ValidateEchoerStreamingRequest(stream *chatterpb.EchoerStreamingRequest) (err error) {
+	if stream.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "stream"))
+	}
+	return
+}
+
+// ValidateListenerStreamingRequest runs the validations defined on
+// ListenerStreamingRequest.
+func ValidateListenerStreamingRequest(stream *chatterpb.ListenerStreamingRequest) (err error) {
+	if stream.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "stream"))
+	}
+	return
+}
+
+// ValidateSummaryStreamingRequest runs the validations defined on
+// SummaryStreamingRequest.
+func ValidateSummaryStreamingRequest(stream *chatterpb.SummaryStreamingRequest) (err error) {
+	if stream.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "stream"))
+	}
+	return
 }

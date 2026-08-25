@@ -35,9 +35,9 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 	message.Field = make([]*sommelierpb.StoredBottle, len(result))
 	for i, val := range result {
 		message.Field[i] = &sommelierpb.StoredBottle{
-			Id:          *val.ID,
-			Name:        *val.Name,
-			Vintage:     *val.Vintage,
+			Id:          val.ID,
+			Name:        val.Name,
+			Vintage:     val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
@@ -48,7 +48,7 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 			message.Field[i].Composition = make([]*sommelierpb.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				message.Field[i].Composition[j] = &sommelierpb.Component{
-					Varietal:   *val.Varietal,
+					Varietal:   val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -61,7 +61,7 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 // from a value of type *sommelierviews.WineryView.
 func transformWineryViewToProtoWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
 	res := &sommelierpb.Winery{
-		Name: *v.Name,
+		Name: v.Name,
 	}
 
 	return res

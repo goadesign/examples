@@ -10,13 +10,14 @@ package server
 import (
 	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewMultiplyPayload builds *calc.MultiplyPayload from *calcpb.MultiplyRequest.
 func NewMultiplyPayload(message *calcpb.MultiplyRequest) *calc.MultiplyPayload {
 	v := &calc.MultiplyPayload{
-		A: int(message.A),
-		B: int(message.B),
+		A: int(*message.A),
+		B: int(*message.B),
 	}
 	return v
 }
@@ -24,6 +25,18 @@ func NewMultiplyPayload(message *calcpb.MultiplyRequest) *calc.MultiplyPayload {
 // NewProtoMultiplyResponse builds *calcpb.MultiplyResponse from int.
 func NewProtoMultiplyResponse(result int) *calcpb.MultiplyResponse {
 	message := &calcpb.MultiplyResponse{}
-	message.Field = int32(result)
+	message.Field = new(int32)
+	*message.Field = int32(result)
 	return message
+}
+
+// ValidateMultiplyRequest runs the validations defined on MultiplyRequest.
+func ValidateMultiplyRequest(message *calcpb.MultiplyRequest) (err error) {
+	if message.A == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("a", "message"))
+	}
+	if message.B == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("b", "message"))
+	}
+	return
 }

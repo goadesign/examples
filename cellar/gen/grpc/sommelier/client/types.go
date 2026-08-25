@@ -37,9 +37,9 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 	result := make([]*sommelierviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
 		result[i] = &sommelierviews.StoredBottleView{
-			ID:          &val.Id,
-			Name:        &val.Name,
-			Vintage:     &val.Vintage,
+			ID:          val.Id,
+			Name:        val.Name,
+			Vintage:     val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
@@ -50,7 +50,7 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 			result[i].Composition = make([]*sommelierviews.ComponentView, len(val.Composition))
 			for j, val := range val.Composition {
 				result[i].Composition[j] = &sommelierviews.ComponentView{
-					Varietal:   &val.Varietal,
+					Varietal:   val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -74,22 +74,35 @@ func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection)
 
 // ValidateStoredBottle runs the validations defined on StoredBottle.
 func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
+	if elem.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "elem"))
+	}
+	if elem.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "elem"))
+	}
 	if elem.Winery == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "elem"))
 	}
-	if utf8.RuneCountInString(elem.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", elem.Name, utf8.RuneCountInString(elem.Name), 100, false))
+	if elem.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "elem"))
+	}
+	if elem.Name != nil {
+		if utf8.RuneCountInString(*elem.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", *elem.Name, utf8.RuneCountInString(*elem.Name), 100, false))
+		}
 	}
 	if elem.Winery != nil {
 		if err2 := ValidateWinery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if elem.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 1900, true))
-	}
-	if elem.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 2020, false))
+	if elem.Vintage != nil {
+		if *elem.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 1900, true))
+		}
+		if *elem.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 2020, false))
+		}
 	}
 	for _, e := range elem.Composition {
 		if e != nil {
@@ -116,19 +129,22 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 
 // ValidateWinery runs the validations defined on Winery.
 func ValidateWinery(winery *sommelierpb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", winery.Region, "[a-zA-Z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", winery.Country, "[a-zA-Z '\\.]+"))
-	if winery.Url != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+	if winery.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
 	}
 	return
 }
 
 // ValidateComponent runs the validations defined on Component.
 func ValidateComponent(elem *sommelierpb.Component) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", elem.Varietal, "[A-Za-z' ]+"))
-	if utf8.RuneCountInString(elem.Varietal) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", elem.Varietal, utf8.RuneCountInString(elem.Varietal), 100, false))
+	if elem.Varietal == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "elem"))
+	}
+	if elem.Varietal != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", *elem.Varietal, "[A-Za-z' ]+"))
+		if utf8.RuneCountInString(*elem.Varietal) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", *elem.Varietal, utf8.RuneCountInString(*elem.Varietal), 100, false))
+		}
 	}
 	if elem.Percentage != nil {
 		if *elem.Percentage < 1 {
@@ -145,7 +161,7 @@ func ValidateComponent(elem *sommelierpb.Component) (err error) {
 // *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
 func transformProtoWineryToWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
 	res := &sommelierviews.WineryView{
-		Name: &v.Name,
+		Name: v.Name,
 	}
 
 	return res

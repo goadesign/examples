@@ -31,7 +31,7 @@ const (
 type GetMessageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Identifies one demonstration request.
-	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,8 +67,8 @@ func (*GetMessageRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetMessageRequest) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
@@ -76,7 +76,7 @@ func (x *GetMessageRequest) GetId() string {
 type GetMessageResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Message returned after the retry succeeds.
-	Message_      string `protobuf:"bytes,1,opt,name=message_,json=message,proto3" json:"message_,omitempty"`
+	Message_      *string `protobuf:"bytes,1,opt,name=message_,json=message,proto3,oneof" json:"message_,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -112,8 +112,8 @@ func (*GetMessageResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetMessageResponse) GetMessage_() string {
-	if x != nil {
-		return x.Message_
+	if x != nil && x.Message_ != nil {
+		return *x.Message_
 	}
 	return ""
 }
@@ -122,11 +122,13 @@ var File_goagen_retry_retry_proto protoreflect.FileDescriptor
 
 const file_goagen_retry_retry_proto_rawDesc = "" +
 	"\n" +
-	"\x18goagen_retry_retry.proto\x12\x05retry\"#\n" +
-	"\x11GetMessageRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"/\n" +
-	"\x12GetMessageResponse\x12\x19\n" +
-	"\bmessage_\x18\x01 \x01(\tR\amessage2O\n" +
+	"\x18goagen_retry_retry.proto\x12\x05retry\"/\n" +
+	"\x11GetMessageRequest\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01B\x05\n" +
+	"\x03_id\"A\n" +
+	"\x12GetMessageResponse\x12\x1e\n" +
+	"\bmessage_\x18\x01 \x01(\tH\x00R\amessage\x88\x01\x01B\v\n" +
+	"\t_message_2O\n" +
 	"\x05Retry\x12F\n" +
 	"\n" +
 	"GetMessage\x12\x18.retry.GetMessageRequest\x1a\x19.retry.GetMessageResponse\"\x03\x90\x02\x02B\n" +
@@ -164,6 +166,8 @@ func file_goagen_retry_retry_proto_init() {
 	if File_goagen_retry_retry_proto != nil {
 		return
 	}
+	file_goagen_retry_retry_proto_msgTypes[0].OneofWrappers = []any{}
+	file_goagen_retry_retry_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

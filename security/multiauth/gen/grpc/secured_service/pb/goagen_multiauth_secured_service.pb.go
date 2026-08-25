@@ -67,11 +67,11 @@ func (*SigninRequest) Descriptor() ([]byte, []int) {
 type SigninResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// JWT token
-	Jwt string `protobuf:"bytes,1,opt,name=jwt,proto3" json:"jwt,omitempty"`
+	Jwt *string `protobuf:"bytes,1,opt,name=jwt,proto3,oneof" json:"jwt,omitempty"`
 	// API Key
-	ApiKey string `protobuf:"bytes,2,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`
+	ApiKey *string `protobuf:"bytes,2,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
 	// OAuth2 token
-	OauthToken    string `protobuf:"bytes,3,opt,name=oauth_token,json=oauthToken,proto3" json:"oauth_token,omitempty"`
+	OauthToken    *string `protobuf:"bytes,3,opt,name=oauth_token,json=oauthToken,proto3,oneof" json:"oauth_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -107,22 +107,22 @@ func (*SigninResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *SigninResponse) GetJwt() string {
-	if x != nil {
-		return x.Jwt
+	if x != nil && x.Jwt != nil {
+		return *x.Jwt
 	}
 	return ""
 }
 
 func (x *SigninResponse) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
+	if x != nil && x.ApiKey != nil {
+		return *x.ApiKey
 	}
 	return ""
 }
 
 func (x *SigninResponse) GetOauthToken() string {
-	if x != nil {
-		return x.OauthToken
+	if x != nil && x.OauthToken != nil {
+		return *x.OauthToken
 	}
 	return ""
 }
@@ -174,7 +174,7 @@ func (x *SecureRequest) GetFail() bool {
 
 type SecureResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -210,8 +210,8 @@ func (*SecureResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *SecureResponse) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
@@ -219,7 +219,7 @@ func (x *SecureResponse) GetField() string {
 type DoublySecureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// API key
-	Key           string `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Key           *string `protobuf:"bytes,1,opt,name=key,proto3,oneof" json:"key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -255,15 +255,15 @@ func (*DoublySecureRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *DoublySecureRequest) GetKey() string {
-	if x != nil {
-		return x.Key
+	if x != nil && x.Key != nil {
+		return *x.Key
 	}
 	return ""
 }
 
 type DoublySecureResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -299,8 +299,8 @@ func (*DoublySecureResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *DoublySecureResponse) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
@@ -370,7 +370,7 @@ func (x *AlsoDoublySecureRequest) GetKey() string {
 
 type AlsoDoublySecureResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -406,8 +406,8 @@ func (*AlsoDoublySecureResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *AlsoDoublySecureResponse) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
@@ -417,30 +417,38 @@ var File_goagen_multiauth_secured_service_proto protoreflect.FileDescriptor
 const file_goagen_multiauth_secured_service_proto_rawDesc = "" +
 	"\n" +
 	"&goagen_multiauth_secured_service.proto\x12\x0fsecured_service\"\x0f\n" +
-	"\rSigninRequest\"\\\n" +
-	"\x0eSigninResponse\x12\x10\n" +
-	"\x03jwt\x18\x01 \x01(\tR\x03jwt\x12\x17\n" +
-	"\aapi_key\x18\x02 \x01(\tR\x06apiKey\x12\x1f\n" +
-	"\voauth_token\x18\x03 \x01(\tR\n" +
-	"oauthToken\"1\n" +
+	"\rSigninRequest\"\x8f\x01\n" +
+	"\x0eSigninResponse\x12\x15\n" +
+	"\x03jwt\x18\x01 \x01(\tH\x00R\x03jwt\x88\x01\x01\x12\x1c\n" +
+	"\aapi_key\x18\x02 \x01(\tH\x01R\x06apiKey\x88\x01\x01\x12$\n" +
+	"\voauth_token\x18\x03 \x01(\tH\x02R\n" +
+	"oauthToken\x88\x01\x01B\x06\n" +
+	"\x04_jwtB\n" +
+	"\n" +
+	"\b_api_keyB\x0e\n" +
+	"\f_oauth_token\"1\n" +
 	"\rSecureRequest\x12\x17\n" +
 	"\x04fail\x18\x01 \x01(\bH\x00R\x04fail\x88\x01\x01B\a\n" +
-	"\x05_fail\"&\n" +
-	"\x0eSecureResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"'\n" +
-	"\x13DoublySecureRequest\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\",\n" +
-	"\x14DoublySecureResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"\x94\x01\n" +
+	"\x05_fail\"5\n" +
+	"\x0eSecureResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"4\n" +
+	"\x13DoublySecureRequest\x12\x15\n" +
+	"\x03key\x18\x01 \x01(\tH\x00R\x03key\x88\x01\x01B\x06\n" +
+	"\x04_key\";\n" +
+	"\x14DoublySecureResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"\x94\x01\n" +
 	"\x17AlsoDoublySecureRequest\x12\x1f\n" +
 	"\busername\x18\x01 \x01(\tH\x00R\busername\x88\x01\x01\x12\x1f\n" +
 	"\bpassword\x18\x02 \x01(\tH\x01R\bpassword\x88\x01\x01\x12\x15\n" +
 	"\x03key\x18\x03 \x01(\tH\x02R\x03key\x88\x01\x01B\v\n" +
 	"\t_usernameB\v\n" +
 	"\t_passwordB\x06\n" +
-	"\x04_key\"0\n" +
-	"\x18AlsoDoublySecureResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field2\xec\x02\n" +
+	"\x04_key\"?\n" +
+	"\x18AlsoDoublySecureResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field2\xec\x02\n" +
 	"\x0eSecuredService\x12I\n" +
 	"\x06Signin\x12\x1e.secured_service.SigninRequest\x1a\x1f.secured_service.SigninResponse\x12I\n" +
 	"\x06Secure\x12\x1e.secured_service.SecureRequest\x1a\x1f.secured_service.SecureResponse\x12[\n" +
@@ -491,8 +499,13 @@ func file_goagen_multiauth_secured_service_proto_init() {
 	if File_goagen_multiauth_secured_service_proto != nil {
 		return
 	}
+	file_goagen_multiauth_secured_service_proto_msgTypes[1].OneofWrappers = []any{}
 	file_goagen_multiauth_secured_service_proto_msgTypes[2].OneofWrappers = []any{}
+	file_goagen_multiauth_secured_service_proto_msgTypes[3].OneofWrappers = []any{}
+	file_goagen_multiauth_secured_service_proto_msgTypes[4].OneofWrappers = []any{}
+	file_goagen_multiauth_secured_service_proto_msgTypes[5].OneofWrappers = []any{}
 	file_goagen_multiauth_secured_service_proto_msgTypes[6].OneofWrappers = []any{}
+	file_goagen_multiauth_secured_service_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

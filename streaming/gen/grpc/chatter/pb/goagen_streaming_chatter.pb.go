@@ -66,7 +66,7 @@ func (*LoginRequest) Descriptor() ([]byte, []int) {
 
 type LoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -102,15 +102,15 @@ func (*LoginResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *LoginResponse) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
 
 type EchoerStreamingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -146,15 +146,15 @@ func (*EchoerStreamingRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *EchoerStreamingRequest) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
 
 type EchoerResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -190,15 +190,15 @@ func (*EchoerResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *EchoerResponse) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
 
 type ListenerStreamingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -234,8 +234,8 @@ func (*ListenerStreamingRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListenerStreamingRequest) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
@@ -278,7 +278,7 @@ func (*ListenerResponse) Descriptor() ([]byte, []int) {
 
 type SummaryStreamingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *string                `protobuf:"bytes,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -314,8 +314,8 @@ func (*SummaryStreamingRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *SummaryStreamingRequest) GetField() string {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return ""
 }
@@ -367,11 +367,11 @@ func (x *ChatSummaryCollection) GetField() []*ChatSummary {
 type ChatSummary struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Message sent to the server
-	Message_ string `protobuf:"bytes,1,opt,name=message_,json=message,proto3" json:"message_,omitempty"`
+	Message_ *string `protobuf:"bytes,1,opt,name=message_,json=message,proto3,oneof" json:"message_,omitempty"`
 	// Length of the message sent
 	Length *int32 `protobuf:"zigzag32,2,opt,name=length,proto3,oneof" json:"length,omitempty"`
 	// Time at which the message was sent
-	SentAt        string `protobuf:"bytes,3,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
+	SentAt        *string `protobuf:"bytes,3,opt,name=sent_at,json=sentAt,proto3,oneof" json:"sent_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -407,8 +407,8 @@ func (*ChatSummary) Descriptor() ([]byte, []int) {
 }
 
 func (x *ChatSummary) GetMessage_() string {
-	if x != nil {
-		return x.Message_
+	if x != nil && x.Message_ != nil {
+		return *x.Message_
 	}
 	return ""
 }
@@ -421,8 +421,8 @@ func (x *ChatSummary) GetLength() int32 {
 }
 
 func (x *ChatSummary) GetSentAt() string {
-	if x != nil {
-		return x.SentAt
+	if x != nil && x.SentAt != nil {
+		return *x.SentAt
 	}
 	return ""
 }
@@ -466,10 +466,10 @@ func (*SubscribeRequest) Descriptor() ([]byte, []int) {
 type SubscribeResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Message sent to the server
-	Message_ string `protobuf:"bytes,1,opt,name=message_,json=message,proto3" json:"message_,omitempty"`
-	Action   string `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
+	Message_ *string `protobuf:"bytes,1,opt,name=message_,json=message,proto3,oneof" json:"message_,omitempty"`
+	Action   *string `protobuf:"bytes,2,opt,name=action,proto3,oneof" json:"action,omitempty"`
 	// Time at which the message was added
-	AddedAt       string `protobuf:"bytes,3,opt,name=added_at,json=addedAt,proto3" json:"added_at,omitempty"`
+	AddedAt       *string `protobuf:"bytes,3,opt,name=added_at,json=addedAt,proto3,oneof" json:"added_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -505,22 +505,22 @@ func (*SubscribeResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *SubscribeResponse) GetMessage_() string {
-	if x != nil {
-		return x.Message_
+	if x != nil && x.Message_ != nil {
+		return *x.Message_
 	}
 	return ""
 }
 
 func (x *SubscribeResponse) GetAction() string {
-	if x != nil {
-		return x.Action
+	if x != nil && x.Action != nil {
+		return *x.Action
 	}
 	return ""
 }
 
 func (x *SubscribeResponse) GetAddedAt() string {
-	if x != nil {
-		return x.AddedAt
+	if x != nil && x.AddedAt != nil {
+		return *x.AddedAt
 	}
 	return ""
 }
@@ -564,11 +564,11 @@ func (*HistoryRequest) Descriptor() ([]byte, []int) {
 type HistoryResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Message sent to the server
-	Message_ string `protobuf:"bytes,1,opt,name=message_,json=message,proto3" json:"message_,omitempty"`
+	Message_ *string `protobuf:"bytes,1,opt,name=message_,json=message,proto3,oneof" json:"message_,omitempty"`
 	// Length of the message sent
 	Length *int32 `protobuf:"zigzag32,2,opt,name=length,proto3,oneof" json:"length,omitempty"`
 	// Time at which the message was sent
-	SentAt        string `protobuf:"bytes,3,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
+	SentAt        *string `protobuf:"bytes,3,opt,name=sent_at,json=sentAt,proto3,oneof" json:"sent_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -604,8 +604,8 @@ func (*HistoryResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *HistoryResponse) GetMessage_() string {
-	if x != nil {
-		return x.Message_
+	if x != nil && x.Message_ != nil {
+		return *x.Message_
 	}
 	return ""
 }
@@ -618,8 +618,8 @@ func (x *HistoryResponse) GetLength() int32 {
 }
 
 func (x *HistoryResponse) GetSentAt() string {
-	if x != nil {
-		return x.SentAt
+	if x != nil && x.SentAt != nil {
+		return *x.SentAt
 	}
 	return ""
 }
@@ -629,36 +629,50 @@ var File_goagen_streaming_chatter_proto protoreflect.FileDescriptor
 const file_goagen_streaming_chatter_proto_rawDesc = "" +
 	"\n" +
 	"\x1egoagen_streaming_chatter.proto\x12\achatter\"\x0e\n" +
-	"\fLoginRequest\"%\n" +
-	"\rLoginResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\".\n" +
-	"\x16EchoerStreamingRequest\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"&\n" +
-	"\x0eEchoerResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"0\n" +
-	"\x18ListenerStreamingRequest\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"\x12\n" +
-	"\x10ListenerResponse\"/\n" +
-	"\x17SummaryStreamingRequest\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\"C\n" +
+	"\fLoginRequest\"4\n" +
+	"\rLoginResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"=\n" +
+	"\x16EchoerStreamingRequest\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"5\n" +
+	"\x0eEchoerResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"?\n" +
+	"\x18ListenerStreamingRequest\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"\x12\n" +
+	"\x10ListenerResponse\">\n" +
+	"\x17SummaryStreamingRequest\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\tH\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field\"C\n" +
 	"\x15ChatSummaryCollection\x12*\n" +
-	"\x05field\x18\x01 \x03(\v2\x14.chatter.ChatSummaryR\x05field\"i\n" +
-	"\vChatSummary\x12\x19\n" +
-	"\bmessage_\x18\x01 \x01(\tR\amessage\x12\x1b\n" +
-	"\x06length\x18\x02 \x01(\x11H\x00R\x06length\x88\x01\x01\x12\x17\n" +
-	"\asent_at\x18\x03 \x01(\tR\x06sentAtB\t\n" +
-	"\a_length\"\x12\n" +
-	"\x10SubscribeRequest\"a\n" +
-	"\x11SubscribeResponse\x12\x19\n" +
-	"\bmessage_\x18\x01 \x01(\tR\amessage\x12\x16\n" +
-	"\x06action\x18\x02 \x01(\tR\x06action\x12\x19\n" +
-	"\badded_at\x18\x03 \x01(\tR\aaddedAt\"\x10\n" +
-	"\x0eHistoryRequest\"m\n" +
-	"\x0fHistoryResponse\x12\x19\n" +
-	"\bmessage_\x18\x01 \x01(\tR\amessage\x12\x1b\n" +
-	"\x06length\x18\x02 \x01(\x11H\x00R\x06length\x88\x01\x01\x12\x17\n" +
-	"\asent_at\x18\x03 \x01(\tR\x06sentAtB\t\n" +
-	"\a_length2\xaa\x03\n" +
+	"\x05field\x18\x01 \x03(\v2\x14.chatter.ChatSummaryR\x05field\"\x8c\x01\n" +
+	"\vChatSummary\x12\x1e\n" +
+	"\bmessage_\x18\x01 \x01(\tH\x00R\amessage\x88\x01\x01\x12\x1b\n" +
+	"\x06length\x18\x02 \x01(\x11H\x01R\x06length\x88\x01\x01\x12\x1c\n" +
+	"\asent_at\x18\x03 \x01(\tH\x02R\x06sentAt\x88\x01\x01B\v\n" +
+	"\t_message_B\t\n" +
+	"\a_lengthB\n" +
+	"\n" +
+	"\b_sent_at\"\x12\n" +
+	"\x10SubscribeRequest\"\x95\x01\n" +
+	"\x11SubscribeResponse\x12\x1e\n" +
+	"\bmessage_\x18\x01 \x01(\tH\x00R\amessage\x88\x01\x01\x12\x1b\n" +
+	"\x06action\x18\x02 \x01(\tH\x01R\x06action\x88\x01\x01\x12\x1e\n" +
+	"\badded_at\x18\x03 \x01(\tH\x02R\aaddedAt\x88\x01\x01B\v\n" +
+	"\t_message_B\t\n" +
+	"\a_actionB\v\n" +
+	"\t_added_at\"\x10\n" +
+	"\x0eHistoryRequest\"\x90\x01\n" +
+	"\x0fHistoryResponse\x12\x1e\n" +
+	"\bmessage_\x18\x01 \x01(\tH\x00R\amessage\x88\x01\x01\x12\x1b\n" +
+	"\x06length\x18\x02 \x01(\x11H\x01R\x06length\x88\x01\x01\x12\x1c\n" +
+	"\asent_at\x18\x03 \x01(\tH\x02R\x06sentAt\x88\x01\x01B\v\n" +
+	"\t_message_B\t\n" +
+	"\a_lengthB\n" +
+	"\n" +
+	"\b_sent_at2\xaa\x03\n" +
 	"\aChatter\x126\n" +
 	"\x05Login\x12\x15.chatter.LoginRequest\x1a\x16.chatter.LoginResponse\x12F\n" +
 	"\x06Echoer\x12\x1f.chatter.EchoerStreamingRequest\x1a\x17.chatter.EchoerResponse(\x010\x01\x12J\n" +
@@ -722,7 +736,13 @@ func file_goagen_streaming_chatter_proto_init() {
 	if File_goagen_streaming_chatter_proto != nil {
 		return
 	}
+	file_goagen_streaming_chatter_proto_msgTypes[1].OneofWrappers = []any{}
+	file_goagen_streaming_chatter_proto_msgTypes[2].OneofWrappers = []any{}
+	file_goagen_streaming_chatter_proto_msgTypes[3].OneofWrappers = []any{}
+	file_goagen_streaming_chatter_proto_msgTypes[4].OneofWrappers = []any{}
+	file_goagen_streaming_chatter_proto_msgTypes[6].OneofWrappers = []any{}
 	file_goagen_streaming_chatter_proto_msgTypes[8].OneofWrappers = []any{}
+	file_goagen_streaming_chatter_proto_msgTypes[10].OneofWrappers = []any{}
 	file_goagen_streaming_chatter_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

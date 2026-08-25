@@ -17,10 +17,12 @@ import (
 // *interceptors.GetPayload.
 func NewProtoGetRequest(payload *interceptors.GetPayload) *interceptorspb.GetRequest {
 	message := &interceptorspb.GetRequest{
-		TenantId: string(payload.TenantID),
-		RecordId: string(payload.RecordID),
-		Auth:     payload.Auth,
+		Auth: &payload.Auth,
 	}
+	tenantID := string(payload.TenantID)
+	message.TenantId = &tenantID
+	recordID := string(payload.RecordID)
+	message.RecordId = &recordID
 	if payload.TraceID != nil {
 		traceID := string(*payload.TraceID)
 		message.TraceId = &traceID
@@ -35,12 +37,12 @@ func NewProtoGetRequest(payload *interceptors.GetPayload) *interceptorspb.GetReq
 // NewGetResult builds *interceptors.GetResult from *interceptorspb.GetResponse.
 func NewGetResult(message *interceptorspb.GetResponse) *interceptors.GetResult {
 	result := &interceptors.GetResult{
-		ID:          interceptors.UUID(message.Id),
-		Value:       message.Value,
-		Tenant:      message.Tenant,
-		Status:      int(message.Status),
-		ProcessedAt: message.ProcessedAt,
-		Duration:    int(message.Duration),
+		ID:          interceptors.UUID(*message.Id),
+		Value:       *message.Value,
+		Tenant:      *message.Tenant,
+		Status:      int(*message.Status),
+		ProcessedAt: *message.ProcessedAt,
+		Duration:    int(*message.Duration),
 		CachedAt:    message.CachedAt,
 	}
 	if message.RetryCount != nil {
@@ -54,8 +56,54 @@ func NewGetResult(message *interceptorspb.GetResponse) *interceptors.GetResult {
 	return result
 }
 
+// ValidateGetRequest runs the validations defined on GetRequest.
+func ValidateGetRequest(message *interceptorspb.GetRequest) (err error) {
+	if message.TenantId == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("tenantID", "message"))
+	}
+	if message.RecordId == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("recordID", "message"))
+	}
+	if message.Auth == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("auth", "message"))
+	}
+	if message.TenantId != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.tenantID", string(*message.TenantId), goa.FormatUUID))
+	}
+	if message.RecordId != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.recordID", string(*message.RecordId), goa.FormatUUID))
+	}
+	if message.TraceId != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.traceID", string(*message.TraceId), goa.FormatUUID))
+	}
+	if message.SpanId != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.spanID", string(*message.SpanId), goa.FormatUUID))
+	}
+	return
+}
+
 // ValidateGetResponse runs the validations defined on GetResponse.
 func ValidateGetResponse(message *interceptorspb.GetResponse) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.id", string(message.Id), goa.FormatUUID))
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
+	}
+	if message.Value == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("value", "message"))
+	}
+	if message.Tenant == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("tenant", "message"))
+	}
+	if message.Status == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("status", "message"))
+	}
+	if message.ProcessedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("processedAt", "message"))
+	}
+	if message.Duration == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("duration", "message"))
+	}
+	if message.Id != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.id", string(*message.Id), goa.FormatUUID))
+	}
 	return
 }

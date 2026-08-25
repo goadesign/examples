@@ -31,11 +31,11 @@ const (
 type GetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Tenant ID for the request
-	TenantId string `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
+	TenantId *string `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	// ID of the record to retrieve
-	RecordId string `protobuf:"bytes,2,opt,name=record_id,json=recordId,proto3" json:"record_id,omitempty"`
+	RecordId *string `protobuf:"bytes,2,opt,name=record_id,json=recordId,proto3,oneof" json:"record_id,omitempty"`
 	// JWT auth token
-	Auth string `protobuf:"bytes,3,opt,name=auth,proto3" json:"auth,omitempty"`
+	Auth *string `protobuf:"bytes,3,opt,name=auth,proto3,oneof" json:"auth,omitempty"`
 	// Unique trace ID for request, initialized by the TraceRequest interceptor
 	TraceId *string `protobuf:"bytes,4,opt,name=trace_id,json=traceId,proto3,oneof" json:"trace_id,omitempty"`
 	// Unique span ID for request, initialized by the TraceRequest interceptor
@@ -75,22 +75,22 @@ func (*GetRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetRequest) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
+	if x != nil && x.TenantId != nil {
+		return *x.TenantId
 	}
 	return ""
 }
 
 func (x *GetRequest) GetRecordId() string {
-	if x != nil {
-		return x.RecordId
+	if x != nil && x.RecordId != nil {
+		return *x.RecordId
 	}
 	return ""
 }
 
 func (x *GetRequest) GetAuth() string {
-	if x != nil {
-		return x.Auth
+	if x != nil && x.Auth != nil {
+		return *x.Auth
 	}
 	return ""
 }
@@ -112,17 +112,17 @@ func (x *GetRequest) GetSpanId() string {
 type GetResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the record
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// Value of the record
-	Value string `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	Value *string `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
 	// Tenant the record belongs to
-	Tenant string `protobuf:"bytes,3,opt,name=tenant,proto3" json:"tenant,omitempty"`
+	Tenant *string `protobuf:"bytes,3,opt,name=tenant,proto3,oneof" json:"tenant,omitempty"`
 	// Response status code
-	Status int32 `protobuf:"zigzag32,4,opt,name=status,proto3" json:"status,omitempty"`
+	Status *int32 `protobuf:"zigzag32,4,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	// Timestamp when processed, written by the RequestAudit interceptor
-	ProcessedAt string `protobuf:"bytes,5,opt,name=processed_at,json=processedAt,proto3" json:"processed_at,omitempty"`
+	ProcessedAt *string `protobuf:"bytes,5,opt,name=processed_at,json=processedAt,proto3,oneof" json:"processed_at,omitempty"`
 	// Processing duration in ms, written by the RequestAudit interceptor
-	Duration int32 `protobuf:"zigzag32,6,opt,name=duration,proto3" json:"duration,omitempty"`
+	Duration *int32 `protobuf:"zigzag32,6,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
 	// Time at which the record was cached, written by the Cache interceptor
 	CachedAt *string `protobuf:"bytes,7,opt,name=cached_at,json=cachedAt,proto3,oneof" json:"cached_at,omitempty"`
 	// Number of retry attempts made, written client-side by the Retry interceptor
@@ -164,43 +164,43 @@ func (*GetResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetResponse) GetId() string {
-	if x != nil {
-		return x.Id
+	if x != nil && x.Id != nil {
+		return *x.Id
 	}
 	return ""
 }
 
 func (x *GetResponse) GetValue() string {
-	if x != nil {
-		return x.Value
+	if x != nil && x.Value != nil {
+		return *x.Value
 	}
 	return ""
 }
 
 func (x *GetResponse) GetTenant() string {
-	if x != nil {
-		return x.Tenant
+	if x != nil && x.Tenant != nil {
+		return *x.Tenant
 	}
 	return ""
 }
 
 func (x *GetResponse) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return 0
 }
 
 func (x *GetResponse) GetProcessedAt() string {
-	if x != nil {
-		return x.ProcessedAt
+	if x != nil && x.ProcessedAt != nil {
+		return *x.ProcessedAt
 	}
 	return ""
 }
 
 func (x *GetResponse) GetDuration() int32 {
-	if x != nil {
-		return x.Duration
+	if x != nil && x.Duration != nil {
+		return *x.Duration
 	}
 	return 0
 }
@@ -230,28 +230,39 @@ var File_goagen_interceptors_interceptors_proto protoreflect.FileDescriptor
 
 const file_goagen_interceptors_interceptors_proto_rawDesc = "" +
 	"\n" +
-	"&goagen_interceptors_interceptors.proto\x12\finterceptors\"\xb1\x01\n" +
+	"&goagen_interceptors_interceptors.proto\x12\finterceptors\"\xe5\x01\n" +
 	"\n" +
-	"GetRequest\x12\x1b\n" +
-	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x1b\n" +
-	"\trecord_id\x18\x02 \x01(\tR\brecordId\x12\x12\n" +
-	"\x04auth\x18\x03 \x01(\tR\x04auth\x12\x1e\n" +
-	"\btrace_id\x18\x04 \x01(\tH\x00R\atraceId\x88\x01\x01\x12\x1c\n" +
-	"\aspan_id\x18\x05 \x01(\tH\x01R\x06spanId\x88\x01\x01B\v\n" +
+	"GetRequest\x12 \n" +
+	"\ttenant_id\x18\x01 \x01(\tH\x00R\btenantId\x88\x01\x01\x12 \n" +
+	"\trecord_id\x18\x02 \x01(\tH\x01R\brecordId\x88\x01\x01\x12\x17\n" +
+	"\x04auth\x18\x03 \x01(\tH\x02R\x04auth\x88\x01\x01\x12\x1e\n" +
+	"\btrace_id\x18\x04 \x01(\tH\x03R\atraceId\x88\x01\x01\x12\x1c\n" +
+	"\aspan_id\x18\x05 \x01(\tH\x04R\x06spanId\x88\x01\x01B\f\n" +
+	"\n" +
+	"_tenant_idB\f\n" +
+	"\n" +
+	"_record_idB\a\n" +
+	"\x05_authB\v\n" +
 	"\t_trace_idB\n" +
 	"\n" +
-	"\b_span_id\"\xc7\x02\n" +
-	"\vGetResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\x12\x16\n" +
-	"\x06tenant\x18\x03 \x01(\tR\x06tenant\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x11R\x06status\x12!\n" +
-	"\fprocessed_at\x18\x05 \x01(\tR\vprocessedAt\x12\x1a\n" +
-	"\bduration\x18\x06 \x01(\x11R\bduration\x12 \n" +
-	"\tcached_at\x18\a \x01(\tH\x00R\bcachedAt\x88\x01\x01\x12$\n" +
-	"\vretry_count\x18\b \x01(\x11H\x01R\n" +
+	"\b_span_id\"\xaa\x03\n" +
+	"\vGetResponse\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x19\n" +
+	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x12\x1b\n" +
+	"\x06tenant\x18\x03 \x01(\tH\x02R\x06tenant\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x04 \x01(\x11H\x03R\x06status\x88\x01\x01\x12&\n" +
+	"\fprocessed_at\x18\x05 \x01(\tH\x04R\vprocessedAt\x88\x01\x01\x12\x1f\n" +
+	"\bduration\x18\x06 \x01(\x11H\x05R\bduration\x88\x01\x01\x12 \n" +
+	"\tcached_at\x18\a \x01(\tH\x06R\bcachedAt\x88\x01\x01\x12$\n" +
+	"\vretry_count\x18\b \x01(\x11H\aR\n" +
 	"retryCount\x88\x01\x01\x12*\n" +
-	"\x0eretry_duration\x18\t \x01(\x11H\x02R\rretryDuration\x88\x01\x01B\f\n" +
+	"\x0eretry_duration\x18\t \x01(\x11H\bR\rretryDuration\x88\x01\x01B\x05\n" +
+	"\x03_idB\b\n" +
+	"\x06_valueB\t\n" +
+	"\a_tenantB\t\n" +
+	"\a_statusB\x0f\n" +
+	"\r_processed_atB\v\n" +
+	"\t_durationB\f\n" +
 	"\n" +
 	"_cached_atB\x0e\n" +
 	"\f_retry_countB\x11\n" +

@@ -17,9 +17,9 @@ import (
 // *interceptorspb.GetRequest.
 func NewGetPayload(message *interceptorspb.GetRequest) *interceptors.GetPayload {
 	v := &interceptors.GetPayload{
-		TenantID: interceptors.UUID(message.TenantId),
-		RecordID: interceptors.UUID(message.RecordId),
-		Auth:     message.Auth,
+		TenantID: interceptors.UUID(*message.TenantId),
+		RecordID: interceptors.UUID(*message.RecordId),
+		Auth:     *message.Auth,
 	}
 	if message.TraceId != nil {
 		traceID := interceptors.UUID(*message.TraceId)
@@ -36,14 +36,17 @@ func NewGetPayload(message *interceptorspb.GetRequest) *interceptors.GetPayload 
 // *interceptors.GetResult.
 func NewProtoGetResponse(result *interceptors.GetResult) *interceptorspb.GetResponse {
 	message := &interceptorspb.GetResponse{
-		Id:          string(result.ID),
-		Value:       result.Value,
-		Tenant:      result.Tenant,
-		Status:      int32(result.Status),
-		ProcessedAt: result.ProcessedAt,
-		Duration:    int32(result.Duration),
+		Value:       &result.Value,
+		Tenant:      &result.Tenant,
+		ProcessedAt: &result.ProcessedAt,
 		CachedAt:    result.CachedAt,
 	}
+	id := string(result.ID)
+	message.Id = &id
+	status := int32(result.Status)
+	message.Status = &status
+	duration := int32(result.Duration)
+	message.Duration = &duration
 	if result.RetryCount != nil {
 		retryCount := int32(*result.RetryCount)
 		message.RetryCount = &retryCount
@@ -57,8 +60,21 @@ func NewProtoGetResponse(result *interceptors.GetResult) *interceptorspb.GetResp
 
 // ValidateGetRequest runs the validations defined on GetRequest.
 func ValidateGetRequest(message *interceptorspb.GetRequest) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.tenantID", string(message.TenantId), goa.FormatUUID))
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.recordID", string(message.RecordId), goa.FormatUUID))
+	if message.TenantId == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("tenantID", "message"))
+	}
+	if message.RecordId == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("recordID", "message"))
+	}
+	if message.Auth == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("auth", "message"))
+	}
+	if message.TenantId != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.tenantID", string(*message.TenantId), goa.FormatUUID))
+	}
+	if message.RecordId != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.recordID", string(*message.RecordId), goa.FormatUUID))
+	}
 	if message.TraceId != nil {
 		err = goa.MergeErrors(err, goa.ValidateFormat("message.traceID", string(*message.TraceId), goa.FormatUUID))
 	}

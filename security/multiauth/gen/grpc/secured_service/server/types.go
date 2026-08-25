@@ -10,6 +10,7 @@ package server
 import (
 	secured_servicepb "goa.design/examples/security/multiauth/gen/grpc/secured_service/pb"
 	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // NewSigninPayload builds *securedservice.SigninPayload from metadata values.
@@ -24,9 +25,9 @@ func NewSigninPayload(username string, password string) *securedservice.SigninPa
 // *securedservice.Creds.
 func NewProtoSigninResponse(result *securedservice.Creds) *secured_servicepb.SigninResponse {
 	message := &secured_servicepb.SigninResponse{
-		Jwt:        result.JWT,
-		ApiKey:     result.APIKey,
-		OauthToken: result.OauthToken,
+		Jwt:        &result.JWT,
+		ApiKey:     &result.APIKey,
+		OauthToken: &result.OauthToken,
 	}
 	return message
 }
@@ -44,7 +45,8 @@ func NewSecurePayload(message *secured_servicepb.SecureRequest, token string) *s
 // NewProtoSecureResponse builds *secured_servicepb.SecureResponse from string.
 func NewProtoSecureResponse(result string) *secured_servicepb.SecureResponse {
 	message := &secured_servicepb.SecureResponse{}
-	message.Field = result
+	message.Field = new(string)
+	*message.Field = result
 	return message
 }
 
@@ -52,7 +54,7 @@ func NewProtoSecureResponse(result string) *secured_servicepb.SecureResponse {
 // *secured_servicepb.DoublySecureRequest.
 func NewDoublySecurePayload(message *secured_servicepb.DoublySecureRequest, token string) *securedservice.DoublySecurePayload {
 	v := &securedservice.DoublySecurePayload{
-		Key: message.Key,
+		Key: *message.Key,
 	}
 	v.Token = token
 	return v
@@ -62,7 +64,8 @@ func NewDoublySecurePayload(message *secured_servicepb.DoublySecureRequest, toke
 // from string.
 func NewProtoDoublySecureResponse(result string) *secured_servicepb.DoublySecureResponse {
 	message := &secured_servicepb.DoublySecureResponse{}
-	message.Field = result
+	message.Field = new(string)
+	*message.Field = result
 	return message
 }
 
@@ -91,6 +94,16 @@ func NewAlsoDoublySecurePayload(message *secured_servicepb.AlsoDoublySecureReque
 // *secured_servicepb.AlsoDoublySecureResponse from string.
 func NewProtoAlsoDoublySecureResponse(result string) *secured_servicepb.AlsoDoublySecureResponse {
 	message := &secured_servicepb.AlsoDoublySecureResponse{}
-	message.Field = result
+	message.Field = new(string)
+	*message.Field = result
 	return message
+}
+
+// ValidateDoublySecureRequest runs the validations defined on
+// DoublySecureRequest.
+func ValidateDoublySecureRequest(message *secured_servicepb.DoublySecureRequest) (err error) {
+	if message.Key == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("key", "message"))
+	}
+	return
 }

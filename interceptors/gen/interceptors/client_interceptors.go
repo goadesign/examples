@@ -33,14 +33,7 @@ type ClientInterceptors interface {
 type (
 	// EncodeTenantInfo describes the service call currently passed to the interceptor.
 	EncodeTenantInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// Payload returns the selected fields from the method payload.
 		Payload() EncodeTenantPayload
 	}
@@ -54,14 +47,7 @@ type (
 	}
 	// RetryInfo describes the service call currently passed to the interceptor.
 	RetryInfo interface {
-		// Service returns the service selected for this call.
-		Service() string
-		// Method returns the method selected for this call.
-		Method() string
-		// CallType returns whether this is an endpoint call, stream send, or stream receive.
-		CallType() goa.InterceptorCallType
-		// RawPayload returns the value passed to the interceptor.
-		RawPayload() any
+		goa.InterceptorInfo
 		// Result returns the selected fields from the method result.
 		Result(any) RetryResult
 	}
@@ -82,31 +68,31 @@ type (
 		rawPayload any
 	}
 	encodeTenantGetClientUnaryInfo struct {
-		*encodeTenantGetInfo
+		encodeTenantGetInfo
 	}
 	encodeTenantCreateInfo struct {
 		rawPayload any
 	}
 	encodeTenantCreateClientUnaryInfo struct {
-		*encodeTenantCreateInfo
+		encodeTenantCreateInfo
 	}
 	encodeTenantStreamInfo struct {
 		rawPayload any
 	}
 	encodeTenantStreamClientUnaryInfo struct {
-		*encodeTenantStreamInfo
+		encodeTenantStreamInfo
 	}
 	retryGetInfo struct {
 		rawPayload any
 	}
 	retryGetClientUnaryInfo struct {
-		*retryGetInfo
+		retryGetInfo
 	}
 	retryCreateInfo struct {
 		rawPayload any
 	}
 	retryCreateClientUnaryInfo struct {
-		*retryCreateInfo
+		retryCreateInfo
 	}
 	encodeTenantGetPayload struct {
 		payload *GetPayload

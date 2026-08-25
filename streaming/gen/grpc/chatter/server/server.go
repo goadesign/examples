@@ -356,6 +356,9 @@ func (s *EchoerServerStream) Recv() (string, error) {
 	if err != nil {
 		return res, err
 	}
+	if err = ValidateEchoerStreamingRequest(v); err != nil {
+		return res, err
+	}
 	return NewEchoerStreamingRequestEchoerStreamingRequest(v), nil
 }
 
@@ -376,6 +379,9 @@ func (s *ListenerServerStream) Recv() (string, error) {
 	var res string
 	v, err := s.stream.Recv()
 	if err != nil {
+		return res, err
+	}
+	if err = ValidateListenerStreamingRequest(v); err != nil {
 		return res, err
 	}
 	return NewListenerStreamingRequestListenerStreamingRequest(v), nil
@@ -413,6 +419,9 @@ func (s *SummaryServerStream) Recv() (string, error) {
 	var res string
 	v, err := s.stream.Recv()
 	if err != nil {
+		return res, err
+	}
+	if err = ValidateSummaryStreamingRequest(v); err != nil {
 		return res, err
 	}
 	return NewSummaryStreamingRequestSummaryStreamingRequest(v), nil

@@ -23,13 +23,13 @@ func NewProtoLoginRequest() *chatterpb.LoginRequest {
 
 // NewLoginResult builds string from *chatterpb.LoginResponse.
 func NewLoginResult(message *chatterpb.LoginResponse) string {
-	result := message.Field
+	result := *message.Field
 	return result
 }
 
 // NewEchoerResponseEchoerResponse builds string from *chatterpb.EchoerResponse.
 func NewEchoerResponseEchoerResponse(v *chatterpb.EchoerResponse) string {
-	result := v.Field
+	result := *v.Field
 	return result
 }
 
@@ -37,7 +37,8 @@ func NewEchoerResponseEchoerResponse(v *chatterpb.EchoerResponse) string {
 // string.
 func NewProtoEchoerStreamingRequest(spayload string) *chatterpb.EchoerStreamingRequest {
 	v := &chatterpb.EchoerStreamingRequest{}
-	v.Field = spayload
+	v.Field = new(string)
+	*v.Field = spayload
 	return v
 }
 
@@ -45,7 +46,8 @@ func NewProtoEchoerStreamingRequest(spayload string) *chatterpb.EchoerStreamingR
 // from string.
 func NewProtoListenerStreamingRequest(spayload string) *chatterpb.ListenerStreamingRequest {
 	v := &chatterpb.ListenerStreamingRequest{}
-	v.Field = spayload
+	v.Field = new(string)
+	*v.Field = spayload
 	return v
 }
 
@@ -55,8 +57,8 @@ func NewChatSummaryCollectionChatSummaryCollection(v *chatterpb.ChatSummaryColle
 	vresult := make([]*chatterviews.ChatSummaryView, len(v.Field))
 	for i, val := range v.Field {
 		vresult[i] = &chatterviews.ChatSummaryView{
-			Message: &val.Message_,
-			SentAt:  &val.SentAt,
+			Message: val.Message_,
+			SentAt:  val.SentAt,
 		}
 		if val.Length != nil {
 			length := int(*val.Length)
@@ -70,7 +72,8 @@ func NewChatSummaryCollectionChatSummaryCollection(v *chatterpb.ChatSummaryColle
 // from string.
 func NewProtoSummaryStreamingRequest(spayload string) *chatterpb.SummaryStreamingRequest {
 	v := &chatterpb.SummaryStreamingRequest{}
-	v.Field = spayload
+	v.Field = new(string)
+	*v.Field = spayload
 	return v
 }
 
@@ -85,9 +88,9 @@ func NewProtoSubscribeRequest() *chatterpb.SubscribeRequest {
 // *chatterpb.SubscribeResponse.
 func NewSubscribeResponseEvent(v *chatterpb.SubscribeResponse) *chatter.Event {
 	result := &chatter.Event{
-		Message: v.Message_,
-		Action:  v.Action,
-		AddedAt: v.AddedAt,
+		Message: *v.Message_,
+		Action:  *v.Action,
+		AddedAt: *v.AddedAt,
 	}
 	return result
 }
@@ -103,8 +106,8 @@ func NewProtoHistoryRequest() *chatterpb.HistoryRequest {
 // *chatterpb.HistoryResponse.
 func NewHistoryResponseChatSummaryView(v *chatterpb.HistoryResponse) *chatterviews.ChatSummaryView {
 	vresult := &chatterviews.ChatSummaryView{
-		Message: &v.Message_,
-		SentAt:  &v.SentAt,
+		Message: v.Message_,
+		SentAt:  v.SentAt,
 	}
 	if v.Length != nil {
 		length := int(*v.Length)
@@ -117,9 +120,25 @@ func NewHistoryResponseChatSummaryView(v *chatterpb.HistoryResponse) *chattervie
 // from *chatterpb.HistoryResponse.
 func NewHistoryResponseChatSummaryViewTiny(v *chatterpb.HistoryResponse) *chatterviews.ChatSummaryView {
 	vresult := &chatterviews.ChatSummaryView{
-		Message: &v.Message_,
+		Message: v.Message_,
 	}
 	return vresult
+}
+
+// ValidateLoginResponse runs the validations defined on LoginResponse.
+func ValidateLoginResponse(message *chatterpb.LoginResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
+}
+
+// ValidateEchoerResponse runs the validations defined on EchoerResponse.
+func ValidateEchoerResponse(message *chatterpb.EchoerResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
 }
 
 // ValidateChatSummaryCollection runs the validations defined on
@@ -137,21 +156,58 @@ func ValidateChatSummaryCollection(message *chatterpb.ChatSummaryCollection) (er
 
 // ValidateChatSummary runs the validations defined on ChatSummary.
 func ValidateChatSummary(elem *chatterpb.ChatSummary) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("elem.sent_at", elem.SentAt, goa.FormatDateTime))
+	if elem.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "elem"))
+	}
+	if elem.SentAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("sent_at", "elem"))
+	}
+	if elem.SentAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("elem.sent_at", *elem.SentAt, goa.FormatDateTime))
+	}
 	return
 }
 
 // ValidateSubscribeResponse runs the validations defined on SubscribeResponse.
 func ValidateSubscribeResponse(message *chatterpb.SubscribeResponse) (err error) {
-	if !(message.Action == "added") {
-		err = goa.MergeErrors(err, goa.InvalidEnumValueError("message.action", message.Action, []any{"added"}))
+	if message.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "message"))
 	}
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.added_at", message.AddedAt, goa.FormatDateTime))
+	if message.Action == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("action", "message"))
+	}
+	if message.AddedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("added_at", "message"))
+	}
+	if message.Action != nil {
+		if !(*message.Action == "added") {
+			err = goa.MergeErrors(err, goa.InvalidEnumValueError("message.action", *message.Action, []any{"added"}))
+		}
+	}
+	if message.AddedAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.added_at", *message.AddedAt, goa.FormatDateTime))
+	}
+	return
+}
+
+// ValidateHistoryResponseTiny runs the validations defined on HistoryResponse.
+func ValidateHistoryResponseTiny(message *chatterpb.HistoryResponse) (err error) {
+	if message.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "message"))
+	}
 	return
 }
 
 // ValidateHistoryResponse runs the validations defined on HistoryResponse.
 func ValidateHistoryResponse(message *chatterpb.HistoryResponse) (err error) {
-	err = goa.MergeErrors(err, goa.ValidateFormat("message.sent_at", message.SentAt, goa.FormatDateTime))
+	if message.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "message"))
+	}
+	if message.SentAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("sent_at", "message"))
+	}
+	if message.SentAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("message.sent_at", *message.SentAt, goa.FormatDateTime))
+	}
 	return
 }

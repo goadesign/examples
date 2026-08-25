@@ -43,6 +43,9 @@ func (c *Client) Divide() goa.Endpoint {
 			resp := goagrpc.DecodeError(err)
 			switch message := resp.(type) {
 			case *calcpb.DivideDivByZeroError:
+				if err := ValidateDivideDivByZeroError(message); err != nil {
+					return nil, err
+				}
 				return nil, NewDivideDivByZeroError(message)
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)

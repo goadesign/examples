@@ -32,13 +32,13 @@ message StoredBottleCollection {
 // A StoredBottle describes a bottle retrieved by the storage service.
 message StoredBottle {
 	// ID is the unique id of the bottle.
-	string id = 8;
+	optional string id = 8;
 	// Name of bottle
-	string name = 2;
+	optional string name = 2;
 	// Winery that produces wine
 	Winery winery = 3;
 	// Vintage of bottle
-	uint32 vintage = 4;
+	optional uint32 vintage = 4;
 	// Composition is the list of grape varietals and associated percentage.
 	repeated Component composition = 5;
 	// Description of bottle
@@ -49,18 +49,18 @@ message StoredBottle {
 
 message Winery {
 	// Name of winery
-	string name = 1;
+	optional string name = 1;
 	// Region of winery
-	string region = 2;
+	optional string region = 2;
 	// Country of winery
-	string country = 3;
+	optional string country = 3;
 	// Winery website URL
 	optional string url = 4;
 }
 
 message Component {
 	// Grape varietal
-	string varietal = 1;
+	optional string varietal = 1;
 	// Percentage of varietal in wine
 	optional uint32 percentage = 2;
 }

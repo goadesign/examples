@@ -31,9 +31,9 @@ const (
 type MultiplyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Left operand
-	A int32 `protobuf:"zigzag32,1,opt,name=a,proto3" json:"a,omitempty"`
+	A *int32 `protobuf:"zigzag32,1,opt,name=a,proto3,oneof" json:"a,omitempty"`
 	// Right operand
-	B             int32 `protobuf:"zigzag32,2,opt,name=b,proto3" json:"b,omitempty"`
+	B             *int32 `protobuf:"zigzag32,2,opt,name=b,proto3,oneof" json:"b,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -69,22 +69,22 @@ func (*MultiplyRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *MultiplyRequest) GetA() int32 {
-	if x != nil {
-		return x.A
+	if x != nil && x.A != nil {
+		return *x.A
 	}
 	return 0
 }
 
 func (x *MultiplyRequest) GetB() int32 {
-	if x != nil {
-		return x.B
+	if x != nil && x.B != nil {
+		return *x.B
 	}
 	return 0
 }
 
 type MultiplyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Field         int32                  `protobuf:"zigzag32,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field         *int32                 `protobuf:"zigzag32,1,opt,name=field,proto3,oneof" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -120,8 +120,8 @@ func (*MultiplyResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *MultiplyResponse) GetField() int32 {
-	if x != nil {
-		return x.Field
+	if x != nil && x.Field != nil {
+		return *x.Field
 	}
 	return 0
 }
@@ -130,12 +130,15 @@ var File_goagen_basic_calc_proto protoreflect.FileDescriptor
 
 const file_goagen_basic_calc_proto_rawDesc = "" +
 	"\n" +
-	"\x17goagen_basic_calc.proto\x12\x04calc\"-\n" +
-	"\x0fMultiplyRequest\x12\f\n" +
-	"\x01a\x18\x01 \x01(\x11R\x01a\x12\f\n" +
-	"\x01b\x18\x02 \x01(\x11R\x01b\"(\n" +
-	"\x10MultiplyResponse\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\x11R\x05field2A\n" +
+	"\x17goagen_basic_calc.proto\x12\x04calc\"C\n" +
+	"\x0fMultiplyRequest\x12\x11\n" +
+	"\x01a\x18\x01 \x01(\x11H\x00R\x01a\x88\x01\x01\x12\x11\n" +
+	"\x01b\x18\x02 \x01(\x11H\x01R\x01b\x88\x01\x01B\x04\n" +
+	"\x02_aB\x04\n" +
+	"\x02_b\"7\n" +
+	"\x10MultiplyResponse\x12\x19\n" +
+	"\x05field\x18\x01 \x01(\x11H\x00R\x05field\x88\x01\x01B\b\n" +
+	"\x06_field2A\n" +
 	"\x04Calc\x129\n" +
 	"\bMultiply\x12\x15.calc.MultiplyRequest\x1a\x16.calc.MultiplyResponseB\tZ\a/calcpbb\x06proto3"
 
@@ -171,6 +174,8 @@ func file_goagen_basic_calc_proto_init() {
 	if File_goagen_basic_calc_proto != nil {
 		return
 	}
+	file_goagen_basic_calc_proto_msgTypes[0].OneofWrappers = []any{}
+	file_goagen_basic_calc_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
