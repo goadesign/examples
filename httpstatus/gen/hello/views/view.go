@@ -21,7 +21,8 @@ type Hello struct {
 type HelloView struct {
 	// The greeting message
 	Greeting *string
-	Outcome  *string
+	// The HTTP response selected for the greeting
+	Outcome *string
 }
 
 var (
@@ -48,11 +49,13 @@ func ValidateHello(result *Hello) (err error) {
 // ValidateHelloView runs the validations defined on HelloView using the
 // "default" view.
 func ValidateHelloView(result *HelloView) (err error) {
-	if result.Outcome == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("outcome", "result"))
-	}
 	if result.Greeting == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("greeting", "result"))
+	}
+	if result.Outcome != nil {
+		if !(*result.Outcome == "created" || *result.Outcome == "accepted" || *result.Outcome == "defaultStatus") {
+			err = goa.MergeErrors(err, goa.InvalidEnumValueError("result.outcome", *result.Outcome, []any{"created", "accepted", "defaultStatus"}))
+		}
 	}
 	return
 }

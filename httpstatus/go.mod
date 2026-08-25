@@ -2,7 +2,7 @@ module goa.design/examples/httpstatus
 
 go 1.26.0
 
-require goa.design/goa/v3 v3.30.1-0.20260825122644-ed7b72688709
+require goa.design/goa/v3 v3.30.1-0.20260825174000-15f11dc2fdee
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
@@ -19,6 +19,7 @@ require (
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/text v0.41.0 // indirect
 	golang.org/x/tools v0.49.0 // indirect
+	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

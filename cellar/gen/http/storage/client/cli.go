@@ -116,7 +116,7 @@ func BuildAddPayload(storageAddBody *string) (*storage.Bottle, error) {
 				v.Composition[i] = nil
 				continue
 			}
-			v.Composition[i] = marshalComponentRequestBodyToStorageComponentOptional(val)
+			v.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
 		}
 	}
 

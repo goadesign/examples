@@ -332,9 +332,6 @@ func newWineryViewTiny(res *Winery) *sommelierviews.WineryView {
 // transformSommelierviewsComponentViewToComponent builds a value of type
 // *Component from a value of type *sommelierviews.ComponentView.
 func transformSommelierviewsComponentViewToComponent(v *sommelierviews.ComponentView) *Component {
-	if v == nil {
-		return nil
-	}
 	res := &Component{
 		Varietal:   *v.Varietal,
 		Percentage: v.Percentage,
@@ -346,9 +343,6 @@ func transformSommelierviewsComponentViewToComponent(v *sommelierviews.Component
 // transformComponentToSommelierviewsComponentView builds a value of type
 // *sommelierviews.ComponentView from a value of type *Component.
 func transformComponentToSommelierviewsComponentView(v *Component) *sommelierviews.ComponentView {
-	if v == nil {
-		return nil
-	}
 	res := &sommelierviews.ComponentView{
 		Varietal:   &v.Varietal,
 		Percentage: v.Percentage,

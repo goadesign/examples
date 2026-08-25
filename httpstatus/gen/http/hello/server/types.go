@@ -31,7 +31,6 @@ type HelloAcceptedResponseBody struct {
 type HelloOKResponseBody struct {
 	// The greeting message
 	Greeting string `form:"greeting" json:"greeting" xml:"greeting"`
-	Outcome  string `form:"outcome" json:"outcome" xml:"outcome"`
 }
 
 // NewHelloCreatedResponseBody builds the HTTP response body from the result of
@@ -57,7 +56,6 @@ func NewHelloAcceptedResponseBody(res *helloviews.HelloView) *HelloAcceptedRespo
 func NewHelloOKResponseBody(res *helloviews.HelloView) *HelloOKResponseBody {
 	body := &HelloOKResponseBody{
 		Greeting: *res.Greeting,
-		Outcome:  *res.Outcome,
 	}
 	return body
 }

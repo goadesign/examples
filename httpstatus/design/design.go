@@ -6,11 +6,11 @@ import (
 
 var GreetingResult = ResultType("application/vnd.hello", func() {
 	Attribute("greeting", String, "The greeting message")
-	Attribute("outcome", func() {
-		Meta("swagger:example", "false") // hide from swagger
-		Meta("swagger:generate", "false")
+	Attribute("outcome", String, "The HTTP response selected for the greeting", func() {
+		Default("defaultStatus")
+		Enum("created", "accepted", "defaultStatus")
 	})
-	Required("outcome", "greeting")
+	Required("greeting")
 })
 
 var _ = Service("hello", func() {
@@ -33,7 +33,11 @@ var _ = Service("hello", func() {
 			Response(StatusAccepted, func() {
 				Tag("outcome", "accepted")
 			})
-			Response(StatusOK) // default response status
+			Response(StatusOK, func() {
+				Body(func() {
+					Attribute("greeting")
+				})
+			})
 		})
 	})
 })

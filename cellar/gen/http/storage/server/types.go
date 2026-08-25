@@ -176,7 +176,7 @@ func NewShowResponseBody(res *storageviews.StoredBottleView) *ShowResponseBody {
 				body.Composition[i] = nil
 				continue
 			}
-			body.Composition[i] = marshalStorageviewsComponentViewToComponentResponseBodyOptional(val)
+			body.Composition[i] = marshalStorageviewsComponentViewToComponentResponseBody(val)
 		}
 	}
 	return body
@@ -230,7 +230,7 @@ func NewAddBottle(body *AddRequestBody) *storage.Bottle {
 				v.Composition[i] = nil
 				continue
 			}
-			v.Composition[i] = unmarshalComponentRequestBodyToStorageComponentOptional(val)
+			v.Composition[i] = unmarshalComponentRequestBodyToStorageComponent(val)
 		}
 	}
 

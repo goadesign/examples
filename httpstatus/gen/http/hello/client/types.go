@@ -31,7 +31,6 @@ type HelloAcceptedResponseBody struct {
 type HelloOKResponseBody struct {
 	// The greeting message
 	Greeting *string `form:"greeting,omitempty" json:"greeting,omitempty" xml:"greeting,omitempty"`
-	Outcome  *string `form:"outcome,omitempty" json:"outcome,omitempty" xml:"outcome,omitempty"`
 }
 
 // NewHelloViewCreated builds a "hello" service "hello" endpoint result from a
@@ -59,7 +58,6 @@ func NewHelloViewAccepted(body *HelloAcceptedResponseBody) *helloviews.HelloView
 func NewHelloViewOK(body *HelloOKResponseBody) *helloviews.HelloView {
 	v := &helloviews.HelloView{
 		Greeting: body.Greeting,
-		Outcome:  body.Outcome,
 	}
 
 	return v
@@ -86,9 +84,6 @@ func ValidateHelloAcceptedResponseBody(body *HelloAcceptedResponseBody) (err err
 // ValidateHelloOKResponseBody runs the validations defined on
 // HelloOKResponseBody
 func ValidateHelloOKResponseBody(body *HelloOKResponseBody) (err error) {
-	if body.Outcome == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("outcome", "body"))
-	}
 	if body.Greeting == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("greeting", "body"))
 	}

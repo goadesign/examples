@@ -39,7 +39,8 @@ var MethodNames = [1]string{"hello"}
 type Hello struct {
 	// The greeting message
 	Greeting string
-	Outcome  string
+	// The HTTP response selected for the greeting
+	Outcome string
 }
 
 // HelloPayload is the payload type of the hello service hello method.
@@ -68,6 +69,9 @@ func newHello(vres *helloviews.HelloView) *Hello {
 	}
 	if vres.Outcome != nil {
 		res.Outcome = *vres.Outcome
+	}
+	if vres.Outcome == nil {
+		res.Outcome = "defaultStatus"
 	}
 	return res
 }

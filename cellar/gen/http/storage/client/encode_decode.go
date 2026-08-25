@@ -631,13 +631,9 @@ func unmarshalWineryResponseBodyToStorageviewsWineryView(v *WineryResponseBody) 
 	return res
 }
 
-// unmarshalComponentResponseBodyToStorageviewsComponentViewOptional builds a
-// value of type *storageviews.ComponentView from a value of type
-// *ComponentResponseBody.
-func unmarshalComponentResponseBodyToStorageviewsComponentViewOptional(v *ComponentResponseBody) *storageviews.ComponentView {
-	if v == nil {
-		return nil
-	}
+// unmarshalComponentResponseBodyToStorageviewsComponentView builds a value of
+// type *storageviews.ComponentView from a value of type *ComponentResponseBody.
+func unmarshalComponentResponseBodyToStorageviewsComponentView(v *ComponentResponseBody) *storageviews.ComponentView {
 	res := &storageviews.ComponentView{
 		Varietal:   v.Varietal,
 		Percentage: v.Percentage,
@@ -659,12 +655,9 @@ func marshalStorageWineryToWineryRequestBody(v *storage.Winery) *WineryRequestBo
 	return res
 }
 
-// marshalStorageComponentToComponentRequestBodyOptional builds a value of type
+// marshalStorageComponentToComponentRequestBody builds a value of type
 // *ComponentRequestBody from a value of type *storage.Component.
-func marshalStorageComponentToComponentRequestBodyOptional(v *storage.Component) *ComponentRequestBody {
-	if v == nil {
-		return nil
-	}
+func marshalStorageComponentToComponentRequestBody(v *storage.Component) *ComponentRequestBody {
 	res := &ComponentRequestBody{
 		Varietal:   v.Varietal,
 		Percentage: v.Percentage,
@@ -686,12 +679,9 @@ func marshalWineryRequestBodyToStorageWinery(v *WineryRequestBody) *storage.Wine
 	return res
 }
 
-// marshalComponentRequestBodyToStorageComponentOptional builds a value of type
+// marshalComponentRequestBodyToStorageComponent builds a value of type
 // *storage.Component from a value of type *ComponentRequestBody.
-func marshalComponentRequestBodyToStorageComponentOptional(v *ComponentRequestBody) *storage.Component {
-	if v == nil {
-		return nil
-	}
+func marshalComponentRequestBodyToStorageComponent(v *ComponentRequestBody) *storage.Component {
 	res := &storage.Component{
 		Varietal:   v.Varietal,
 		Percentage: v.Percentage,
@@ -719,7 +709,7 @@ func marshalStorageBottleToBottleRequestBody(v *storage.Bottle) *BottleRequestBo
 				res.Composition[i] = nil
 				continue
 			}
-			res.Composition[i] = marshalStorageComponentToComponentRequestBodyOptional(val)
+			res.Composition[i] = marshalStorageComponentToComponentRequestBody(val)
 		}
 	}
 
@@ -745,7 +735,7 @@ func marshalBottleRequestBodyToStorageBottle(v *BottleRequestBody) *storage.Bott
 				res.Composition[i] = nil
 				continue
 			}
-			res.Composition[i] = marshalComponentRequestBodyToStorageComponentOptional(val)
+			res.Composition[i] = marshalComponentRequestBodyToStorageComponent(val)
 		}
 	}
 

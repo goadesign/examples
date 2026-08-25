@@ -110,7 +110,7 @@ func marshalSommelierviewsStoredBottleViewToStoredBottleResponse(v *sommeliervie
 				res.Composition[i] = nil
 				continue
 			}
-			res.Composition[i] = marshalSommelierviewsComponentViewToComponentResponseOptional(val)
+			res.Composition[i] = marshalSommelierviewsComponentViewToComponentResponse(val)
 		}
 	}
 
@@ -127,13 +127,9 @@ func marshalSommelierviewsWineryViewToWineryResponseTiny(v *sommelierviews.Winer
 	return res
 }
 
-// marshalSommelierviewsComponentViewToComponentResponseOptional builds a value
-// of type *ComponentResponse from a value of type
-// *sommelierviews.ComponentView.
-func marshalSommelierviewsComponentViewToComponentResponseOptional(v *sommelierviews.ComponentView) *ComponentResponse {
-	if v == nil {
-		return nil
-	}
+// marshalSommelierviewsComponentViewToComponentResponse builds a value of type
+// *ComponentResponse from a value of type *sommelierviews.ComponentView.
+func marshalSommelierviewsComponentViewToComponentResponse(v *sommelierviews.ComponentView) *ComponentResponse {
 	res := &ComponentResponse{
 		Varietal:   *v.Varietal,
 		Percentage: v.Percentage,

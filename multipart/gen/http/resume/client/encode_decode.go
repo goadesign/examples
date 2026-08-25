@@ -248,7 +248,7 @@ func marshalResumeResumeToResumeRequestBody(v *resume.Resume) *ResumeRequestBody
 				res.Experience[i] = nil
 				continue
 			}
-			res.Experience[i] = marshalResumeExperienceToExperienceRequestBodyOptional(val)
+			res.Experience[i] = marshalResumeExperienceToExperienceRequestBody(val)
 		}
 	}
 	if v.Education != nil {
@@ -258,19 +258,16 @@ func marshalResumeResumeToResumeRequestBody(v *resume.Resume) *ResumeRequestBody
 				res.Education[i] = nil
 				continue
 			}
-			res.Education[i] = marshalResumeEducationToEducationRequestBodyOptional(val)
+			res.Education[i] = marshalResumeEducationToEducationRequestBody(val)
 		}
 	}
 
 	return res
 }
 
-// marshalResumeExperienceToExperienceRequestBodyOptional builds a value of
-// type *ExperienceRequestBody from a value of type *resume.Experience.
-func marshalResumeExperienceToExperienceRequestBodyOptional(v *resume.Experience) *ExperienceRequestBody {
-	if v == nil {
-		return nil
-	}
+// marshalResumeExperienceToExperienceRequestBody builds a value of type
+// *ExperienceRequestBody from a value of type *resume.Experience.
+func marshalResumeExperienceToExperienceRequestBody(v *resume.Experience) *ExperienceRequestBody {
 	res := &ExperienceRequestBody{
 		Company:  v.Company,
 		Role:     v.Role,
@@ -280,12 +277,9 @@ func marshalResumeExperienceToExperienceRequestBodyOptional(v *resume.Experience
 	return res
 }
 
-// marshalResumeEducationToEducationRequestBodyOptional builds a value of type
+// marshalResumeEducationToEducationRequestBody builds a value of type
 // *EducationRequestBody from a value of type *resume.Education.
-func marshalResumeEducationToEducationRequestBodyOptional(v *resume.Education) *EducationRequestBody {
-	if v == nil {
-		return nil
-	}
+func marshalResumeEducationToEducationRequestBody(v *resume.Education) *EducationRequestBody {
 	res := &EducationRequestBody{
 		Institution: v.Institution,
 		Major:       v.Major,
@@ -307,7 +301,7 @@ func marshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resume
 				res.Experience[i] = nil
 				continue
 			}
-			res.Experience[i] = marshalExperienceRequestBodyToResumeExperienceOptional(val)
+			res.Experience[i] = marshalExperienceRequestBodyToResumeExperience(val)
 		}
 	}
 	if v.Education != nil {
@@ -317,19 +311,16 @@ func marshalResumeRequestBodyToResumeResume(v *ResumeRequestBody) *resume.Resume
 				res.Education[i] = nil
 				continue
 			}
-			res.Education[i] = marshalEducationRequestBodyToResumeEducationOptional(val)
+			res.Education[i] = marshalEducationRequestBodyToResumeEducation(val)
 		}
 	}
 
 	return res
 }
 
-// marshalExperienceRequestBodyToResumeExperienceOptional builds a value of
-// type *resume.Experience from a value of type *ExperienceRequestBody.
-func marshalExperienceRequestBodyToResumeExperienceOptional(v *ExperienceRequestBody) *resume.Experience {
-	if v == nil {
-		return nil
-	}
+// marshalExperienceRequestBodyToResumeExperience builds a value of type
+// *resume.Experience from a value of type *ExperienceRequestBody.
+func marshalExperienceRequestBodyToResumeExperience(v *ExperienceRequestBody) *resume.Experience {
 	res := &resume.Experience{
 		Company:  v.Company,
 		Role:     v.Role,
@@ -339,12 +330,9 @@ func marshalExperienceRequestBodyToResumeExperienceOptional(v *ExperienceRequest
 	return res
 }
 
-// marshalEducationRequestBodyToResumeEducationOptional builds a value of type
+// marshalEducationRequestBodyToResumeEducation builds a value of type
 // *resume.Education from a value of type *EducationRequestBody.
-func marshalEducationRequestBodyToResumeEducationOptional(v *EducationRequestBody) *resume.Education {
-	if v == nil {
-		return nil
-	}
+func marshalEducationRequestBodyToResumeEducation(v *EducationRequestBody) *resume.Education {
 	res := &resume.Education{
 		Institution: v.Institution,
 		Major:       v.Major,

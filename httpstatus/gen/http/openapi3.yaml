@@ -28,7 +28,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Hello'
+                                $ref: '#/components/schemas/HellohelloResponseBody'
                             example:
                                 greeting: Rem tempora sed qui.
                 "201":
@@ -58,6 +58,17 @@ components:
                     example: Ea earum recusandae.
             example:
                 greeting: Ea earum recusandae.
+            required:
+                - greeting
+        HellohelloResponseBody:
+            type: object
+            properties:
+                greeting:
+                    type: string
+                    description: The greeting message
+                    example: Rem tempora sed qui.
+            example:
+                greeting: Rem tempora sed qui.
             required:
                 - greeting
 tags:
