@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/websocket v1.5.3
-	goa.design/goa/v3 v3.30.1-0.20260826161049-5e4c64c6087d
+	goa.design/goa/v3 v3.30.1-0.20260826171120-899b46415849
 	google.golang.org/grpc v1.83.1
 	google.golang.org/protobuf v1.36.12
 )
