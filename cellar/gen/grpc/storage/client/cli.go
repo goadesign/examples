@@ -77,7 +77,7 @@ func BuildAddPayload(storageAddMessage *string) (*storage.Bottle, error) {
 		Rating:      message.Rating,
 	}
 	if message.Winery != nil {
-		v.Winery = transformProtoAddRequestWineryToBottleWinery(message.Winery)
+		v.Winery = transformProtoWineryToWinery(message.Winery)
 	}
 	if message.Composition != nil {
 		v.Composition = make([]*storage.Component, len(message.Composition))
@@ -170,7 +170,7 @@ func BuildMultiAddPayload(storageMultiAddMessage *string) ([]*storage.Bottle, er
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			v[i].Winery = transformProtoMultiAddRequestWineryToMultiAddRequestWinery(val.Winery)
+			v[i].Winery = transformProtoWineryToWinery(val.Winery)
 		}
 		if val.Composition != nil {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
@@ -219,7 +219,7 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage *string) (*storage.MultiU
 				Rating:      val.Rating,
 			}
 			if val.Winery != nil {
-				v.Bottles[i].Winery = transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery(val.Winery)
+				v.Bottles[i].Winery = transformProtoWineryToWinery(val.Winery)
 			}
 			if val.Composition != nil {
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))

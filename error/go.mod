@@ -3,7 +3,7 @@ module goa.design/examples/error
 go 1.26.0
 
 require (
-	goa.design/goa/v3 v3.30.1-0.20260826190237-ed9cac596472
+	goa.design/goa/v3 v3.30.1-0.20260826205939-36e92a56a054
 	google.golang.org/genproto v0.0.0-20260810153831-ec0a7760b754
 	google.golang.org/grpc v1.83.1
 	google.golang.org/protobuf v1.36.12
@@ -18,6 +18,7 @@ require (
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/stretchr/testify v1.12.1 // indirect
+	go.opentelemetry.io/otel v1.45.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/mod v0.40.0 // indirect
 	golang.org/x/net v0.58.0 // indirect

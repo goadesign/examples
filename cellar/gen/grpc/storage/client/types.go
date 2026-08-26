@@ -32,7 +32,7 @@ func NewListResult(message *storagepb.StoredBottleCollection) storageviews.Store
 			Name: val.Name,
 		}
 		if val.Winery != nil {
-			result[i].Winery = transformProtoStoredBottleCollectionWineryToStoredBottleCollectionViewWineryView(val.Winery)
+			result[i].Winery = transformProtoWineryToWineryView(val.Winery)
 		}
 	}
 	return result
@@ -57,7 +57,7 @@ func NewShowResult(message *storagepb.ShowResponse) *storageviews.StoredBottleVi
 		Rating:      message.Rating,
 	}
 	if message.Winery != nil {
-		result.Winery = transformProtoShowResponseWineryToStoredBottleViewWineryView(message.Winery)
+		result.Winery = transformProtoWineryToWineryView(message.Winery)
 	}
 	if message.Composition != nil {
 		result.Composition = make([]*storageviews.ComponentView, len(message.Composition))
@@ -79,7 +79,7 @@ func NewShowResultTiny(message *storagepb.ShowResponse) *storageviews.StoredBott
 		Name: message.Name,
 	}
 	if message.Winery != nil {
-		result.Winery = transformProtoWineryToWineryViewTiny(message.Winery)
+		result.Winery = transformProtoWineryToWineryView(message.Winery)
 	}
 	return result
 }
@@ -103,7 +103,7 @@ func NewProtoAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
 		Rating:      payload.Rating,
 	}
 	if payload.Winery != nil {
-		message.Winery = transformBottleWineryToProtoAddRequestWinery(payload.Winery)
+		message.Winery = transformWineryToProtoWinery(payload.Winery)
 	}
 	if payload.Composition != nil {
 		message.Composition = make([]*storagepb.Component, len(payload.Composition))
@@ -161,7 +161,7 @@ func NewProtoMultiAddRequest(payload []*storage.Bottle) *storagepb.MultiAddReque
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			message.Field[i].Winery = transformMultiAddRequestWineryToProtoMultiAddRequestWinery(val.Winery)
+			message.Field[i].Winery = transformWineryToProtoWinery(val.Winery)
 		}
 		if val.Composition != nil {
 			message.Field[i].Composition = make([]*storagepb.Component, len(val.Composition))
@@ -205,7 +205,7 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 				Rating:      val.Rating,
 			}
 			if val.Winery != nil {
-				message.Bottles[i].Winery = transformMultiUpdatePayloadWineryToProtoMultiUpdateRequestWinery(val.Winery)
+				message.Bottles[i].Winery = transformWineryToProtoWinery(val.Winery)
 			}
 			if val.Composition != nil {
 				message.Bottles[i].Composition = make([]*storagepb.Component, len(val.Composition))
@@ -564,30 +564,9 @@ func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err erro
 	return
 }
 
-// transformProtoStoredBottleCollectionWineryToStoredBottleCollectionViewWineryView
-// builds a value of type *storageviews.WineryView from a value of type
-// *storagepb.Winery.
-func transformProtoStoredBottleCollectionWineryToStoredBottleCollectionViewWineryView(v *storagepb.Winery) *storageviews.WineryView {
-	res := &storageviews.WineryView{
-		Name: v.Name,
-	}
-
-	return res
-}
-
-// transformProtoShowResponseWineryToStoredBottleViewWineryView builds a value
-// of type *storageviews.WineryView from a value of type *storagepb.Winery.
-func transformProtoShowResponseWineryToStoredBottleViewWineryView(v *storagepb.Winery) *storageviews.WineryView {
-	res := &storageviews.WineryView{
-		Name: v.Name,
-	}
-
-	return res
-}
-
-// transformProtoWineryToWineryViewTiny builds a value of type
+// transformProtoWineryToWineryView builds a value of type
 // *storageviews.WineryView from a value of type *storagepb.Winery.
-func transformProtoWineryToWineryViewTiny(v *storagepb.Winery) *storageviews.WineryView {
+func transformProtoWineryToWineryView(v *storagepb.Winery) *storageviews.WineryView {
 	res := &storageviews.WineryView{
 		Name: v.Name,
 	}
@@ -595,9 +574,9 @@ func transformProtoWineryToWineryViewTiny(v *storagepb.Winery) *storageviews.Win
 	return res
 }
 
-// transformBottleWineryToProtoAddRequestWinery builds a value of type
-// *storagepb.Winery from a value of type *storage.Winery.
-func transformBottleWineryToProtoAddRequestWinery(v *storage.Winery) *storagepb.Winery {
+// transformWineryToProtoWinery builds a value of type *storagepb.Winery from a
+// value of type *storage.Winery.
+func transformWineryToProtoWinery(v *storage.Winery) *storagepb.Winery {
 	res := &storagepb.Winery{
 		Name:    &v.Name,
 		Region:  &v.Region,
@@ -608,61 +587,9 @@ func transformBottleWineryToProtoAddRequestWinery(v *storage.Winery) *storagepb.
 	return res
 }
 
-// transformProtoAddRequestWineryToBottleWinery builds a value of type
-// *storage.Winery from a value of type *storagepb.Winery.
-func transformProtoAddRequestWineryToBottleWinery(v *storagepb.Winery) *storage.Winery {
-	res := &storage.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		URL:     v.Url,
-	}
-
-	return res
-}
-
-// transformMultiAddRequestWineryToProtoMultiAddRequestWinery builds a value of
-// type *storagepb.Winery from a value of type *storage.Winery.
-func transformMultiAddRequestWineryToProtoMultiAddRequestWinery(v *storage.Winery) *storagepb.Winery {
-	res := &storagepb.Winery{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		Url:     v.URL,
-	}
-
-	return res
-}
-
-// transformProtoMultiAddRequestWineryToMultiAddRequestWinery builds a value of
-// type *storage.Winery from a value of type *storagepb.Winery.
-func transformProtoMultiAddRequestWineryToMultiAddRequestWinery(v *storagepb.Winery) *storage.Winery {
-	res := &storage.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		URL:     v.Url,
-	}
-
-	return res
-}
-
-// transformMultiUpdatePayloadWineryToProtoMultiUpdateRequestWinery builds a
-// value of type *storagepb.Winery from a value of type *storage.Winery.
-func transformMultiUpdatePayloadWineryToProtoMultiUpdateRequestWinery(v *storage.Winery) *storagepb.Winery {
-	res := &storagepb.Winery{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		Url:     v.URL,
-	}
-
-	return res
-}
-
-// transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery builds a
-// value of type *storage.Winery from a value of type *storagepb.Winery.
-func transformProtoMultiUpdateRequestWineryToMultiUpdatePayloadWinery(v *storagepb.Winery) *storage.Winery {
+// transformProtoWineryToWinery builds a value of type *storage.Winery from a
+// value of type *storagepb.Winery.
+func transformProtoWineryToWinery(v *storagepb.Winery) *storage.Winery {
 	res := &storage.Winery{
 		Name:    *v.Name,
 		Region:  *v.Region,

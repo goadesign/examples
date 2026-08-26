@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/fxamacker/cbor/v2 v2.9.2
 	goa.design/clue v1.2.6
-	goa.design/goa/v3 v3.30.1-0.20260826190237-ed9cac596472
+	goa.design/goa/v3 v3.30.1-0.20260826205939-36e92a56a054
 )
 
 require (
