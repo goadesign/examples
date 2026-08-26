@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // HelloHelloPath returns the URL path to the hello service hello HTTP endpoint.
 func HelloHelloPath(greeting string) string {

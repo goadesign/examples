@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.2
-	goa.design/goa/v3 v3.30.1-0.20260825203937-95933f068ade
+	goa.design/goa/v3 v3.30.1-0.20260826121623-5f90d9cb72a2
 	google.golang.org/grpc v1.83.1
 	google.golang.org/protobuf v1.36.12
 )

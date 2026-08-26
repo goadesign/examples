@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	defaultservice "goa.design/examples/security/hierarchy/gen/default_service"
-)
+import defaultservice "goa.design/examples/security/hierarchy/gen/default_service"
 
 // NewDefaultPayload builds a default_service service default endpoint payload.
 func NewDefaultPayload() *defaultservice.DefaultPayload {

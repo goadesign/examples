@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
-)
+import securedservice "goa.design/examples/security/multiauth/gen/secured_service"
 
 // SigninResponseBody is the type of the "secured_service" service "signin"
 // endpoint HTTP response body.

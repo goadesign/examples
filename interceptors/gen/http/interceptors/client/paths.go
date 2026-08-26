@@ -7,9 +7,7 @@
 
 package client
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // GetInterceptorsPath returns the URL path to the interceptors service get HTTP endpoint.
 func GetInterceptorsPath(tenantID string, recordID string) string {

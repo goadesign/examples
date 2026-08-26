@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // UploadUpdownPath returns the URL path to the updown service upload HTTP endpoint.
 func UploadUpdownPath(dir string) string {
