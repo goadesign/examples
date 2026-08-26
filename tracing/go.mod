@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	goa.design/examples/basic v0.0.0-20260810182504-f834f43955c5
-	goa.design/goa/v3 v3.30.1-0.20260826122756-811e48b6ca13
+	goa.design/goa/v3 v3.30.1-0.20260826132953-76b2e84da6dd
 	google.golang.org/grpc v1.83.1
 )
 
