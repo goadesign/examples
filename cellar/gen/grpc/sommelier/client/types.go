@@ -64,7 +64,7 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection) (err error) {
 	for _, e := range message.Field {
 		if e != nil {
-			if err2 := ValidateStoredBottle(e); err2 != nil {
+			if err2 := validatecellar_sommelier_StoredBottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -72,8 +72,9 @@ func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection)
 	return
 }
 
-// ValidateStoredBottle runs the validations defined on StoredBottle.
-func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
+// validatecellar_sommelier_StoredBottle_At_elem runs the validations defined
+// on StoredBottle.
+func validatecellar_sommelier_StoredBottle_At_elem(elem *sommelierpb.StoredBottle) (err error) {
 	if elem.Id == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("id", "elem"))
 	}
@@ -92,7 +93,7 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 		}
 	}
 	if elem.Winery != nil {
-		if err2 := ValidateWinery(elem.Winery); err2 != nil {
+		if err2 := validatecellar_sommelier_Winery_At_winery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -106,7 +107,7 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 	}
 	for _, e := range elem.Composition {
 		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
+			if err2 := validatecellar_sommelier_Component_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -127,16 +128,18 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 	return
 }
 
-// ValidateWinery runs the validations defined on Winery.
-func ValidateWinery(winery *sommelierpb.Winery) (err error) {
+// validatecellar_sommelier_Winery_At_winery runs the validations defined on
+// Winery.
+func validatecellar_sommelier_Winery_At_winery(winery *sommelierpb.Winery) (err error) {
 	if winery.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
 	}
 	return
 }
 
-// ValidateComponent runs the validations defined on Component.
-func ValidateComponent(elem *sommelierpb.Component) (err error) {
+// validatecellar_sommelier_Component_At_elem runs the validations defined on
+// Component.
+func validatecellar_sommelier_Component_At_elem(elem *sommelierpb.Component) (err error) {
 	if elem.Varietal == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "elem"))
 	}

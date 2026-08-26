@@ -226,7 +226,7 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 func ValidateStoredBottleCollectionTiny(message *storagepb.StoredBottleCollection) (err error) {
 	for _, e := range message.Field {
 		if e != nil {
-			if err2 := ValidateStoredBottleTiny(e); err2 != nil {
+			if err2 := validatecellar_storage_StoredBottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -234,8 +234,9 @@ func ValidateStoredBottleCollectionTiny(message *storagepb.StoredBottleCollectio
 	return
 }
 
-// ValidateStoredBottleTiny runs the validations defined on StoredBottle.
-func ValidateStoredBottleTiny(elem *storagepb.StoredBottle) (err error) {
+// validatecellar_storage_StoredBottle_At_elem runs the validations defined on
+// StoredBottle.
+func validatecellar_storage_StoredBottle_At_elem(elem *storagepb.StoredBottle) (err error) {
 	if elem.Id == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("id", "elem"))
 	}
@@ -251,15 +252,16 @@ func ValidateStoredBottleTiny(elem *storagepb.StoredBottle) (err error) {
 		}
 	}
 	if elem.Winery != nil {
-		if err2 := ValidateWineryTiny(elem.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
 	return
 }
 
-// ValidateWineryTiny runs the validations defined on Winery.
-func ValidateWineryTiny(winery *storagepb.Winery) (err error) {
+// validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery
+// runs the validations defined on Winery.
+func validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(winery *storagepb.Winery) (err error) {
 	if winery.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
 	}
@@ -294,7 +296,7 @@ func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
 		}
 	}
 	if message.Winery != nil {
-		if err2 := ValidateWineryTiny(message.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(message.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -308,7 +310,7 @@ func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
 	}
 	for _, e := range message.Composition {
 		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
+			if err2 := validatecellar_storage_Component_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -329,8 +331,9 @@ func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
 	return
 }
 
-// ValidateComponent runs the validations defined on Component.
-func ValidateComponent(elem *storagepb.Component) (err error) {
+// validatecellar_storage_Component_At_elem runs the validations defined on
+// Component.
+func validatecellar_storage_Component_At_elem(elem *storagepb.Component) (err error) {
 	if elem.Varietal == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "elem"))
 	}
@@ -368,7 +371,7 @@ func ValidateShowResponseTiny(message *storagepb.ShowResponse) (err error) {
 		}
 	}
 	if message.Winery != nil {
-		if err2 := ValidateWineryTiny(message.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(message.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -403,7 +406,7 @@ func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
 		}
 	}
 	if message.Winery != nil {
-		if err2 := ValidateWinery(message.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery(message.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -417,7 +420,7 @@ func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
 	}
 	for _, e := range message.Composition {
 		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
+			if err2 := validatecellar_storage_Component_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -438,8 +441,9 @@ func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
 	return
 }
 
-// ValidateWinery runs the validations defined on Winery.
-func ValidateWinery(winery *storagepb.Winery) (err error) {
+// validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery runs
+// the validations defined on Winery.
+func validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery(winery *storagepb.Winery) (err error) {
 	if winery.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
 	}
@@ -481,7 +485,7 @@ func ValidateRemoveRequest(message *storagepb.RemoveRequest) (err error) {
 func ValidateMultiAddRequest(message *storagepb.MultiAddRequest) (err error) {
 	for _, e := range message.Field {
 		if e != nil {
-			if err2 := ValidateBottle(e); err2 != nil {
+			if err2 := validatecellar_storage_Bottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -489,8 +493,8 @@ func ValidateMultiAddRequest(message *storagepb.MultiAddRequest) (err error) {
 	return
 }
 
-// ValidateBottle runs the validations defined on Bottle.
-func ValidateBottle(elem *storagepb.Bottle) (err error) {
+// validatecellar_storage_Bottle_At_elem runs the validations defined on Bottle.
+func validatecellar_storage_Bottle_At_elem(elem *storagepb.Bottle) (err error) {
 	if elem.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "elem"))
 	}
@@ -506,7 +510,7 @@ func ValidateBottle(elem *storagepb.Bottle) (err error) {
 		}
 	}
 	if elem.Winery != nil {
-		if err2 := ValidateWinery(elem.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -520,7 +524,7 @@ func ValidateBottle(elem *storagepb.Bottle) (err error) {
 	}
 	for _, e := range elem.Composition {
 		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
+			if err2 := validatecellar_storage_Component_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -552,7 +556,7 @@ func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err erro
 	}
 	for _, e := range message.Bottles {
 		if e != nil {
-			if err2 := ValidateBottle(e); err2 != nil {
+			if err2 := validatecellar_storage_Bottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}

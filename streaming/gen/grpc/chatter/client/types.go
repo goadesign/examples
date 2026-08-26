@@ -146,7 +146,7 @@ func ValidateEchoerResponse(message *chatterpb.EchoerResponse) (err error) {
 func ValidateChatSummaryCollection(message *chatterpb.ChatSummaryCollection) (err error) {
 	for _, e := range message.Field {
 		if e != nil {
-			if err2 := ValidateChatSummary(e); err2 != nil {
+			if err2 := validatechatter_chatter_ChatSummary_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -154,8 +154,9 @@ func ValidateChatSummaryCollection(message *chatterpb.ChatSummaryCollection) (er
 	return
 }
 
-// ValidateChatSummary runs the validations defined on ChatSummary.
-func ValidateChatSummary(elem *chatterpb.ChatSummary) (err error) {
+// validatechatter_chatter_ChatSummary_At_elem runs the validations defined on
+// ChatSummary.
+func validatechatter_chatter_ChatSummary_At_elem(elem *chatterpb.ChatSummary) (err error) {
 	if elem.Message_ == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "elem"))
 	}
