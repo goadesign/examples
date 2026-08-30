@@ -33,8 +33,8 @@ github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWD
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
 go.yaml.in/yaml/v3 v3.0.5/go.mod h1:HVTZu1O7/Vkt2N+BFy8Zza+lnLsABggaTM2ZpNIGuKg=
-goa.design/goa/v3 v3.31.0-preview.1.0.20260830175414-d176af092260 h1:/xDlBPLY77lF13h194zLA3/5q8NU3y9UmF7VJCJbPB4=
-goa.design/goa/v3 v3.31.0-preview.1.0.20260830175414-d176af092260/go.mod h1:XpqR5Ho75FrEGDZd6o/hIWnv7lN/TUHudl2QxfM1kFU=
+goa.design/goa/v3 v3.31.0-preview.1.0.20260830192305-318c40614944 h1:1Ui2hEokREN21MBzSfcCsccb7Yq9z9IUFelMG3weKRQ=
+goa.design/goa/v3 v3.31.0-preview.1.0.20260830192305-318c40614944/go.mod h1:XpqR5Ho75FrEGDZd6o/hIWnv7lN/TUHudl2QxfM1kFU=
 golang.org/x/mod v0.40.0 h1:hUv+3cXcdRHz08UmSiOob7sadHig73uo5bkXxQ/tvUs=
 golang.org/x/mod v0.40.0/go.mod h1:0/weTWkPWGBikyTWAX3dkjVztMmBA5hM0DH6BElSupE=
 golang.org/x/sync v0.22.0 h1:SZjpbeLmrCk4xhRSZFNZW5gFUeCeFgjekvI/+gfScek=

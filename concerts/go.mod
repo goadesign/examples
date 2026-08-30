@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/google/uuid v1.6.0
-	goa.design/goa/v3 v3.31.0-preview.1.0.20260830175414-d176af092260
+	goa.design/goa/v3 v3.31.0-preview.1.0.20260830192305-318c40614944
 )
 
 require (
