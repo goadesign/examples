@@ -89,6 +89,9 @@ type DoublySecurePayload struct {
 	Token string
 }
 
+// Token scopes are invalid
+type InvalidScopes string
+
 // SecurePayload is the payload type of the secured_service service secure
 // method.
 type SecurePayload struct {
@@ -105,9 +108,6 @@ type SigninPayload struct {
 	// Password used to perform signin
 	Password string
 }
-
-// Token scopes are invalid
-type InvalidScopes string
 
 // Credentials are invalid
 type Unauthorized string

@@ -86,6 +86,7 @@ func EncodeEchoerRequest(ctx context.Context, v any, md *metadata.MD) (any, erro
 func DecodeEchoerResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
 	return &EchoerClientStream{
 		stream: v.(chatterpb.Chatter_EchoerClient),
+		ctx:    ctx,
 	}, nil
 }
 
@@ -118,6 +119,7 @@ func EncodeListenerRequest(ctx context.Context, v any, md *metadata.MD) (any, er
 func DecodeListenerResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
 	return &ListenerClientStream{
 		stream: v.(chatterpb.Chatter_ListenerClient),
+		ctx:    ctx,
 	}, nil
 }
 
@@ -150,6 +152,7 @@ func EncodeSummaryRequest(ctx context.Context, v any, md *metadata.MD) (any, err
 func DecodeSummaryResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
 	return &SummaryClientStream{
 		stream: v.(chatterpb.Chatter_SummaryClient),
+		ctx:    ctx,
 	}, nil
 }
 
@@ -183,6 +186,7 @@ func EncodeSubscribeRequest(ctx context.Context, v any, md *metadata.MD) (any, e
 func DecodeSubscribeResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
 	return &SubscribeClientStream{
 		stream: v.(chatterpb.Chatter_SubscribeClient),
+		ctx:    ctx,
 	}, nil
 }
 
@@ -219,5 +223,6 @@ func EncodeHistoryRequest(ctx context.Context, v any, md *metadata.MD) (any, err
 func DecodeHistoryResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (any, error) {
 	return &HistoryClientStream{
 		stream: v.(chatterpb.Chatter_HistoryClient),
+		ctx:    ctx,
 	}, nil
 }

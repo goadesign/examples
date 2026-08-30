@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	goa.design/clue v1.2.6
-	goa.design/goa/v3 v3.30.1-0.20260826213606-c30c5e1423e7
+	goa.design/goa/v3 v3.31.0-preview.1.0.20260830104908-eb6472c49e99
 )
 
 require (

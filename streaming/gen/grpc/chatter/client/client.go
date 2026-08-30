@@ -28,26 +28,31 @@ type Client struct {
 // EchoerClientStream implements the chatter.EchoerClientStream interface.
 type EchoerClientStream struct {
 	stream chatterpb.Chatter_EchoerClient
+	ctx    context.Context
 }
 
 // ListenerClientStream implements the chatter.ListenerClientStream interface.
 type ListenerClientStream struct {
 	stream chatterpb.Chatter_ListenerClient
+	ctx    context.Context
 }
 
 // SummaryClientStream implements the chatter.SummaryClientStream interface.
 type SummaryClientStream struct {
 	stream chatterpb.Chatter_SummaryClient
+	ctx    context.Context
 }
 
 // SubscribeClientStream implements the chatter.SubscribeClientStream interface.
 type SubscribeClientStream struct {
 	stream chatterpb.Chatter_SubscribeClient
+	ctx    context.Context
 }
 
 // HistoryClientStream implements the chatter.HistoryClientStream interface.
 type HistoryClientStream struct {
 	stream  chatterpb.Chatter_HistoryClient
+	ctx     context.Context
 	view    string
 	viewSet bool
 }
@@ -74,6 +79,9 @@ func (c *Client) Login() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -95,6 +103,9 @@ func (c *Client) Echoer() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -116,6 +127,9 @@ func (c *Client) Listener() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -137,6 +151,9 @@ func (c *Client) Summary() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -159,6 +176,9 @@ func (c *Client) Subscribe() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -180,6 +200,9 @@ func (c *Client) History() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -198,6 +221,9 @@ func (s *EchoerClientStream) Recv() (string, error) {
 		case *goapb.ErrorResponse:
 			return res, goagrpc.NewServiceError(message)
 		default:
+			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
+				return res, ctxErr
+			}
 			return res, err
 		}
 	}
@@ -247,6 +273,18 @@ func (s *ListenerClientStream) SendWithContext(ctx context.Context, res string) 
 func (s *ListenerClientStream) Close() error {
 	// synchronize and report any server error
 	_, err := s.stream.CloseAndRecv()
+	if err != nil {
+		resp := goagrpc.DecodeError(err)
+		switch message := resp.(type) {
+		case *goapb.ErrorResponse:
+			return goagrpc.NewServiceError(message)
+		default:
+			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
+				return ctxErr
+			}
+			return err
+		}
+	}
 	return err
 }
 
@@ -261,6 +299,9 @@ func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 		case *goapb.ErrorResponse:
 			return res, goagrpc.NewServiceError(message)
 		default:
+			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
+				return res, ctxErr
+			}
 			return res, err
 		}
 	}
@@ -305,6 +346,9 @@ func (s *SubscribeClientStream) Recv() (*chatter.Event, error) {
 		case *goapb.ErrorResponse:
 			return res, goagrpc.NewServiceError(message)
 		default:
+			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
+				return res, ctxErr
+			}
 			return res, err
 		}
 	}
@@ -331,6 +375,9 @@ func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 		case *goapb.ErrorResponse:
 			return res, goagrpc.NewServiceError(message)
 		default:
+			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
+				return res, ctxErr
+			}
 			return res, err
 		}
 	}

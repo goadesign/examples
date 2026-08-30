@@ -52,6 +52,12 @@ type Criteria struct {
 	Winery *string
 }
 
+// Missing criteria
+type NoCriteria string
+
+// No bottle matched given criteria
+type NoMatch string
+
 // A StoredBottle describes a bottle retrieved by the storage service.
 type StoredBottle struct {
 	// ID is the unique id of the bottle.
@@ -84,12 +90,6 @@ type Winery struct {
 	// Winery website URL
 	URL *string
 }
-
-// Missing criteria
-type NoCriteria string
-
-// No bottle matched given criteria
-type NoMatch string
 
 // Error returns an error description.
 func (e NoCriteria) Error() string {

@@ -2,7 +2,7 @@ module goa.design/examples/multipart
 
 go 1.26.0
 
-require goa.design/goa/v3 v3.30.1-0.20260826213606-c30c5e1423e7
+require goa.design/goa/v3 v3.31.0-preview.1.0.20260830104908-eb6472c49e99
 
 require (
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect

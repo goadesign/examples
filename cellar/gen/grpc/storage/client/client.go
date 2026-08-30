@@ -40,10 +40,13 @@ func (c *Client) List() goa.Endpoint {
 			DecodeListResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}
@@ -70,6 +73,9 @@ func (c *Client) Show() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -86,10 +92,13 @@ func (c *Client) Add() goa.Endpoint {
 			DecodeAddResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}
@@ -106,10 +115,13 @@ func (c *Client) Remove() goa.Endpoint {
 			nil)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}
@@ -126,10 +138,13 @@ func (c *Client) Rate() goa.Endpoint {
 			nil)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}
@@ -146,10 +161,13 @@ func (c *Client) MultiAdd() goa.Endpoint {
 			DecodeMultiAddResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}
@@ -167,10 +185,13 @@ func (c *Client) MultiUpdate() goa.Endpoint {
 			nil)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}

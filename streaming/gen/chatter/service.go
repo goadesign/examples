@@ -210,6 +210,8 @@ type HistoryPayload struct {
 	View *string
 }
 
+type InvalidScopes string
+
 // ListenerPayload is the payload type of the chatter service listener method.
 type ListenerPayload struct {
 	// JWT used for authentication
@@ -233,8 +235,6 @@ type SummaryPayload struct {
 	// JWT used for authentication
 	Token string
 }
-
-type InvalidScopes string
 
 // Credentials are invalid
 type Unauthorized string
