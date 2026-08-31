@@ -20,6 +20,7 @@ import (
 	storage "goa.design/examples/cellar/gen/storage"
 	storageviews "goa.design/examples/cellar/gen/storage/views"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildListRequest instantiates a HTTP request object with method and path set
@@ -162,26 +163,54 @@ func DecodeShowResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
-			var (
-				body ShowResponseBody
-				err  error
-			)
-			err = decoder(resp).Decode(&body)
-			if err != nil {
-				return nil, goahttp.ErrDecodingError("storage", "show", err)
-			}
-			err = ValidateShowResponseBody(&body)
-			if err != nil {
-				return nil, goahttp.ErrValidationError("storage", "show", err)
-			}
-			p := NewShowStoredBottleOK(&body)
 			view := resp.Header.Get("goa-view")
-			vres := &storageviews.StoredBottle{Projected: p, View: view}
-			if err = storageviews.ValidateStoredBottle(vres); err != nil {
-				return nil, goahttp.ErrValidationError("storage", "show", err)
+			if view == "" {
+				view = "default"
 			}
-			res := storage.NewStoredBottle(vres)
-			return res, nil
+			switch view {
+			case "default":
+				var (
+					body ShowResponseBody
+					err  error
+				)
+				err = decoder(resp).Decode(&body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("storage", "show", err)
+				}
+				err = ValidateShowResponseBody(&body)
+				if err != nil {
+					return nil, goahttp.ErrValidationError("storage", "show", err)
+				}
+				p := NewShowResultDefaultOK(&body)
+				vres := &storageviews.StoredBottle{Projected: p, View: view}
+				if err = storageviews.ValidateStoredBottle(vres); err != nil {
+					return nil, goahttp.ErrValidationError("storage", "show", err)
+				}
+				res := storage.NewStoredBottle(vres)
+				return res, nil
+			case "tiny":
+				var (
+					body ShowResponseBodyTiny
+					err  error
+				)
+				err = decoder(resp).Decode(&body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("storage", "show", err)
+				}
+				err = ValidateShowResponseBodyTiny(&body)
+				if err != nil {
+					return nil, goahttp.ErrValidationError("storage", "show", err)
+				}
+				p := NewShowResultTinyOK(&body)
+				vres := &storageviews.StoredBottle{Projected: p, View: view}
+				if err = storageviews.ValidateStoredBottle(vres); err != nil {
+					return nil, goahttp.ErrValidationError("storage", "show", err)
+				}
+				res := storage.NewStoredBottle(vres)
+				return res, nil
+			default:
+				return nil, goahttp.ErrValidationError("storage", "show", goa.InvalidEnumValueError("view", view, []any{"default", "tiny"}))
+			}
 		case http.StatusNotFound:
 			var (
 				body ShowNotFoundResponseBody
@@ -603,29 +632,16 @@ func unmarshalStoredBottleResponseTinyToStorageviewsStoredBottleView(v *StoredBo
 		ID:   v.ID,
 		Name: v.Name,
 	}
-	res.Winery = unmarshalWineryResponseTinyToStorageviewsWineryView(v.Winery)
+	res.Winery = unmarshalWineryTinyToStorageviewsWineryView(v.Winery)
 
 	return res
 }
 
-// unmarshalWineryResponseTinyToStorageviewsWineryView builds a value of type
-// *storageviews.WineryView from a value of type *WineryResponseTiny.
-func unmarshalWineryResponseTinyToStorageviewsWineryView(v *WineryResponseTiny) *storageviews.WineryView {
+// unmarshalWineryTinyToStorageviewsWineryView builds a value of type
+// *storageviews.WineryView from a value of type *WineryTiny.
+func unmarshalWineryTinyToStorageviewsWineryView(v *WineryTiny) *storageviews.WineryView {
 	res := &storageviews.WineryView{
 		Name: v.Name,
-	}
-
-	return res
-}
-
-// unmarshalWineryResponseBodyToStorageviewsWineryView builds a value of type
-// *storageviews.WineryView from a value of type *WineryResponseBody.
-func unmarshalWineryResponseBodyToStorageviewsWineryView(v *WineryResponseBody) *storageviews.WineryView {
-	res := &storageviews.WineryView{
-		Name:    v.Name,
-		Region:  v.Region,
-		Country: v.Country,
-		URL:     v.URL,
 	}
 
 	return res

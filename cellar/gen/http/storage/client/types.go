@@ -51,7 +51,7 @@ type ShowResponseBody struct {
 	// Name of bottle
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// Winery that produces wine
-	Winery *WineryResponseBody `form:"winery,omitempty" json:"winery,omitempty" xml:"winery,omitempty"`
+	Winery *WineryTiny `form:"winery,omitempty" json:"winery,omitempty" xml:"winery,omitempty"`
 	// Vintage of bottle
 	Vintage *uint32 `form:"vintage,omitempty" json:"vintage,omitempty" xml:"vintage,omitempty"`
 	// Composition is the list of grape varietals and associated percentage.
@@ -60,6 +60,17 @@ type ShowResponseBody struct {
 	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
 	// Rating of bottle from 1 (worst) to 5 (best)
 	Rating *uint32 `form:"rating,omitempty" json:"rating,omitempty" xml:"rating,omitempty"`
+}
+
+// ShowResponseBodyTiny is the type of the "storage" service "show" endpoint
+// HTTP response body.
+type ShowResponseBodyTiny struct {
+	// ID is the unique id of the bottle.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Name of bottle
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Winery that produces wine
+	Winery *WineryTiny `form:"winery,omitempty" json:"winery,omitempty" xml:"winery,omitempty"`
 }
 
 // ShowNotFoundResponseBody is the type of the "storage" service "show"
@@ -78,25 +89,13 @@ type StoredBottleResponseTiny struct {
 	// Name of bottle
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// Winery that produces wine
-	Winery *WineryResponseTiny `form:"winery,omitempty" json:"winery,omitempty" xml:"winery,omitempty"`
+	Winery *WineryTiny `form:"winery,omitempty" json:"winery,omitempty" xml:"winery,omitempty"`
 }
 
-// WineryResponseTiny is used to define fields on response body types.
-type WineryResponseTiny struct {
+// WineryTiny is used to define fields on response body types.
+type WineryTiny struct {
 	// Name of winery
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-}
-
-// WineryResponseBody is used to define fields on response body types.
-type WineryResponseBody struct {
-	// Name of winery
-	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	// Region of winery
-	Region *string `form:"region,omitempty" json:"region,omitempty" xml:"region,omitempty"`
-	// Country of winery
-	Country *string `form:"country,omitempty" json:"country,omitempty" xml:"country,omitempty"`
-	// Winery website URL
-	URL *string `form:"url,omitempty" json:"url,omitempty" xml:"url,omitempty"`
 }
 
 // ComponentResponseBody is used to define fields on response body types.
@@ -216,9 +215,9 @@ func NewListStoredBottleCollectionOK(body StoredBottleResponseTinyCollection) st
 	return v
 }
 
-// NewShowStoredBottleOK builds a "storage" service "show" endpoint result from
-// a HTTP "OK" response.
-func NewShowStoredBottleOK(body *ShowResponseBody) *storageviews.StoredBottleView {
+// NewShowResultDefaultOK builds a "storage" service "show" endpoint result
+// from a HTTP "OK" response.
+func NewShowResultDefaultOK(body *ShowResponseBody) *storageviews.StoredBottleView {
 	v := &storageviews.StoredBottleView{
 		ID:          body.ID,
 		Name:        body.Name,
@@ -226,7 +225,7 @@ func NewShowStoredBottleOK(body *ShowResponseBody) *storageviews.StoredBottleVie
 		Description: body.Description,
 		Rating:      body.Rating,
 	}
-	v.Winery = unmarshalWineryResponseBodyToStorageviewsWineryView(body.Winery)
+	v.Winery = unmarshalWineryTinyToStorageviewsWineryView(body.Winery)
 	if body.Composition != nil {
 		v.Composition = make([]*storageviews.ComponentView, len(body.Composition))
 		for i, val := range body.Composition {
@@ -237,6 +236,18 @@ func NewShowStoredBottleOK(body *ShowResponseBody) *storageviews.StoredBottleVie
 			v.Composition[i] = unmarshalComponentResponseBodyToStorageviewsComponentView(val)
 		}
 	}
+
+	return v
+}
+
+// NewShowResultTinyOK builds a "storage" service "show" endpoint result from a
+// HTTP "OK" response.
+func NewShowResultTinyOK(body *ShowResponseBodyTiny) *storageviews.StoredBottleView {
+	v := &storageviews.StoredBottleView{
+		ID:   body.ID,
+		Name: body.Name,
+	}
+	v.Winery = unmarshalWineryTinyToStorageviewsWineryView(body.Winery)
 
 	return v
 }
@@ -284,7 +295,7 @@ func ValidateShowResponseBody(body *ShowResponseBody) (err error) {
 		}
 	}
 	if body.Winery != nil {
-		if err2 := validateWineryResponseBody(body.Winery, "body.winery"); err2 != nil {
+		if err2 := validateWineryTiny(body.Winery, "body.winery"); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -314,6 +325,31 @@ func ValidateShowResponseBody(body *ShowResponseBody) (err error) {
 		}
 		if *body.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.rating", *body.Rating, 5, false))
+		}
+	}
+	return
+}
+
+// ValidateShowResponseBodyTiny runs the validations defined on
+// ShowResponseBodyTiny
+func ValidateShowResponseBodyTiny(body *ShowResponseBodyTiny) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "body"))
+	}
+	if body.Name != nil {
+		if utf8.RuneCountInString(*body.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("body.name", *body.Name, utf8.RuneCountInString(*body.Name), 100, false))
+		}
+	}
+	if body.Winery != nil {
+		if err2 := validateWineryTiny(body.Winery, "body.winery"); err2 != nil {
+			err = goa.MergeErrors(err, err2)
 		}
 	}
 	return
@@ -349,7 +385,7 @@ func ValidateStoredBottleResponseTiny(body *StoredBottleResponseTiny) (err error
 		}
 	}
 	if body.Winery != nil {
-		if err2 := validateWineryResponseTiny(body.Winery, "body.winery"); err2 != nil {
+		if err2 := validateWineryTiny(body.Winery, "body.winery"); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
@@ -374,73 +410,26 @@ func validateStoredBottleResponseTiny(body *StoredBottleResponseTiny, path strin
 		}
 	}
 	if body.Winery != nil {
-		if err2 := validateWineryResponseTiny(body.Winery, path+".winery"); err2 != nil {
+		if err2 := validateWineryTiny(body.Winery, path+".winery"); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
 	return
 }
 
-// ValidateWineryResponseTiny runs the validations defined on WineryTiny
-func ValidateWineryResponseTiny(body *WineryResponseTiny) (err error) {
+// ValidateWineryTiny runs the validations defined on WineryTiny
+func ValidateWineryTiny(body *WineryTiny) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
 	return
 }
 
-// validateWineryResponseTiny checks WineryTiny and reports errors using the
-// path supplied by its caller
-func validateWineryResponseTiny(body *WineryResponseTiny, path string) (err error) {
-	if body.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
-	}
-	return
-}
-
-// ValidateWineryResponseBody runs the validations defined on Winery
-func ValidateWineryResponseBody(body *WineryResponseBody) (err error) {
-	if body.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
-	}
-	if body.Region == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("region", "body"))
-	}
-	if body.Country == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("country", "body"))
-	}
-	if body.Region != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("body.region", *body.Region, "[a-zA-Z '\\.]+"))
-	}
-	if body.Country != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("body.country", *body.Country, "[a-zA-Z '\\.]+"))
-	}
-	if body.URL != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("body.url", *body.URL, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
-	}
-	return
-}
-
-// validateWineryResponseBody checks Winery and reports errors using the path
+// validateWineryTiny checks WineryTiny and reports errors using the path
 // supplied by its caller
-func validateWineryResponseBody(body *WineryResponseBody, path string) (err error) {
+func validateWineryTiny(body *WineryTiny, path string) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
-	}
-	if body.Region == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("region", path))
-	}
-	if body.Country == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("country", path))
-	}
-	if body.Region != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern(path+".region", *body.Region, "[a-zA-Z '\\.]+"))
-	}
-	if body.Country != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern(path+".country", *body.Country, "[a-zA-Z '\\.]+"))
-	}
-	if body.URL != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern(path+".url", *body.URL, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
 	}
 	return
 }

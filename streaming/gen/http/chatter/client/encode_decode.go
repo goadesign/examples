@@ -630,26 +630,7 @@ func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
-			var (
-				body HistoryResponseBody
-				err  error
-			)
-			err = decoder(resp).Decode(&body)
-			if err != nil {
-				return nil, goahttp.ErrDecodingError("chatter", "history", err)
-			}
-			err = ValidateHistoryResponseBody(&body)
-			if err != nil {
-				return nil, goahttp.ErrValidationError("chatter", "history", err)
-			}
-			p := NewHistoryChatSummaryOK(&body)
-			view := resp.Header.Get("goa-view")
-			vres := &chatterviews.ChatSummary{Projected: p, View: view}
-			if err = chatterviews.ValidateChatSummary(vres); err != nil {
-				return nil, goahttp.ErrValidationError("chatter", "history", err)
-			}
-			res := chatter.NewChatSummary(vres)
-			return res, nil
+			return nil, nil
 		case http.StatusForbidden:
 			var (
 				body string
