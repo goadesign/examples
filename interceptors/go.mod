@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	goa.design/clue v1.3.0
-	goa.design/goa/v3 v3.31.0-preview.5.0.20260916070337-f03a5d261cc4
+	goa.design/goa/v3 v3.31.0
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12
 )
