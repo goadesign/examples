@@ -56,14 +56,7 @@ func NewProtoListenerStreamingRequest(spayload string) *chatterpb.ListenerStream
 func NewChatSummaryCollectionChatSummaryCollection(v *chatterpb.ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
 	vresult := make([]*chatterviews.ChatSummaryView, len(v.Field))
 	for i, val := range v.Field {
-		vresult[i] = &chatterviews.ChatSummaryView{
-			Message: val.Message_,
-			SentAt:  val.SentAt,
-		}
-		if val.Length != nil {
-			length := int(*val.Length)
-			vresult[i].Length = &length
-		}
+		vresult[i] = transformProtoChatSummaryToChatSummaryView(val)
 	}
 	return vresult
 }
@@ -211,4 +204,19 @@ func ValidateHistoryResponse(message *chatterpb.HistoryResponse) (err error) {
 		err = goa.MergeErrors(err, goa.ValidateFormat("message.sent_at", *message.SentAt, goa.FormatDateTime))
 	}
 	return
+}
+
+// transformProtoChatSummaryToChatSummaryView builds a value of type
+// *chatterviews.ChatSummaryView from a value of type *chatterpb.ChatSummary.
+func transformProtoChatSummaryToChatSummaryView(v *chatterpb.ChatSummary) *chatterviews.ChatSummaryView {
+	res := &chatterviews.ChatSummaryView{
+		Message: v.Message_,
+		SentAt:  v.SentAt,
+	}
+	if v.Length != nil {
+		length := int(*v.Length)
+		res.Length = &length
+	}
+
+	return res
 }

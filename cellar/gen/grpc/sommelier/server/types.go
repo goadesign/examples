@@ -34,27 +34,33 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 	message := &sommelierpb.StoredBottleCollection{}
 	message.Field = make([]*sommelierpb.StoredBottle, len(result))
 	for i, val := range result {
-		message.Field[i] = &sommelierpb.StoredBottle{
-			Id:          val.ID,
-			Name:        val.Name,
-			Vintage:     val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
-		}
-		if val.Winery != nil {
-			message.Field[i].Winery = transformWineryViewToProtoWinery(val.Winery)
-		}
-		if val.Composition != nil {
-			message.Field[i].Composition = make([]*sommelierpb.Component, len(val.Composition))
-			for j, val := range val.Composition {
-				message.Field[i].Composition[j] = &sommelierpb.Component{
-					Varietal:   val.Varietal,
-					Percentage: val.Percentage,
-				}
-			}
-		}
+		message.Field[i] = transformStoredBottleViewToProtoStoredBottle(val)
 	}
 	return message
+}
+
+// transformStoredBottleViewToProtoStoredBottle builds a value of type
+// *sommelierpb.StoredBottle from a value of type
+// *sommelierviews.StoredBottleView.
+func transformStoredBottleViewToProtoStoredBottle(v *sommelierviews.StoredBottleView) *sommelierpb.StoredBottle {
+	res := &sommelierpb.StoredBottle{
+		Id:          v.ID,
+		Name:        v.Name,
+		Vintage:     v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	if v.Winery != nil {
+		res.Winery = transformWineryViewToProtoWinery(v.Winery)
+	}
+	if v.Composition != nil {
+		res.Composition = make([]*sommelierpb.Component, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = transformComponentViewToProtoComponent(val)
+		}
+	}
+
+	return res
 }
 
 // transformWineryViewToProtoWinery builds a value of type *sommelierpb.Winery
@@ -62,6 +68,17 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 func transformWineryViewToProtoWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
 	res := &sommelierpb.Winery{
 		Name: v.Name,
+	}
+
+	return res
+}
+
+// transformComponentViewToProtoComponent builds a value of type
+// *sommelierpb.Component from a value of type *sommelierviews.ComponentView.
+func transformComponentViewToProtoComponent(v *sommelierviews.ComponentView) *sommelierpb.Component {
+	res := &sommelierpb.Component{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
 	}
 
 	return res

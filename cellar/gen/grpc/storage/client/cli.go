@@ -82,10 +82,7 @@ func BuildAddPayload(storageAddMessage *string) (*storage.Bottle, error) {
 	if message.Composition != nil {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
-			v.Composition[i] = &storage.Component{
-				Varietal:   *val.Varietal,
-				Percentage: val.Percentage,
-			}
+			v.Composition[i] = transformProtoComponentToComponent(val)
 		}
 	}
 
@@ -163,24 +160,7 @@ func BuildMultiAddPayload(storageMultiAddMessage *string) ([]*storage.Bottle, er
 	}
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
-		v[i] = &storage.Bottle{
-			Name:        *val.Name,
-			Vintage:     *val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
-		}
-		if val.Winery != nil {
-			v[i].Winery = transformProtoWineryToWinery(val.Winery)
-		}
-		if val.Composition != nil {
-			v[i].Composition = make([]*storage.Component, len(val.Composition))
-			for j, val := range val.Composition {
-				v[i].Composition[j] = &storage.Component{
-					Varietal:   *val.Varietal,
-					Percentage: val.Percentage,
-				}
-			}
-		}
+		v[i] = transformProtoBottleToBottle(val)
 	}
 	return v, nil
 }
@@ -212,24 +192,7 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage *string) (*storage.MultiU
 	if message.Bottles != nil {
 		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 		for i, val := range message.Bottles {
-			v.Bottles[i] = &storage.Bottle{
-				Name:        *val.Name,
-				Vintage:     *val.Vintage,
-				Description: val.Description,
-				Rating:      val.Rating,
-			}
-			if val.Winery != nil {
-				v.Bottles[i].Winery = transformProtoWineryToWinery(val.Winery)
-			}
-			if val.Composition != nil {
-				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
-				for j, val := range val.Composition {
-					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   *val.Varietal,
-						Percentage: val.Percentage,
-					}
-				}
-			}
+			v.Bottles[i] = transformProtoBottleToBottle(val)
 		}
 	}
 

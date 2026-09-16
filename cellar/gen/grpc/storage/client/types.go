@@ -27,13 +27,7 @@ func NewProtoListRequest() *storagepb.ListRequest {
 func NewListResult(message *storagepb.StoredBottleCollection) storageviews.StoredBottleCollectionView {
 	result := make([]*storageviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
-		result[i] = &storageviews.StoredBottleView{
-			ID:   val.Id,
-			Name: val.Name,
-		}
-		if val.Winery != nil {
-			result[i].Winery = transformProtoWineryToWineryView(val.Winery)
-		}
+		result[i] = transformProtoStoredBottleToStoredBottleView(val)
 	}
 	return result
 }
@@ -62,10 +56,7 @@ func NewShowResult(message *storagepb.ShowResponse) *storageviews.StoredBottleVi
 	if message.Composition != nil {
 		result.Composition = make([]*storageviews.ComponentView, len(message.Composition))
 		for i, val := range message.Composition {
-			result.Composition[i] = &storageviews.ComponentView{
-				Varietal:   val.Varietal,
-				Percentage: val.Percentage,
-			}
+			result.Composition[i] = transformProtoComponentToComponentView(val)
 		}
 	}
 	return result
@@ -108,10 +99,7 @@ func NewProtoAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
 	if payload.Composition != nil {
 		message.Composition = make([]*storagepb.Component, len(payload.Composition))
 		for i, val := range payload.Composition {
-			message.Composition[i] = &storagepb.Component{
-				Varietal:   &val.Varietal,
-				Percentage: val.Percentage,
-			}
+			message.Composition[i] = transformComponentToProtoComponent(val)
 		}
 	}
 	return message
@@ -154,24 +142,7 @@ func NewProtoMultiAddRequest(payload []*storage.Bottle) *storagepb.MultiAddReque
 	message := &storagepb.MultiAddRequest{}
 	message.Field = make([]*storagepb.Bottle, len(payload))
 	for i, val := range payload {
-		message.Field[i] = &storagepb.Bottle{
-			Name:        &val.Name,
-			Vintage:     &val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
-		}
-		if val.Winery != nil {
-			message.Field[i].Winery = transformWineryToProtoWinery(val.Winery)
-		}
-		if val.Composition != nil {
-			message.Field[i].Composition = make([]*storagepb.Component, len(val.Composition))
-			for j, val := range val.Composition {
-				message.Field[i].Composition[j] = &storagepb.Component{
-					Varietal:   &val.Varietal,
-					Percentage: val.Percentage,
-				}
-			}
-		}
+		message.Field[i] = transformBottleToProtoBottle(val)
 	}
 	return message
 }
@@ -198,24 +169,7 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 	if payload.Bottles != nil {
 		message.Bottles = make([]*storagepb.Bottle, len(payload.Bottles))
 		for i, val := range payload.Bottles {
-			message.Bottles[i] = &storagepb.Bottle{
-				Name:        &val.Name,
-				Vintage:     &val.Vintage,
-				Description: val.Description,
-				Rating:      val.Rating,
-			}
-			if val.Winery != nil {
-				message.Bottles[i].Winery = transformWineryToProtoWinery(val.Winery)
-			}
-			if val.Composition != nil {
-				message.Bottles[i].Composition = make([]*storagepb.Component, len(val.Composition))
-				for j, val := range val.Composition {
-					message.Bottles[i].Composition[j] = &storagepb.Component{
-						Varietal:   &val.Varietal,
-						Percentage: val.Percentage,
-					}
-				}
-			}
+			message.Bottles[i] = transformBottleToProtoBottle(val)
 		}
 	}
 	return message
@@ -558,11 +512,36 @@ func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err erro
 	return
 }
 
+// transformProtoStoredBottleToStoredBottleView builds a value of type
+// *storageviews.StoredBottleView from a value of type *storagepb.StoredBottle.
+func transformProtoStoredBottleToStoredBottleView(v *storagepb.StoredBottle) *storageviews.StoredBottleView {
+	res := &storageviews.StoredBottleView{
+		ID:   v.Id,
+		Name: v.Name,
+	}
+	if v.Winery != nil {
+		res.Winery = transformProtoWineryToWineryView(v.Winery)
+	}
+
+	return res
+}
+
 // transformProtoWineryToWineryView builds a value of type
 // *storageviews.WineryView from a value of type *storagepb.Winery.
 func transformProtoWineryToWineryView(v *storagepb.Winery) *storageviews.WineryView {
 	res := &storageviews.WineryView{
 		Name: v.Name,
+	}
+
+	return res
+}
+
+// transformProtoComponentToComponentView builds a value of type
+// *storageviews.ComponentView from a value of type *storagepb.Component.
+func transformProtoComponentToComponentView(v *storagepb.Component) *storageviews.ComponentView {
+	res := &storageviews.ComponentView{
+		Varietal:   v.Varietal,
+		Percentage: v.Percentage,
 	}
 
 	return res
@@ -581,6 +560,17 @@ func transformWineryToProtoWinery(v *storage.Winery) *storagepb.Winery {
 	return res
 }
 
+// transformComponentToProtoComponent builds a value of type
+// *storagepb.Component from a value of type *storage.Component.
+func transformComponentToProtoComponent(v *storage.Component) *storagepb.Component {
+	res := &storagepb.Component{
+		Varietal:   &v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
 // transformProtoWineryToWinery builds a value of type *storage.Winery from a
 // value of type *storagepb.Winery.
 func transformProtoWineryToWinery(v *storagepb.Winery) *storage.Winery {
@@ -589,6 +579,61 @@ func transformProtoWineryToWinery(v *storagepb.Winery) *storage.Winery {
 		Region:  *v.Region,
 		Country: *v.Country,
 		URL:     v.Url,
+	}
+
+	return res
+}
+
+// transformProtoComponentToComponent builds a value of type *storage.Component
+// from a value of type *storagepb.Component.
+func transformProtoComponentToComponent(v *storagepb.Component) *storage.Component {
+	res := &storage.Component{
+		Varietal:   *v.Varietal,
+		Percentage: v.Percentage,
+	}
+
+	return res
+}
+
+// transformBottleToProtoBottle builds a value of type *storagepb.Bottle from a
+// value of type *storage.Bottle.
+func transformBottleToProtoBottle(v *storage.Bottle) *storagepb.Bottle {
+	res := &storagepb.Bottle{
+		Name:        &v.Name,
+		Vintage:     &v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	if v.Winery != nil {
+		res.Winery = transformWineryToProtoWinery(v.Winery)
+	}
+	if v.Composition != nil {
+		res.Composition = make([]*storagepb.Component, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = transformComponentToProtoComponent(val)
+		}
+	}
+
+	return res
+}
+
+// transformProtoBottleToBottle builds a value of type *storage.Bottle from a
+// value of type *storagepb.Bottle.
+func transformProtoBottleToBottle(v *storagepb.Bottle) *storage.Bottle {
+	res := &storage.Bottle{
+		Name:        *v.Name,
+		Vintage:     *v.Vintage,
+		Description: v.Description,
+		Rating:      v.Rating,
+	}
+	if v.Winery != nil {
+		res.Winery = transformProtoWineryToWinery(v.Winery)
+	}
+	if v.Composition != nil {
+		res.Composition = make([]*storage.Component, len(v.Composition))
+		for i, val := range v.Composition {
+			res.Composition[i] = transformProtoComponentToComponent(val)
+		}
 	}
 
 	return res

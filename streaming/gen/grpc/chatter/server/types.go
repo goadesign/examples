@@ -86,14 +86,7 @@ func NewProtoChatSummaryCollection(result chatterviews.ChatSummaryCollectionView
 	message := &chatterpb.ChatSummaryCollection{}
 	message.Field = make([]*chatterpb.ChatSummary, len(result))
 	for i, val := range result {
-		message.Field[i] = &chatterpb.ChatSummary{
-			Message_: val.Message,
-			SentAt:   val.SentAt,
-		}
-		if val.Length != nil {
-			length := int32(*val.Length)
-			message.Field[i].Length = &length
-		}
+		message.Field[i] = transformChatSummaryViewToProtoChatSummary(val)
 	}
 	return message
 }
@@ -183,4 +176,19 @@ func ValidateSummaryStreamingRequest(stream *chatterpb.SummaryStreamingRequest) 
 		err = goa.MergeErrors(err, goa.MissingFieldError("field", "stream"))
 	}
 	return
+}
+
+// transformChatSummaryViewToProtoChatSummary builds a value of type
+// *chatterpb.ChatSummary from a value of type *chatterviews.ChatSummaryView.
+func transformChatSummaryViewToProtoChatSummary(v *chatterviews.ChatSummaryView) *chatterpb.ChatSummary {
+	res := &chatterpb.ChatSummary{
+		Message_: v.Message,
+		SentAt:   v.SentAt,
+	}
+	if v.Length != nil {
+		length := int32(*v.Length)
+		res.Length = &length
+	}
+
+	return res
 }
