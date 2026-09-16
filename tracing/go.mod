@@ -4,20 +4,20 @@ go 1.26.0
 
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	goa.design/examples/basic v0.0.0-20260810182504-f834f43955c5
+	goa.design/examples/basic v0.0.0-20260916072332-20010baa9915
 	goa.design/goa/v3 v3.31.0-preview.5.0.20260916070337-f03a5d261cc4
 	google.golang.org/grpc v1.83.2
 )
 
 require (
-	github.com/go-chi/chi/v5 v5.3.1 // indirect
+	github.com/go-chi/chi/v5 v5.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	go.opentelemetry.io/otel/metric v1.45.0 // indirect
-	golang.org/x/net v0.58.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260819154853-08b0e4226688 // indirect
+	golang.org/x/net v0.59.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260911204522-f61a6ca850bd // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 )
