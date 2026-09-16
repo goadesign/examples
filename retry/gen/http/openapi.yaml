@@ -31,7 +31,15 @@ paths:
                         required:
                             - message
                 "503":
-                    description: Service Unavailable response.
+                    description: 'unavailable: The message is temporarily unavailable.'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: unavailable
+                            temporary: true
+                            timeout: false
                     schema:
                         $ref: '#/definitions/RetryGetMessageUnavailableResponseBody'
             schemes:
@@ -48,9 +56,9 @@ definitions:
             message:
                 type: string
                 description: Message returned after the retry succeeds.
-                example: Quaerat cum fugiat fugiat aut quia qui.
+                example: Dolor quos eligendi quibusdam asperiores provident.
         example:
-            message: Quaerat cum fugiat fugiat aut quia qui.
+            message: Dolor quos eligendi quibusdam asperiores provident.
         required:
             - message
     RetryGetMessageUnavailableResponseBody:
@@ -76,19 +84,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: false
+                example: true
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: false
-        description: The message is temporarily unavailable. (default view)
+                example: true
+        description: Error response result type (default view)
         example:
             fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: false
-            timeout: false
+            temporary: true
+            timeout: true
         required:
             - name
             - id

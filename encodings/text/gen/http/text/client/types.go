@@ -7,9 +7,7 @@
 
 package client
 
-import (
-	text "goa.design/examples/encodings/text/gen/text"
-)
+import text "goa.design/examples/encodings/text/gen/text"
 
 // NewConcatstringfieldMyConcatenationOK builds a "text" service
 // "concatstringfield" endpoint result from a HTTP "OK" response.

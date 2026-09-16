@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	concat "goa.design/examples/encodings/cbor/gen/concat"
-)
+import concat "goa.design/examples/encodings/cbor/gen/concat"
 
 // NewConcatPayload builds a concat service concat endpoint payload.
 func NewConcatPayload(a string, b string) *concat.ConcatPayload {

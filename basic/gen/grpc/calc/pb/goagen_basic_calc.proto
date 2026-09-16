@@ -19,11 +19,11 @@ service Calc {
 
 message MultiplyRequest {
 	// Left operand
-	sint32 a = 1;
+	optional sint32 a = 1;
 	// Right operand
-	sint32 b = 2;
+	optional sint32 b = 2;
 }
 
 message MultiplyResponse {
-	sint32 field = 1;
+	optional sint32 field = 1;
 }

@@ -29,8 +29,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "calc divide --body '{\n      \"dividend\": 1196350668178300830,\n      \"divisor\": 5941732484439269441\n   }'" + "\n" +
+	return os.Args[0] + " " + "calc divide --body '{\n      \"dividend\": 6599615662108896380,\n      \"divisor\": 6289780582187170160\n   }'" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -46,8 +65,10 @@ func ParseEndpoint(
 		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
 
 		calcDivideFlags    = flag.NewFlagSet("divide", flag.ExitOnError)
-		calcDivideBodyFlag = calcDivideFlags.String("body", "REQUIRED", "")
+		calcDivideBodyFlag = new(cliStringFlag)
 	)
+	calcDivideFlags.Var(calcDivideBodyFlag, "body", "")
+
 	calcFlags.Usage = calcUsage
 	calcDivideFlags.Usage = calcDivideUsage
 
@@ -115,7 +136,7 @@ func ParseEndpoint(
 			switch epn {
 			case "divide":
 				endpoint = c.Divide()
-				data, err = calcc.BuildDividePayload(*calcDivideBodyFlag)
+				data, err = calcc.BuildDividePayload(calcDivideBodyFlag.value)
 			}
 		}
 	}
@@ -151,5 +172,5 @@ func calcDivideUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc divide --body '{\n      \"dividend\": 1196350668178300830,\n      \"divisor\": 5941732484439269441\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc divide --body '{\n      \"dividend\": 6599615662108896380,\n      \"divisor\": 6289780582187170160\n   }'")
 }

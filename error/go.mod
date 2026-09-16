@@ -3,7 +3,7 @@ module goa.design/examples/error
 go 1.26.0
 
 require (
-	goa.design/goa/v3 v3.30.0
+	goa.design/goa/v3 v3.31.0-preview.5.0.20260916070337-f03a5d261cc4
 	google.golang.org/genproto v0.0.0-20260810153831-ec0a7760b754
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12

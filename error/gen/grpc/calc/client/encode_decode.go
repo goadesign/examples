@@ -46,6 +46,9 @@ func DecodeDivideResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (an
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("calc", "divide", "*calcpb.DivideResponse", v)
 	}
+	if err := ValidateDivideResponse(message); err != nil {
+		return nil, err
+	}
 	res := NewDivideResult(message)
 	return res, nil
 }

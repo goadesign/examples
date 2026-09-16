@@ -9,6 +9,7 @@ package client
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	updown "goa.design/examples/upload_download/gen/updown"
@@ -96,7 +97,9 @@ func (c *Client) Download() goa.Endpoint {
 		}
 		res, err := decodeResponse(resp)
 		if err != nil {
-			resp.Body.Close()
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				return nil, errors.Join(err, goahttp.ErrDecodingError("updown", "download", closeErr))
+			}
 			return nil, err
 		}
 		return &updown.DownloadResponseData{Result: res.(*updown.DownloadResult), Body: resp.Body}, nil

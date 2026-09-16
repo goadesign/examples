@@ -52,7 +52,7 @@ func NewDefaultEndpoint(s Service, authAPIKeyFn security.AuthAPIKeyFunc) goa.End
 			Scopes:         []string{},
 			RequiredScopes: []string{},
 		}
-		ctx, err = authAPIKeyFn(ctx, p.Key, &sc)
+		ctx, err = authAPIKeyFn(ctx, string(p.Key), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -71,7 +71,7 @@ func NewSecureEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 			Scopes:         []string{},
 			RequiredScopes: []string{},
 		}
-		ctx, err = authJWTFn(ctx, p.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(p.Token), &sc)
 		if err != nil {
 			return nil, err
 		}

@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	text "goa.design/examples/encodings/text/gen/text"
-)
+import text "goa.design/examples/encodings/text/gen/text"
 
 // NewConcatstringsPayload builds a text service concatstrings endpoint payload.
 func NewConcatstringsPayload(a string, b string) *text.ConcatstringsPayload {

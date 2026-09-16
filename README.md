@@ -4,10 +4,18 @@
 
 This repository contains examples of microservices implemented using
 [Goa](https://github.com/goadesign/goa). Each example focuses on a specific topic as indicated by
-the directory name. The [cellar](https://github.com/goadesign/examples/tree/master/cellar) example
+the directory name. The [cellar](https://github.com/goadesign/examples/tree/main/cellar) example
 provides a complete implementation of a simple microservice.
-The [retry](https://github.com/goadesign/examples/tree/master/retry) example shows how generated
+The [retry](https://github.com/goadesign/examples/tree/main/retry) example shows how generated
 HTTP and gRPC clients safely retry temporary failures.
+
+The v3.31.0 examples accompany Goa v3.31.0 and require Go 1.26 or later.
+This Goa release includes intentional generated-source and transport changes.
+When adapting an existing application, read the
+[upgrade guide](https://github.com/goadesign/goa/blob/v3.31.0/UPGRADING.md)
+and use matching Goa and examples versions. Regenerate the complete `gen`
+directory and update handwritten interceptors, multipart decoders, and command
+starters as described there.
 
 The samples in each directory serve as templates, and you can clone them using the `gonew` command, as explained in [this blog post](https://go.dev/blog/gonew).
 

@@ -188,9 +188,6 @@ func newStoredResumeView(res *StoredResume) *resumeviews.StoredResumeView {
 // transformResumeviewsExperienceViewToExperience builds a value of type
 // *Experience from a value of type *resumeviews.ExperienceView.
 func transformResumeviewsExperienceViewToExperience(v *resumeviews.ExperienceView) *Experience {
-	if v == nil {
-		return nil
-	}
 	res := &Experience{
 		Company:  *v.Company,
 		Role:     *v.Role,
@@ -203,9 +200,6 @@ func transformResumeviewsExperienceViewToExperience(v *resumeviews.ExperienceVie
 // transformResumeviewsEducationViewToEducation builds a value of type
 // *Education from a value of type *resumeviews.EducationView.
 func transformResumeviewsEducationViewToEducation(v *resumeviews.EducationView) *Education {
-	if v == nil {
-		return nil
-	}
 	res := &Education{
 		Institution: *v.Institution,
 		Major:       *v.Major,

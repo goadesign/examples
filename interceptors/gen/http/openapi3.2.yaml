@@ -22,9 +22,9 @@ paths:
                   schema:
                     type: string
                     description: Tenant ID for the request
-                    example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                    example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                     format: uuid
-                  example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                  example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                 - name: Authorization
                   in: header
                   description: JWT auth token
@@ -32,8 +32,8 @@ paths:
                   schema:
                     type: string
                     description: JWT auth token
-                    example: Voluptatum necessitatibus.
-                  example: Consequatur excepturi quam quia laudantium asperiores.
+                    example: Eaque repellendus quo blanditiis rerum harum.
+                  example: Eaque repellendus quo blanditiis rerum harum.
             requestBody:
                 description: Request body for create.
                 required: true
@@ -42,9 +42,9 @@ paths:
                         schema:
                             $ref: '#/components/schemas/CreateRequestBody'
                         example:
-                            spanID: 7e046fe3-fa36-4f0f-b281-f8c9e1fdf010
-                            traceID: 831384a5-5a7d-43cc-94e4-5ec22455f386
-                            value: Impedit voluptatem culpa et.
+                            spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                            traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                            value: Vel dolores.
             responses:
                 "201":
                     description: Created response.
@@ -53,14 +53,14 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/CreateResponseBody'
                             example:
-                                duration: 2675830902084894015
-                                id: 612f2f00-a808-44b9-a52d-a7f34bf838a4
-                                processedAt: Id quaerat dolores ab quo soluta modi.
-                                retryCount: 193182529652580268
-                                retryDuration: 5809970416232694733
-                                status: 2668736938289029744
-                                tenant: Sed omnis aut recusandae fuga minima.
-                                value: Fuga quia.
+                                duration: 3718795145732531204
+                                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                                processedAt: Dolor sit.
+                                retryCount: 5419496228293178792
+                                retryDuration: 9203795670612989877
+                                status: 4185462404774819293
+                                tenant: Dolores sunt non.
+                                value: Minima eos voluptate esse dolores assumenda.
     /records/{tenantID}/{recordID}:
         get:
             tags:
@@ -76,9 +76,9 @@ paths:
                   schema:
                     type: string
                     description: Tenant ID for the request
-                    example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                    example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                     format: uuid
-                  example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                  example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                 - name: recordID
                   in: path
                   description: ID of the record to retrieve
@@ -86,9 +86,9 @@ paths:
                   schema:
                     type: string
                     description: ID of the record to retrieve
-                    example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                    example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                     format: uuid
-                  example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                  example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                 - name: Authorization
                   in: header
                   description: JWT auth token
@@ -96,8 +96,8 @@ paths:
                   schema:
                     type: string
                     description: JWT auth token
-                    example: Beatae eum.
-                  example: Voluptate perferendis dicta commodi.
+                    example: Molestiae ab ipsa fuga.
+                  example: Molestiae ab ipsa fuga.
             requestBody:
                 description: Request body for get.
                 required: true
@@ -106,8 +106,8 @@ paths:
                         schema:
                             $ref: '#/components/schemas/GetRequestBody'
                         example:
-                            spanID: c2bc78f1-a675-44df-b132-1d285e204cf2
-                            traceID: 8909bcf0-fa7e-4ed1-bc3e-1ed689cc9896
+                            spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                            traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
             responses:
                 "200":
                     description: OK response.
@@ -116,27 +116,41 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/GetResponseBody'
                             example:
-                                cachedAt: Aut vero voluptates.
-                                duration: 966071656546526256
-                                id: f9922b04-e873-4efc-9b16-fdcb9d29ef0a
-                                processedAt: Asperiores voluptatem quisquam id necessitatibus.
-                                retryCount: 1538090001739738220
-                                retryDuration: 3066832311296962951
-                                status: 6370274974021655670
-                                tenant: Ad consequatur dolor alias.
-                                value: Impedit officiis.
+                                cachedAt: Omnis impedit sed.
+                                duration: 178461644483448189
+                                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                                processedAt: Eius mollitia illo quia consequatur voluptatem.
+                                retryCount: 5007217583026942089
+                                retryDuration: 587659532169267737
+                                status: 3494638038445428863
+                                tenant: Numquam est voluptates dolor.
+                                value: Quis nesciunt maiores quia ab.
                 "404":
                     description: 'NotFound: Record not found'
                     content:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: NotFound
+                                temporary: false
+                                timeout: false
                 "503":
                     description: 'Unavailable: Temporary error'
                     content:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: Unavailable
+                                temporary: true
+                                timeout: false
     /records/{tenantID}/stream:
         get:
             tags:
@@ -152,9 +166,9 @@ paths:
                   schema:
                     type: string
                     description: Tenant ID for the request
-                    example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                    example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                     format: uuid
-                  example: 66c20bbb-15ff-4254-b34a-4ecbeff0ce29
+                  example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
                 - name: Authorization
                   in: header
                   description: JWT auth token
@@ -162,8 +176,8 @@ paths:
                   schema:
                     type: string
                     description: JWT auth token
-                    example: Aliquid et dignissimos delectus facere nesciunt.
-                  example: Aut expedita eum id.
+                    example: Dolore repellendus sint soluta tenetur omnis.
+                  example: Dolore repellendus sint soluta tenetur omnis.
             responses:
                 "101":
                     description: Switching Protocols response.
@@ -172,12 +186,12 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/StreamResponseBody'
                             example:
-                                id: 1bbd1751-b7df-4308-a1c7-0a55a307585d
-                                spanID: baffd1d3-7d92-456b-a4f1-37f462d4c356
-                                status: 3407397389909827570
-                                tenant: Repellendus eveniet sit.
-                                traceID: 871ffc91-4efb-4fdb-a84b-8561f8f11b47
-                                value: Eos nihil.
+                                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                                spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                                status: 3451733167122626757
+                                tenant: Accusantium facilis est et.
+                                traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                                value: Et qui.
 components:
     schemas:
         CreateRequestBody:
@@ -190,12 +204,12 @@ components:
                 value:
                     type: string
                     description: Value to store in record
-                    example: Impedit voluptatem culpa et.
+                    example: Vel dolores.
             description: Request body for create.
             example:
-                spanID: c89c4a4e-7182-4507-864e-8c8476e91061
-                traceID: c89c4a4e-7182-4507-864e-8c8476e91061
-                value: Impedit voluptatem culpa et.
+                spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                value: Vel dolores.
             required:
                 - value
         CreateResponseBody:
@@ -204,46 +218,46 @@ components:
                 duration:
                     type: integer
                     description: Processing duration in ms
-                    example: 2675830902084894015
+                    example: 3718795145732531204
                     format: int64
                 id:
                     $ref: '#/components/schemas/UUID'
                 processedAt:
                     type: string
                     description: Timestamp when processed
-                    example: Id quaerat dolores ab quo soluta modi.
+                    example: Dolor sit.
                 retryCount:
                     type: integer
                     description: Number of retry attempts made
-                    example: 193182529652580268
+                    example: 5419496228293178792
                     format: int64
                 retryDuration:
                     type: integer
                     description: Total time spent retrying
-                    example: 5809970416232694733
+                    example: 9203795670612989877
                     format: int64
                 status:
                     type: integer
                     description: Response status code
-                    example: 2668736938289029744
+                    example: 4185462404774819293
                     format: int64
                 tenant:
                     type: string
                     description: Tenant the record belongs to
-                    example: Sed omnis aut recusandae fuga minima.
+                    example: Dolores sunt non.
                 value:
                     type: string
                     description: Value of the record
-                    example: Fuga quia.
+                    example: Minima eos voluptate esse dolores assumenda.
             example:
-                duration: 2675830902084894015
-                id: 7673f207-d6bd-473a-8f84-1c0b64fcfc54
-                processedAt: Id quaerat dolores ab quo soluta modi.
-                retryCount: 193182529652580268
-                retryDuration: 5809970416232694733
-                status: 2668736938289029744
-                tenant: Sed omnis aut recusandae fuga minima.
-                value: Fuga quia.
+                duration: 3718795145732531204
+                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                processedAt: Dolor sit.
+                retryCount: 5419496228293178792
+                retryDuration: 9203795670612989877
+                status: 4185462404774819293
+                tenant: Dolores sunt non.
+                value: Minima eos voluptate esse dolores assumenda.
             required:
                 - id
                 - value
@@ -273,18 +287,18 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: false
+                    example: true
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
                     example: true
-            description: Record not found
+            description: Error response result type
             example:
                 fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
                 timeout: true
             required:
                 - name
@@ -302,59 +316,59 @@ components:
                     $ref: '#/components/schemas/UUID'
             description: Request body for get.
             example:
-                spanID: c89c4a4e-7182-4507-864e-8c8476e91061
-                traceID: c89c4a4e-7182-4507-864e-8c8476e91061
+                spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
         GetResponseBody:
             type: object
             properties:
                 cachedAt:
                     type: string
                     description: Time at which the record was cached, written by the Cache interceptor
-                    example: Aut vero voluptates.
+                    example: Omnis impedit sed.
                 duration:
                     type: integer
                     description: Processing duration in ms, written by the RequestAudit interceptor
-                    example: 966071656546526256
+                    example: 178461644483448189
                     format: int64
                 id:
                     $ref: '#/components/schemas/UUID'
                 processedAt:
                     type: string
                     description: Timestamp when processed, written by the RequestAudit interceptor
-                    example: Asperiores voluptatem quisquam id necessitatibus.
+                    example: Eius mollitia illo quia consequatur voluptatem.
                 retryCount:
                     type: integer
                     description: Number of retry attempts made, written client-side by the Retry interceptor
-                    example: 1538090001739738220
+                    example: 5007217583026942089
                     format: int64
                 retryDuration:
                     type: integer
                     description: Total time spent retrying, written client-side by the Retry interceptor
-                    example: 3066832311296962951
+                    example: 587659532169267737
                     format: int64
                 status:
                     type: integer
                     description: Response status code
-                    example: 6370274974021655670
+                    example: 3494638038445428863
                     format: int64
                 tenant:
                     type: string
                     description: Tenant the record belongs to
-                    example: Ad consequatur dolor alias.
+                    example: Numquam est voluptates dolor.
                 value:
                     type: string
                     description: Value of the record
-                    example: Impedit officiis.
+                    example: Quis nesciunt maiores quia ab.
             example:
-                cachedAt: Aut vero voluptates.
-                duration: 966071656546526256
-                id: 7673f207-d6bd-473a-8f84-1c0b64fcfc54
-                processedAt: Asperiores voluptatem quisquam id necessitatibus.
-                retryCount: 1538090001739738220
-                retryDuration: 3066832311296962951
-                status: 6370274974021655670
-                tenant: Ad consequatur dolor alias.
-                value: Impedit officiis.
+                cachedAt: Omnis impedit sed.
+                duration: 178461644483448189
+                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                processedAt: Eius mollitia illo quia consequatur voluptatem.
+                retryCount: 5007217583026942089
+                retryDuration: 587659532169267737
+                status: 3494638038445428863
+                tenant: Numquam est voluptates dolor.
+                value: Quis nesciunt maiores quia ab.
             required:
                 - id
                 - value
@@ -372,25 +386,25 @@ components:
                 status:
                     type: integer
                     description: Response status code
-                    example: 3407397389909827570
+                    example: 3451733167122626757
                     format: int64
                 tenant:
                     type: string
                     description: Tenant the record belongs to
-                    example: Repellendus eveniet sit.
+                    example: Accusantium facilis est et.
                 traceID:
                     $ref: '#/components/schemas/UUID'
                 value:
                     type: string
                     description: Value of the record
-                    example: Eos nihil.
+                    example: Et qui.
             example:
-                id: 7673f207-d6bd-473a-8f84-1c0b64fcfc54
-                spanID: 7673f207-d6bd-473a-8f84-1c0b64fcfc54
-                status: 3407397389909827570
-                tenant: Repellendus eveniet sit.
-                traceID: 7673f207-d6bd-473a-8f84-1c0b64fcfc54
-                value: Eos nihil.
+                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                status: 3451733167122626757
+                tenant: Accusantium facilis est et.
+                traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                value: Et qui.
             required:
                 - id
                 - value
@@ -408,19 +422,19 @@ components:
                 value:
                     type: string
                     description: Value of the record
-                    example: Enim qui sint.
+                    example: Reprehenderit sunt nam veniam quibusdam.
             example:
-                id: 4ebe4239-1377-48a0-a82d-aeb7fb4a79aa
-                spanID: 4ebe4239-1377-48a0-a82d-aeb7fb4a79aa
-                traceID: 4ebe4239-1377-48a0-a82d-aeb7fb4a79aa
-                value: Enim qui sint.
+                id: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                spanID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                traceID: dd11abcb-f3b1-412f-9ede-6f80730d5a28
+                value: Reprehenderit sunt nam veniam quibusdam.
             required:
                 - id
                 - value
         UUID:
             type: string
             description: Valid UUID representation as per RFC 4122
-            example: c89c4a4e-7182-4507-864e-8c8476e91061
+            example: dd11abcb-f3b1-412f-9ede-6f80730d5a28
             format: uuid
 tags:
     - name: interceptors

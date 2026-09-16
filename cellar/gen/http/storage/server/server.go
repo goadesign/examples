@@ -42,11 +42,11 @@ type MountPoint struct {
 
 // StorageMultiAddDecoderFunc is the type to decode multipart request for the
 // "storage" service "multi_add" endpoint.
-type StorageMultiAddDecoderFunc func(*multipart.Reader, *[]*storage.Bottle) error
+type StorageMultiAddDecoderFunc func(*multipart.Reader, *[]*BottleRequestBody) error
 
 // StorageMultiUpdateDecoderFunc is the type to decode multipart request for
 // the "storage" service "multi_update" endpoint.
-type StorageMultiUpdateDecoderFunc func(*multipart.Reader, **storage.MultiUpdatePayload) error
+type StorageMultiUpdateDecoderFunc func(*multipart.Reader, *MultiUpdateRequestBody) error
 
 // New instantiates HTTP handlers for all the storage service endpoints using
 // the provided encoder and decoder. The handlers are mounted on the given mux

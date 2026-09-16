@@ -194,7 +194,9 @@ var _ = Service("chatter", func() {
 			Token("token", String, func() {
 				Description("JWT used for authentication")
 			})
-			Attribute("view", String, "View to use to render the result")
+			Attribute("view", String, "View to use to render the result", func() {
+				Enum("tiny", "default")
+			})
 			Required("token")
 		})
 

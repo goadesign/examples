@@ -46,7 +46,7 @@ func NewDefaultEndpoint(s Service, authBasicFn security.AuthBasicFunc) goa.Endpo
 			Scopes:         []string{},
 			RequiredScopes: []string{},
 		}
-		ctx, err = authBasicFn(ctx, p.Username, p.Password, &sc)
+		ctx, err = authBasicFn(ctx, string(p.Username), string(p.Password), &sc)
 		if err != nil {
 			return nil, err
 		}

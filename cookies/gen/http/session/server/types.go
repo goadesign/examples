@@ -70,7 +70,7 @@ func NewUseSessionPayload(sessionID string) *session.UseSessionPayload {
 }
 
 // ValidateCreateSessionRequestBody runs the validations defined on
-// create_session_request_body
+// CreateSessionRequestBody
 func ValidateCreateSessionRequestBody(body *CreateSessionRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))

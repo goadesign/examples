@@ -9,9 +9,10 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"mime"
 	"net/http"
-	"strings"
 
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
@@ -75,9 +76,13 @@ func (c *Client) Monitor() goa.Endpoint {
 		}
 
 		contentType := resp.Header.Get("Content-Type")
-		if contentType != "" && !strings.HasPrefix(contentType, "text/event-stream") {
-			resp.Body.Close()
-			return nil, fmt.Errorf("unexpected content type: %s (expected text/event-stream)", contentType)
+		mediaType, _, mediaTypeErr := mime.ParseMediaType(contentType)
+		if mediaTypeErr != nil || mediaType != "text/event-stream" {
+			contentTypeErr := fmt.Errorf("unexpected content type: %s (expected text/event-stream)", contentType)
+			if err := resp.Body.Close(); err != nil {
+				return nil, errors.Join(contentTypeErr, goahttp.ErrDecodingError("monitor", "monitor", err))
+			}
+			return nil, contentTypeErr
 		}
 
 		return NewMonitorStream(resp, c.decoder), nil

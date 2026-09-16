@@ -16,8 +16,7 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoPickRequest builds the gRPC request type from the payload of the
-// "pick" endpoint of the "sommelier" service.
+// NewProtoPickRequest builds *sommelierpb.PickRequest from *sommelier.Criteria.
 func NewProtoPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 	message := &sommelierpb.PickRequest{
 		Name:   payload.Name,
@@ -32,26 +31,26 @@ func NewProtoPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 	return message
 }
 
-// NewPickResult builds the result type of the "pick" endpoint of the
-// "sommelier" service from the gRPC response type.
+// NewPickResult builds sommelierviews.StoredBottleCollectionView from
+// *sommelierpb.StoredBottleCollection.
 func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.StoredBottleCollectionView {
 	result := make([]*sommelierviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
 		result[i] = &sommelierviews.StoredBottleView{
-			ID:          &val.Id,
-			Name:        &val.Name,
-			Vintage:     &val.Vintage,
+			ID:          val.Id,
+			Name:        val.Name,
+			Vintage:     val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			result[i].Winery = protobufSommelierpbWineryToSommelierviewsWineryView(val.Winery)
+			result[i].Winery = transformProtoWineryToWineryView(val.Winery)
 		}
 		if val.Composition != nil {
 			result[i].Composition = make([]*sommelierviews.ComponentView, len(val.Composition))
 			for j, val := range val.Composition {
 				result[i].Composition[j] = &sommelierviews.ComponentView{
-					Varietal:   &val.Varietal,
+					Varietal:   val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -65,7 +64,7 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection) (err error) {
 	for _, e := range message.Field {
 		if e != nil {
-			if err2 := ValidateStoredBottle(e); err2 != nil {
+			if err2 := validatecellar_sommelier_StoredBottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -73,28 +72,42 @@ func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection)
 	return
 }
 
-// ValidateStoredBottle runs the validations defined on StoredBottle.
-func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
+// validatecellar_sommelier_StoredBottle_At_elem runs the validations defined
+// on StoredBottle.
+func validatecellar_sommelier_StoredBottle_At_elem(elem *sommelierpb.StoredBottle) (err error) {
+	if elem.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "elem"))
+	}
+	if elem.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "elem"))
+	}
 	if elem.Winery == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "elem"))
 	}
-	if utf8.RuneCountInString(elem.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", elem.Name, utf8.RuneCountInString(elem.Name), 100, false))
+	if elem.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "elem"))
+	}
+	if elem.Name != nil {
+		if utf8.RuneCountInString(*elem.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", *elem.Name, utf8.RuneCountInString(*elem.Name), 100, false))
+		}
 	}
 	if elem.Winery != nil {
-		if err2 := ValidateWinery(elem.Winery); err2 != nil {
+		if err2 := validatecellar_sommelier_Winery_At_winery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if elem.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 1900, true))
-	}
-	if elem.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 2020, false))
+	if elem.Vintage != nil {
+		if *elem.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 1900, true))
+		}
+		if *elem.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 2020, false))
+		}
 	}
 	for _, e := range elem.Composition {
 		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
+			if err2 := validatecellar_sommelier_Component_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -108,8 +121,6 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 		if *elem.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 1, true))
 		}
-	}
-	if elem.Rating != nil {
 		if *elem.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 5, false))
 		}
@@ -117,28 +128,31 @@ func ValidateStoredBottle(elem *sommelierpb.StoredBottle) (err error) {
 	return
 }
 
-// ValidateWinery runs the validations defined on Winery.
-func ValidateWinery(winery *sommelierpb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", winery.Region, "[a-zA-Z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", winery.Country, "[a-zA-Z '\\.]+"))
-	if winery.Url != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+// validatecellar_sommelier_Winery_At_winery runs the validations defined on
+// Winery.
+func validatecellar_sommelier_Winery_At_winery(winery *sommelierpb.Winery) (err error) {
+	if winery.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
 	}
 	return
 }
 
-// ValidateComponent runs the validations defined on Component.
-func ValidateComponent(elem *sommelierpb.Component) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", elem.Varietal, "[A-Za-z' ]+"))
-	if utf8.RuneCountInString(elem.Varietal) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", elem.Varietal, utf8.RuneCountInString(elem.Varietal), 100, false))
+// validatecellar_sommelier_Component_At_elem runs the validations defined on
+// Component.
+func validatecellar_sommelier_Component_At_elem(elem *sommelierpb.Component) (err error) {
+	if elem.Varietal == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "elem"))
+	}
+	if elem.Varietal != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", *elem.Varietal, "[A-Za-z' ]+"))
+		if utf8.RuneCountInString(*elem.Varietal) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", *elem.Varietal, utf8.RuneCountInString(*elem.Varietal), 100, false))
+		}
 	}
 	if elem.Percentage != nil {
 		if *elem.Percentage < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 1, true))
 		}
-	}
-	if elem.Percentage != nil {
 		if *elem.Percentage > 100 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 100, false))
 		}
@@ -146,27 +160,11 @@ func ValidateComponent(elem *sommelierpb.Component) (err error) {
 	return
 }
 
-// svcSommelierviewsWineryViewToSommelierpbWinery builds a value of type
-// *sommelierpb.Winery from a value of type *sommelierviews.WineryView.
-func svcSommelierviewsWineryViewToSommelierpbWinery(v *sommelierviews.WineryView) *sommelierpb.Winery {
-	res := &sommelierpb.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		Url:     v.URL,
-	}
-
-	return res
-}
-
-// protobufSommelierpbWineryToSommelierviewsWineryView builds a value of type
+// transformProtoWineryToWineryView builds a value of type
 // *sommelierviews.WineryView from a value of type *sommelierpb.Winery.
-func protobufSommelierpbWineryToSommelierviewsWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
+func transformProtoWineryToWineryView(v *sommelierpb.Winery) *sommelierviews.WineryView {
 	res := &sommelierviews.WineryView{
-		Name:    &v.Name,
-		Region:  &v.Region,
-		Country: &v.Country,
-		URL:     v.Url,
+		Name: v.Name,
 	}
 
 	return res

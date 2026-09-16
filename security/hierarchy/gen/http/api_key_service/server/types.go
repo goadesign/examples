@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	apikeyservice "goa.design/examples/security/hierarchy/gen/api_key_service"
-)
+import apikeyservice "goa.design/examples/security/hierarchy/gen/api_key_service"
 
 // NewDefaultPayload builds a api_key_service service default endpoint payload.
 func NewDefaultPayload(key string) *apikeyservice.DefaultPayload {

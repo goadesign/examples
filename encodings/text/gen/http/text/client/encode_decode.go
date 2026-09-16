@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -49,18 +50,24 @@ func (c *Client) BuildConcatstringsRequest(ctx context.Context, v any) (*http.Re
 // text concatstrings endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 func DecodeConcatstringsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatstrings", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("text", "concatstrings", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -74,7 +81,10 @@ func DecodeConcatstringsResponse(decoder func(*http.Response) goahttp.Decoder, r
 			}
 			return body, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatstrings", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("text", "concatstrings", resp.StatusCode, string(body))
 		}
 	}
@@ -111,18 +121,24 @@ func (c *Client) BuildConcatbytesRequest(ctx context.Context, v any) (*http.Requ
 // text concatbytes endpoint. restoreBody controls whether the response body
 // should be restored after having been read.
 func DecodeConcatbytesResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatbytes", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("text", "concatbytes", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -136,7 +152,10 @@ func DecodeConcatbytesResponse(decoder func(*http.Response) goahttp.Decoder, res
 			}
 			return body, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatbytes", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("text", "concatbytes", resp.StatusCode, string(body))
 		}
 	}
@@ -173,18 +192,24 @@ func (c *Client) BuildConcatstringfieldRequest(ctx context.Context, v any) (*htt
 // the text concatstringfield endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
 func DecodeConcatstringfieldResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatstringfield", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("text", "concatstringfield", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -199,7 +224,10 @@ func DecodeConcatstringfieldResponse(decoder func(*http.Response) goahttp.Decode
 			res := NewConcatstringfieldMyConcatenationOK(body)
 			return res, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatstringfield", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("text", "concatstringfield", resp.StatusCode, string(body))
 		}
 	}
@@ -236,18 +264,24 @@ func (c *Client) BuildConcatbytesfieldRequest(ctx context.Context, v any) (*http
 // the text concatbytesfield endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
 func DecodeConcatbytesfieldResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatbytesfield", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("text", "concatbytesfield", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -262,7 +296,10 @@ func DecodeConcatbytesfieldResponse(decoder func(*http.Response) goahttp.Decoder
 			res := NewConcatbytesfieldMyConcatenationOK(body)
 			return res, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("text", "concatbytesfield", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("text", "concatbytesfield", resp.StatusCode, string(body))
 		}
 	}

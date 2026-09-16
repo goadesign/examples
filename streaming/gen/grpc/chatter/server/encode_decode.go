@@ -13,6 +13,7 @@ import (
 
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
+	chatterpb "goa.design/examples/streaming/gen/grpc/chatter/pb"
 	goagrpc "goa.design/goa/v3/grpc"
 	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc/metadata"
@@ -90,10 +91,9 @@ func DecodeEchoerRequest(ctx context.Context, v any, md metadata.MD) (any, error
 	var payload *chatter.EchoerPayload
 	{
 		payload = NewEchoerPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -126,10 +126,9 @@ func DecodeListenerRequest(ctx context.Context, v any, md metadata.MD) (any, err
 	var payload *chatter.ListenerPayload
 	{
 		payload = NewListenerPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -143,8 +142,8 @@ func EncodeSummaryResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (
 		return nil, goagrpc.ErrInvalidType("chatter", "summary", "chatterviews.ChatSummaryCollection", v)
 	}
 	result := vres.Projected
-	(*hdr).Append("goa-view", vres.View)
 	resp := NewProtoChatSummaryCollection(result)
+	(*hdr).Append("goa-view", "default")
 	return resp, nil
 }
 
@@ -168,10 +167,9 @@ func DecodeSummaryRequest(ctx context.Context, v any, md metadata.MD) (any, erro
 	var payload *chatter.SummaryPayload
 	{
 		payload = NewSummaryPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -208,10 +206,9 @@ func DecodeSubscribeRequest(ctx context.Context, v any, md metadata.MD) (any, er
 	var payload *chatter.SubscribePayload
 	{
 		payload = NewSubscribePayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -225,8 +222,16 @@ func EncodeHistoryResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (
 		return nil, goagrpc.ErrInvalidType("chatter", "history", "*chatterviews.ChatSummary", v)
 	}
 	result := vres.Projected
+	var resp *chatterpb.HistoryResponse
+	switch vres.View {
+	case "tiny":
+		resp = NewProtoHistoryResponseTiny(result)
+	case "default", "":
+		resp = NewProtoHistoryResponse(result)
+	default:
+		return nil, goa.InvalidEnumValueError("view", vres.View, []any{"tiny", "default"})
+	}
 	(*hdr).Append("goa-view", vres.View)
-	resp := NewProtoHistoryResponse(result)
 	return resp, nil
 }
 
@@ -242,6 +247,11 @@ func DecodeHistoryRequest(ctx context.Context, v any, md metadata.MD) (any, erro
 		if vals := md.Get("view"); len(vals) > 0 {
 			view = &vals[0]
 		}
+		if view != nil {
+			if !(*view == "tiny" || *view == "default") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []any{"tiny", "default"}))
+			}
+		}
 		if vals := md.Get("authorization"); len(vals) == 0 {
 			err = goa.MergeErrors(err, goa.MissingFieldError("authorization", "metadata"))
 		} else {
@@ -254,10 +264,9 @@ func DecodeHistoryRequest(ctx context.Context, v any, md metadata.MD) (any, erro
 	var payload *chatter.HistoryPayload
 	{
 		payload = NewHistoryPayload(view, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil

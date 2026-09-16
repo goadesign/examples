@@ -8,41 +8,45 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	storage "goa.design/examples/cellar/gen/storage"
 	goa "goa.design/goa/v3/pkg"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildShowPayload builds the payload for the storage show endpoint from CLI
 // flags.
-func BuildShowPayload(storageShowMessage string, storageShowView string) (*storage.ShowPayload, error) {
+func BuildShowPayload(storageShowMessage *string, storageShowView *string) (*storage.ShowPayload, error) {
 	var err error
 	var message storagepb.ShowRequest
 	{
-		if storageShowMessage != "" {
-			err = json.Unmarshal([]byte(storageShowMessage), &message)
+		if storageShowMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageShowMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Sed voluptatibus excepturi culpa aut aliquam ea.\"\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Neque voluptas molestias.\"\n   }'")
 			}
 		}
 	}
 	var view *string
 	{
-		if storageShowView != "" {
-			view = &storageShowView
-			if !(*view == "default" || *view == "tiny") {
-				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *view, []any{"default", "tiny"}))
+		if storageShowView != nil {
+			view = storageShowView
+			if !(*storageShowView == "default" || *storageShowView == "tiny") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("view", *storageShowView, []any{"default", "tiny"}))
 			}
 			if err != nil {
 				return nil, err
 			}
 		}
 	}
+	if err := ValidateShowRequest(&message); err != nil {
+		var zero *storage.ShowPayload
+		return zero, err
+	}
 	v := &storage.ShowPayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 	v.View = view
 
@@ -51,31 +55,35 @@ func BuildShowPayload(storageShowMessage string, storageShowView string) (*stora
 
 // BuildAddPayload builds the payload for the storage add endpoint from CLI
 // flags.
-func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
+func BuildAddPayload(storageAddMessage *string) (*storage.Bottle, error) {
 	var err error
 	var message storagepb.AddRequest
 	{
-		if storageAddMessage != "" {
-			err = json.Unmarshal([]byte(storageAddMessage), &message)
+		if storageAddMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageAddMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 62,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 62,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 62,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 1,\n      \"vintage\": 2015,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"composition\": [\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 2,\n      \"vintage\": 1918,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 			}
 		}
 	}
+	if err := ValidateAddRequest(&message); err != nil {
+		var zero *storage.Bottle
+		return zero, err
+	}
 	v := &storage.Bottle{
-		Name:        message.Name,
-		Vintage:     message.Vintage,
+		Name:        *message.Name,
+		Vintage:     *message.Vintage,
 		Description: message.Description,
 		Rating:      message.Rating,
 	}
 	if message.Winery != nil {
-		v.Winery = protobufStoragepbWineryToStorageWinery(message.Winery)
+		v.Winery = transformProtoWineryToWinery(message.Winery)
 	}
 	if message.Composition != nil {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
 			v.Composition[i] = &storage.Component{
-				Varietal:   val.Varietal,
+				Varietal:   *val.Varietal,
 				Percentage: val.Percentage,
 			}
 		}
@@ -86,19 +94,23 @@ func BuildAddPayload(storageAddMessage string) (*storage.Bottle, error) {
 
 // BuildRemovePayload builds the payload for the storage remove endpoint from
 // CLI flags.
-func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, error) {
+func BuildRemovePayload(storageRemoveMessage *string) (*storage.RemovePayload, error) {
 	var err error
 	var message storagepb.RemoveRequest
 	{
-		if storageRemoveMessage != "" {
-			err = json.Unmarshal([]byte(storageRemoveMessage), &message)
+		if storageRemoveMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageRemoveMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"At commodi tempore iure qui cumque.\"\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Consectetur quaerat neque sed.\"\n   }'")
 			}
 		}
 	}
+	if err := ValidateRemoveRequest(&message); err != nil {
+		var zero *storage.RemovePayload
+		return zero, err
+	}
 	v := &storage.RemovePayload{
-		ID: message.Id,
+		ID: *message.Id,
 	}
 
 	return v, nil
@@ -106,23 +118,26 @@ func BuildRemovePayload(storageRemoveMessage string) (*storage.RemovePayload, er
 
 // BuildRatePayload builds the payload for the storage rate endpoint from CLI
 // flags.
-func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
+func BuildRatePayload(storageRateMessage *string) (map[uint32][]string, error) {
 	var err error
 	var message storagepb.RateRequest
 	{
-		if storageRateMessage != "" {
-			err = json.Unmarshal([]byte(storageRateMessage), &message)
+		if storageRateMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageRateMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": {\n         \"2226247690\": {\n            \"field\": [\n               \"Fugiat rem ut eaque explicabo iure non.\",\n               \"Quo eius perspiciatis est ut.\",\n               \"Magni nihil tenetur dolorem.\",\n               \"Quod quae ut debitis iste.\"\n            ]\n         }\n      }\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": {\n         \"3188487350\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"507886676\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"890945719\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         }\n      }\n   }'")
 			}
 		}
 	}
 	v := make(map[uint32][]string, len(message.Field))
 	for key, val := range message.Field {
 		tk := key
-		tv := make([]string, len(val.Field))
-		for i, val := range val.Field {
-			tv[i] = val
+		var tv []string
+		if val != nil {
+			tv = make([]string, len(val.Field))
+			for i, val := range val.Field {
+				tv[i] = val
+			}
 		}
 		v[tk] = tv
 	}
@@ -131,33 +146,37 @@ func BuildRatePayload(storageRateMessage string) (map[uint32][]string, error) {
 
 // BuildMultiAddPayload builds the payload for the storage multi_add endpoint
 // from CLI flags.
-func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, error) {
+func BuildMultiAddPayload(storageMultiAddMessage *string) ([]*storage.Bottle, error) {
 	var err error
 	var message storagepb.MultiAddRequest
 	{
-		if storageMultiAddMessage != "" {
-			err = json.Unmarshal([]byte(storageMultiAddMessage), &message)
+		if storageMultiAddMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageMultiAddMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 			}
 		}
+	}
+	if err := ValidateMultiAddRequest(&message); err != nil {
+		var zero []*storage.Bottle
+		return zero, err
 	}
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
 		v[i] = &storage.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
+			Name:        *val.Name,
+			Vintage:     *val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			v[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
+			v[i].Winery = transformProtoWineryToWinery(val.Winery)
 		}
 		if val.Composition != nil {
 			v[i].Composition = make([]*storage.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				v[i].Composition[j] = &storage.Component{
-					Varietal:   val.Varietal,
+					Varietal:   *val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -168,16 +187,20 @@ func BuildMultiAddPayload(storageMultiAddMessage string) ([]*storage.Bottle, err
 
 // BuildMultiUpdatePayload builds the payload for the storage multi_update
 // endpoint from CLI flags.
-func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUpdatePayload, error) {
+func BuildMultiUpdatePayload(storageMultiUpdateMessage *string) (*storage.MultiUpdatePayload, error) {
 	var err error
 	var message storagepb.MultiUpdateRequest
 	{
-		if storageMultiUpdateMessage != "" {
-			err = json.Unmarshal([]byte(storageMultiUpdateMessage), &message)
+		if storageMultiUpdateMessage != nil {
+			err = protojson.Unmarshal([]byte(*storageMultiUpdateMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Pariatur porro fugiat et ex voluptates molestias.\",\n         \"Rem cupiditate.\",\n         \"Dolorem id et dolore.\"\n      ]\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Nihil voluptatibus aut mollitia ipsam.\",\n         \"Qui optio non voluptate rem adipisci soluta.\",\n         \"Omnis corporis quod veritatis temporibus dolores.\",\n         \"Dolores voluptatem sunt architecto consequatur non.\"\n      ]\n   }'")
 			}
 		}
+	}
+	if err := ValidateMultiUpdateRequest(&message); err != nil {
+		var zero *storage.MultiUpdatePayload
+		return zero, err
 	}
 	v := &storage.MultiUpdatePayload{}
 	if message.Ids != nil {
@@ -190,19 +213,19 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage string) (*storage.MultiUp
 		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 		for i, val := range message.Bottles {
 			v.Bottles[i] = &storage.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
+				Name:        *val.Name,
+				Vintage:     *val.Vintage,
 				Description: val.Description,
 				Rating:      val.Rating,
 			}
 			if val.Winery != nil {
-				v.Bottles[i].Winery = protobufStoragepbWineryToStorageWinery(val.Winery)
+				v.Bottles[i].Winery = transformProtoWineryToWinery(val.Winery)
 			}
 			if val.Composition != nil {
 				v.Bottles[i].Composition = make([]*storage.Component, len(val.Composition))
 				for j, val := range val.Composition {
 					v.Bottles[i].Composition[j] = &storage.Component{
-						Varietal:   val.Varietal,
+						Varietal:   *val.Varietal,
 						Percentage: val.Percentage,
 					}
 				}

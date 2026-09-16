@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // GetMessageRetryPath returns the URL path to the retry service get_message HTTP endpoint.
 func GetMessageRetryPath(id string) string {

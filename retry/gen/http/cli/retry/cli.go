@@ -29,8 +29,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "retry get-message --id \"Omnis eius maiores aut et rerum veritatis.\"" + "\n" +
+	return os.Args[0] + " " + "retry get-message --id \"Dolore assumenda ratione maiores.\"" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -46,8 +65,10 @@ func ParseEndpoint(
 		retryFlags = flag.NewFlagSet("retry", flag.ContinueOnError)
 
 		retryGetMessageFlags  = flag.NewFlagSet("get-message", flag.ExitOnError)
-		retryGetMessageIDFlag = retryGetMessageFlags.String("id", "REQUIRED", "Identifies one demonstration request.")
+		retryGetMessageIDFlag = new(cliStringFlag)
 	)
+	retryGetMessageFlags.Var(retryGetMessageIDFlag, "id", "Identifies one demonstration request.")
+
 	retryFlags.Usage = retryUsage
 	retryGetMessageFlags.Usage = retryGetMessageUsage
 
@@ -115,7 +136,7 @@ func ParseEndpoint(
 			switch epn {
 			case "get-message":
 				endpoint = c.GetMessage()
-				data, err = retryc.BuildGetMessagePayload(*retryGetMessageIDFlag)
+				data, err = retryc.BuildGetMessagePayload(retryGetMessageIDFlag.value)
 			}
 		}
 	}
@@ -151,5 +172,5 @@ func retryGetMessageUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "retry get-message --id \"Omnis eius maiores aut et rerum veritatis.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "retry get-message --id \"Dolore assumenda ratione maiores.\"")
 }

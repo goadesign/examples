@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
-)
+import securedservice "goa.design/examples/security/multiauth/gen/secured_service"
 
 // SigninResponseBody is the type of the "secured_service" service "signin"
 // endpoint HTTP response body.
@@ -34,8 +32,10 @@ func NewSigninResponseBody(res *securedservice.Creds) *SigninResponseBody {
 }
 
 // NewSigninPayload builds a secured_service service signin endpoint payload.
-func NewSigninPayload() *securedservice.SigninPayload {
+func NewSigninPayload(username string, password string) *securedservice.SigninPayload {
 	v := &securedservice.SigninPayload{}
+	v.Username = username
+	v.Password = password
 
 	return v
 }
@@ -61,11 +61,13 @@ func NewDoublySecurePayload(key string, token string) *securedservice.DoublySecu
 
 // NewAlsoDoublySecurePayload builds a secured_service service
 // also_doubly_secure endpoint payload.
-func NewAlsoDoublySecurePayload(key *string, oauthToken *string, token *string) *securedservice.AlsoDoublySecurePayload {
+func NewAlsoDoublySecurePayload(key *string, oauthToken *string, token *string, username *string, password *string) *securedservice.AlsoDoublySecurePayload {
 	v := &securedservice.AlsoDoublySecurePayload{}
 	v.Key = key
 	v.OauthToken = oauthToken
 	v.Token = token
+	v.Username = username
+	v.Password = password
 
 	return v
 }

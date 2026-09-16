@@ -34,13 +34,29 @@ paths:
                             type: integer
                             format: int64
                 "404":
-                    description: Not Found response.
+                    description: 'invalid_file_path: Could not locate file for download'
                     schema:
                         $ref: '#/definitions/UpdownDownloadInvalidFilePathResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: invalid_file_path
+                            temporary: false
+                            timeout: false
                 "500":
-                    description: Internal Server Error response.
+                    description: 'internal_error: Fault while processing download.'
                     schema:
                         $ref: '#/definitions/UpdownDownloadInternalErrorResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: internal_error
+                            temporary: false
+                            timeout: false
             schemes:
                 - http
     /upload/{dir}:
@@ -67,13 +83,29 @@ paths:
                 "204":
                     description: No Content response.
                 "400":
-                    description: Bad Request response.
+                    description: 'invalid_multipart_request: Error returned when the request body is not a valid multipart content.'
                     schema:
                         $ref: '#/definitions/UpdownUploadInvalidMultipartRequestResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: invalid_multipart_request
+                            temporary: false
+                            timeout: false
                 "500":
-                    description: Internal Server Error response.
+                    description: 'internal_error: Fault while processing upload.'
                     schema:
                         $ref: '#/definitions/UpdownUploadInternalErrorResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: internal_error
+                            temporary: false
+                            timeout: false
             schemes:
                 - http
 definitions:
@@ -105,7 +137,7 @@ definitions:
                 type: boolean
                 description: Is the error a timeout?
                 example: false
-        description: Fault while processing download. (default view)
+        description: Error response result type (default view)
         example:
             fault: false
             id: 123abc
@@ -127,7 +159,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -143,19 +175,19 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: false
+                example: true
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: false
-        description: Could not locate file for download (default view)
+                example: true
+        description: Error response result type (default view)
         example:
-            fault: false
+            fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: false
-            timeout: false
+            temporary: true
+            timeout: true
         required:
             - name
             - id
@@ -190,15 +222,15 @@ definitions:
             timeout:
                 type: boolean
                 description: Is the error a timeout?
-                example: false
-        description: Fault while processing upload. (default view)
+                example: true
+        description: Error response result type (default view)
         example:
             fault: false
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
             temporary: false
-            timeout: false
+            timeout: true
         required:
             - name
             - id
@@ -234,7 +266,7 @@ definitions:
                 type: boolean
                 description: Is the error a timeout?
                 example: false
-        description: Error returned when the Content-Type header does not define a multipart request. (default view)
+        description: Error response result type (default view)
         example:
             fault: false
             id: 123abc
@@ -256,7 +288,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: false
+                example: true
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -272,18 +304,18 @@ definitions:
             temporary:
                 type: boolean
                 description: Is the error temporary?
-                example: false
+                example: true
             timeout:
                 type: boolean
                 description: Is the error a timeout?
                 example: false
-        description: Error returned when the request body is not a valid multipart content. (default view)
+        description: Error response result type (default view)
         example:
-            fault: false
+            fault: true
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
-            temporary: false
+            temporary: true
             timeout: false
         required:
             - name

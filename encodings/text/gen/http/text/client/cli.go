@@ -8,19 +8,27 @@
 package client
 
 import (
+	"fmt"
+
 	text "goa.design/examples/encodings/text/gen/text"
 )
 
 // BuildConcatstringsPayload builds the payload for the text concatstrings
 // endpoint from CLI flags.
-func BuildConcatstringsPayload(textConcatstringsA string, textConcatstringsB string) (*text.ConcatstringsPayload, error) {
+func BuildConcatstringsPayload(textConcatstringsA *string, textConcatstringsB *string) (*text.ConcatstringsPayload, error) {
 	var a string
 	{
-		a = textConcatstringsA
+		if textConcatstringsA == nil {
+			return nil, fmt.Errorf("missing required flag --a")
+		}
+		a = *textConcatstringsA
 	}
 	var b string
 	{
-		b = textConcatstringsB
+		if textConcatstringsB == nil {
+			return nil, fmt.Errorf("missing required flag --b")
+		}
+		b = *textConcatstringsB
 	}
 	v := &text.ConcatstringsPayload{}
 	v.A = a
@@ -31,14 +39,20 @@ func BuildConcatstringsPayload(textConcatstringsA string, textConcatstringsB str
 
 // BuildConcatbytesPayload builds the payload for the text concatbytes endpoint
 // from CLI flags.
-func BuildConcatbytesPayload(textConcatbytesA string, textConcatbytesB string) (*text.ConcatbytesPayload, error) {
+func BuildConcatbytesPayload(textConcatbytesA *string, textConcatbytesB *string) (*text.ConcatbytesPayload, error) {
 	var a string
 	{
-		a = textConcatbytesA
+		if textConcatbytesA == nil {
+			return nil, fmt.Errorf("missing required flag --a")
+		}
+		a = *textConcatbytesA
 	}
 	var b string
 	{
-		b = textConcatbytesB
+		if textConcatbytesB == nil {
+			return nil, fmt.Errorf("missing required flag --b")
+		}
+		b = *textConcatbytesB
 	}
 	v := &text.ConcatbytesPayload{}
 	v.A = a
@@ -49,14 +63,20 @@ func BuildConcatbytesPayload(textConcatbytesA string, textConcatbytesB string) (
 
 // BuildConcatstringfieldPayload builds the payload for the text
 // concatstringfield endpoint from CLI flags.
-func BuildConcatstringfieldPayload(textConcatstringfieldA string, textConcatstringfieldB string) (*text.ConcatstringfieldPayload, error) {
+func BuildConcatstringfieldPayload(textConcatstringfieldA *string, textConcatstringfieldB *string) (*text.ConcatstringfieldPayload, error) {
 	var a string
 	{
-		a = textConcatstringfieldA
+		if textConcatstringfieldA == nil {
+			return nil, fmt.Errorf("missing required flag --a")
+		}
+		a = *textConcatstringfieldA
 	}
 	var b string
 	{
-		b = textConcatstringfieldB
+		if textConcatstringfieldB == nil {
+			return nil, fmt.Errorf("missing required flag --b")
+		}
+		b = *textConcatstringfieldB
 	}
 	v := &text.ConcatstringfieldPayload{}
 	v.A = a
@@ -67,14 +87,20 @@ func BuildConcatstringfieldPayload(textConcatstringfieldA string, textConcatstri
 
 // BuildConcatbytesfieldPayload builds the payload for the text
 // concatbytesfield endpoint from CLI flags.
-func BuildConcatbytesfieldPayload(textConcatbytesfieldA string, textConcatbytesfieldB string) (*text.ConcatbytesfieldPayload, error) {
+func BuildConcatbytesfieldPayload(textConcatbytesfieldA *string, textConcatbytesfieldB *string) (*text.ConcatbytesfieldPayload, error) {
 	var a string
 	{
-		a = textConcatbytesfieldA
+		if textConcatbytesfieldA == nil {
+			return nil, fmt.Errorf("missing required flag --a")
+		}
+		a = *textConcatbytesfieldA
 	}
 	var b string
 	{
-		b = textConcatbytesfieldB
+		if textConcatbytesfieldB == nil {
+			return nil, fmt.Errorf("missing required flag --b")
+		}
+		b = *textConcatbytesfieldB
 	}
 	v := &text.ConcatbytesfieldPayload{}
 	v.A = a

@@ -52,6 +52,12 @@ type Criteria struct {
 	Winery *string
 }
 
+// Missing criteria
+type NoCriteria string
+
+// No bottle matched given criteria
+type NoMatch string
+
 // A StoredBottle describes a bottle retrieved by the storage service.
 type StoredBottle struct {
 	// ID is the unique id of the bottle.
@@ -84,12 +90,6 @@ type Winery struct {
 	// Winery website URL
 	URL *string
 }
-
-// Missing criteria
-type NoCriteria string
-
-// No bottle matched given criteria
-type NoMatch string
 
 // Error returns an error description.
 func (e NoCriteria) Error() string {
@@ -142,7 +142,7 @@ func NewStoredBottleCollection(vres sommelierviews.StoredBottleCollection) Store
 // StoredBottleCollection from result type StoredBottleCollection using the
 // given view.
 func NewViewedStoredBottleCollection(res StoredBottleCollection, view string) sommelierviews.StoredBottleCollection {
-	var vres sommelierviews.StoredBottleCollection
+	vres := sommelierviews.StoredBottleCollection{View: view}
 	switch view {
 	case "default", "":
 		p := newStoredBottleCollectionView(res)
@@ -332,9 +332,6 @@ func newWineryViewTiny(res *Winery) *sommelierviews.WineryView {
 // transformSommelierviewsComponentViewToComponent builds a value of type
 // *Component from a value of type *sommelierviews.ComponentView.
 func transformSommelierviewsComponentViewToComponent(v *sommelierviews.ComponentView) *Component {
-	if v == nil {
-		return nil
-	}
 	res := &Component{
 		Varietal:   *v.Varietal,
 		Percentage: v.Percentage,
@@ -346,9 +343,6 @@ func transformSommelierviewsComponentViewToComponent(v *sommelierviews.Component
 // transformComponentToSommelierviewsComponentView builds a value of type
 // *sommelierviews.ComponentView from a value of type *Component.
 func transformComponentToSommelierviewsComponentView(v *Component) *sommelierviews.ComponentView {
-	if v == nil {
-		return nil
-	}
 	res := &sommelierviews.ComponentView{
 		Varietal:   &v.Varietal,
 		Percentage: v.Percentage,

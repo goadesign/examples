@@ -35,6 +35,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -45,31 +64,40 @@ func ParseEndpoint(
 		sommelierFlags = flag.NewFlagSet("sommelier", flag.ContinueOnError)
 
 		sommelierPickFlags       = flag.NewFlagSet("pick", flag.ExitOnError)
-		sommelierPickMessageFlag = sommelierPickFlags.String("message", "", "")
+		sommelierPickMessageFlag = new(cliStringFlag)
 
 		storageFlags = flag.NewFlagSet("storage", flag.ContinueOnError)
 
 		storageListFlags = flag.NewFlagSet("list", flag.ExitOnError)
 
 		storageShowFlags       = flag.NewFlagSet("show", flag.ExitOnError)
-		storageShowMessageFlag = storageShowFlags.String("message", "", "")
-		storageShowViewFlag    = storageShowFlags.String("view", "", "")
+		storageShowMessageFlag = new(cliStringFlag)
+		storageShowViewFlag    = new(cliStringFlag)
 
 		storageAddFlags       = flag.NewFlagSet("add", flag.ExitOnError)
-		storageAddMessageFlag = storageAddFlags.String("message", "", "")
+		storageAddMessageFlag = new(cliStringFlag)
 
 		storageRemoveFlags       = flag.NewFlagSet("remove", flag.ExitOnError)
-		storageRemoveMessageFlag = storageRemoveFlags.String("message", "", "")
+		storageRemoveMessageFlag = new(cliStringFlag)
 
 		storageRateFlags       = flag.NewFlagSet("rate", flag.ExitOnError)
-		storageRateMessageFlag = storageRateFlags.String("message", "", "")
+		storageRateMessageFlag = new(cliStringFlag)
 
 		storageMultiAddFlags       = flag.NewFlagSet("multi-add", flag.ExitOnError)
-		storageMultiAddMessageFlag = storageMultiAddFlags.String("message", "", "")
+		storageMultiAddMessageFlag = new(cliStringFlag)
 
 		storageMultiUpdateFlags       = flag.NewFlagSet("multi-update", flag.ExitOnError)
-		storageMultiUpdateMessageFlag = storageMultiUpdateFlags.String("message", "", "")
+		storageMultiUpdateMessageFlag = new(cliStringFlag)
 	)
+	sommelierPickFlags.Var(sommelierPickMessageFlag, "message", "")
+	storageShowFlags.Var(storageShowMessageFlag, "message", "")
+	storageShowFlags.Var(storageShowViewFlag, "view", "")
+	storageAddFlags.Var(storageAddMessageFlag, "message", "")
+	storageRemoveFlags.Var(storageRemoveMessageFlag, "message", "")
+	storageRateFlags.Var(storageRateMessageFlag, "message", "")
+	storageMultiAddFlags.Var(storageMultiAddMessageFlag, "message", "")
+	storageMultiUpdateFlags.Var(storageMultiUpdateMessageFlag, "message", "")
+
 	sommelierFlags.Usage = sommelierUsage
 	sommelierPickFlags.Usage = sommelierPickUsage
 
@@ -173,7 +201,7 @@ func ParseEndpoint(
 			switch epn {
 			case "pick":
 				endpoint = c.Pick()
-				data, err = sommelierc.BuildPickPayload(*sommelierPickMessageFlag)
+				data, err = sommelierc.BuildPickPayload(sommelierPickMessageFlag.value)
 			}
 		case "storage":
 			c := storagec.NewClient(cc, opts...)
@@ -182,22 +210,22 @@ func ParseEndpoint(
 				endpoint = c.List()
 			case "show":
 				endpoint = c.Show()
-				data, err = storagec.BuildShowPayload(*storageShowMessageFlag, *storageShowViewFlag)
+				data, err = storagec.BuildShowPayload(storageShowMessageFlag.value, storageShowViewFlag.value)
 			case "add":
 				endpoint = c.Add()
-				data, err = storagec.BuildAddPayload(*storageAddMessageFlag)
+				data, err = storagec.BuildAddPayload(storageAddMessageFlag.value)
 			case "remove":
 				endpoint = c.Remove()
-				data, err = storagec.BuildRemovePayload(*storageRemoveMessageFlag)
+				data, err = storagec.BuildRemovePayload(storageRemoveMessageFlag.value)
 			case "rate":
 				endpoint = c.Rate()
-				data, err = storagec.BuildRatePayload(*storageRateMessageFlag)
+				data, err = storagec.BuildRatePayload(storageRateMessageFlag.value)
 			case "multi-add":
 				endpoint = c.MultiAdd()
-				data, err = storagec.BuildMultiAddPayload(*storageMultiAddMessageFlag)
+				data, err = storagec.BuildMultiAddPayload(storageMultiAddMessageFlag.value)
 			case "multi-update":
 				endpoint = c.MultiUpdate()
-				data, err = storagec.BuildMultiUpdatePayload(*storageMultiUpdateMessageFlag)
+				data, err = storagec.BuildMultiUpdatePayload(storageMultiUpdateMessageFlag.value)
 			}
 		}
 	}
@@ -286,7 +314,7 @@ func storageShowUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage show --message '{\n      \"id\": \"Sed voluptatibus excepturi culpa aut aliquam ea.\"\n   }' --view \"tiny\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage show --message '{\n      \"id\": \"Neque voluptas molestias.\"\n   }' --view \"tiny\"")
 }
 
 func storageAddUsage() {
@@ -304,7 +332,7 @@ func storageAddUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage add --message '{\n      \"composition\": [\n         {\n            \"percentage\": 62,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 62,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 62,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 1,\n      \"vintage\": 2015,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage add --message '{\n      \"composition\": [\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         },\n         {\n            \"percentage\": 8,\n            \"varietal\": \"Syrah\"\n         }\n      ],\n      \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n      \"name\": \"Blue\\'s Cuvee\",\n      \"rating\": 2,\n      \"vintage\": 1918,\n      \"winery\": {\n         \"country\": \"USA\",\n         \"name\": \"Longoria\",\n         \"region\": \"Central Coast, California\",\n         \"url\": \"http://www.longoriawine.com/\"\n      }\n   }'")
 }
 
 func storageRemoveUsage() {
@@ -322,7 +350,7 @@ func storageRemoveUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage remove --message '{\n      \"id\": \"At commodi tempore iure qui cumque.\"\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage remove --message '{\n      \"id\": \"Consectetur quaerat neque sed.\"\n   }'")
 }
 
 func storageRateUsage() {
@@ -340,7 +368,7 @@ func storageRateUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage rate --message '{\n      \"field\": {\n         \"2226247690\": {\n            \"field\": [\n               \"Fugiat rem ut eaque explicabo iure non.\",\n               \"Quo eius perspiciatis est ut.\",\n               \"Magni nihil tenetur dolorem.\",\n               \"Quod quae ut debitis iste.\"\n            ]\n         }\n      }\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage rate --message '{\n      \"field\": {\n         \"3188487350\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"507886676\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         },\n         \"890945719\": {\n            \"field\": [\n               \"Sed quibusdam quidem.\",\n               \"Dolore ratione libero.\"\n            ]\n         }\n      }\n   }'")
 }
 
 func storageMultiAddUsage() {
@@ -358,7 +386,7 @@ func storageMultiAddUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage multi-add --message '{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage multi-add --message '{\n      \"field\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ]\n   }'")
 }
 
 func storageMultiUpdateUsage() {
@@ -376,5 +404,5 @@ func storageMultiUpdateUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage multi-update --message '{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 62,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 4,\n            \"vintage\": 1967,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Pariatur porro fugiat et ex voluptates molestias.\",\n         \"Rem cupiditate.\",\n         \"Dolorem id et dolore.\"\n      ]\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "storage multi-update --message '{\n      \"bottles\": [\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         },\n         {\n            \"composition\": [\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               },\n               {\n                  \"percentage\": 8,\n                  \"varietal\": \"Syrah\"\n               }\n            ],\n            \"description\": \"Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah\",\n            \"name\": \"Blue\\'s Cuvee\",\n            \"rating\": 3,\n            \"vintage\": 2003,\n            \"winery\": {\n               \"country\": \"USA\",\n               \"name\": \"Longoria\",\n               \"region\": \"Central Coast, California\",\n               \"url\": \"http://www.longoriawine.com/\"\n            }\n         }\n      ],\n      \"ids\": [\n         \"Nihil voluptatibus aut mollitia ipsam.\",\n         \"Qui optio non voluptate rem adipisci soluta.\",\n         \"Omnis corporis quod veritatis temporibus dolores.\",\n         \"Dolores voluptatem sunt architecto consequatur non.\"\n      ]\n   }'")
 }

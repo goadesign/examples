@@ -33,6 +33,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -49,8 +68,10 @@ func ParseEndpoint(
 		resumeListFlags = flag.NewFlagSet("list", flag.ExitOnError)
 
 		resumeAddFlags    = flag.NewFlagSet("add", flag.ExitOnError)
-		resumeAddBodyFlag = resumeAddFlags.String("body", "REQUIRED", "")
+		resumeAddBodyFlag = new(cliStringFlag)
 	)
+	resumeAddFlags.Var(resumeAddBodyFlag, "body", "")
+
 	resumeFlags.Usage = resumeUsage
 	resumeListFlags.Usage = resumeListUsage
 	resumeAddFlags.Usage = resumeAddUsage
@@ -124,7 +145,7 @@ func ParseEndpoint(
 				endpoint = c.List()
 			case "add":
 				endpoint = c.Add(resumeAddEncoderFn)
-				data, err = resumec.BuildAddPayload(*resumeAddBodyFlag)
+				data, err = resumec.BuildAddPayload(resumeAddBodyFlag.value)
 			}
 		}
 	}
@@ -177,5 +198,5 @@ func resumeAddUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "resume add --body '[\n      {\n         \"education\": [\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            },\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            }\n         ],\n         \"name\": \"Explicabo et eligendi expedita necessitatibus eius qui.\"\n      },\n      {\n         \"education\": [\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            },\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            }\n         ],\n         \"name\": \"Explicabo et eligendi expedita necessitatibus eius qui.\"\n      },\n      {\n         \"education\": [\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            },\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            }\n         ],\n         \"name\": \"Explicabo et eligendi expedita necessitatibus eius qui.\"\n      },\n      {\n         \"education\": [\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            },\n            {\n               \"institution\": \"Ipsum saepe quia est.\",\n               \"major\": \"Fuga placeat est voluptatem sed.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            },\n            {\n               \"company\": \"Saepe enim.\",\n               \"duration\": 4129157726558553807,\n               \"role\": \"Aut sit aut dolores sed ut ut.\"\n            }\n         ],\n         \"name\": \"Explicabo et eligendi expedita necessitatibus eius qui.\"\n      }\n   ]'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "resume add --body '[\n      {\n         \"education\": [\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            },\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            },\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            }\n         ],\n         \"name\": \"Voluptas et.\"\n      },\n      {\n         \"education\": [\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            },\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            },\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            }\n         ],\n         \"name\": \"Voluptas et.\"\n      },\n      {\n         \"education\": [\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            },\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            },\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            }\n         ],\n         \"name\": \"Voluptas et.\"\n      },\n      {\n         \"education\": [\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            },\n            {\n               \"institution\": \"Vitae eaque autem in.\",\n               \"major\": \"Qui nostrum quas velit nihil.\"\n            }\n         ],\n         \"experience\": [\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            },\n            {\n               \"company\": \"Dolor dicta dignissimos eius facere enim quae.\",\n               \"duration\": 6839028381351029038,\n               \"role\": \"Enim quia recusandae nostrum animi nam.\"\n            }\n         ],\n         \"name\": \"Voluptas et.\"\n      }\n   ]'")
 }

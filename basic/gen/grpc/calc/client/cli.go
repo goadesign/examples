@@ -8,29 +8,33 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	calc "goa.design/examples/basic/gen/calc"
 	calcpb "goa.design/examples/basic/gen/grpc/calc/pb"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildMultiplyPayload builds the payload for the calc multiply endpoint from
 // CLI flags.
-func BuildMultiplyPayload(calcMultiplyMessage string) (*calc.MultiplyPayload, error) {
+func BuildMultiplyPayload(calcMultiplyMessage *string) (*calc.MultiplyPayload, error) {
 	var err error
 	var message calcpb.MultiplyRequest
 	{
-		if calcMultiplyMessage != "" {
-			err = json.Unmarshal([]byte(calcMultiplyMessage), &message)
+		if calcMultiplyMessage != nil {
+			err = protojson.Unmarshal([]byte(*calcMultiplyMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 7452483468033160813,\n      \"b\": 6772490184910890684\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"a\": 7630570414871587529,\n      \"b\": 2968728213815611862\n   }'")
 			}
 		}
 	}
+	if err := ValidateMultiplyRequest(&message); err != nil {
+		var zero *calc.MultiplyPayload
+		return zero, err
+	}
 	v := &calc.MultiplyPayload{
-		A: int(message.A),
-		B: int(message.B),
+		A: int(*message.A),
+		B: int(*message.B),
 	}
 
 	return v, nil

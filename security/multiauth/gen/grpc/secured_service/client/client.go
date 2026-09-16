@@ -47,6 +47,9 @@ func (c *Client) Signin() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -69,6 +72,9 @@ func (c *Client) Secure() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -91,6 +97,9 @@ func (c *Client) DoublySecure() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}
@@ -113,6 +122,9 @@ func (c *Client) AlsoDoublySecure() goa.Endpoint {
 			case *goapb.ErrorResponse:
 				return nil, goagrpc.NewServiceError(message)
 			default:
+				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+					return nil, ctxErr
+				}
 				return nil, goa.Fault("%s", err.Error())
 			}
 		}

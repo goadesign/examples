@@ -36,15 +36,23 @@ paths:
                             - quotient
                             - reminder
                 "400":
-                    description: Response used for division by zero errors
+                    description: 'div_by_zero: Response used for division by zero errors'
                     schema:
                         $ref: '#/definitions/DivByZero'
                         required:
                             - message
                 "504":
-                    description: Operation timed out
+                    description: 'timeout: Operation timed out'
                     schema:
                         $ref: '#/definitions/CalcDivideTimeoutResponseBody'
+                    examples:
+                        application/vnd.goa.error:
+                            fault: false
+                            id: 123abc
+                            message: parameter 'p' must be an integer
+                            name: timeout
+                            temporary: false
+                            timeout: true
             schemes:
                 - http
 definitions:
@@ -54,15 +62,15 @@ definitions:
         properties:
             dividend:
                 type: integer
-                example: 1196350668178300830
+                example: 6599615662108896380
                 format: int64
             divisor:
                 type: integer
-                example: 5941732484439269441
+                example: 6289780582187170160
                 format: int64
         example:
-            dividend: 1196350668178300830
-            divisor: 5941732484439269441
+            dividend: 6599615662108896380
+            divisor: 6289780582187170160
         required:
             - dividend
             - divisor
@@ -72,15 +80,15 @@ definitions:
         properties:
             quotient:
                 type: integer
-                example: 3989696267411135677
+                example: 5026300794991892168
                 format: int64
             reminder:
                 type: integer
-                example: 6133210891814429636
+                example: 3251227134896864353
                 format: int64
         example:
-            quotient: 3989696267411135677
-            reminder: 6133210891814429636
+            quotient: 5026300794991892168
+            reminder: 3251227134896864353
         required:
             - quotient
             - reminder
@@ -91,7 +99,7 @@ definitions:
             fault:
                 type: boolean
                 description: Is the error a server-side fault?
-                example: true
+                example: false
             id:
                 type: string
                 description: ID is a unique identifier for this particular occurrence of the problem.
@@ -114,7 +122,7 @@ definitions:
                 example: true
         description: Error response result type (default view)
         example:
-            fault: true
+            fault: false
             id: 123abc
             message: parameter 'p' must be an integer
             name: bad_request
@@ -134,9 +142,9 @@ definitions:
             message:
                 type: string
                 description: division by zero leads to infinity.
-                example: Eius exercitationem nemo ipsa eveniet est.
-        description: division by 0
+                example: Consequatur veniam est tempora non natus.
+        description: DivByZero is the error returned when using value 0 as divisor.
         example:
-            message: Eius exercitationem nemo ipsa eveniet est.
+            message: Consequatur veniam est tempora non natus.
         required:
             - message

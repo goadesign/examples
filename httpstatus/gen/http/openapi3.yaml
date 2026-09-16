@@ -20,17 +20,17 @@ paths:
                   schema:
                     type: string
                     description: The greeting message
-                    example: Porro quas nobis ea.
-                  example: Quae est possimus eius architecto.
+                    example: Dolor minima nisi cum.
+                  example: Dolor minima nisi cum.
             responses:
                 "200":
                     description: OK response.
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Hello'
+                                $ref: '#/components/schemas/HellohelloResponseBody'
                             example:
-                                greeting: Ullam sequi quidem qui in et excepturi.
+                                greeting: Rem tempora sed qui.
                 "201":
                     description: Created response.
                     content:
@@ -38,7 +38,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Hello'
                             example:
-                                greeting: Aut iste labore provident incidunt aut enim.
+                                greeting: Ea earum recusandae.
                 "202":
                     description: Accepted response.
                     content:
@@ -46,7 +46,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Hello'
                             example:
-                                greeting: Iste ratione voluptatum.
+                                greeting: Ex tempore iste.
 components:
     schemas:
         Hello:
@@ -55,9 +55,20 @@ components:
                 greeting:
                     type: string
                     description: The greeting message
-                    example: Perspiciatis laboriosam voluptatem sunt maxime quae.
+                    example: Ea earum recusandae.
             example:
-                greeting: Et molestiae.
+                greeting: Ea earum recusandae.
+            required:
+                - greeting
+        HellohelloResponseBody:
+            type: object
+            properties:
+                greeting:
+                    type: string
+                    description: The greeting message
+                    example: Rem tempora sed qui.
+            example:
+                greeting: Rem tempora sed qui.
             required:
                 - greeting
 tags:

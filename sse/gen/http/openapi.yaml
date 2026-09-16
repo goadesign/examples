@@ -114,12 +114,12 @@ definitions:
             timestamp:
                 type: string
                 description: Timestamp of the usage report
-                example: "1988-01-09T02:12:36Z"
+                example: "1987-11-07T01:47:47Z"
                 format: date-time
         example:
             cpu: 50
             memory: 30
-            timestamp: "1988-01-09T02:12:36Z"
+            timestamp: "1987-11-07T01:47:47Z"
         required:
             - timestamp
             - cpu

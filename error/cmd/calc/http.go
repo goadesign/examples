@@ -1,7 +1,10 @@
+// This file configures the calc HTTP server, including the response body used
+// when a request is missing a required field.
 package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"net/url"
@@ -9,16 +12,39 @@ import (
 	"sync"
 	"time"
 
-	calc "goa.design/examples/error/gen/calc"
-	calcsvr "goa.design/examples/error/gen/http/calc/server"
+	gencalc "goa.design/examples/error/gen/calc"
+	gencalcsvr "goa.design/examples/error/gen/http/calc/server"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
+	goa "goa.design/goa/v3/pkg"
 )
 
-// handleHTTPServer starts configures and starts a HTTP server on the given
-// URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+type (
+	// missingFieldError is written as a JSON string when a request omits a
+	// required field.
+	missingFieldError string
+
+	// divByZeroError preserves the response declared for division by zero when
+	// the custom formatter handles all HTTP errors.
+	divByZeroError struct {
+		Message string `form:"message" json:"message" xml:"message"`
+	}
+)
+
+// StatusCode reports that a missing required field makes the request invalid.
+func (missingFieldError) StatusCode() int {
+	return http.StatusBadRequest
+}
+
+// StatusCode reports that division by zero makes the request invalid.
+func (*divByZeroError) StatusCode() int {
+	return http.StatusBadRequest
+}
+
+// handleHTTPServer starts an HTTP server on the given URL. It shuts down the
+// server when the error channel receives a value.
+func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *gencalc.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -49,11 +75,11 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpo
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		calcServer *calcsvr.Server
+		calcServer *gencalcsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh, nil)
+		calcServer = gencalcsvr.New(calcEndpoints, mux, dec, enc, eh, formatError)
 		if debug {
 			servers := goahttp.Servers{
 				calcServer,
@@ -62,7 +88,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpo
 		}
 	}
 	// Configure the mux.
-	calcsvr.Mount(mux, calcServer)
+	gencalcsvr.Mount(mux, calcServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
@@ -101,6 +127,23 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calc.Endpo
 			logger.Printf("failed to shutdown: %v", err)
 		}
 	}()
+}
+
+// formatError writes missing-field validation errors as JSON strings and
+// preserves the response declared for division by zero. Every other error uses
+// Goa's standard HTTP error response.
+func formatError(ctx context.Context, err error) goahttp.Statuser {
+	var serviceError *goa.ServiceError
+	if errors.As(err, &serviceError) && serviceError.Name == "missing_field" {
+		return missingFieldError(serviceError.Message)
+	}
+
+	var divideError *gencalc.DivByZero
+	if errors.As(err, &divideError) {
+		return &divByZeroError{Message: divideError.Message}
+	}
+
+	return goahttp.NewErrorResponse(ctx, err)
 }
 
 // errorHandler returns a function that writes and logs the given error.

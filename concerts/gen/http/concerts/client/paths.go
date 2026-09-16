@@ -7,9 +7,7 @@
 
 package client
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // ListConcertsPath returns the URL path to the concerts service list HTTP endpoint.
 func ListConcertsPath() string {

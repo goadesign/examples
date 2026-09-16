@@ -21,10 +21,10 @@ service Retry {
 
 message GetMessageRequest {
 	// Identifies one demonstration request.
-	string id = 1;
+	optional string id = 1;
 }
 
 message GetMessageResponse {
 	// Message returned after the retry succeeds.
-	string message_ = 1;
+	optional string message_ = 1;
 }

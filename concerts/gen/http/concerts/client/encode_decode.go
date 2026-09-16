@@ -10,10 +10,11 @@ package client
 import (
 	"bytes"
 	"context"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	concerts "goa.design/examples/concerts/gen/concerts"
 	goahttp "goa.design/goa/v3/http"
@@ -44,8 +45,8 @@ func EncodeListRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 			return goahttp.ErrInvalidType("concerts", "list", "*concerts.ListPayload", v)
 		}
 		values := req.URL.Query()
-		values.Add("page", fmt.Sprintf("%v", p.Page))
-		values.Add("limit", fmt.Sprintf("%v", p.Limit))
+		values.Add("page", strconv.Itoa(p.Page))
+		values.Add("limit", strconv.Itoa(p.Limit))
 		req.URL.RawQuery = values.Encode()
 		return nil
 	}
@@ -55,18 +56,24 @@ func EncodeListRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.R
 // list endpoint. restoreBody controls whether the response body should be
 // restored after having been read.
 func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "list", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("concerts", "list", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -80,7 +87,7 @@ func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			for _, e := range body {
 				if e != nil {
-					if err2 := ValidateConcertResponse(e); err2 != nil {
+					if err2 := validateConcertResponse(e, "body[*]"); err2 != nil {
 						err = goa.MergeErrors(err, err2)
 					}
 				}
@@ -91,7 +98,10 @@ func DecodeListResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			res := NewListConcertOK(body)
 			return res, nil
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "list", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("concerts", "list", resp.StatusCode, string(body))
 		}
 	}
@@ -135,18 +145,24 @@ func EncodeCreateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "bad_request" (type *goa.ServiceError): http.StatusBadRequest
 //   - error: internal error
 func DecodeCreateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "create", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("concerts", "create", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusCreated:
@@ -179,7 +195,10 @@ func DecodeCreateResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewCreateBadRequest(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "create", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("concerts", "create", resp.StatusCode, string(body))
 		}
 	}
@@ -217,18 +236,24 @@ func (c *Client) BuildShowRequest(ctx context.Context, v any) (*http.Request, er
 //   - "not_found" (type *goa.ServiceError): http.StatusNotFound
 //   - error: internal error
 func DecodeShowResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "show", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("concerts", "show", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -261,7 +286,10 @@ func DecodeShowResponse(decoder func(*http.Response) goahttp.Decoder, restoreBod
 			}
 			return nil, NewShowNotFound(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "show", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("concerts", "show", resp.StatusCode, string(body))
 		}
 	}
@@ -316,18 +344,24 @@ func EncodeUpdateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "bad_request" (type *goa.ServiceError): http.StatusBadRequest
 //   - error: internal error
 func DecodeUpdateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "update", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("concerts", "update", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -374,7 +408,10 @@ func DecodeUpdateResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewUpdateBadRequest(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "update", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("concerts", "update", resp.StatusCode, string(body))
 		}
 	}
@@ -412,18 +449,24 @@ func (c *Client) BuildDeleteRequest(ctx context.Context, v any) (*http.Request, 
 //   - "not_found" (type *goa.ServiceError): http.StatusNotFound
 //   - error: internal error
 func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "delete", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("concerts", "delete", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
@@ -443,7 +486,10 @@ func DecodeDeleteResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewDeleteNotFound(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("concerts", "delete", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("concerts", "delete", resp.StatusCode, string(body))
 		}
 	}

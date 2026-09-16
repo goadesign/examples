@@ -210,6 +210,8 @@ type HistoryPayload struct {
 	View *string
 }
 
+type InvalidScopes string
+
 // ListenerPayload is the payload type of the chatter service listener method.
 type ListenerPayload struct {
 	// JWT used for authentication
@@ -233,8 +235,6 @@ type SummaryPayload struct {
 	// JWT used for authentication
 	Token string
 }
-
-type InvalidScopes string
 
 // Credentials are invalid
 type Unauthorized string
@@ -290,7 +290,7 @@ func NewChatSummaryCollection(vres chatterviews.ChatSummaryCollection) ChatSumma
 // ChatSummaryCollection from result type ChatSummaryCollection using the given
 // view.
 func NewViewedChatSummaryCollection(res ChatSummaryCollection, view string) chatterviews.ChatSummaryCollection {
-	var vres chatterviews.ChatSummaryCollection
+	vres := chatterviews.ChatSummaryCollection{View: view}
 	switch view {
 	case "tiny":
 		p := newChatSummaryCollectionViewTiny(res)
@@ -318,7 +318,7 @@ func NewChatSummary(vres *chatterviews.ChatSummary) *ChatSummary {
 // NewViewedChatSummary initializes viewed result type ChatSummary from result
 // type ChatSummary using the given view.
 func NewViewedChatSummary(res *ChatSummary, view string) *chatterviews.ChatSummary {
-	var vres *chatterviews.ChatSummary
+	vres := &chatterviews.ChatSummary{View: view}
 	switch view {
 	case "tiny":
 		p := newChatSummaryViewTiny(res)

@@ -14,26 +14,33 @@ paths:
             operationId: retry#get_message
             parameters:
                 - description: Identifies one demonstration request.
-                  example: Nemo qui atque iure.
+                  example: Dolore assumenda ratione maiores.
                   in: path
                   name: id
                   required: true
                   schema:
                     description: Identifies one demonstration request.
-                    example: Omnis eius maiores aut et rerum veritatis.
+                    example: Dolore assumenda ratione maiores.
                     type: string
             responses:
                 "200":
                     content:
                         application/json:
                             example:
-                                message: Quaerat cum fugiat fugiat aut quia qui.
+                                message: Dolor quos eligendi quibusdam asperiores provident.
                             schema:
                                 $ref: '#/components/schemas/GetMessageResponseBody'
                     description: OK response.
                 "503":
                     content:
                         application/vnd.goa.error:
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: unavailable
+                                temporary: true
+                                timeout: false
                             schema:
                                 $ref: '#/components/schemas/Error'
                     description: 'unavailable: The message is temporarily unavailable.'
@@ -65,19 +72,19 @@ components:
                 temporary:
                     type: boolean
                     description: Is the error temporary?
-                    example: false
+                    example: true
                 timeout:
                     type: boolean
                     description: Is the error a timeout?
-                    example: false
-            description: The message is temporarily unavailable.
+                    example: true
+            description: Error response result type
             example:
                 fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
+                temporary: true
+                timeout: true
             required:
                 - name
                 - id
@@ -91,9 +98,9 @@ components:
                 message:
                     type: string
                     description: Message returned after the retry succeeds.
-                    example: Quaerat cum fugiat fugiat aut quia qui.
+                    example: Dolor quos eligendi quibusdam asperiores provident.
             example:
-                message: Quaerat cum fugiat fugiat aut quia qui.
+                message: Dolor quos eligendi quibusdam asperiores provident.
             required:
                 - message
 tags:

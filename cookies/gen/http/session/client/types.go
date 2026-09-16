@@ -64,7 +64,7 @@ func NewUseSessionResultOK(body *UseSessionResponseBody) *session.UseSessionResu
 }
 
 // ValidateCreateSessionResponseBody runs the validations defined on
-// create_session_response_body
+// CreateSessionResponseBody
 func ValidateCreateSessionResponseBody(body *CreateSessionResponseBody) (err error) {
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
@@ -73,7 +73,7 @@ func ValidateCreateSessionResponseBody(body *CreateSessionResponseBody) (err err
 }
 
 // ValidateUseSessionResponseBody runs the validations defined on
-// use_session_response_body
+// UseSessionResponseBody
 func ValidateUseSessionResponseBody(body *UseSessionResponseBody) (err error) {
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))

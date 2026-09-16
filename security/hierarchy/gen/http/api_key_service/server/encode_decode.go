@@ -43,10 +43,9 @@ func DecodeDefaultRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			return payload, err
 		}
 		payload = NewDefaultPayload(key)
-		if strings.Contains(payload.Key, " ") {
+		if index := strings.IndexByte(string(payload.Key), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Key, " ", 2)[1]
-			payload.Key = cred
+			payload.Key = payload.Key[index+1:]
 		}
 
 		return payload, nil
@@ -79,10 +78,9 @@ func DecodeSecureRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 			return payload, err
 		}
 		payload = NewSecurePayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil

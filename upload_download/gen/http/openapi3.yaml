@@ -21,8 +21,8 @@ paths:
                   schema:
                     type: string
                     description: Path to downloaded file.
-                    example: Qui vel non.
-                  example: Tempora in.
+                    example: Ut rerum est minus natus voluptas ex.
+                  example: Ut rerum est minus natus voluptas ex.
             responses:
                 "200":
                     description: OK response.
@@ -46,12 +46,26 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: invalid_file_path
+                                temporary: false
+                                timeout: false
                 "500":
                     description: 'internal_error: Fault while processing download.'
                     content:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: internal_error
+                                temporary: false
+                                timeout: false
     /upload/{dir}:
         post:
             tags:
@@ -88,12 +102,26 @@ paths:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: invalid_multipart_request
+                                temporary: false
+                                timeout: false
                 "500":
                     description: 'internal_error: Fault while processing upload.'
                     content:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
+                            example:
+                                fault: false
+                                id: 123abc
+                                message: parameter 'p' must be an integer
+                                name: internal_error
+                                temporary: false
+                                timeout: false
 components:
     schemas:
         Error:
@@ -102,7 +130,7 @@ components:
                 fault:
                     type: boolean
                     description: Is the error a server-side fault?
-                    example: true
+                    example: false
                 id:
                     type: string
                     description: ID is a unique identifier for this particular occurrence of the problem.
@@ -123,9 +151,9 @@ components:
                     type: boolean
                     description: Is the error a timeout?
                     example: false
-            description: Error returned when the Content-Type header does not define a multipart request.
+            description: Error response result type
             example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request

@@ -29,8 +29,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "text concatstrings --a \"Numquam unde accusantium autem tenetur.\" --b \"Odio inventore dolorem sunt in dolorem aut.\"" + "\n" +
+	return os.Args[0] + " " + "text concatstrings --a \"Nam ut eligendi quia laudantium non quia.\" --b \"Officia aliquid aut quis minus.\"" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -46,21 +65,30 @@ func ParseEndpoint(
 		textFlags = flag.NewFlagSet("text", flag.ContinueOnError)
 
 		textConcatstringsFlags = flag.NewFlagSet("concatstrings", flag.ExitOnError)
-		textConcatstringsAFlag = textConcatstringsFlags.String("a", "REQUIRED", "Left operand")
-		textConcatstringsBFlag = textConcatstringsFlags.String("b", "REQUIRED", "Right operand")
+		textConcatstringsAFlag = new(cliStringFlag)
+		textConcatstringsBFlag = new(cliStringFlag)
 
 		textConcatbytesFlags = flag.NewFlagSet("concatbytes", flag.ExitOnError)
-		textConcatbytesAFlag = textConcatbytesFlags.String("a", "REQUIRED", "Left operand")
-		textConcatbytesBFlag = textConcatbytesFlags.String("b", "REQUIRED", "Right operand")
+		textConcatbytesAFlag = new(cliStringFlag)
+		textConcatbytesBFlag = new(cliStringFlag)
 
 		textConcatstringfieldFlags = flag.NewFlagSet("concatstringfield", flag.ExitOnError)
-		textConcatstringfieldAFlag = textConcatstringfieldFlags.String("a", "REQUIRED", "Left operand")
-		textConcatstringfieldBFlag = textConcatstringfieldFlags.String("b", "REQUIRED", "Right operand")
+		textConcatstringfieldAFlag = new(cliStringFlag)
+		textConcatstringfieldBFlag = new(cliStringFlag)
 
 		textConcatbytesfieldFlags = flag.NewFlagSet("concatbytesfield", flag.ExitOnError)
-		textConcatbytesfieldAFlag = textConcatbytesfieldFlags.String("a", "REQUIRED", "Left operand")
-		textConcatbytesfieldBFlag = textConcatbytesfieldFlags.String("b", "REQUIRED", "Right operand")
+		textConcatbytesfieldAFlag = new(cliStringFlag)
+		textConcatbytesfieldBFlag = new(cliStringFlag)
 	)
+	textConcatstringsFlags.Var(textConcatstringsAFlag, "a", "Left operand")
+	textConcatstringsFlags.Var(textConcatstringsBFlag, "b", "Right operand")
+	textConcatbytesFlags.Var(textConcatbytesAFlag, "a", "Left operand")
+	textConcatbytesFlags.Var(textConcatbytesBFlag, "b", "Right operand")
+	textConcatstringfieldFlags.Var(textConcatstringfieldAFlag, "a", "Left operand")
+	textConcatstringfieldFlags.Var(textConcatstringfieldBFlag, "b", "Right operand")
+	textConcatbytesfieldFlags.Var(textConcatbytesfieldAFlag, "a", "Left operand")
+	textConcatbytesfieldFlags.Var(textConcatbytesfieldBFlag, "b", "Right operand")
+
 	textFlags.Usage = textUsage
 	textConcatstringsFlags.Usage = textConcatstringsUsage
 	textConcatbytesFlags.Usage = textConcatbytesUsage
@@ -140,16 +168,16 @@ func ParseEndpoint(
 			switch epn {
 			case "concatstrings":
 				endpoint = c.Concatstrings()
-				data, err = textc.BuildConcatstringsPayload(*textConcatstringsAFlag, *textConcatstringsBFlag)
+				data, err = textc.BuildConcatstringsPayload(textConcatstringsAFlag.value, textConcatstringsBFlag.value)
 			case "concatbytes":
 				endpoint = c.Concatbytes()
-				data, err = textc.BuildConcatbytesPayload(*textConcatbytesAFlag, *textConcatbytesBFlag)
+				data, err = textc.BuildConcatbytesPayload(textConcatbytesAFlag.value, textConcatbytesBFlag.value)
 			case "concatstringfield":
 				endpoint = c.Concatstringfield()
-				data, err = textc.BuildConcatstringfieldPayload(*textConcatstringfieldAFlag, *textConcatstringfieldBFlag)
+				data, err = textc.BuildConcatstringfieldPayload(textConcatstringfieldAFlag.value, textConcatstringfieldBFlag.value)
 			case "concatbytesfield":
 				endpoint = c.Concatbytesfield()
-				data, err = textc.BuildConcatbytesfieldPayload(*textConcatbytesfieldAFlag, *textConcatbytesfieldBFlag)
+				data, err = textc.BuildConcatbytesfieldPayload(textConcatbytesfieldAFlag.value, textConcatbytesfieldBFlag.value)
 			}
 		}
 	}
@@ -190,7 +218,7 @@ func textConcatstringsUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstrings --a \"Numquam unde accusantium autem tenetur.\" --b \"Odio inventore dolorem sunt in dolorem aut.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstrings --a \"Nam ut eligendi quia laudantium non quia.\" --b \"Officia aliquid aut quis minus.\"")
 }
 
 func textConcatbytesUsage() {
@@ -210,7 +238,7 @@ func textConcatbytesUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytes --a \"Cupiditate perferendis excepturi corrupti sint aspernatur.\" --b \"Dolorem perspiciatis officiis ipsum delectus.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytes --a \"Dolorum molestias sed dolorem unde numquam laudantium.\" --b \"Ut repudiandae velit qui rerum aut eaque.\"")
 }
 
 func textConcatstringfieldUsage() {
@@ -230,7 +258,7 @@ func textConcatstringfieldUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstringfield --a \"Qui delectus reprehenderit laudantium tempora autem.\" --b \"Sit officia repellat.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatstringfield --a \"Ipsa qui expedita consectetur et et labore.\" --b \"Fuga dolorum quaerat.\"")
 }
 
 func textConcatbytesfieldUsage() {
@@ -250,5 +278,5 @@ func textConcatbytesfieldUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytesfield --a \"Vitae assumenda fugiat et sit repellendus.\" --b \"Ut tempore.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "text concatbytesfield --a \"Quasi itaque.\" --b \"Culpa ratione.\"")
 }

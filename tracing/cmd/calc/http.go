@@ -94,14 +94,16 @@ func handleHTTPServer(ctx context.Context, u *url.URL, calcEndpoints *calcsvc.En
 			errc <- srv.ListenAndServe()
 		}()
 
-		ctx.Done()
+		<-ctx.Done()
 		logger.Printf("shutting down HTTP server at %q", u.Host)
 
 		// Shutdown gracefully with a 30s timeout.
-		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		srv.Shutdown(ctx)
+		if err := srv.Shutdown(shutdownCtx); err != nil {
+			logger.Printf("failed to shut down HTTP server at %q: %s", u.Host, err)
+		}
 	}()
 }
 

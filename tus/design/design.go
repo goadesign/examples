@@ -91,10 +91,13 @@ var _ = Service("tus", func() {
 			Reference(TUSCoreHeaders)
 			Reference(TUSExtensionHeaders)
 			UploadID()
+			Attribute("contentType", String, "Media type of the uploaded bytes.", func() {
+				Example("application/offset+octet-stream")
+			})
 			Attribute("tusResumable")
 			Attribute("uploadOffset")
 			Attribute("uploadChecksum")
-			Required("id", "tusResumable", "uploadOffset")
+			Required("id", "contentType", "tusResumable", "uploadOffset")
 		})
 
 		Result(func() {
@@ -130,6 +133,7 @@ var _ = Service("tus", func() {
 
 		HTTP(func() {
 			PATCH("/{id}")
+			Header("contentType:Content-Type")
 			Header("tusResumable:Tus-Resumable")
 			Header("uploadOffset:Upload-Offset")
 			Header("uploadChecksum:Upload-Checksum")

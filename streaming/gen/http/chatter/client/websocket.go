@@ -15,6 +15,7 @@ import (
 	chatter "goa.design/examples/streaming/gen/chatter"
 	chatterviews "goa.design/examples/streaming/gen/chatter/views"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // ConnConfigurer holds the websocket connection configurer functions for the
@@ -55,7 +56,7 @@ type SubscribeClientStream struct {
 type HistoryClientStream struct {
 	// conn is the underlying websocket connection.
 	conn *websocket.Conn
-	// view is the view to render  result type before sending to the websocket
+	// view is the result view used to decode values received from the websocket
 	// connection.
 	view string
 }
@@ -162,6 +163,10 @@ func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 	if err != nil {
 		return rv, err
 	}
+	err = ValidateChatSummaryResponseCollection(body)
+	if err != nil {
+		return rv, err
+	}
 	res := NewSummaryChatSummaryCollectionOK(body)
 	vres := chatterviews.ChatSummaryCollection{Projected: res, View: "default"}
 	if err := chatterviews.ValidateChatSummaryCollection(vres); err != nil {
@@ -223,24 +228,57 @@ func (s *SubscribeClientStream) RecvWithContext(ctx context.Context) (*chatter.E
 // websocket connection.
 func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 	var (
-		rv   *chatter.ChatSummary
-		body HistoryResponseBody
-		err  error
+		rv  *chatter.ChatSummary
+		err error
 	)
-	err = s.conn.ReadJSON(&body)
-	if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
-		s.conn.Close()
-		return rv, io.EOF
+	view := s.view
+	if view == "" {
+		view = "default"
 	}
-	if err != nil {
-		return rv, err
+	switch view {
+	case "tiny":
+		var body HistoryResponseBodyTiny
+		err = s.conn.ReadJSON(&body)
+		if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+			s.conn.Close()
+			return rv, io.EOF
+		}
+		if err != nil {
+			return rv, err
+		}
+		err = ValidateHistoryResponseBodyTiny(&body)
+		if err != nil {
+			return rv, err
+		}
+		res := NewHistoryResultTinyOK(&body)
+		vres := &chatterviews.ChatSummary{Projected: res, View: view}
+		if err := chatterviews.ValidateChatSummary(vres); err != nil {
+			return rv, goahttp.ErrValidationError("chatter", "history", err)
+		}
+		return chatter.NewChatSummary(vres), nil
+	case "default":
+		var body HistoryResponseBody
+		err = s.conn.ReadJSON(&body)
+		if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+			s.conn.Close()
+			return rv, io.EOF
+		}
+		if err != nil {
+			return rv, err
+		}
+		err = ValidateHistoryResponseBody(&body)
+		if err != nil {
+			return rv, err
+		}
+		res := NewHistoryResultDefaultOK(&body)
+		vres := &chatterviews.ChatSummary{Projected: res, View: view}
+		if err := chatterviews.ValidateChatSummary(vres); err != nil {
+			return rv, goahttp.ErrValidationError("chatter", "history", err)
+		}
+		return chatter.NewChatSummary(vres), nil
+	default:
+		return rv, goahttp.ErrValidationError("chatter", "history", goa.InvalidEnumValueError("view", view, []any{"tiny", "default"}))
 	}
-	res := NewHistoryChatSummaryOK(&body)
-	vres := &chatterviews.ChatSummary{Projected: res, View: s.view}
-	if err := chatterviews.ValidateChatSummary(vres); err != nil {
-		return rv, goahttp.ErrValidationError("chatter", "history", err)
-	}
-	return chatter.NewChatSummary(vres), nil
 }
 
 // RecvWithContext reads instances of "chatter.ChatSummary" from the "history"
@@ -249,8 +287,8 @@ func (s *HistoryClientStream) RecvWithContext(ctx context.Context) (*chatter.Cha
 	return s.Recv()
 }
 
-// SetView sets the view to render the  type before sending to the "history"
-// endpoint websocket connection.
+// SetView sets the result view used to decode values received from the
+// "history" endpoint websocket connection.
 func (s *HistoryClientStream) SetView(view string) {
 	s.view = view
 }

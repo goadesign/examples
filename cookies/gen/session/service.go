@@ -7,9 +7,7 @@
 
 package session
 
-import (
-	"context"
-)
+import "context"
 
 // The session service illustrates managing user sessions with cookies.
 type Service interface {

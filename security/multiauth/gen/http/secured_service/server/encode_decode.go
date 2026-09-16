@@ -36,13 +36,11 @@ func EncodeSigninResponse(encoder func(context.Context, http.ResponseWriter) goa
 func DecodeSigninRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*securedservice.SigninPayload, error) {
 	return func(r *http.Request) (*securedservice.SigninPayload, error) {
 		var payload *securedservice.SigninPayload
-		payload = NewSigninPayload()
 		user, pass, ok := r.BasicAuth()
 		if !ok {
 			return payload, goa.MissingFieldError("Authorization", "header")
 		}
-		payload.Username = user
-		payload.Password = pass
+		payload = NewSigninPayload(user, pass)
 
 		return payload, nil
 	}
@@ -112,10 +110,9 @@ func DecodeSecureRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 			return payload, err
 		}
 		payload = NewSecurePayload(fail, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil
@@ -188,10 +185,9 @@ func DecodeDoublySecureRequest(mux goahttp.Muxer, decoder func(*http.Request) go
 			return payload, err
 		}
 		payload = NewDoublySecurePayload(key, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil
@@ -265,14 +261,18 @@ func DecodeAlsoDoublySecureRequest(mux goahttp.Muxer, decoder func(*http.Request
 		if tokenRaw != "" {
 			token = &tokenRaw
 		}
-		payload = NewAlsoDoublySecurePayload(key, oauthToken, token)
-		user, pass, _ := r.BasicAuth()
-		payload.Username = &user
-		payload.Password = &pass
+		user, pass, ok := r.BasicAuth()
+		var userPtr, passPtr *string
+		if ok {
+			userPtr = &user
+			passPtr = &pass
+		}
+		payload = NewAlsoDoublySecurePayload(key, oauthToken, token, userPtr, passPtr)
 		if payload.Token != nil {
-			if strings.Contains(*payload.Token, " ") {
+			cred := *payload.Token
+			if index := strings.IndexByte(string(cred), ' '); index >= 0 {
 				// Remove authorization scheme prefix (e.g. "Bearer")
-				cred := strings.SplitN(*payload.Token, " ", 2)[1]
+				cred = cred[index+1:]
 				payload.Token = &cred
 			}
 		}

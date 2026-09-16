@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // HeadTusPath returns the URL path to the tus service head HTTP endpoint.
 func HeadTusPath(id string) string {

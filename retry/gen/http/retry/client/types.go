@@ -63,7 +63,7 @@ func NewGetMessageUnavailable(body *GetMessageUnavailableResponseBody) *goa.Serv
 }
 
 // ValidateGetMessageResponseBody runs the validations defined on
-// get_message_response_body
+// GetMessageResponseBody
 func ValidateGetMessageResponseBody(body *GetMessageResponseBody) (err error) {
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
@@ -72,7 +72,7 @@ func ValidateGetMessageResponseBody(body *GetMessageResponseBody) (err error) {
 }
 
 // ValidateGetMessageUnavailableResponseBody runs the validations defined on
-// get_message_unavailable_response_body
+// GetMessageUnavailableResponseBody
 func ValidateGetMessageUnavailableResponseBody(body *GetMessageUnavailableResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))

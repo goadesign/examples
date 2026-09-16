@@ -37,8 +37,10 @@ func EncodeSigninRequest(ctx context.Context, v any, md *metadata.MD) (any, erro
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "signin", "*securedservice.SigninPayload", v)
 	}
-	(*md).Append("username", payload.Username)
-	(*md).Append("password", payload.Password)
+	usernameWire := payload.Username
+	(*md).Append("username", usernameWire)
+	passwordWire := payload.Password
+	(*md).Append("password", passwordWire)
 	return NewProtoSigninRequest(), nil
 }
 
@@ -48,6 +50,9 @@ func DecodeSigninResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (an
 	message, ok := v.(*secured_servicepb.SigninResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "signin", "*secured_servicepb.SigninResponse", v)
+	}
+	if err := ValidateSigninResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewSigninResult(message)
 	return res, nil
@@ -73,7 +78,8 @@ func EncodeSecureRequest(ctx context.Context, v any, md *metadata.MD) (any, erro
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "secure", "*securedservice.SecurePayload", v)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return NewProtoSecureRequest(payload), nil
 }
 
@@ -83,6 +89,9 @@ func DecodeSecureResponse(ctx context.Context, v any, hdr, trlr metadata.MD) (an
 	message, ok := v.(*secured_servicepb.SecureResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "secure", "*secured_servicepb.SecureResponse", v)
+	}
+	if err := ValidateSecureResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewSecureResult(message)
 	return res, nil
@@ -109,7 +118,8 @@ func EncodeDoublySecureRequest(ctx context.Context, v any, md *metadata.MD) (any
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "doubly_secure", "*securedservice.DoublySecurePayload", v)
 	}
-	(*md).Append("authorization", payload.Token)
+	tokenWire := payload.Token
+	(*md).Append("authorization", tokenWire)
 	return NewProtoDoublySecureRequest(payload), nil
 }
 
@@ -119,6 +129,9 @@ func DecodeDoublySecureResponse(ctx context.Context, v any, hdr, trlr metadata.M
 	message, ok := v.(*secured_servicepb.DoublySecureResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "doubly_secure", "*secured_servicepb.DoublySecureResponse", v)
+	}
+	if err := ValidateDoublySecureResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewDoublySecureResult(message)
 	return res, nil
@@ -146,10 +159,12 @@ func EncodeAlsoDoublySecureRequest(ctx context.Context, v any, md *metadata.MD) 
 		return nil, goagrpc.ErrInvalidType("secured_service", "also_doubly_secure", "*securedservice.AlsoDoublySecurePayload", v)
 	}
 	if payload.OauthToken != nil {
-		(*md).Append("oauth", *payload.OauthToken)
+		oauthTokenWire := *payload.OauthToken
+		(*md).Append("oauth", oauthTokenWire)
 	}
 	if payload.Token != nil {
-		(*md).Append("authorization", *payload.Token)
+		tokenWire := *payload.Token
+		(*md).Append("authorization", tokenWire)
 	}
 	return NewProtoAlsoDoublySecureRequest(payload), nil
 }
@@ -160,6 +175,9 @@ func DecodeAlsoDoublySecureResponse(ctx context.Context, v any, hdr, trlr metada
 	message, ok := v.(*secured_servicepb.AlsoDoublySecureResponse)
 	if !ok {
 		return nil, goagrpc.ErrInvalidType("secured_service", "also_doubly_secure", "*secured_servicepb.AlsoDoublySecureResponse", v)
+	}
+	if err := ValidateAlsoDoublySecureResponse(message); err != nil {
+		return nil, err
 	}
 	res := NewAlsoDoublySecureResult(message)
 	return res, nil

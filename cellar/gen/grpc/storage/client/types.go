@@ -16,127 +16,123 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoListRequest builds the gRPC request type from the payload of the
-// "list" endpoint of the "storage" service.
+// NewProtoListRequest builds *storagepb.ListRequest from metadata values.
 func NewProtoListRequest() *storagepb.ListRequest {
 	message := &storagepb.ListRequest{}
 	return message
 }
 
-// NewListResult builds the result type of the "list" endpoint of the "storage"
-// service from the gRPC response type.
+// NewListResult builds storageviews.StoredBottleCollectionView from
+// *storagepb.StoredBottleCollection.
 func NewListResult(message *storagepb.StoredBottleCollection) storageviews.StoredBottleCollectionView {
 	result := make([]*storageviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
 		result[i] = &storageviews.StoredBottleView{
-			ID:          &val.Id,
-			Name:        &val.Name,
-			Vintage:     &val.Vintage,
-			Description: val.Description,
-			Rating:      val.Rating,
+			ID:   val.Id,
+			Name: val.Name,
 		}
 		if val.Winery != nil {
-			result[i].Winery = protobufStoragepbWineryToStorageviewsWineryView(val.Winery)
-		}
-		if val.Composition != nil {
-			result[i].Composition = make([]*storageviews.ComponentView, len(val.Composition))
-			for j, val := range val.Composition {
-				result[i].Composition[j] = &storageviews.ComponentView{
-					Varietal:   &val.Varietal,
-					Percentage: val.Percentage,
-				}
-			}
+			result[i].Winery = transformProtoWineryToWineryView(val.Winery)
 		}
 	}
 	return result
 }
 
-// NewProtoShowRequest builds the gRPC request type from the payload of the
-// "show" endpoint of the "storage" service.
+// NewProtoShowRequest builds *storagepb.ShowRequest from *storage.ShowPayload.
 func NewProtoShowRequest(payload *storage.ShowPayload) *storagepb.ShowRequest {
 	message := &storagepb.ShowRequest{
-		Id: payload.ID,
+		Id: &payload.ID,
 	}
 	return message
 }
 
-// NewShowResult builds the result type of the "show" endpoint of the "storage"
-// service from the gRPC response type.
+// NewShowResult builds *storageviews.StoredBottleView from
+// *storagepb.ShowResponse.
 func NewShowResult(message *storagepb.ShowResponse) *storageviews.StoredBottleView {
 	result := &storageviews.StoredBottleView{
-		ID:          &message.Id,
-		Name:        &message.Name,
-		Vintage:     &message.Vintage,
+		ID:          message.Id,
+		Name:        message.Name,
+		Vintage:     message.Vintage,
 		Description: message.Description,
 		Rating:      message.Rating,
 	}
 	if message.Winery != nil {
-		result.Winery = protobufStoragepbWineryToStorageviewsWineryView(message.Winery)
+		result.Winery = transformProtoWineryToWineryView(message.Winery)
 	}
 	if message.Composition != nil {
 		result.Composition = make([]*storageviews.ComponentView, len(message.Composition))
 		for i, val := range message.Composition {
 			result.Composition[i] = &storageviews.ComponentView{
-				Varietal:   &val.Varietal,
-				Percentage: val.Percentage,
-			}
-		}
-	}
-	return result
-}
-
-// NewShowNotFoundError builds the error type of the "show" endpoint of the
-// "storage" service from the gRPC error response type.
-func NewShowNotFoundError(message *storagepb.ShowNotFoundError) *storage.NotFound {
-	er := &storage.NotFound{
-		Message: message.Message_,
-		ID:      message.Id,
-	}
-	return er
-}
-
-// NewProtoAddRequest builds the gRPC request type from the payload of the
-// "add" endpoint of the "storage" service.
-func NewProtoAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
-	message := &storagepb.AddRequest{
-		Name:        payload.Name,
-		Vintage:     payload.Vintage,
-		Description: payload.Description,
-		Rating:      payload.Rating,
-	}
-	if payload.Winery != nil {
-		message.Winery = svcStorageWineryToStoragepbWinery(payload.Winery)
-	}
-	if payload.Composition != nil {
-		message.Composition = make([]*storagepb.Component, len(payload.Composition))
-		for i, val := range payload.Composition {
-			message.Composition[i] = &storagepb.Component{
 				Varietal:   val.Varietal,
 				Percentage: val.Percentage,
 			}
 		}
 	}
-	return message
-}
-
-// NewAddResult builds the result type of the "add" endpoint of the "storage"
-// service from the gRPC response type.
-func NewAddResult(message *storagepb.AddResponse) string {
-	result := message.Field
 	return result
 }
 
-// NewProtoRemoveRequest builds the gRPC request type from the payload of the
-// "remove" endpoint of the "storage" service.
-func NewProtoRemoveRequest(payload *storage.RemovePayload) *storagepb.RemoveRequest {
-	message := &storagepb.RemoveRequest{
-		Id: payload.ID,
+// NewShowResultTiny builds *storageviews.StoredBottleView from
+// *storagepb.ShowResponse.
+func NewShowResultTiny(message *storagepb.ShowResponse) *storageviews.StoredBottleView {
+	result := &storageviews.StoredBottleView{
+		ID:   message.Id,
+		Name: message.Name,
+	}
+	if message.Winery != nil {
+		result.Winery = transformProtoWineryToWineryView(message.Winery)
+	}
+	return result
+}
+
+// NewShowNotFoundError builds *storage.NotFound from
+// *storagepb.ShowNotFoundError.
+func NewShowNotFoundError(message *storagepb.ShowNotFoundError) *storage.NotFound {
+	er := &storage.NotFound{
+		Message: *message.Message_,
+		ID:      *message.Id,
+	}
+	return er
+}
+
+// NewProtoAddRequest builds *storagepb.AddRequest from *storage.Bottle.
+func NewProtoAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
+	message := &storagepb.AddRequest{
+		Name:        &payload.Name,
+		Vintage:     &payload.Vintage,
+		Description: payload.Description,
+		Rating:      payload.Rating,
+	}
+	if payload.Winery != nil {
+		message.Winery = transformWineryToProtoWinery(payload.Winery)
+	}
+	if payload.Composition != nil {
+		message.Composition = make([]*storagepb.Component, len(payload.Composition))
+		for i, val := range payload.Composition {
+			message.Composition[i] = &storagepb.Component{
+				Varietal:   &val.Varietal,
+				Percentage: val.Percentage,
+			}
+		}
 	}
 	return message
 }
 
-// NewProtoRateRequest builds the gRPC request type from the payload of the
-// "rate" endpoint of the "storage" service.
+// NewAddResult builds string from *storagepb.AddResponse.
+func NewAddResult(message *storagepb.AddResponse) string {
+	result := *message.Field
+	return result
+}
+
+// NewProtoRemoveRequest builds *storagepb.RemoveRequest from
+// *storage.RemovePayload.
+func NewProtoRemoveRequest(payload *storage.RemovePayload) *storagepb.RemoveRequest {
+	message := &storagepb.RemoveRequest{
+		Id: &payload.ID,
+	}
+	return message
+}
+
+// NewProtoRateRequest builds *storagepb.RateRequest from map[uint32][]string.
 func NewProtoRateRequest(payload map[uint32][]string) *storagepb.RateRequest {
 	message := &storagepb.RateRequest{}
 	message.Field = make(map[uint32]*storagepb.ArrayOfString, len(payload))
@@ -152,26 +148,26 @@ func NewProtoRateRequest(payload map[uint32][]string) *storagepb.RateRequest {
 	return message
 }
 
-// NewProtoMultiAddRequest builds the gRPC request type from the payload of the
-// "multi_add" endpoint of the "storage" service.
+// NewProtoMultiAddRequest builds *storagepb.MultiAddRequest from
+// []*storage.Bottle.
 func NewProtoMultiAddRequest(payload []*storage.Bottle) *storagepb.MultiAddRequest {
 	message := &storagepb.MultiAddRequest{}
 	message.Field = make([]*storagepb.Bottle, len(payload))
 	for i, val := range payload {
 		message.Field[i] = &storagepb.Bottle{
-			Name:        val.Name,
-			Vintage:     val.Vintage,
+			Name:        &val.Name,
+			Vintage:     &val.Vintage,
 			Description: val.Description,
 			Rating:      val.Rating,
 		}
 		if val.Winery != nil {
-			message.Field[i].Winery = svcStorageWineryToStoragepbWinery(val.Winery)
+			message.Field[i].Winery = transformWineryToProtoWinery(val.Winery)
 		}
 		if val.Composition != nil {
 			message.Field[i].Composition = make([]*storagepb.Component, len(val.Composition))
 			for j, val := range val.Composition {
 				message.Field[i].Composition[j] = &storagepb.Component{
-					Varietal:   val.Varietal,
+					Varietal:   &val.Varietal,
 					Percentage: val.Percentage,
 				}
 			}
@@ -180,8 +176,7 @@ func NewProtoMultiAddRequest(payload []*storage.Bottle) *storagepb.MultiAddReque
 	return message
 }
 
-// NewMultiAddResult builds the result type of the "multi_add" endpoint of the
-// "storage" service from the gRPC response type.
+// NewMultiAddResult builds []string from *storagepb.MultiAddResponse.
 func NewMultiAddResult(message *storagepb.MultiAddResponse) []string {
 	result := make([]string, len(message.Field))
 	for i, val := range message.Field {
@@ -190,8 +185,8 @@ func NewMultiAddResult(message *storagepb.MultiAddResponse) []string {
 	return result
 }
 
-// NewProtoMultiUpdateRequest builds the gRPC request type from the payload of
-// the "multi_update" endpoint of the "storage" service.
+// NewProtoMultiUpdateRequest builds *storagepb.MultiUpdateRequest from
+// *storage.MultiUpdatePayload.
 func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.MultiUpdateRequest {
 	message := &storagepb.MultiUpdateRequest{}
 	if payload.Ids != nil {
@@ -204,19 +199,19 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 		message.Bottles = make([]*storagepb.Bottle, len(payload.Bottles))
 		for i, val := range payload.Bottles {
 			message.Bottles[i] = &storagepb.Bottle{
-				Name:        val.Name,
-				Vintage:     val.Vintage,
+				Name:        &val.Name,
+				Vintage:     &val.Vintage,
 				Description: val.Description,
 				Rating:      val.Rating,
 			}
 			if val.Winery != nil {
-				message.Bottles[i].Winery = svcStorageWineryToStoragepbWinery(val.Winery)
+				message.Bottles[i].Winery = transformWineryToProtoWinery(val.Winery)
 			}
 			if val.Composition != nil {
 				message.Bottles[i].Composition = make([]*storagepb.Component, len(val.Composition))
 				for j, val := range val.Composition {
 					message.Bottles[i].Composition[j] = &storagepb.Component{
-						Varietal:   val.Varietal,
+						Varietal:   &val.Varietal,
 						Percentage: val.Percentage,
 					}
 				}
@@ -226,12 +221,12 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 	return message
 }
 
-// ValidateStoredBottleCollection runs the validations defined on
+// ValidateStoredBottleCollectionTiny runs the validations defined on
 // StoredBottleCollection.
-func ValidateStoredBottleCollection(message *storagepb.StoredBottleCollection) (err error) {
+func ValidateStoredBottleCollectionTiny(message *storagepb.StoredBottleCollection) (err error) {
 	for _, e := range message.Field {
 		if e != nil {
-			if err2 := ValidateStoredBottle(e); err2 != nil {
+			if err2 := validatecellar_storage_StoredBottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -239,101 +234,83 @@ func ValidateStoredBottleCollection(message *storagepb.StoredBottleCollection) (
 	return
 }
 
-// ValidateStoredBottle runs the validations defined on StoredBottle.
-func ValidateStoredBottle(elem *storagepb.StoredBottle) (err error) {
+// validatecellar_storage_StoredBottle_At_elem runs the validations defined on
+// StoredBottle.
+func validatecellar_storage_StoredBottle_At_elem(elem *storagepb.StoredBottle) (err error) {
+	if elem.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "elem"))
+	}
+	if elem.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "elem"))
+	}
 	if elem.Winery == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "elem"))
 	}
-	if utf8.RuneCountInString(elem.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", elem.Name, utf8.RuneCountInString(elem.Name), 100, false))
+	if elem.Name != nil {
+		if utf8.RuneCountInString(*elem.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", *elem.Name, utf8.RuneCountInString(*elem.Name), 100, false))
+		}
 	}
 	if elem.Winery != nil {
-		if err2 := ValidateWinery(elem.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(elem.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if elem.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 1900, true))
-	}
-	if elem.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", elem.Vintage, 2020, false))
-	}
-	for _, e := range elem.Composition {
-		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	if elem.Description != nil {
-		if utf8.RuneCountInString(*elem.Description) > 2000 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.description", *elem.Description, utf8.RuneCountInString(*elem.Description), 2000, false))
-		}
-	}
-	if elem.Rating != nil {
-		if *elem.Rating < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 1, true))
-		}
-	}
-	if elem.Rating != nil {
-		if *elem.Rating > 5 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 5, false))
-		}
+	return
+}
+
+// validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery
+// runs the validations defined on Winery.
+func validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(winery *storagepb.Winery) (err error) {
+	if winery.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
 	}
 	return
 }
 
-// ValidateWinery runs the validations defined on Winery.
-func ValidateWinery(winery *storagepb.Winery) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", winery.Region, "[a-zA-Z '\\.]+"))
-	err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", winery.Country, "[a-zA-Z '\\.]+"))
-	if winery.Url != nil {
-		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
-	}
-	return
-}
-
-// ValidateComponent runs the validations defined on Component.
-func ValidateComponent(elem *storagepb.Component) (err error) {
-	err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", elem.Varietal, "[A-Za-z' ]+"))
-	if utf8.RuneCountInString(elem.Varietal) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", elem.Varietal, utf8.RuneCountInString(elem.Varietal), 100, false))
-	}
-	if elem.Percentage != nil {
-		if *elem.Percentage < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 1, true))
-		}
-	}
-	if elem.Percentage != nil {
-		if *elem.Percentage > 100 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 100, false))
-		}
+// ValidateShowRequest runs the validations defined on ShowRequest.
+func ValidateShowRequest(message *storagepb.ShowRequest) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
 	}
 	return
 }
 
 // ValidateShowResponse runs the validations defined on ShowResponse.
 func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
+	}
+	if message.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "message"))
+	}
 	if message.Winery == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "message"))
 	}
-	if utf8.RuneCountInString(message.Name) > 100 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", message.Name, utf8.RuneCountInString(message.Name), 100, false))
+	if message.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "message"))
+	}
+	if message.Name != nil {
+		if utf8.RuneCountInString(*message.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", *message.Name, utf8.RuneCountInString(*message.Name), 100, false))
+		}
 	}
 	if message.Winery != nil {
-		if err2 := ValidateWinery(message.Winery); err2 != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(message.Winery); err2 != nil {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if message.Vintage < 1900 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 1900, true))
-	}
-	if message.Vintage > 2020 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", message.Vintage, 2020, false))
+	if message.Vintage != nil {
+		if *message.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", *message.Vintage, 1900, true))
+		}
+		if *message.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", *message.Vintage, 2020, false))
+		}
 	}
 	for _, e := range message.Composition {
 		if e != nil {
-			if err2 := ValidateComponent(e); err2 != nil {
+			if err2 := validatecellar_storage_Component_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -347,8 +324,6 @@ func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
 		if *message.Rating < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", *message.Rating, 1, true))
 		}
-	}
-	if message.Rating != nil {
 		if *message.Rating > 5 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", *message.Rating, 5, false))
 		}
@@ -356,53 +331,264 @@ func ValidateShowResponse(message *storagepb.ShowResponse) (err error) {
 	return
 }
 
-// svcStorageviewsWineryViewToStoragepbWinery builds a value of type
-// *storagepb.Winery from a value of type *storageviews.WineryView.
-func svcStorageviewsWineryViewToStoragepbWinery(v *storageviews.WineryView) *storagepb.Winery {
-	res := &storagepb.Winery{
-		Name:    *v.Name,
-		Region:  *v.Region,
-		Country: *v.Country,
-		Url:     v.URL,
+// validatecellar_storage_Component_At_elem runs the validations defined on
+// Component.
+func validatecellar_storage_Component_At_elem(elem *storagepb.Component) (err error) {
+	if elem.Varietal == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("varietal", "elem"))
+	}
+	if elem.Varietal != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("elem.varietal", *elem.Varietal, "[A-Za-z' ]+"))
+		if utf8.RuneCountInString(*elem.Varietal) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.varietal", *elem.Varietal, utf8.RuneCountInString(*elem.Varietal), 100, false))
+		}
+	}
+	if elem.Percentage != nil {
+		if *elem.Percentage < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 1, true))
+		}
+		if *elem.Percentage > 100 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.percentage", *elem.Percentage, 100, false))
+		}
+	}
+	return
+}
+
+// ValidateShowResponseTiny runs the validations defined on ShowResponse.
+func ValidateShowResponseTiny(message *storagepb.ShowResponse) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
+	}
+	if message.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "message"))
+	}
+	if message.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "message"))
+	}
+	if message.Name != nil {
+		if utf8.RuneCountInString(*message.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", *message.Name, utf8.RuneCountInString(*message.Name), 100, false))
+		}
+	}
+	if message.Winery != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_list_Response_View_tiny_Field_field_ArrayElement_Field_winery(message.Winery); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
+// ValidateShowNotFoundError runs the validations defined on ShowNotFoundError.
+func ValidateShowNotFoundError(errmsg *storagepb.ShowNotFoundError) (err error) {
+	if errmsg.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "errmsg"))
+	}
+	if errmsg.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "errmsg"))
+	}
+	return
+}
+
+// ValidateAddRequest runs the validations defined on AddRequest.
+func ValidateAddRequest(message *storagepb.AddRequest) (err error) {
+	if message.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "message"))
+	}
+	if message.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "message"))
+	}
+	if message.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "message"))
+	}
+	if message.Name != nil {
+		if utf8.RuneCountInString(*message.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.name", *message.Name, utf8.RuneCountInString(*message.Name), 100, false))
+		}
+	}
+	if message.Winery != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery(message.Winery); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if message.Vintage != nil {
+		if *message.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", *message.Vintage, 1900, true))
+		}
+		if *message.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.vintage", *message.Vintage, 2020, false))
+		}
+	}
+	for _, e := range message.Composition {
+		if e != nil {
+			if err2 := validatecellar_storage_Component_At_elem(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	if message.Description != nil {
+		if utf8.RuneCountInString(*message.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("message.description", *message.Description, utf8.RuneCountInString(*message.Description), 2000, false))
+		}
+	}
+	if message.Rating != nil {
+		if *message.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", *message.Rating, 1, true))
+		}
+		if *message.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("message.rating", *message.Rating, 5, false))
+		}
+	}
+	return
+}
+
+// validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery runs
+// the validations defined on Winery.
+func validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery(winery *storagepb.Winery) (err error) {
+	if winery.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "winery"))
+	}
+	if winery.Region == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("region", "winery"))
+	}
+	if winery.Country == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("country", "winery"))
+	}
+	if winery.Region != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("winery.region", *winery.Region, "[a-zA-Z '\\.]+"))
+	}
+	if winery.Country != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("winery.country", *winery.Country, "[a-zA-Z '\\.]+"))
+	}
+	if winery.Url != nil {
+		err = goa.MergeErrors(err, goa.ValidatePattern("winery.url", *winery.Url, "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$"))
+	}
+	return
+}
+
+// ValidateAddResponse runs the validations defined on AddResponse.
+func ValidateAddResponse(message *storagepb.AddResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
+}
+
+// ValidateRemoveRequest runs the validations defined on RemoveRequest.
+func ValidateRemoveRequest(message *storagepb.RemoveRequest) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
+	}
+	return
+}
+
+// ValidateMultiAddRequest runs the validations defined on MultiAddRequest.
+func ValidateMultiAddRequest(message *storagepb.MultiAddRequest) (err error) {
+	for _, e := range message.Field {
+		if e != nil {
+			if err2 := validatecellar_storage_Bottle_At_elem(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// validatecellar_storage_Bottle_At_elem runs the validations defined on Bottle.
+func validatecellar_storage_Bottle_At_elem(elem *storagepb.Bottle) (err error) {
+	if elem.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "elem"))
+	}
+	if elem.Winery == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("winery", "elem"))
+	}
+	if elem.Vintage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("vintage", "elem"))
+	}
+	if elem.Name != nil {
+		if utf8.RuneCountInString(*elem.Name) > 100 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.name", *elem.Name, utf8.RuneCountInString(*elem.Name), 100, false))
+		}
+	}
+	if elem.Winery != nil {
+		if err2 := validatecellar_storage_Winery_At_winery_From_add_Request_Field_winery(elem.Winery); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if elem.Vintage != nil {
+		if *elem.Vintage < 1900 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 1900, true))
+		}
+		if *elem.Vintage > 2020 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.vintage", *elem.Vintage, 2020, false))
+		}
+	}
+	for _, e := range elem.Composition {
+		if e != nil {
+			if err2 := validatecellar_storage_Component_At_elem(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	if elem.Description != nil {
+		if utf8.RuneCountInString(*elem.Description) > 2000 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError("elem.description", *elem.Description, utf8.RuneCountInString(*elem.Description), 2000, false))
+		}
+	}
+	if elem.Rating != nil {
+		if *elem.Rating < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 1, true))
+		}
+		if *elem.Rating > 5 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("elem.rating", *elem.Rating, 5, false))
+		}
+	}
+	return
+}
+
+// ValidateMultiUpdateRequest runs the validations defined on
+// MultiUpdateRequest.
+func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err error) {
+	for _, e := range message.Bottles {
+		if e != nil {
+			if err2 := validatecellar_storage_Bottle_At_elem(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// transformProtoWineryToWineryView builds a value of type
+// *storageviews.WineryView from a value of type *storagepb.Winery.
+func transformProtoWineryToWineryView(v *storagepb.Winery) *storageviews.WineryView {
+	res := &storageviews.WineryView{
+		Name: v.Name,
 	}
 
 	return res
 }
 
-// protobufStoragepbWineryToStorageviewsWineryView builds a value of type
-// *storageviews.WineryView from a value of type *storagepb.Winery.
-func protobufStoragepbWineryToStorageviewsWineryView(v *storagepb.Winery) *storageviews.WineryView {
-	res := &storageviews.WineryView{
+// transformWineryToProtoWinery builds a value of type *storagepb.Winery from a
+// value of type *storage.Winery.
+func transformWineryToProtoWinery(v *storage.Winery) *storagepb.Winery {
+	res := &storagepb.Winery{
 		Name:    &v.Name,
 		Region:  &v.Region,
 		Country: &v.Country,
-		URL:     v.Url,
-	}
-
-	return res
-}
-
-// protobufStoragepbWineryToStorageWinery builds a value of type
-// *storage.Winery from a value of type *storagepb.Winery.
-func protobufStoragepbWineryToStorageWinery(v *storagepb.Winery) *storage.Winery {
-	res := &storage.Winery{
-		Name:    v.Name,
-		Region:  v.Region,
-		Country: v.Country,
-		URL:     v.Url,
-	}
-
-	return res
-}
-
-// svcStorageWineryToStoragepbWinery builds a value of type *storagepb.Winery
-// from a value of type *storage.Winery.
-func svcStorageWineryToStoragepbWinery(v *storage.Winery) *storagepb.Winery {
-	res := &storagepb.Winery{
-		Name:    v.Name,
-		Region:  v.Region,
-		Country: v.Country,
 		Url:     v.URL,
+	}
+
+	return res
+}
+
+// transformProtoWineryToWinery builds a value of type *storage.Winery from a
+// value of type *storagepb.Winery.
+func transformProtoWineryToWinery(v *storagepb.Winery) *storage.Winery {
+	res := &storage.Winery{
+		Name:    *v.Name,
+		Region:  *v.Region,
+		Country: *v.Country,
+		URL:     v.Url,
 	}
 
 	return res

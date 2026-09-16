@@ -359,7 +359,7 @@ func ValidateStreamResponseBody(body *StreamResponseBody) (err error) {
 }
 
 // ValidateGetNotFoundResponseBody runs the validations defined on
-// get_NotFound_response_body
+// GetNotFoundResponseBody
 func ValidateGetNotFoundResponseBody(body *GetNotFoundResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
@@ -383,7 +383,7 @@ func ValidateGetNotFoundResponseBody(body *GetNotFoundResponseBody) (err error) 
 }
 
 // ValidateGetUnavailableResponseBody runs the validations defined on
-// get_Unavailable_response_body
+// GetUnavailableResponseBody
 func ValidateGetUnavailableResponseBody(body *GetUnavailableResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))

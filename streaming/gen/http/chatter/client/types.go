@@ -27,6 +27,13 @@ type SubscribeResponseBody struct {
 	AddedAt *string `form:"added_at,omitempty" json:"added_at,omitempty" xml:"added_at,omitempty"`
 }
 
+// HistoryResponseBodyTiny is the type of the "chatter" service "history"
+// endpoint HTTP response body.
+type HistoryResponseBodyTiny struct {
+	// Message sent to the server
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
 // HistoryResponseBody is the type of the "chatter" service "history" endpoint
 // HTTP response body.
 type HistoryResponseBody struct {
@@ -147,9 +154,19 @@ func NewSubscribeUnauthorized(body string) chatter.Unauthorized {
 	return v
 }
 
-// NewHistoryChatSummaryOK builds a "chatter" service "history" endpoint result
+// NewHistoryResultTinyOK builds a "chatter" service "history" endpoint result
 // from a HTTP "OK" response.
-func NewHistoryChatSummaryOK(body *HistoryResponseBody) *chatterviews.ChatSummaryView {
+func NewHistoryResultTinyOK(body *HistoryResponseBodyTiny) *chatterviews.ChatSummaryView {
+	v := &chatterviews.ChatSummaryView{
+		Message: body.Message,
+	}
+
+	return v
+}
+
+// NewHistoryResultDefaultOK builds a "chatter" service "history" endpoint
+// result from a HTTP "OK" response.
+func NewHistoryResultDefaultOK(body *HistoryResponseBody) *chatterviews.ChatSummaryView {
 	v := &chatterviews.ChatSummaryView{
 		Message: body.Message,
 		Length:  body.Length,
@@ -175,6 +192,19 @@ func NewHistoryUnauthorized(body string) chatter.Unauthorized {
 	return v
 }
 
+// ValidateChatSummaryResponseCollection runs the validations defined on
+// ChatSummaryResponseCollection
+func ValidateChatSummaryResponseCollection(body ChatSummaryResponseCollection) (err error) {
+	for _, e := range body {
+		if e != nil {
+			if err2 := validateChatSummaryResponse(e, "body[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // ValidateSubscribeResponseBody runs the validations defined on
 // SubscribeResponseBody
 func ValidateSubscribeResponseBody(body *SubscribeResponseBody) (err error) {
@@ -198,8 +228,31 @@ func ValidateSubscribeResponseBody(body *SubscribeResponseBody) (err error) {
 	return
 }
 
-// ValidateChatSummaryResponse runs the validations defined on
-// ChatSummaryResponse
+// ValidateHistoryResponseBodyTiny runs the validations defined on
+// HistoryResponseBodyTiny
+func ValidateHistoryResponseBodyTiny(body *HistoryResponseBodyTiny) (err error) {
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	return
+}
+
+// ValidateHistoryResponseBody runs the validations defined on
+// HistoryResponseBody
+func ValidateHistoryResponseBody(body *HistoryResponseBody) (err error) {
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.SentAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("sent_at", "body"))
+	}
+	if body.SentAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.sent_at", *body.SentAt, goa.FormatDateTime))
+	}
+	return
+}
+
+// ValidateChatSummaryResponse runs the validations defined on ChatSummary
 func ValidateChatSummaryResponse(body *ChatSummaryResponse) (err error) {
 	if body.Message == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
@@ -209,6 +262,21 @@ func ValidateChatSummaryResponse(body *ChatSummaryResponse) (err error) {
 	}
 	if body.SentAt != nil {
 		err = goa.MergeErrors(err, goa.ValidateFormat("body.sent_at", *body.SentAt, goa.FormatDateTime))
+	}
+	return
+}
+
+// validateChatSummaryResponse checks ChatSummary and reports errors using the
+// path supplied by its caller
+func validateChatSummaryResponse(body *ChatSummaryResponse, path string) (err error) {
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", path))
+	}
+	if body.SentAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("sent_at", path))
+	}
+	if body.SentAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat(path+".sent_at", *body.SentAt, goa.FormatDateTime))
 	}
 	return
 }

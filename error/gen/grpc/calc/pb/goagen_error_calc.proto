@@ -19,15 +19,15 @@ service Calc {
 
 message DivideDivByZeroError {
 	// division by zero leads to infinity.
-	string message_ = 1;
+	optional string message_ = 1;
 }
 
 message DivideRequest {
-	sint32 dividend = 1;
-	sint32 divisor = 2;
+	optional sint32 dividend = 1;
+	optional sint32 divisor = 2;
 }
 
 message DivideResponse {
-	sint32 quotient = 1;
-	sint32 reminder = 2;
+	optional sint32 quotient = 1;
+	optional sint32 reminder = 2;
 }

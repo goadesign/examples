@@ -32,6 +32,25 @@ func UsageExamples() string {
 		""
 }
 
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
+}
+
 // ParseEndpoint returns the endpoint and payload as specified on the command
 // line.
 func ParseEndpoint(
@@ -42,22 +61,32 @@ func ParseEndpoint(
 		securedServiceFlags = flag.NewFlagSet("secured-service", flag.ContinueOnError)
 
 		securedServiceSigninFlags        = flag.NewFlagSet("signin", flag.ExitOnError)
-		securedServiceSigninUsernameFlag = securedServiceSigninFlags.String("username", "REQUIRED", "")
-		securedServiceSigninPasswordFlag = securedServiceSigninFlags.String("password", "REQUIRED", "")
+		securedServiceSigninUsernameFlag = new(cliStringFlag)
+		securedServiceSigninPasswordFlag = new(cliStringFlag)
 
 		securedServiceSecureFlags       = flag.NewFlagSet("secure", flag.ExitOnError)
-		securedServiceSecureMessageFlag = securedServiceSecureFlags.String("message", "", "")
-		securedServiceSecureTokenFlag   = securedServiceSecureFlags.String("token", "REQUIRED", "")
+		securedServiceSecureMessageFlag = new(cliStringFlag)
+		securedServiceSecureTokenFlag   = new(cliStringFlag)
 
 		securedServiceDoublySecureFlags       = flag.NewFlagSet("doubly-secure", flag.ExitOnError)
-		securedServiceDoublySecureMessageFlag = securedServiceDoublySecureFlags.String("message", "", "")
-		securedServiceDoublySecureTokenFlag   = securedServiceDoublySecureFlags.String("token", "REQUIRED", "")
+		securedServiceDoublySecureMessageFlag = new(cliStringFlag)
+		securedServiceDoublySecureTokenFlag   = new(cliStringFlag)
 
 		securedServiceAlsoDoublySecureFlags          = flag.NewFlagSet("also-doubly-secure", flag.ExitOnError)
-		securedServiceAlsoDoublySecureMessageFlag    = securedServiceAlsoDoublySecureFlags.String("message", "", "")
-		securedServiceAlsoDoublySecureOauthTokenFlag = securedServiceAlsoDoublySecureFlags.String("oauth-token", "", "")
-		securedServiceAlsoDoublySecureTokenFlag      = securedServiceAlsoDoublySecureFlags.String("token", "", "")
+		securedServiceAlsoDoublySecureMessageFlag    = new(cliStringFlag)
+		securedServiceAlsoDoublySecureOauthTokenFlag = new(cliStringFlag)
+		securedServiceAlsoDoublySecureTokenFlag      = new(cliStringFlag)
 	)
+	securedServiceSigninFlags.Var(securedServiceSigninUsernameFlag, "username", "")
+	securedServiceSigninFlags.Var(securedServiceSigninPasswordFlag, "password", "")
+	securedServiceSecureFlags.Var(securedServiceSecureMessageFlag, "message", "")
+	securedServiceSecureFlags.Var(securedServiceSecureTokenFlag, "token", "")
+	securedServiceDoublySecureFlags.Var(securedServiceDoublySecureMessageFlag, "message", "")
+	securedServiceDoublySecureFlags.Var(securedServiceDoublySecureTokenFlag, "token", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureMessageFlag, "message", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureOauthTokenFlag, "oauth-token", "")
+	securedServiceAlsoDoublySecureFlags.Var(securedServiceAlsoDoublySecureTokenFlag, "token", "")
+
 	securedServiceFlags.Usage = securedServiceUsage
 	securedServiceSigninFlags.Usage = securedServiceSigninUsage
 	securedServiceSecureFlags.Usage = securedServiceSecureUsage
@@ -137,16 +166,16 @@ func ParseEndpoint(
 			switch epn {
 			case "signin":
 				endpoint = c.Signin()
-				data, err = securedservicec.BuildSigninPayload(*securedServiceSigninUsernameFlag, *securedServiceSigninPasswordFlag)
+				data, err = securedservicec.BuildSigninPayload(securedServiceSigninUsernameFlag.value, securedServiceSigninPasswordFlag.value)
 			case "secure":
 				endpoint = c.Secure()
-				data, err = securedservicec.BuildSecurePayload(*securedServiceSecureMessageFlag, *securedServiceSecureTokenFlag)
+				data, err = securedservicec.BuildSecurePayload(securedServiceSecureMessageFlag.value, securedServiceSecureTokenFlag.value)
 			case "doubly-secure":
 				endpoint = c.DoublySecure()
-				data, err = securedservicec.BuildDoublySecurePayload(*securedServiceDoublySecureMessageFlag, *securedServiceDoublySecureTokenFlag)
+				data, err = securedservicec.BuildDoublySecurePayload(securedServiceDoublySecureMessageFlag.value, securedServiceDoublySecureTokenFlag.value)
 			case "also-doubly-secure":
 				endpoint = c.AlsoDoublySecure()
-				data, err = securedservicec.BuildAlsoDoublySecurePayload(*securedServiceAlsoDoublySecureMessageFlag, *securedServiceAlsoDoublySecureOauthTokenFlag, *securedServiceAlsoDoublySecureTokenFlag)
+				data, err = securedservicec.BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessageFlag.value, securedServiceAlsoDoublySecureOauthTokenFlag.value, securedServiceAlsoDoublySecureTokenFlag.value)
 			}
 		}
 	}
@@ -208,7 +237,7 @@ func securedServiceSecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service secure --message '{\n      \"fail\": true\n   }' --token \"Et omnis consequatur ut.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service secure --message '{\n      \"fail\": false\n   }' --token \"Impedit impedit sed eos aut.\"")
 }
 
 func securedServiceDoublySecureUsage() {
@@ -250,5 +279,5 @@ func securedServiceAlsoDoublySecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service also-doubly-secure --message '{\n      \"key\": \"abcdef12345\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }' --oauth-token \"Fugiat molestiae molestiae.\" --token \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "secured-service also-doubly-secure --message '{\n      \"key\": \"abcdef12345\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }' --oauth-token \"Dicta explicabo dolore est.\" --token \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ\"")
 }

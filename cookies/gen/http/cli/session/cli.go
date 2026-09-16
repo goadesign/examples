@@ -29,8 +29,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "session create-session --body '{\n      \"name\": \"Et distinctio eos dolores quibusdam adipisci.\"\n   }'" + "\n" +
+	return os.Args[0] + " " + "session create-session --body '{\n      \"name\": \"Ea sit quis similique.\"\n   }'" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -46,11 +65,14 @@ func ParseEndpoint(
 		sessionFlags = flag.NewFlagSet("session", flag.ContinueOnError)
 
 		sessionCreateSessionFlags    = flag.NewFlagSet("create-session", flag.ExitOnError)
-		sessionCreateSessionBodyFlag = sessionCreateSessionFlags.String("body", "REQUIRED", "")
+		sessionCreateSessionBodyFlag = new(cliStringFlag)
 
 		sessionUseSessionFlags         = flag.NewFlagSet("use-session", flag.ExitOnError)
-		sessionUseSessionSessionIDFlag = sessionUseSessionFlags.String("session-id", "REQUIRED", "")
+		sessionUseSessionSessionIDFlag = new(cliStringFlag)
 	)
+	sessionCreateSessionFlags.Var(sessionCreateSessionBodyFlag, "body", "")
+	sessionUseSessionFlags.Var(sessionUseSessionSessionIDFlag, "session-id", "")
+
 	sessionFlags.Usage = sessionUsage
 	sessionCreateSessionFlags.Usage = sessionCreateSessionUsage
 	sessionUseSessionFlags.Usage = sessionUseSessionUsage
@@ -122,10 +144,10 @@ func ParseEndpoint(
 			switch epn {
 			case "create-session":
 				endpoint = c.CreateSession()
-				data, err = sessionc.BuildCreateSessionPayload(*sessionCreateSessionBodyFlag)
+				data, err = sessionc.BuildCreateSessionPayload(sessionCreateSessionBodyFlag.value)
 			case "use-session":
 				endpoint = c.UseSession()
-				data, err = sessionc.BuildUseSessionPayload(*sessionUseSessionSessionIDFlag)
+				data, err = sessionc.BuildUseSessionPayload(sessionUseSessionSessionIDFlag.value)
 			}
 		}
 	}
@@ -162,7 +184,7 @@ func sessionCreateSessionUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session create-session --body '{\n      \"name\": \"Et distinctio eos dolores quibusdam adipisci.\"\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session create-session --body '{\n      \"name\": \"Ea sit quis similique.\"\n   }'")
 }
 
 func sessionUseSessionUsage() {
@@ -180,5 +202,5 @@ func sessionUseSessionUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session use-session --session-id \"Porro animi illum et corporis nobis.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "session use-session --session-id \"Et et et nam.\"")
 }

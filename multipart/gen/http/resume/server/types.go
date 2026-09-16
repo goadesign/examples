@@ -104,21 +104,21 @@ func NewAddResume(body []*ResumeRequestBody) []*resume.Resume {
 	return v
 }
 
-// ValidateResumeRequestBody runs the validations defined on ResumeRequestBody
+// ValidateResumeRequestBody runs the validations defined on Resume
 func ValidateResumeRequestBody(body *ResumeRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
 	for _, e := range body.Experience {
 		if e != nil {
-			if err2 := ValidateExperienceRequestBody(e); err2 != nil {
+			if err2 := validateExperienceRequestBody(e, "body.experience[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
 	}
 	for _, e := range body.Education {
 		if e != nil {
-			if err2 := ValidateEducationRequestBody(e); err2 != nil {
+			if err2 := validateEducationRequestBody(e, "body.education[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -126,8 +126,30 @@ func ValidateResumeRequestBody(body *ResumeRequestBody) (err error) {
 	return
 }
 
-// ValidateExperienceRequestBody runs the validations defined on
-// ExperienceRequestBody
+// validateResumeRequestBody checks Resume and reports errors using the path
+// supplied by its caller
+func validateResumeRequestBody(body *ResumeRequestBody, path string) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	for _, e := range body.Experience {
+		if e != nil {
+			if err2 := validateExperienceRequestBody(e, path+".experience[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	for _, e := range body.Education {
+		if e != nil {
+			if err2 := validateEducationRequestBody(e, path+".education[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateExperienceRequestBody runs the validations defined on Experience
 func ValidateExperienceRequestBody(body *ExperienceRequestBody) (err error) {
 	if body.Company == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("company", "body"))
@@ -141,14 +163,40 @@ func ValidateExperienceRequestBody(body *ExperienceRequestBody) (err error) {
 	return
 }
 
-// ValidateEducationRequestBody runs the validations defined on
-// EducationRequestBody
+// validateExperienceRequestBody checks Experience and reports errors using the
+// path supplied by its caller
+func validateExperienceRequestBody(body *ExperienceRequestBody, path string) (err error) {
+	if body.Company == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("company", path))
+	}
+	if body.Role == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("role", path))
+	}
+	if body.Duration == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("duration", path))
+	}
+	return
+}
+
+// ValidateEducationRequestBody runs the validations defined on Education
 func ValidateEducationRequestBody(body *EducationRequestBody) (err error) {
 	if body.Institution == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("institution", "body"))
 	}
 	if body.Major == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("major", "body"))
+	}
+	return
+}
+
+// validateEducationRequestBody checks Education and reports errors using the
+// path supplied by its caller
+func validateEducationRequestBody(body *EducationRequestBody, path string) (err error) {
+	if body.Institution == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("institution", path))
+	}
+	if body.Major == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("major", path))
 	}
 	return
 }

@@ -26,8 +26,8 @@ func EncodeListResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any
 		return nil, goagrpc.ErrInvalidType("storage", "list", "storageviews.StoredBottleCollection", v)
 	}
 	result := vres.Projected
-	(*hdr).Append("goa-view", vres.View)
 	resp := NewProtoStoredBottleCollection(result)
+	(*hdr).Append("goa-view", "tiny")
 	return resp, nil
 }
 
@@ -39,8 +39,16 @@ func EncodeShowResponse(ctx context.Context, v any, hdr, trlr *metadata.MD) (any
 		return nil, goagrpc.ErrInvalidType("storage", "show", "*storageviews.StoredBottle", v)
 	}
 	result := vres.Projected
+	var resp *storagepb.ShowResponse
+	switch vres.View {
+	case "default", "":
+		resp = NewProtoShowResponse(result)
+	case "tiny":
+		resp = NewProtoShowResponseTiny(result)
+	default:
+		return nil, goa.InvalidEnumValueError("view", vres.View, []any{"default", "tiny"})
+	}
 	(*hdr).Append("goa-view", vres.View)
-	resp := NewProtoShowResponse(result)
 	return resp, nil
 }
 
@@ -70,6 +78,9 @@ func DecodeShowRequest(ctx context.Context, v any, md metadata.MD) (any, error) 
 	{
 		if message, ok = v.(*storagepb.ShowRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("storage", "show", "*storagepb.ShowRequest", v)
+		}
+		if err = ValidateShowRequest(message); err != nil {
+			return nil, err
 		}
 	}
 	var payload *storage.ShowPayload
@@ -129,6 +140,9 @@ func DecodeRemoveRequest(ctx context.Context, v any, md metadata.MD) (any, error
 		if message, ok = v.(*storagepb.RemoveRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("storage", "remove", "*storagepb.RemoveRequest", v)
 		}
+		if err := ValidateRemoveRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *storage.RemovePayload
 	{
@@ -153,9 +167,6 @@ func DecodeRateRequest(ctx context.Context, v any, md metadata.MD) (any, error) 
 	{
 		if message, ok = v.(*storagepb.RateRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("storage", "rate", "*storagepb.RateRequest", v)
-		}
-		if err := ValidateRateRequest(message); err != nil {
-			return nil, err
 		}
 	}
 	var payload map[uint32][]string

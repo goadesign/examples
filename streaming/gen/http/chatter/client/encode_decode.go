@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -43,7 +44,7 @@ func EncodeLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "login", "*chatter.LoginPayload", v)
 		}
-		req.SetBasicAuth(p.User, p.Password)
+		req.SetBasicAuth(string(p.User), string(p.Password))
 		return nil
 	}
 }
@@ -55,18 +56,24 @@ func EncodeLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 //   - "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeLoginResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "login", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("chatter", "login", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -90,7 +97,10 @@ func DecodeLoginResponse(decoder func(*http.Response) goahttp.Decoder, restoreBo
 			}
 			return nil, NewLoginUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "login", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("chatter", "login", resp.StatusCode, string(body))
 		}
 	}
@@ -146,18 +156,24 @@ func EncodeEchoerRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeEchoerResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "echoer", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("chatter", "echoer", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -191,7 +207,10 @@ func DecodeEchoerResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewEchoerUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "echoer", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("chatter", "echoer", resp.StatusCode, string(body))
 		}
 	}
@@ -247,18 +266,24 @@ func EncodeListenerRequest(encoder func(*http.Request) goahttp.Encoder) func(*ht
 //   - "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeListenerResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "listener", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("chatter", "listener", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -284,7 +309,10 @@ func DecodeListenerResponse(decoder func(*http.Response) goahttp.Decoder, restor
 			}
 			return nil, NewListenerUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "listener", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("chatter", "listener", resp.StatusCode, string(body))
 		}
 	}
@@ -340,18 +368,24 @@ func EncodeSummaryRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 //   - "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeSummaryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "summary", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("chatter", "summary", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -362,6 +396,10 @@ func DecodeSummaryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("chatter", "summary", err)
+			}
+			err = ValidateChatSummaryResponseCollection(body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("chatter", "summary", err)
 			}
 			p := NewSummaryChatSummaryCollectionOK(body)
 			view := "default"
@@ -392,7 +430,10 @@ func DecodeSummaryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			}
 			return nil, NewSummaryUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "summary", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("chatter", "summary", resp.StatusCode, string(body))
 		}
 	}
@@ -448,18 +489,24 @@ func EncodeSubscribeRequest(encoder func(*http.Request) goahttp.Encoder) func(*h
 //   - "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeSubscribeResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "subscribe", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("chatter", "subscribe", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
@@ -498,7 +545,10 @@ func DecodeSubscribeResponse(decoder func(*http.Response) goahttp.Decoder, resto
 			}
 			return nil, NewSubscribeUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "subscribe", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("chatter", "subscribe", resp.StatusCode, string(body))
 		}
 	}
@@ -559,37 +609,28 @@ func EncodeHistoryRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 //   - "unauthorized" (type chatter.Unauthorized): http.StatusUnauthorized
 //   - error: internal error
 func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "history", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("chatter", "history", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusOK:
-			var (
-				body HistoryResponseBody
-				err  error
-			)
-			err = decoder(resp).Decode(&body)
-			if err != nil {
-				return nil, goahttp.ErrDecodingError("chatter", "history", err)
-			}
-			p := NewHistoryChatSummaryOK(&body)
-			view := resp.Header.Get("goa-view")
-			vres := &chatterviews.ChatSummary{Projected: p, View: view}
-			if err = chatterviews.ValidateChatSummary(vres); err != nil {
-				return nil, goahttp.ErrValidationError("chatter", "history", err)
-			}
-			res := chatter.NewChatSummary(vres)
-			return res, nil
+			return nil, nil
 		case http.StatusForbidden:
 			var (
 				body string
@@ -611,7 +652,10 @@ func DecodeHistoryResponse(decoder func(*http.Response) goahttp.Decoder, restore
 			}
 			return nil, NewHistoryUnauthorized(body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("chatter", "history", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("chatter", "history", resp.StatusCode, string(body))
 		}
 	}

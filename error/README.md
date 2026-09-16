@@ -50,7 +50,7 @@ The `DivByZero` struct can be used to return division by zero errors:
     }
 ```
 
-### Overridding Default Validation Errors
+### Overriding Default Validation Errors
 
 This example also illustrates how to override default validation error
 responses. In this case the response returned for missing required field
@@ -58,46 +58,47 @@ errors. This is accomplished in the `main` package by providing a non-nil
 error formatter function to the HTTP server `New` function:
 
 ```go
-calcServer = calcsvr.New(calcEndpoints, mux, dec, enc, eh, FormatError)
+calcServer = gencalcsvr.New(calcEndpoints, mux, dec, enc, eh, formatError)
 ```
 
-The `FormatError` function is called by the generated code prior to writing
+The `formatError` function is called by the generated code prior to writing
 the HTTP response. The function takes the error as argument and returns the
-struct that should be serialized in the response body. The struct retuned by
+value that should be serialized in the response body. The value returned by
 the error formatter must implement the
 [Statuser](https://pkg.go.dev/goa.design/goa/v3/http#Statuser) interface
 which defines a single method `StatusCode()` that returns the response
 status code.
 
- The example uses a string to send the error back. The `FormatError` function
- checks whether the error is an instance of `ServiceError` and if so whether
- it corresponds to a missing field validation error. If that's the case it
- returns the custom error type otherwise it returns the default Goa error
- response by calling
- [NewErrorResponse](https://pkg.go.dev/goa.design/goa/v3/http#NewErrorResponse).
-	
+The example uses a string to send a missing-field error back. The formatter
+also preserves the response body declared for division by zero. All other
+errors use Goa's default response.
+
 ```go
 // missingFieldError is the type used to serialize missing required field
 // errors. It overrides the default provided by Goa.
 type missingFieldError string
 
-// StatusCode returns 400 (BadRequest).
-func (missingFieldError) StatusCode() int { return http.StatusBadRequest }
+// divByZeroError preserves the response declared for division by zero when the
+// custom formatter handles all HTTP errors.
+type divByZeroError struct {
+    Message string `form:"message" json:"message" xml:"message"`
+}
 
-// FormatError is the error formatter used to format error responses returned by
-// the calc server.
-func FormatError(err error) goahttp.Statuser {
-	if serr, ok := err.(*goa.ServiceError); ok {
-		switch serr.Name {
-		case "missing_field":
-			return missingFieldError(serr.Message)
-		default:
-			// Use Goa default
-			return goahttp.NewErrorResponse(err)
-		}
-	}
-	// Use Goa default for all other error types
-	return goahttp.NewErrorResponse(err)
+func (missingFieldError) StatusCode() int { return http.StatusBadRequest }
+func (*divByZeroError) StatusCode() int    { return http.StatusBadRequest }
+
+func formatError(ctx context.Context, err error) goahttp.Statuser {
+    var serviceError *goa.ServiceError
+    if errors.As(err, &serviceError) && serviceError.Name == "missing_field" {
+        return missingFieldError(serviceError.Message)
+    }
+
+    var divideError *gencalc.DivByZero
+    if errors.As(err, &divideError) {
+        return &divByZeroError{Message: divideError.Message}
+    }
+
+    return goahttp.NewErrorResponse(ctx, err)
 }
 ```
 

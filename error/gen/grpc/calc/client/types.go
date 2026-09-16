@@ -10,33 +10,64 @@ package client
 import (
 	calc "goa.design/examples/error/gen/calc"
 	calcpb "goa.design/examples/error/gen/grpc/calc/pb"
+	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoDivideRequest builds the gRPC request type from the payload of the
-// "divide" endpoint of the "calc" service.
+// NewProtoDivideRequest builds *calcpb.DivideRequest from *calc.DividePayload.
 func NewProtoDivideRequest(payload *calc.DividePayload) *calcpb.DivideRequest {
-	message := &calcpb.DivideRequest{
-		Dividend: int32(payload.Dividend),
-		Divisor:  int32(payload.Divisor),
-	}
+	message := &calcpb.DivideRequest{}
+	dividend := int32(payload.Dividend)
+	message.Dividend = &dividend
+	divisor := int32(payload.Divisor)
+	message.Divisor = &divisor
 	return message
 }
 
-// NewDivideResult builds the result type of the "divide" endpoint of the
-// "calc" service from the gRPC response type.
+// NewDivideResult builds *calc.DivideResult from *calcpb.DivideResponse.
 func NewDivideResult(message *calcpb.DivideResponse) *calc.DivideResult {
 	result := &calc.DivideResult{
-		Quotient: int(message.Quotient),
-		Reminder: int(message.Reminder),
+		Quotient: int(*message.Quotient),
+		Reminder: int(*message.Reminder),
 	}
 	return result
 }
 
-// NewDivideDivByZeroError builds the error type of the "divide" endpoint of
-// the "calc" service from the gRPC error response type.
+// NewDivideDivByZeroError builds *calc.DivByZero from
+// *calcpb.DivideDivByZeroError.
 func NewDivideDivByZeroError(message *calcpb.DivideDivByZeroError) *calc.DivByZero {
 	er := &calc.DivByZero{
-		Message: message.Message_,
+		Message: *message.Message_,
 	}
 	return er
+}
+
+// ValidateDivideRequest runs the validations defined on DivideRequest.
+func ValidateDivideRequest(message *calcpb.DivideRequest) (err error) {
+	if message.Dividend == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("dividend", "message"))
+	}
+	if message.Divisor == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("divisor", "message"))
+	}
+	return
+}
+
+// ValidateDivideResponse runs the validations defined on DivideResponse.
+func ValidateDivideResponse(message *calcpb.DivideResponse) (err error) {
+	if message.Quotient == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("quotient", "message"))
+	}
+	if message.Reminder == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("reminder", "message"))
+	}
+	return
+}
+
+// ValidateDivideDivByZeroError runs the validations defined on
+// DivideDivByZeroError.
+func ValidateDivideDivByZeroError(errmsg *calcpb.DivideDivByZeroError) (err error) {
+	if errmsg.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "errmsg"))
+	}
+	return
 }

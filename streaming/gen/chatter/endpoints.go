@@ -104,7 +104,7 @@ func NewLoginEndpoint(s Service, authBasicFn security.AuthBasicFunc) goa.Endpoin
 			Scopes:         []string{},
 			RequiredScopes: []string{},
 		}
-		ctx, err = authBasicFn(ctx, p.User, p.Password, &sc)
+		ctx, err = authBasicFn(ctx, string(p.User), string(p.Password), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -123,7 +123,7 @@ func NewEchoerEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 			Scopes:         []string{"stream:read", "stream:write"},
 			RequiredScopes: []string{"stream:write"},
 		}
-		ctx, err = authJWTFn(ctx, ep.Payload.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(ep.Payload.Token), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -142,7 +142,7 @@ func NewListenerEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint
 			Scopes:         []string{"stream:read", "stream:write"},
 			RequiredScopes: []string{"stream:write"},
 		}
-		ctx, err = authJWTFn(ctx, ep.Payload.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(ep.Payload.Token), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -161,7 +161,7 @@ func NewSummaryEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint 
 			Scopes:         []string{"stream:read", "stream:write"},
 			RequiredScopes: []string{"stream:write"},
 		}
-		ctx, err = authJWTFn(ctx, ep.Payload.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(ep.Payload.Token), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -180,7 +180,7 @@ func NewSubscribeEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoin
 			Scopes:         []string{"stream:read", "stream:write"},
 			RequiredScopes: []string{"stream:write"},
 		}
-		ctx, err = authJWTFn(ctx, ep.Payload.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(ep.Payload.Token), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -199,7 +199,7 @@ func NewHistoryEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint 
 			Scopes:         []string{"stream:read", "stream:write"},
 			RequiredScopes: []string{"stream:read"},
 		}
-		ctx, err = authJWTFn(ctx, ep.Payload.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(ep.Payload.Token), &sc)
 		if err != nil {
 			return nil, err
 		}

@@ -10,28 +10,29 @@ package client
 import (
 	secured_servicepb "goa.design/examples/security/multiauth/gen/grpc/secured_service/pb"
 	securedservice "goa.design/examples/security/multiauth/gen/secured_service"
+	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoSigninRequest builds the gRPC request type from the payload of the
-// "signin" endpoint of the "secured_service" service.
+// NewProtoSigninRequest builds *secured_servicepb.SigninRequest from
+// *securedservice.SigninPayload.
 func NewProtoSigninRequest() *secured_servicepb.SigninRequest {
 	message := &secured_servicepb.SigninRequest{}
 	return message
 }
 
-// NewSigninResult builds the result type of the "signin" endpoint of the
-// "secured_service" service from the gRPC response type.
+// NewSigninResult builds *securedservice.Creds from
+// *secured_servicepb.SigninResponse.
 func NewSigninResult(message *secured_servicepb.SigninResponse) *securedservice.Creds {
 	result := &securedservice.Creds{
-		JWT:        message.Jwt,
-		APIKey:     message.ApiKey,
-		OauthToken: message.OauthToken,
+		JWT:        *message.Jwt,
+		APIKey:     *message.ApiKey,
+		OauthToken: *message.OauthToken,
 	}
 	return result
 }
 
-// NewProtoSecureRequest builds the gRPC request type from the payload of the
-// "secure" endpoint of the "secured_service" service.
+// NewProtoSecureRequest builds *secured_servicepb.SecureRequest from
+// *securedservice.SecurePayload.
 func NewProtoSecureRequest(payload *securedservice.SecurePayload) *secured_servicepb.SecureRequest {
 	message := &secured_servicepb.SecureRequest{
 		Fail: payload.Fail,
@@ -39,32 +40,31 @@ func NewProtoSecureRequest(payload *securedservice.SecurePayload) *secured_servi
 	return message
 }
 
-// NewSecureResult builds the result type of the "secure" endpoint of the
-// "secured_service" service from the gRPC response type.
+// NewSecureResult builds string from *secured_servicepb.SecureResponse.
 func NewSecureResult(message *secured_servicepb.SecureResponse) string {
-	result := message.Field
+	result := *message.Field
 	return result
 }
 
-// NewProtoDoublySecureRequest builds the gRPC request type from the payload of
-// the "doubly_secure" endpoint of the "secured_service" service.
+// NewProtoDoublySecureRequest builds *secured_servicepb.DoublySecureRequest
+// from *securedservice.DoublySecurePayload.
 func NewProtoDoublySecureRequest(payload *securedservice.DoublySecurePayload) *secured_servicepb.DoublySecureRequest {
 	message := &secured_servicepb.DoublySecureRequest{
-		Key: payload.Key,
+		Key: &payload.Key,
 	}
 	return message
 }
 
-// NewDoublySecureResult builds the result type of the "doubly_secure" endpoint
-// of the "secured_service" service from the gRPC response type.
+// NewDoublySecureResult builds string from
+// *secured_servicepb.DoublySecureResponse.
 func NewDoublySecureResult(message *secured_servicepb.DoublySecureResponse) string {
-	result := message.Field
+	result := *message.Field
 	return result
 }
 
-// NewProtoAlsoDoublySecureRequest builds the gRPC request type from the
-// payload of the "also_doubly_secure" endpoint of the "secured_service"
-// service.
+// NewProtoAlsoDoublySecureRequest builds
+// *secured_servicepb.AlsoDoublySecureRequest from
+// *securedservice.AlsoDoublySecurePayload.
 func NewProtoAlsoDoublySecureRequest(payload *securedservice.AlsoDoublySecurePayload) *secured_servicepb.AlsoDoublySecureRequest {
 	message := &secured_servicepb.AlsoDoublySecureRequest{
 		Username: payload.Username,
@@ -74,9 +74,58 @@ func NewProtoAlsoDoublySecureRequest(payload *securedservice.AlsoDoublySecurePay
 	return message
 }
 
-// NewAlsoDoublySecureResult builds the result type of the "also_doubly_secure"
-// endpoint of the "secured_service" service from the gRPC response type.
+// NewAlsoDoublySecureResult builds string from
+// *secured_servicepb.AlsoDoublySecureResponse.
 func NewAlsoDoublySecureResult(message *secured_servicepb.AlsoDoublySecureResponse) string {
-	result := message.Field
+	result := *message.Field
 	return result
+}
+
+// ValidateSigninResponse runs the validations defined on SigninResponse.
+func ValidateSigninResponse(message *secured_servicepb.SigninResponse) (err error) {
+	if message.Jwt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("jwt", "message"))
+	}
+	if message.ApiKey == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("api_key", "message"))
+	}
+	if message.OauthToken == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("oauth_token", "message"))
+	}
+	return
+}
+
+// ValidateSecureResponse runs the validations defined on SecureResponse.
+func ValidateSecureResponse(message *secured_servicepb.SecureResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
+}
+
+// ValidateDoublySecureRequest runs the validations defined on
+// DoublySecureRequest.
+func ValidateDoublySecureRequest(message *secured_servicepb.DoublySecureRequest) (err error) {
+	if message.Key == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("key", "message"))
+	}
+	return
+}
+
+// ValidateDoublySecureResponse runs the validations defined on
+// DoublySecureResponse.
+func ValidateDoublySecureResponse(message *secured_servicepb.DoublySecureResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
+}
+
+// ValidateAlsoDoublySecureResponse runs the validations defined on
+// AlsoDoublySecureResponse.
+func ValidateAlsoDoublySecureResponse(message *secured_servicepb.AlsoDoublySecureResponse) (err error) {
+	if message.Field == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("field", "message"))
+	}
+	return
 }

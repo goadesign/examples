@@ -7,9 +7,7 @@
 
 package client
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // ConcatstringsTextPath returns the URL path to the text service concatstrings HTTP endpoint.
 func ConcatstringsTextPath(a string, b string) string {

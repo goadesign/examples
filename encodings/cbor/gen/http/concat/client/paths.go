@@ -7,9 +7,7 @@
 
 package client
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // ConcatConcatPath returns the URL path to the concat service concat HTTP endpoint.
 func ConcatConcatPath(a string, b string) string {

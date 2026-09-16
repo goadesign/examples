@@ -31,9 +31,28 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "default-service default --username \"Consectetur qui fugit qui voluptatibus deleniti et.\" --password \"Cupiditate est aut dolores hic numquam.\"" + "\n" +
-		os.Args[0] + " " + "api-key-service default --key \"Et ipsam velit illum repellat.\"" + "\n" +
+	return os.Args[0] + " " + "default-service default --username \"Incidunt in quo vel.\" --password \"Quis accusantium.\"" + "\n" +
+		os.Args[0] + " " + "api-key-service default --key \"Laudantium et voluptatem.\"" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -49,17 +68,22 @@ func ParseEndpoint(
 		defaultServiceFlags = flag.NewFlagSet("default-service", flag.ContinueOnError)
 
 		defaultServiceDefaultFlags        = flag.NewFlagSet("default", flag.ExitOnError)
-		defaultServiceDefaultUsernameFlag = defaultServiceDefaultFlags.String("username", "REQUIRED", "")
-		defaultServiceDefaultPasswordFlag = defaultServiceDefaultFlags.String("password", "REQUIRED", "")
+		defaultServiceDefaultUsernameFlag = new(cliStringFlag)
+		defaultServiceDefaultPasswordFlag = new(cliStringFlag)
 
 		apiKeyServiceFlags = flag.NewFlagSet("api-key-service", flag.ContinueOnError)
 
 		apiKeyServiceDefaultFlags   = flag.NewFlagSet("default", flag.ExitOnError)
-		apiKeyServiceDefaultKeyFlag = apiKeyServiceDefaultFlags.String("key", "REQUIRED", "")
+		apiKeyServiceDefaultKeyFlag = new(cliStringFlag)
 
 		apiKeyServiceSecureFlags     = flag.NewFlagSet("secure", flag.ExitOnError)
-		apiKeyServiceSecureTokenFlag = apiKeyServiceSecureFlags.String("token", "REQUIRED", "")
+		apiKeyServiceSecureTokenFlag = new(cliStringFlag)
 	)
+	defaultServiceDefaultFlags.Var(defaultServiceDefaultUsernameFlag, "username", "")
+	defaultServiceDefaultFlags.Var(defaultServiceDefaultPasswordFlag, "password", "")
+	apiKeyServiceDefaultFlags.Var(apiKeyServiceDefaultKeyFlag, "key", "")
+	apiKeyServiceSecureFlags.Var(apiKeyServiceSecureTokenFlag, "token", "")
+
 	defaultServiceFlags.Usage = defaultServiceUsage
 	defaultServiceDefaultFlags.Usage = defaultServiceDefaultUsage
 
@@ -143,17 +167,17 @@ func ParseEndpoint(
 			switch epn {
 			case "default":
 				endpoint = c.Default()
-				data, err = defaultservicec.BuildDefaultPayload(*defaultServiceDefaultUsernameFlag, *defaultServiceDefaultPasswordFlag)
+				data, err = defaultservicec.BuildDefaultPayload(defaultServiceDefaultUsernameFlag.value, defaultServiceDefaultPasswordFlag.value)
 			}
 		case "api-key-service":
 			c := apikeyservicec.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "default":
 				endpoint = c.Default()
-				data, err = apikeyservicec.BuildDefaultPayload(*apiKeyServiceDefaultKeyFlag)
+				data, err = apikeyservicec.BuildDefaultPayload(apiKeyServiceDefaultKeyFlag.value)
 			case "secure":
 				endpoint = c.Secure()
-				data, err = apikeyservicec.BuildSecurePayload(*apiKeyServiceSecureTokenFlag)
+				data, err = apikeyservicec.BuildSecurePayload(apiKeyServiceSecureTokenFlag.value)
 			}
 		}
 	}
@@ -192,7 +216,7 @@ func defaultServiceDefaultUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "default-service default --username \"Consectetur qui fugit qui voluptatibus deleniti et.\" --password \"Cupiditate est aut dolores hic numquam.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "default-service default --username \"Incidunt in quo vel.\" --password \"Quis accusantium.\"")
 }
 
 // apiKeyServiceUsage displays the usage of the api-key-service command and its
@@ -222,7 +246,7 @@ func apiKeyServiceDefaultUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service default --key \"Et ipsam velit illum repellat.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service default --key \"Laudantium et voluptatem.\"")
 }
 
 func apiKeyServiceSecureUsage() {
@@ -240,5 +264,5 @@ func apiKeyServiceSecureUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service secure --token \"Dolorem et deleniti voluptate enim.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "api-key-service secure --token \"Nihil quam a repudiandae voluptatibus id.\"")
 }

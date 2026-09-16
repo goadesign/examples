@@ -29,8 +29,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "concat concat --a \"Minus illo ducimus rerum id.\" --b \"Quod vel occaecati autem ducimus quis vel.\"" + "\n" +
+	return os.Args[0] + " " + "concat concat --a \"Non molestiae ipsam et possimus nesciunt.\" --b \"Commodi inventore quos.\"" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -46,9 +65,12 @@ func ParseEndpoint(
 		concatFlags = flag.NewFlagSet("concat", flag.ContinueOnError)
 
 		concatConcatFlags = flag.NewFlagSet("concat", flag.ExitOnError)
-		concatConcatAFlag = concatConcatFlags.String("a", "REQUIRED", "Left operand")
-		concatConcatBFlag = concatConcatFlags.String("b", "REQUIRED", "Right operand")
+		concatConcatAFlag = new(cliStringFlag)
+		concatConcatBFlag = new(cliStringFlag)
 	)
+	concatConcatFlags.Var(concatConcatAFlag, "a", "Left operand")
+	concatConcatFlags.Var(concatConcatBFlag, "b", "Right operand")
+
 	concatFlags.Usage = concatUsage
 	concatConcatFlags.Usage = concatConcatUsage
 
@@ -116,7 +138,7 @@ func ParseEndpoint(
 			switch epn {
 			case "concat":
 				endpoint = c.Concat()
-				data, err = concatc.BuildConcatPayload(*concatConcatAFlag, *concatConcatBFlag)
+				data, err = concatc.BuildConcatPayload(concatConcatAFlag.value, concatConcatBFlag.value)
 			}
 		}
 	}
@@ -130,10 +152,9 @@ func ParseEndpoint(
 // concatUsage displays the usage of the concat command and its subcommands.
 func concatUsage() {
 	fmt.Fprintln(os.Stderr, `The concat service performs operations on strings.
-	
+
 	The service uses the CBOR binary serialization standard to encode responses.
-	It supports reading requests encoded with CBOR, JSON, XML or GOB.
-	`)
+	It supports reading requests encoded with CBOR, JSON, XML or GOB.`)
 	fmt.Fprintf(os.Stderr, "Usage:\n    %s [globalflags] concat COMMAND [flags]\n\n", os.Args[0])
 	fmt.Fprintln(os.Stderr, "COMMAND:")
 	fmt.Fprintln(os.Stderr, `    concat: Concat implements concat.`)
@@ -158,5 +179,5 @@ func concatConcatUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "concat concat --a \"Minus illo ducimus rerum id.\" --b \"Quod vel occaecati autem ducimus quis vel.\"")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "concat concat --a \"Non molestiae ipsam et possimus nesciunt.\" --b \"Commodi inventore quos.\"")
 }

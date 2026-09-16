@@ -106,8 +106,20 @@ func NewListStoredResumeCollectionOK(body StoredResumeResponseCollection) resume
 	return v
 }
 
-// ValidateStoredResumeResponse runs the validations defined on
-// StoredResumeResponse
+// ValidateStoredResumeResponseCollection runs the validations defined on
+// StoredResumeResponseCollection
+func ValidateStoredResumeResponseCollection(body StoredResumeResponseCollection) (err error) {
+	for _, e := range body {
+		if e != nil {
+			if err2 := validateStoredResumeResponse(e, "body[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateStoredResumeResponse runs the validations defined on StoredResume
 func ValidateStoredResumeResponse(body *StoredResumeResponse) (err error) {
 	if body.ID == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
@@ -126,14 +138,14 @@ func ValidateStoredResumeResponse(body *StoredResumeResponse) (err error) {
 	}
 	for _, e := range body.Experience {
 		if e != nil {
-			if err2 := ValidateExperienceResponse(e); err2 != nil {
+			if err2 := validateExperienceResponse(e, "body.experience[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
 	}
 	for _, e := range body.Education {
 		if e != nil {
-			if err2 := ValidateEducationResponse(e); err2 != nil {
+			if err2 := validateEducationResponse(e, "body.education[*]"); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -141,7 +153,42 @@ func ValidateStoredResumeResponse(body *StoredResumeResponse) (err error) {
 	return
 }
 
-// ValidateExperienceResponse runs the validations defined on ExperienceResponse
+// validateStoredResumeResponse checks StoredResume and reports errors using
+// the path supplied by its caller
+func validateStoredResumeResponse(body *StoredResumeResponse, path string) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", path))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", path))
+	}
+	if body.Experience == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("experience", path))
+	}
+	if body.Education == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("education", path))
+	}
+	if body.CreatedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("created_at", path))
+	}
+	for _, e := range body.Experience {
+		if e != nil {
+			if err2 := validateExperienceResponse(e, path+".experience[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	for _, e := range body.Education {
+		if e != nil {
+			if err2 := validateEducationResponse(e, path+".education[*]"); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateExperienceResponse runs the validations defined on Experience
 func ValidateExperienceResponse(body *ExperienceResponse) (err error) {
 	if body.Company == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("company", "body"))
@@ -155,13 +202,40 @@ func ValidateExperienceResponse(body *ExperienceResponse) (err error) {
 	return
 }
 
-// ValidateEducationResponse runs the validations defined on EducationResponse
+// validateExperienceResponse checks Experience and reports errors using the
+// path supplied by its caller
+func validateExperienceResponse(body *ExperienceResponse, path string) (err error) {
+	if body.Company == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("company", path))
+	}
+	if body.Role == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("role", path))
+	}
+	if body.Duration == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("duration", path))
+	}
+	return
+}
+
+// ValidateEducationResponse runs the validations defined on Education
 func ValidateEducationResponse(body *EducationResponse) (err error) {
 	if body.Institution == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("institution", "body"))
 	}
 	if body.Major == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("major", "body"))
+	}
+	return
+}
+
+// validateEducationResponse checks Education and reports errors using the path
+// supplied by its caller
+func validateEducationResponse(body *EducationResponse, path string) (err error) {
+	if body.Institution == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("institution", path))
+	}
+	if body.Major == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("major", path))
 	}
 	return
 }

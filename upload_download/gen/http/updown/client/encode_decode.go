@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -75,18 +76,24 @@ func EncodeUploadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 //   - "internal_error" (type *goa.ServiceError): http.StatusInternalServerError
 //   - error: internal error
 func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
-	return func(resp *http.Response) (any, error) {
+	return func(resp *http.Response) (result any, decodeErr error) {
+		responseBody := resp.Body
 		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
+			b, readErr := io.ReadAll(responseBody)
+			closeErr := responseBody.Close()
+			if err := errors.Join(readErr, closeErr); err != nil {
+				return nil, goahttp.ErrDecodingError("updown", "upload", err)
 			}
 			resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			defer func() {
 				resp.Body = io.NopCloser(bytes.NewBuffer(b))
 			}()
 		} else {
-			defer resp.Body.Close()
+			defer func() {
+				if err := responseBody.Close(); err != nil {
+					decodeErr = errors.Join(decodeErr, goahttp.ErrDecodingError("updown", "upload", err))
+				}
+			}()
 		}
 		switch resp.StatusCode {
 		case http.StatusNoContent:
@@ -123,7 +130,10 @@ func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 				}
 				return nil, NewUploadInvalidMultipartRequest(&body)
 			default:
-				body, _ := io.ReadAll(resp.Body)
+				body, err := io.ReadAll(resp.Body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("updown", "upload", err)
+				}
 				return nil, goahttp.ErrInvalidResponse("updown", "upload", resp.StatusCode, string(body))
 			}
 		case http.StatusInternalServerError:
@@ -141,7 +151,10 @@ func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 			}
 			return nil, NewUploadInternalError(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("updown", "upload", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("updown", "upload", resp.StatusCode, string(body))
 		}
 	}
@@ -194,16 +207,6 @@ func (c *Client) BuildDownloadRequest(ctx context.Context, v any) (*http.Request
 //   - error: internal error
 func DecodeDownloadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
 	return func(resp *http.Response) (any, error) {
-		if restoreBody {
-			b, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, err
-			}
-			resp.Body = io.NopCloser(bytes.NewBuffer(b))
-			defer func() {
-				resp.Body = io.NopCloser(bytes.NewBuffer(b))
-			}()
-		}
 		switch resp.StatusCode {
 		case http.StatusOK:
 			var (
@@ -255,7 +258,10 @@ func DecodeDownloadResponse(decoder func(*http.Response) goahttp.Decoder, restor
 			}
 			return nil, NewDownloadInternalError(&body)
 		default:
-			body, _ := io.ReadAll(resp.Body)
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("updown", "download", err)
+			}
 			return nil, goahttp.ErrInvalidResponse("updown", "download", resp.StatusCode, string(body))
 		}
 	}

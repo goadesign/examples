@@ -116,6 +116,8 @@ type OptionsResult struct {
 type PatchPayload struct {
 	// IDs are generated using Xid: https://github.com/rs/xid
 	ID string
+	// Media type of the uploaded bytes.
+	ContentType string
 	// tusResumable represents a tus protocol version.
 	TusResumable string
 	// uploadOffset represents a byte offset within a resource.

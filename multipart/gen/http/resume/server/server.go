@@ -37,7 +37,7 @@ type MountPoint struct {
 
 // ResumeAddDecoderFunc is the type to decode multipart request for the
 // "resume" service "add" endpoint.
-type ResumeAddDecoderFunc func(*multipart.Reader, *[]*resume.Resume) error
+type ResumeAddDecoderFunc func(*multipart.Reader, *[]*ResumeRequestBody) error
 
 // New instantiates HTTP handlers for all the resume service endpoints using
 // the provided encoder and decoder. The handlers are mounted on the given mux

@@ -7,9 +7,7 @@
 
 package text
 
-import (
-	"context"
-)
+import "context"
 
 // The text service performs operations on strings
 type Service interface {

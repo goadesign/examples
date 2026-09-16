@@ -8,15 +8,20 @@
 package client
 
 import (
+	"fmt"
+
 	retry "goa.design/examples/retry/gen/retry"
 )
 
 // BuildGetMessagePayload builds the payload for the retry get_message endpoint
 // from CLI flags.
-func BuildGetMessagePayload(retryGetMessageID string) (*retry.GetMessagePayload, error) {
+func BuildGetMessagePayload(retryGetMessageID *string) (*retry.GetMessagePayload, error) {
 	var id string
 	{
-		id = retryGetMessageID
+		if retryGetMessageID == nil {
+			return nil, fmt.Errorf("missing required flag --id")
+		}
+		id = *retryGetMessageID
 	}
 	v := &retry.GetMessagePayload{}
 	v.ID = id

@@ -130,9 +130,6 @@ func marshalSommelierviewsWineryViewToWineryResponseTiny(v *sommelierviews.Winer
 // marshalSommelierviewsComponentViewToComponentResponse builds a value of type
 // *ComponentResponse from a value of type *sommelierviews.ComponentView.
 func marshalSommelierviewsComponentViewToComponentResponse(v *sommelierviews.ComponentView) *ComponentResponse {
-	if v == nil {
-		return nil
-	}
 	res := &ComponentResponse{
 		Varietal:   *v.Varietal,
 		Percentage: v.Percentage,

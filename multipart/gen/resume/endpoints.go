@@ -10,6 +10,7 @@ package resume
 import (
 	"context"
 
+	resumeviews "goa.design/examples/multipart/gen/resume/views"
 	goa "goa.design/goa/v3/pkg"
 )
 
@@ -42,6 +43,9 @@ func NewListEndpoint(s Service) goa.Endpoint {
 			return nil, err
 		}
 		vres := NewViewedStoredResumeCollection(res, "default")
+		if err := resumeviews.ValidateStoredResumeCollection(vres); err != nil {
+			return nil, err
+		}
 		return vres, nil
 	}
 }

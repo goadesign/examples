@@ -13,7 +13,6 @@ import (
 	"io"
 	"net/http"
 	"strconv"
-	"strings"
 
 	storage "goa.design/examples/cellar/gen/storage"
 	storageviews "goa.design/examples/cellar/gen/storage/views"
@@ -203,28 +202,17 @@ func DecodeRateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.De
 			if len(queryRaw) == 0 {
 				err = goa.MergeErrors(err, goa.MissingFieldError("query", "query string"))
 			}
+			if query == nil {
+				query = make(map[uint32][]string)
+			}
 			for keyRaw, valRaw := range queryRaw {
-				if strings.HasPrefix(keyRaw, "query[") {
-					if query == nil {
-						query = make(map[uint32][]string)
-					}
-					var keya uint32
-					{
-						openIdx := strings.IndexRune(keyRaw, '[')
-						closeIdx := strings.IndexRune(keyRaw, ']')
-						if openIdx == -1 || closeIdx == -1 || closeIdx <= openIdx {
-							err = goa.MergeErrors(err, goa.DecodePayloadError("invalid query string: malformed brackets"))
-						} else {
-							keyaRaw := keyRaw[openIdx+1 : closeIdx]
-							v, err2 := strconv.ParseUint(keyaRaw, 10, 32)
-							if err2 != nil {
-								err = goa.MergeErrors(err, goa.InvalidFieldTypeError("query", keyaRaw, "unsigned integer"))
-							}
-							keya = uint32(v)
-						}
-					}
-					query[keya] = valRaw
+				var key uint32
+				v, err2 := strconv.ParseUint(keyRaw, 10, 32)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("query", keyRaw, "unsigned integer"))
 				}
+				key = uint32(v)
+				query[key] = valRaw
 			}
 		}
 		if err != nil {
@@ -253,13 +241,32 @@ func EncodeMultiAddResponse(encoder func(context.Context, http.ResponseWriter) g
 func DecodeMultiAddRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) ([]*storage.Bottle, error) {
 	return func(r *http.Request) ([]*storage.Bottle, error) {
 		var payload []*storage.Bottle
-		if err := decoder(r).Decode(&payload); err != nil {
+		var (
+			body []*BottleRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return payload, goa.MissingPayloadError()
+			}
 			var gerr *goa.ServiceError
 			if errors.As(err, &gerr) {
 				return payload, gerr
 			}
 			return payload, goa.DecodePayloadError(err.Error())
 		}
+		for _, e := range body {
+			if e != nil {
+				if err2 := validateBottleRequestBody(e, "body[*]"); err2 != nil {
+					err = goa.MergeErrors(err, err2)
+				}
+			}
+		}
+		if err != nil {
+			return payload, err
+		}
+		payload = NewMultiAddBottle(body)
 
 		return payload, nil
 	}
@@ -267,15 +274,15 @@ func DecodeMultiAddRequest(mux goahttp.Muxer, decoder func(*http.Request) goahtt
 
 // NewStorageMultiAddDecoder returns a decoder to decode the multipart request
 // for the "storage" service "multi_add" endpoint.
-func NewStorageMultiAddDecoder(mux goahttp.Muxer, storageMultiAddDecoderFn StorageMultiAddDecoderFunc) func(r *http.Request) goahttp.Decoder {
+func NewStorageMultiAddDecoder(_ goahttp.Muxer, storageMultiAddDecoderFn StorageMultiAddDecoderFunc) func(r *http.Request) goahttp.Decoder {
 	return func(r *http.Request) goahttp.Decoder {
 		return goahttp.EncodingFunc(func(v any) error {
 			mr, merr := r.MultipartReader()
 			if merr != nil {
 				return merr
 			}
-			p := v.(*[]*storage.Bottle)
-			if err := storageMultiAddDecoderFn(mr, p); err != nil {
+			body := v.(*[]*BottleRequestBody)
+			if err := storageMultiAddDecoderFn(mr, body); err != nil {
 				return err
 			}
 			return nil
@@ -297,13 +304,37 @@ func EncodeMultiUpdateResponse(encoder func(context.Context, http.ResponseWriter
 func DecodeMultiUpdateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*storage.MultiUpdatePayload, error) {
 	return func(r *http.Request) (*storage.MultiUpdatePayload, error) {
 		var payload *storage.MultiUpdatePayload
-		if err := decoder(r).Decode(&payload); err != nil {
+		var (
+			body MultiUpdateRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return payload, goa.MissingPayloadError()
+			}
 			var gerr *goa.ServiceError
 			if errors.As(err, &gerr) {
 				return payload, gerr
 			}
 			return payload, goa.DecodePayloadError(err.Error())
 		}
+		err = ValidateMultiUpdateRequestBody(&body)
+		if err != nil {
+			return payload, err
+		}
+
+		var (
+			ids []string
+		)
+		ids = r.URL.Query()["ids"]
+		if ids == nil {
+			err = goa.MergeErrors(err, goa.MissingFieldError("ids", "query string"))
+		}
+		if err != nil {
+			return payload, err
+		}
+		payload = NewMultiUpdatePayload(&body, ids)
 
 		return payload, nil
 	}
@@ -311,30 +342,17 @@ func DecodeMultiUpdateRequest(mux goahttp.Muxer, decoder func(*http.Request) goa
 
 // NewStorageMultiUpdateDecoder returns a decoder to decode the multipart
 // request for the "storage" service "multi_update" endpoint.
-func NewStorageMultiUpdateDecoder(mux goahttp.Muxer, storageMultiUpdateDecoderFn StorageMultiUpdateDecoderFunc) func(r *http.Request) goahttp.Decoder {
+func NewStorageMultiUpdateDecoder(_ goahttp.Muxer, storageMultiUpdateDecoderFn StorageMultiUpdateDecoderFunc) func(r *http.Request) goahttp.Decoder {
 	return func(r *http.Request) goahttp.Decoder {
 		return goahttp.EncodingFunc(func(v any) error {
 			mr, merr := r.MultipartReader()
 			if merr != nil {
 				return merr
 			}
-			p := v.(**storage.MultiUpdatePayload)
-			if err := storageMultiUpdateDecoderFn(mr, p); err != nil {
+			body := v.(*MultiUpdateRequestBody)
+			if err := storageMultiUpdateDecoderFn(mr, body); err != nil {
 				return err
 			}
-
-			var (
-				ids []string
-				err error
-			)
-			ids = r.URL.Query()["ids"]
-			if ids == nil {
-				err = goa.MergeErrors(err, goa.MissingFieldError("ids", "query string"))
-			}
-			if err != nil {
-				return err
-			}
-			(*p).Ids = ids
 			return nil
 		})
 	}
@@ -349,26 +367,16 @@ func marshalStorageviewsStoredBottleViewToStoredBottleResponseTiny(v *storagevie
 		Name: *v.Name,
 	}
 	if v.Winery != nil {
-		res.Winery = marshalStorageviewsWineryViewToWineryResponseTiny(v.Winery)
+		res.Winery = marshalStorageviewsWineryViewToWineryTiny(v.Winery)
 	}
 
 	return res
 }
 
-// marshalStorageviewsWineryViewToWineryResponseTiny builds a value of type
-// *WineryResponseTiny from a value of type *storageviews.WineryView.
-func marshalStorageviewsWineryViewToWineryResponseTiny(v *storageviews.WineryView) *WineryResponseTiny {
-	res := &WineryResponseTiny{
-		Name: *v.Name,
-	}
-
-	return res
-}
-
-// marshalStorageviewsWineryViewToWineryResponseBodyTiny builds a value of type
-// *WineryResponseBodyTiny from a value of type *storageviews.WineryView.
-func marshalStorageviewsWineryViewToWineryResponseBodyTiny(v *storageviews.WineryView) *WineryResponseBodyTiny {
-	res := &WineryResponseBodyTiny{
+// marshalStorageviewsWineryViewToWineryTiny builds a value of type *WineryTiny
+// from a value of type *storageviews.WineryView.
+func marshalStorageviewsWineryViewToWineryTiny(v *storageviews.WineryView) *WineryTiny {
+	res := &WineryTiny{
 		Name: *v.Name,
 	}
 
@@ -378,9 +386,6 @@ func marshalStorageviewsWineryViewToWineryResponseBodyTiny(v *storageviews.Winer
 // marshalStorageviewsComponentViewToComponentResponseBody builds a value of
 // type *ComponentResponseBody from a value of type *storageviews.ComponentView.
 func marshalStorageviewsComponentViewToComponentResponseBody(v *storageviews.ComponentView) *ComponentResponseBody {
-	if v == nil {
-		return nil
-	}
 	res := &ComponentResponseBody{
 		Varietal:   *v.Varietal,
 		Percentage: v.Percentage,
@@ -405,9 +410,6 @@ func unmarshalWineryRequestBodyToStorageWinery(v *WineryRequestBody) *storage.Wi
 // unmarshalComponentRequestBodyToStorageComponent builds a value of type
 // *storage.Component from a value of type *ComponentRequestBody.
 func unmarshalComponentRequestBodyToStorageComponent(v *ComponentRequestBody) *storage.Component {
-	if v == nil {
-		return nil
-	}
 	res := &storage.Component{
 		Varietal:   *v.Varietal,
 		Percentage: v.Percentage,

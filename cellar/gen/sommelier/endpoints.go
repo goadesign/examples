@@ -10,6 +10,7 @@ package sommelier
 import (
 	"context"
 
+	sommelierviews "goa.design/examples/cellar/gen/sommelier/views"
 	goa "goa.design/goa/v3/pkg"
 )
 
@@ -40,6 +41,9 @@ func NewPickEndpoint(s Service) goa.Endpoint {
 			return nil, err
 		}
 		vres := NewViewedStoredBottleCollection(res, "default")
+		if err := sommelierviews.ValidateStoredBottleCollection(vres); err != nil {
+			return nil, err
+		}
 		return vres, nil
 	}
 }

@@ -21,9 +21,10 @@ func NewHeadPayload(id string, tusResumable string) *tus.HeadPayload {
 }
 
 // NewPatchPayload builds a tus service patch endpoint payload.
-func NewPatchPayload(id string, tusResumable string, uploadOffset int64, uploadChecksum *string) *tus.PatchPayload {
+func NewPatchPayload(id string, contentType string, tusResumable string, uploadOffset int64, uploadChecksum *string) *tus.PatchPayload {
 	v := &tus.PatchPayload{}
 	v.ID = id
+	v.ContentType = contentType
 	v.TusResumable = tusResumable
 	v.UploadOffset = uploadOffset
 	v.UploadChecksum = uploadChecksum

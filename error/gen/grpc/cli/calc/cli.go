@@ -28,8 +28,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "calc divide --message '{\n      \"dividend\": 7044419912256284667,\n      \"divisor\": 1003733810773493288\n   }'" + "\n" +
+	return os.Args[0] + " " + "calc divide --message '{\n      \"dividend\": 2120767999786333776,\n      \"divisor\": 6535528958544806582\n   }'" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -42,8 +61,10 @@ func ParseEndpoint(
 		calcFlags = flag.NewFlagSet("calc", flag.ContinueOnError)
 
 		calcDivideFlags       = flag.NewFlagSet("divide", flag.ExitOnError)
-		calcDivideMessageFlag = calcDivideFlags.String("message", "", "")
+		calcDivideMessageFlag = new(cliStringFlag)
 	)
+	calcDivideFlags.Var(calcDivideMessageFlag, "message", "")
+
 	calcFlags.Usage = calcUsage
 	calcDivideFlags.Usage = calcDivideUsage
 
@@ -111,7 +132,7 @@ func ParseEndpoint(
 			switch epn {
 			case "divide":
 				endpoint = c.Divide()
-				data, err = calcc.BuildDividePayload(*calcDivideMessageFlag)
+				data, err = calcc.BuildDividePayload(calcDivideMessageFlag.value)
 			}
 		}
 	}
@@ -147,5 +168,5 @@ func calcDivideUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc divide --message '{\n      \"dividend\": 7044419912256284667,\n      \"divisor\": 1003733810773493288\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "calc divide --message '{\n      \"dividend\": 2120767999786333776,\n      \"divisor\": 6535528958544806582\n   }'")
 }

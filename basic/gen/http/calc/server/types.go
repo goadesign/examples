@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	calc "goa.design/examples/basic/gen/calc"
-)
+import calc "goa.design/examples/basic/gen/calc"
 
 // NewMultiplyPayload builds a calc service multiply endpoint payload.
 func NewMultiplyPayload(a int, b int) *calc.MultiplyPayload {

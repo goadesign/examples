@@ -384,8 +384,6 @@ func ValidateCreateRequestBody(body *CreateRequestBody) (err error) {
 		if utf8.RuneCountInString(*body.Artist) < 1 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.artist", *body.Artist, utf8.RuneCountInString(*body.Artist), 1, true))
 		}
-	}
-	if body.Artist != nil {
 		if utf8.RuneCountInString(*body.Artist) > 200 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.artist", *body.Artist, utf8.RuneCountInString(*body.Artist), 200, false))
 		}
@@ -397,8 +395,6 @@ func ValidateCreateRequestBody(body *CreateRequestBody) (err error) {
 		if utf8.RuneCountInString(*body.Venue) < 1 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.venue", *body.Venue, utf8.RuneCountInString(*body.Venue), 1, true))
 		}
-	}
-	if body.Venue != nil {
 		if utf8.RuneCountInString(*body.Venue) > 300 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.venue", *body.Venue, utf8.RuneCountInString(*body.Venue), 300, false))
 		}
@@ -407,8 +403,6 @@ func ValidateCreateRequestBody(body *CreateRequestBody) (err error) {
 		if *body.Price < 0 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.price", *body.Price, 0, true))
 		}
-	}
-	if body.Price != nil {
 		if *body.Price > 100000 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.price", *body.Price, 100000, false))
 		}
@@ -422,8 +416,6 @@ func ValidateUpdateRequestBody(body *UpdateRequestBody) (err error) {
 		if utf8.RuneCountInString(*body.Artist) < 1 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.artist", *body.Artist, utf8.RuneCountInString(*body.Artist), 1, true))
 		}
-	}
-	if body.Artist != nil {
 		if utf8.RuneCountInString(*body.Artist) > 200 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.artist", *body.Artist, utf8.RuneCountInString(*body.Artist), 200, false))
 		}
@@ -435,8 +427,6 @@ func ValidateUpdateRequestBody(body *UpdateRequestBody) (err error) {
 		if utf8.RuneCountInString(*body.Venue) < 1 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.venue", *body.Venue, utf8.RuneCountInString(*body.Venue), 1, true))
 		}
-	}
-	if body.Venue != nil {
 		if utf8.RuneCountInString(*body.Venue) > 300 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.venue", *body.Venue, utf8.RuneCountInString(*body.Venue), 300, false))
 		}
@@ -445,8 +435,6 @@ func ValidateUpdateRequestBody(body *UpdateRequestBody) (err error) {
 		if *body.Price < 0 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.price", *body.Price, 0, true))
 		}
-	}
-	if body.Price != nil {
 		if *body.Price > 100000 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.price", *body.Price, 100000, false))
 		}

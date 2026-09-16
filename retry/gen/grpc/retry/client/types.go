@@ -10,22 +10,40 @@ package client
 import (
 	retrypb "goa.design/examples/retry/gen/grpc/retry/pb"
 	retry "goa.design/examples/retry/gen/retry"
+	goa "goa.design/goa/v3/pkg"
 )
 
-// NewProtoGetMessageRequest builds the gRPC request type from the payload of
-// the "get_message" endpoint of the "retry" service.
+// NewProtoGetMessageRequest builds *retrypb.GetMessageRequest from
+// *retry.GetMessagePayload.
 func NewProtoGetMessageRequest(payload *retry.GetMessagePayload) *retrypb.GetMessageRequest {
 	message := &retrypb.GetMessageRequest{
-		Id: payload.ID,
+		Id: &payload.ID,
 	}
 	return message
 }
 
-// NewGetMessageResult builds the result type of the "get_message" endpoint of
-// the "retry" service from the gRPC response type.
+// NewGetMessageResult builds *retry.GetMessageResult from
+// *retrypb.GetMessageResponse.
 func NewGetMessageResult(message *retrypb.GetMessageResponse) *retry.GetMessageResult {
 	result := &retry.GetMessageResult{
-		Message: message.Message_,
+		Message: *message.Message_,
 	}
 	return result
+}
+
+// ValidateGetMessageRequest runs the validations defined on GetMessageRequest.
+func ValidateGetMessageRequest(message *retrypb.GetMessageRequest) (err error) {
+	if message.Id == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "message"))
+	}
+	return
+}
+
+// ValidateGetMessageResponse runs the validations defined on
+// GetMessageResponse.
+func ValidateGetMessageResponse(message *retrypb.GetMessageResponse) (err error) {
+	if message.Message_ == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "message"))
+	}
+	return
 }

@@ -38,6 +38,9 @@ func DecodeGetMessageRequest(ctx context.Context, v any, md metadata.MD) (any, e
 		if message, ok = v.(*retrypb.GetMessageRequest); !ok {
 			return nil, goagrpc.ErrInvalidType("retry", "get_message", "*retrypb.GetMessageRequest", v)
 		}
+		if err := ValidateGetMessageRequest(message); err != nil {
+			return nil, err
+		}
 	}
 	var payload *retry.GetMessagePayload
 	{

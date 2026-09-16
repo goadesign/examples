@@ -26,7 +26,7 @@ func NewInterceptorsServerInterceptors() *InterceptorsServerInterceptors {
 
 // Server-side interceptor which implements a transparent cache for loaded
 // records
-func (i *InterceptorsServerInterceptors) Cache(ctx context.Context, info *interceptors.CacheInfo, next goa.Endpoint) (any, error) {
+func (i *InterceptorsServerInterceptors) Cache(ctx context.Context, info interceptors.CacheInfo, next goa.Endpoint) (any, error) {
 	log.Printf(ctx, "[Cache] Processing request: %v", info.RawPayload())
 	resp, err := next(ctx, info.RawPayload())
 	if err != nil {
@@ -38,7 +38,7 @@ func (i *InterceptorsServerInterceptors) Cache(ctx context.Context, info *interc
 }
 
 // Server-side interceptor that validates JWT token and tenant ID
-func (i *InterceptorsServerInterceptors) JWTAuth(ctx context.Context, info *interceptors.JWTAuthInfo, next goa.Endpoint) (any, error) {
+func (i *InterceptorsServerInterceptors) JWTAuth(ctx context.Context, info interceptors.JWTAuthInfo, next goa.Endpoint) (any, error) {
 	log.Printf(ctx, "[JWTAuth] Processing request: %v", info.RawPayload())
 	resp, err := next(ctx, info.RawPayload())
 	if err != nil {
@@ -51,7 +51,7 @@ func (i *InterceptorsServerInterceptors) JWTAuth(ctx context.Context, info *inte
 
 // Server-side interceptor that provides comprehensive request/response audit
 // logging
-func (i *InterceptorsServerInterceptors) RequestAudit(ctx context.Context, info *interceptors.RequestAuditInfo, next goa.Endpoint) (any, error) {
+func (i *InterceptorsServerInterceptors) RequestAudit(ctx context.Context, info interceptors.RequestAuditInfo, next goa.Endpoint) (any, error) {
 	log.Printf(ctx, "[RequestAudit] Processing request: %v", info.RawPayload())
 	resp, err := next(ctx, info.RawPayload())
 	if err != nil {
@@ -63,7 +63,7 @@ func (i *InterceptorsServerInterceptors) RequestAudit(ctx context.Context, info 
 }
 
 // Server-side interceptor which sets the context deadline for the request
-func (i *InterceptorsServerInterceptors) SetDeadline(ctx context.Context, info *interceptors.SetDeadlineInfo, next goa.Endpoint) (any, error) {
+func (i *InterceptorsServerInterceptors) SetDeadline(ctx context.Context, info interceptors.SetDeadlineInfo, next goa.Endpoint) (any, error) {
 	log.Printf(ctx, "[SetDeadline] Processing request: %v", info.RawPayload())
 	resp, err := next(ctx, info.RawPayload())
 	if err != nil {
@@ -76,7 +76,7 @@ func (i *InterceptorsServerInterceptors) SetDeadline(ctx context.Context, info *
 
 // Server-side and client-side interceptor that adds trace context to the
 // bidirectional stream payload
-func (i *InterceptorsServerInterceptors) TraceBidirectionalStream(ctx context.Context, info *interceptors.TraceBidirectionalStreamInfo, next goa.Endpoint) (any, error) {
+func (i *InterceptorsServerInterceptors) TraceBidirectionalStream(ctx context.Context, info interceptors.TraceBidirectionalStreamInfo, next goa.Endpoint) (any, error) {
 	log.Printf(ctx, "[TraceBidirectionalStream] Processing request: %v", info.RawPayload())
 	resp, err := next(ctx, info.RawPayload())
 	if err != nil {
@@ -88,7 +88,7 @@ func (i *InterceptorsServerInterceptors) TraceBidirectionalStream(ctx context.Co
 }
 
 // Server-side interceptor that adds trace context to the request payload
-func (i *InterceptorsServerInterceptors) TraceRequest(ctx context.Context, info *interceptors.TraceRequestInfo, next goa.Endpoint) (any, error) {
+func (i *InterceptorsServerInterceptors) TraceRequest(ctx context.Context, info interceptors.TraceRequestInfo, next goa.Endpoint) (any, error) {
 	log.Printf(ctx, "[TraceRequest] Processing request: %v", info.RawPayload())
 	resp, err := next(ctx, info.RawPayload())
 	if err != nil {

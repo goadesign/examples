@@ -100,8 +100,10 @@ func NewHistoryResponseBody(res *chatterviews.ChatSummaryView) *HistoryResponseB
 }
 
 // NewLoginPayload builds a chatter service login endpoint payload.
-func NewLoginPayload() *chatter.LoginPayload {
+func NewLoginPayload(user string, password string) *chatter.LoginPayload {
 	v := &chatter.LoginPayload{}
+	v.User = user
+	v.Password = password
 
 	return v
 }

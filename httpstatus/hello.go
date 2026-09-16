@@ -19,7 +19,7 @@ func NewHello(logger *log.Logger) hello.Service {
 }
 
 // Hello implements hello.
-func (s *hellosrvc) HelloEndpoint(ctx context.Context, p *hello.HelloPayload) (*hello.Hello, error) {
+func (s *hellosrvc) Hello(ctx context.Context, p *hello.HelloPayload) (*hello.Hello, error) {
 	var res hello.Hello
 	res.Greeting = p.Greeting
 	switch p.Greeting {

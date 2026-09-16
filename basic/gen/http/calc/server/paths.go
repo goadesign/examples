@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // MultiplyCalcPath returns the URL path to the calc service multiply HTTP endpoint.
 func MultiplyCalcPath(a int, b int) string {

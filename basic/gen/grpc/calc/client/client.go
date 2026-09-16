@@ -40,10 +40,13 @@ func (c *Client) Multiply() goa.Endpoint {
 			DecodeMultiplyResponse)
 		res, err := inv.Invoke(ctx, v)
 		if err != nil {
-			// Try to decode a Goa error response detail before falling back to Fault.
+			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
 			resp := goagrpc.DecodeError(err)
 			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
 				return nil, goagrpc.NewServiceError(eresp)
+			}
+			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+				return nil, ctxErr
 			}
 			return nil, goa.Fault("%s", err.Error())
 		}

@@ -7,9 +7,7 @@
 
 package server
 
-import (
-	monitor "goa.design/examples/sse/gen/monitor"
-)
+import monitor "goa.design/examples/sse/gen/monitor"
 
 // MonitorResponseBody is the type of the "monitor" service "monitor" endpoint
 // HTTP response body.

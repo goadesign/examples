@@ -8,30 +8,34 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 
 	interceptorspb "goa.design/examples/interceptors/gen/grpc/interceptors/pb"
 	interceptors "goa.design/examples/interceptors/gen/interceptors"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BuildGetPayload builds the payload for the interceptors get endpoint from
 // CLI flags.
-func BuildGetPayload(interceptorsGetMessage string) (*interceptors.GetPayload, error) {
+func BuildGetPayload(interceptorsGetMessage *string) (*interceptors.GetPayload, error) {
 	var err error
 	var message interceptorspb.GetRequest
 	{
-		if interceptorsGetMessage != "" {
-			err = json.Unmarshal([]byte(interceptorsGetMessage), &message)
+		if interceptorsGetMessage != nil {
+			err = protojson.Unmarshal([]byte(*interceptorsGetMessage), &message)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Doloremque in beatae illo nemo nihil id.\",\n      \"recordID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"spanID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"tenantID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"traceID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\"\n   }'")
+				return nil, fmt.Errorf("invalid JSON for message, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"record_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"span_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenant_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"trace_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 			}
 		}
 	}
+	if err := ValidateGetRequest(&message); err != nil {
+		var zero *interceptors.GetPayload
+		return zero, err
+	}
 	v := &interceptors.GetPayload{
-		TenantID: interceptors.UUID(message.TenantId),
-		RecordID: interceptors.UUID(message.RecordId),
-		Auth:     message.Auth,
+		TenantID: interceptors.UUID(*message.TenantId),
+		RecordID: interceptors.UUID(*message.RecordId),
+		Auth:     *message.Auth,
 	}
 	if message.TraceId != nil {
 		traceID := interceptors.UUID(*message.TraceId)

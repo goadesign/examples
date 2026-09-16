@@ -29,8 +29,27 @@ func UsageCommands() []string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + " " + "interceptors get --message '{\n      \"auth\": \"Doloremque in beatae illo nemo nihil id.\",\n      \"recordID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"spanID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"tenantID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"traceID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\"\n   }'" + "\n" +
+	return os.Args[0] + " " + "interceptors get --message '{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"record_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"span_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenant_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"trace_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'" + "\n" +
 		""
+}
+
+// cliStringFlag keeps an omitted command-line flag distinct from an explicitly empty flag.
+type cliStringFlag struct {
+	value *string
+}
+
+// String returns the flag text shown by the standard flag package.
+func (f *cliStringFlag) String() string {
+	if f.value == nil {
+		return ""
+	}
+	return *f.value
+}
+
+// Set records that the user supplied the flag, even when value is empty.
+func (f *cliStringFlag) Set(value string) error {
+	f.value = &value
+	return nil
 }
 
 // ParseEndpoint returns the endpoint and payload as specified on the command
@@ -44,8 +63,10 @@ func ParseEndpoint(
 		interceptorsFlags = flag.NewFlagSet("interceptors", flag.ContinueOnError)
 
 		interceptorsGetFlags       = flag.NewFlagSet("get", flag.ExitOnError)
-		interceptorsGetMessageFlag = interceptorsGetFlags.String("message", "", "")
+		interceptorsGetMessageFlag = new(cliStringFlag)
 	)
+	interceptorsGetFlags.Var(interceptorsGetMessageFlag, "message", "")
+
 	interceptorsFlags.Usage = interceptorsUsage
 	interceptorsGetFlags.Usage = interceptorsGetUsage
 
@@ -114,7 +135,7 @@ func ParseEndpoint(
 			case "get":
 				endpoint = c.Get()
 				endpoint = interceptors.WrapGetClientEndpoint(endpoint, interceptorsInter)
-				data, err = interceptorsc.BuildGetPayload(*interceptorsGetMessageFlag)
+				data, err = interceptorsc.BuildGetPayload(interceptorsGetMessageFlag.value)
 			}
 		}
 	}
@@ -153,5 +174,5 @@ func interceptorsGetUsage() {
 
 	fmt.Fprintln(os.Stderr)
 	fmt.Fprintln(os.Stderr, "Example:")
-	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors get --message '{\n      \"auth\": \"Doloremque in beatae illo nemo nihil id.\",\n      \"recordID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"spanID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"tenantID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\",\n      \"traceID\": \"66c20bbb-15ff-4254-b34a-4ecbeff0ce29\"\n   }'")
+	fmt.Fprintf(os.Stderr, "    %s %s\n", os.Args[0], "interceptors get --message '{\n      \"auth\": \"Aut dolorem nisi qui accusantium.\",\n      \"record_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"span_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"tenant_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\",\n      \"trace_id\": \"dd11abcb-f3b1-412f-9ede-6f80730d5a28\"\n   }'")
 }

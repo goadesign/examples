@@ -7,9 +7,7 @@
 
 package views
 
-import (
-	goa "goa.design/goa/v3/pkg"
-)
+import goa "goa.design/goa/v3/pkg"
 
 // StoredResumeCollection is the viewed result type that is projected based on
 // a view.
