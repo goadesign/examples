@@ -44,7 +44,7 @@ func EncodeLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.
 		if !ok {
 			return goahttp.ErrInvalidType("chatter", "login", "*chatter.LoginPayload", v)
 		}
-		req.SetBasicAuth(p.User, p.Password)
+		req.SetBasicAuth(string(p.User), string(p.Password))
 		return nil
 	}
 }

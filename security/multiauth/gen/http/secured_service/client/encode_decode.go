@@ -44,7 +44,7 @@ func EncodeSigninRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 		if !ok {
 			return goahttp.ErrInvalidType("secured_service", "signin", "*securedservice.SigninPayload", v)
 		}
-		req.SetBasicAuth(p.Username, p.Password)
+		req.SetBasicAuth(string(p.Username), string(p.Password))
 		return nil
 	}
 }
@@ -361,10 +361,16 @@ func EncodeAlsoDoublySecureRequest(encoder func(*http.Request) goahttp.Encoder) 
 			values.Add("oauth", *p.OauthToken)
 		}
 		req.URL.RawQuery = values.Encode()
+		var user string
 		if p.Username != nil {
-			if p.Password != nil {
-				req.SetBasicAuth(*p.Username, *p.Password)
-			}
+			user = string(*p.Username)
+		}
+		var pass string
+		if p.Password != nil {
+			pass = string(*p.Password)
+		}
+		if p.Username != nil || p.Password != nil {
+			req.SetBasicAuth(user, pass)
 		}
 		return nil
 	}

@@ -99,10 +99,9 @@ func DecodeSecureRequest(ctx context.Context, v any, md metadata.MD) (any, error
 	var payload *securedservice.SecurePayload
 	{
 		payload = NewSecurePayload(message, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -151,10 +150,9 @@ func DecodeDoublySecureRequest(ctx context.Context, v any, md metadata.MD) (any,
 	var payload *securedservice.DoublySecurePayload
 	{
 		payload = NewDoublySecurePayload(message, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -203,16 +201,18 @@ func DecodeAlsoDoublySecureRequest(ctx context.Context, v any, md metadata.MD) (
 	{
 		payload = NewAlsoDoublySecurePayload(message, oauthToken, token)
 		if payload.Token != nil {
-			if strings.Contains(*payload.Token, " ") {
+			cred := *payload.Token
+			if index := strings.IndexByte(string(cred), ' '); index >= 0 {
 				// Remove authorization scheme prefix (e.g. "Bearer")
-				cred := strings.SplitN(*payload.Token, " ", 2)[1]
+				cred = cred[index+1:]
 				payload.Token = &cred
 			}
 		}
 		if payload.OauthToken != nil {
-			if strings.Contains(*payload.OauthToken, " ") {
+			cred := *payload.OauthToken
+			if index := strings.IndexByte(string(cred), ' '); index >= 0 {
 				// Remove authorization scheme prefix (e.g. "Bearer")
-				cred := strings.SplitN(*payload.OauthToken, " ", 2)[1]
+				cred = cred[index+1:]
 				payload.OauthToken = &cred
 			}
 		}

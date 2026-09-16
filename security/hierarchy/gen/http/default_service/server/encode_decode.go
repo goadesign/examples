@@ -30,13 +30,11 @@ func EncodeDefaultResponse(encoder func(context.Context, http.ResponseWriter) go
 func DecodeDefaultRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*defaultservice.DefaultPayload, error) {
 	return func(r *http.Request) (*defaultservice.DefaultPayload, error) {
 		var payload *defaultservice.DefaultPayload
-		payload = NewDefaultPayload()
 		user, pass, ok := r.BasicAuth()
 		if !ok {
 			return payload, goa.MissingFieldError("Authorization", "header")
 		}
-		payload.Username = user
-		payload.Password = pass
+		payload = NewDefaultPayload(user, pass)
 
 		return payload, nil
 	}

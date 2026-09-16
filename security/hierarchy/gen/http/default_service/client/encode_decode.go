@@ -42,7 +42,7 @@ func EncodeDefaultRequest(encoder func(*http.Request) goahttp.Encoder) func(*htt
 		if !ok {
 			return goahttp.ErrInvalidType("default_service", "default", "*defaultservice.DefaultPayload", v)
 		}
-		req.SetBasicAuth(p.Username, p.Password)
+		req.SetBasicAuth(string(p.Username), string(p.Password))
 		return nil
 	}
 }

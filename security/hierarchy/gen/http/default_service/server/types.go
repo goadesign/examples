@@ -10,8 +10,10 @@ package server
 import defaultservice "goa.design/examples/security/hierarchy/gen/default_service"
 
 // NewDefaultPayload builds a default_service service default endpoint payload.
-func NewDefaultPayload() *defaultservice.DefaultPayload {
+func NewDefaultPayload(username string, password string) *defaultservice.DefaultPayload {
 	v := &defaultservice.DefaultPayload{}
+	v.Username = username
+	v.Password = password
 
 	return v
 }

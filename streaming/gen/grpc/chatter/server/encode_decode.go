@@ -91,10 +91,9 @@ func DecodeEchoerRequest(ctx context.Context, v any, md metadata.MD) (any, error
 	var payload *chatter.EchoerPayload
 	{
 		payload = NewEchoerPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -127,10 +126,9 @@ func DecodeListenerRequest(ctx context.Context, v any, md metadata.MD) (any, err
 	var payload *chatter.ListenerPayload
 	{
 		payload = NewListenerPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -169,10 +167,9 @@ func DecodeSummaryRequest(ctx context.Context, v any, md metadata.MD) (any, erro
 	var payload *chatter.SummaryPayload
 	{
 		payload = NewSummaryPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -209,10 +206,9 @@ func DecodeSubscribeRequest(ctx context.Context, v any, md metadata.MD) (any, er
 	var payload *chatter.SubscribePayload
 	{
 		payload = NewSubscribePayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil
@@ -268,10 +264,9 @@ func DecodeHistoryRequest(ctx context.Context, v any, md metadata.MD) (any, erro
 	var payload *chatter.HistoryPayload
 	{
 		payload = NewHistoryPayload(view, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 	}
 	return payload, nil

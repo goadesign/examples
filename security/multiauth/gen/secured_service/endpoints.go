@@ -55,7 +55,7 @@ func NewSigninEndpoint(s Service, authBasicFn security.AuthBasicFunc) goa.Endpoi
 			Scopes:         []string{"api:read"},
 			RequiredScopes: []string{},
 		}
-		ctx, err = authBasicFn(ctx, p.Username, p.Password, &sc)
+		ctx, err = authBasicFn(ctx, string(p.Username), string(p.Password), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -74,7 +74,7 @@ func NewSecureEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
 			Scopes:         []string{"api:read", "api:write"},
 			RequiredScopes: []string{"api:read"},
 		}
-		ctx, err = authJWTFn(ctx, p.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(p.Token), &sc)
 		if err != nil {
 			return nil, err
 		}
@@ -93,14 +93,14 @@ func NewDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, authAPIK
 			Scopes:         []string{"api:read", "api:write"},
 			RequiredScopes: []string{"api:read", "api:write"},
 		}
-		ctx, err = authJWTFn(ctx, p.Token, &sc)
+		ctx, err = authJWTFn(ctx, string(p.Token), &sc)
 		if err == nil {
 			sc := security.APIKeyScheme{
 				Name:           "api_key",
 				Scopes:         []string{},
 				RequiredScopes: []string{"api:read", "api:write"},
 			}
-			ctx, err = authAPIKeyFn(ctx, p.Key, &sc)
+			ctx, err = authAPIKeyFn(ctx, string(p.Key), &sc)
 		}
 		if err != nil {
 			return nil, err
@@ -122,7 +122,7 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 		}
 		var token string
 		if p.Token != nil {
-			token = *p.Token
+			token = string(*p.Token)
 		}
 		ctx, err = authJWTFn(ctx, token, &sc)
 		if err == nil {
@@ -133,7 +133,7 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 			}
 			var key string
 			if p.Key != nil {
-				key = *p.Key
+				key = string(*p.Key)
 			}
 			ctx, err = authAPIKeyFn(ctx, key, &sc)
 		}
@@ -153,7 +153,7 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 			}
 			var token string
 			if p.OauthToken != nil {
-				token = *p.OauthToken
+				token = string(*p.OauthToken)
 			}
 			ctx, err = authOAuth2Fn(ctx, token, &sc)
 			if err == nil {
@@ -164,11 +164,11 @@ func NewAlsoDoublySecureEndpoint(s Service, authJWTFn security.AuthJWTFunc, auth
 				}
 				var user string
 				if p.Username != nil {
-					user = *p.Username
+					user = string(*p.Username)
 				}
 				var pass string
 				if p.Password != nil {
-					pass = *p.Password
+					pass = string(*p.Password)
 				}
 				ctx, err = authBasicFn(ctx, user, pass, &sc)
 			}

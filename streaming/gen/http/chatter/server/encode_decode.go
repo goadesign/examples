@@ -36,13 +36,11 @@ func EncodeLoginResponse(encoder func(context.Context, http.ResponseWriter) goah
 func DecodeLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (*chatter.LoginPayload, error) {
 	return func(r *http.Request) (*chatter.LoginPayload, error) {
 		var payload *chatter.LoginPayload
-		payload = NewLoginPayload()
 		user, pass, ok := r.BasicAuth()
 		if !ok {
 			return payload, goa.MissingFieldError("Authorization", "header")
 		}
-		payload.User = user
-		payload.Password = pass
+		payload = NewLoginPayload(user, pass)
 
 		return payload, nil
 	}
@@ -89,10 +87,9 @@ func DecodeEchoerRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.
 			return payload, err
 		}
 		payload = NewEchoerPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil
@@ -148,10 +145,9 @@ func DecodeListenerRequest(mux goahttp.Muxer, decoder func(*http.Request) goahtt
 			return payload, err
 		}
 		payload = NewListenerPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil
@@ -207,10 +203,9 @@ func DecodeSummaryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			return payload, err
 		}
 		payload = NewSummaryPayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil
@@ -266,10 +261,9 @@ func DecodeSubscribeRequest(mux goahttp.Muxer, decoder func(*http.Request) goaht
 			return payload, err
 		}
 		payload = NewSubscribePayload(token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil
@@ -335,10 +329,9 @@ func DecodeHistoryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp
 			return payload, err
 		}
 		payload = NewHistoryPayload(view, token)
-		if strings.Contains(payload.Token, " ") {
+		if index := strings.IndexByte(string(payload.Token), ' '); index >= 0 {
 			// Remove authorization scheme prefix (e.g. "Bearer")
-			cred := strings.SplitN(payload.Token, " ", 2)[1]
-			payload.Token = cred
+			payload.Token = payload.Token[index+1:]
 		}
 
 		return payload, nil

@@ -548,12 +548,6 @@ func validatecellar_storage_Bottle_At_elem(elem *storagepb.Bottle) (err error) {
 // ValidateMultiUpdateRequest runs the validations defined on
 // MultiUpdateRequest.
 func ValidateMultiUpdateRequest(message *storagepb.MultiUpdateRequest) (err error) {
-	if message.Ids == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("ids", "message"))
-	}
-	if message.Bottles == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("bottles", "message"))
-	}
 	for _, e := range message.Bottles {
 		if e != nil {
 			if err2 := validatecellar_storage_Bottle_At_elem(e); err2 != nil {
