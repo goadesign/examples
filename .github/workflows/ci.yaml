@@ -3,15 +3,19 @@ on: [push, pull_request]
 jobs:
 
   Linux:
-    name: Linux
+    name: Linux (Go ${{ matrix.go }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ['1.26.8', '1.27.1']
+    env:
+      GOTOOLCHAIN: local
     steps:
 
-    - name: Set up Go 1.26
+    - name: Set up Go ${{ matrix.go }}
       uses: actions/setup-go@v7.0.0
       with:
-        go-version: '1.26'
-        check-latest: true
+        go-version: ${{ matrix.go }}
       id: go
 
     - name: Check out code into the Go module directory
