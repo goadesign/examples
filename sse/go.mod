@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/shirou/gopsutil/v3 v3.24.5
 	goa.design/clue v1.3.0
-	goa.design/goa/v3 v3.31.1
+	goa.design/goa/v3 v3.32.0
 )
 
 require (
@@ -21,6 +21,7 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20260802145828-341c2f0c90b5 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
 	github.com/power-devops/perfstat v0.0.0-20260916203055-22a1a467d9f0 // indirect
+	github.com/rogpeppe/go-internal v1.16.0 // indirect
 	github.com/shoenig/go-m1cpu v0.2.2 // indirect
 	github.com/stretchr/testify v1.12.1 // indirect
 	github.com/tklauser/go-sysconf v0.4.0 // indirect
