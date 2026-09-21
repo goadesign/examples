@@ -3,9 +3,9 @@ module goa.design/examples/error
 go 1.26.0
 
 require (
-	goa.design/goa/v3 v3.31.1
-	google.golang.org/genproto v0.0.0-20260911204522-f61a6ca850bd
-	google.golang.org/grpc v1.83.2
+	goa.design/goa/v3 v3.32.0
+	google.golang.org/genproto v0.0.0-20260918162117-cecb64721679
+	google.golang.org/grpc v1.84.0
 	google.golang.org/protobuf v1.36.12
 )
 
@@ -15,9 +15,10 @@ require (
 	github.com/gohugoio/hashstructure v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
+	github.com/rogpeppe/go-internal v1.16.0 // indirect
 	github.com/stretchr/testify v1.12.1 // indirect
-	go.opentelemetry.io/otel v1.45.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/net v0.59.0 // indirect
@@ -25,7 +26,7 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/tools v0.50.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260911204522-f61a6ca850bd // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260918162117-cecb64721679 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
