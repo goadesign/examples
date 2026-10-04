@@ -34,22 +34,27 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 // Multiply calls the "Multiply" function in calcpb.CalcClient interface.
 func (c *Client) Multiply() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildMultiplyFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildMultiplyFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			EncodeMultiplyRequest,
 			DecodeMultiplyResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }

@@ -33,25 +33,34 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 
 // GetMessage calls the "GetMessage" function in retrypb.RetryClient interface.
 func (c *Client) GetMessage() goa.Endpoint {
-	endpoint := func(ctx context.Context, v any) (any, error) {
+	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildGetMessageFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildGetMessageFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				// The request is already encoded. Retry this RPC call, then
+				// let the invoker decode its successful response once.
+				rpc := func(ctx context.Context, request any) (any, error) {
+					res, err := remote(ctx, request, opts...)
+					if err != nil {
+						resp := goagrpc.DecodeError(err)
+						switch message := resp.(type) {
+						case *goapb.ErrorResponse:
+							return nil, goagrpc.NewServiceErrorWithCause(err, message)
+						default:
+							if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+								return nil, ctxErr
+							}
+							return nil, goagrpc.NewTransportError(err)
+						}
+					}
+					return res, nil
+				}
+				return goa.RetryEndpoint(rpc, "unavailable")(ctx, request)
+			},
 			EncodeGetMessageRequest,
 			DecodeGetMessageResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goagrpc.NewTransportError(err)
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
-	return goa.RetryEndpoint(endpoint, "unavailable")
 }

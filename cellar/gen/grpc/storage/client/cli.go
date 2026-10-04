@@ -183,17 +183,13 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage *string) (*storage.MultiU
 		return zero, err
 	}
 	v := &storage.MultiUpdatePayload{}
-	if message.Ids != nil {
-		v.Ids = make([]string, len(message.Ids))
-		for i, val := range message.Ids {
-			v.Ids[i] = val
-		}
+	v.Ids = make([]string, len(message.Ids))
+	for i, val := range message.Ids {
+		v.Ids[i] = val
 	}
-	if message.Bottles != nil {
-		v.Bottles = make([]*storage.Bottle, len(message.Bottles))
-		for i, val := range message.Bottles {
-			v.Bottles[i] = transformProtoBottleToBottle(val)
-		}
+	v.Bottles = make([]*storage.Bottle, len(message.Bottles))
+	for i, val := range message.Bottles {
+		v.Bottles[i] = transformProtoBottleToBottle(val)
 	}
 
 	return v, nil

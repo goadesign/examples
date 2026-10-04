@@ -74,6 +74,9 @@ func NewShowEndpoint(s Service) goa.Endpoint {
 		if err != nil {
 			return nil, err
 		}
+		if res == nil {
+			return nil, goa.Fault("service returned a missing result")
+		}
 		vres := NewViewedStoredBottle(res, view)
 		if err := storageviews.ValidateStoredBottle(vres); err != nil {
 			return nil, err

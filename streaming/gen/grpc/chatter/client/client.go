@@ -68,96 +68,125 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 // Login calls the "Login" function in chatterpb.ChatterClient interface.
 func (c *Client) Login() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildLoginFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildLoginFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeLoginRequest,
 			DecodeLoginResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Echoer calls the "Echoer" function in chatterpb.ChatterClient interface.
 func (c *Client) Echoer() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildEchoerFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildEchoerFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, _ ...grpc.CallOption) (any, error) {
+				// Opening a stream does not wait for completion, so omit
+				// the invoker's unary header/trailer capture options. The
+				// remote builder still applies the client's own options.
+				res, err := remote(ctx, request)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeEchoerRequest,
 			DecodeEchoerResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Listener calls the "Listener" function in chatterpb.ChatterClient interface.
 func (c *Client) Listener() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildListenerFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildListenerFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, _ ...grpc.CallOption) (any, error) {
+				// Opening a stream does not wait for completion, so omit
+				// the invoker's unary header/trailer capture options. The
+				// remote builder still applies the client's own options.
+				res, err := remote(ctx, request)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeListenerRequest,
 			DecodeListenerResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Summary calls the "Summary" function in chatterpb.ChatterClient interface.
 func (c *Client) Summary() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildSummaryFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildSummaryFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, _ ...grpc.CallOption) (any, error) {
+				// Opening a stream does not wait for completion, so omit
+				// the invoker's unary header/trailer capture options. The
+				// remote builder still applies the client's own options.
+				res, err := remote(ctx, request)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeSummaryRequest,
 			DecodeSummaryResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
@@ -165,48 +194,64 @@ func (c *Client) Summary() goa.Endpoint {
 // interface.
 func (c *Client) Subscribe() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildSubscribeFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildSubscribeFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, _ ...grpc.CallOption) (any, error) {
+				// Opening a stream does not wait for completion, so omit
+				// the invoker's unary header/trailer capture options. The
+				// remote builder still applies the client's own options.
+				res, err := remote(ctx, request)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeSubscribeRequest,
 			DecodeSubscribeResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // History calls the "History" function in chatterpb.ChatterClient interface.
 func (c *Client) History() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildHistoryFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildHistoryFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, _ ...grpc.CallOption) (any, error) {
+				// Opening a stream does not wait for completion, so omit
+				// the invoker's unary header/trailer capture options. The
+				// remote builder still applies the client's own options.
+				res, err := remote(ctx, request)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeHistoryRequest,
 			DecodeHistoryResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
@@ -219,7 +264,7 @@ func (s *EchoerClientStream) Recv() (string, error) {
 		resp := goagrpc.DecodeError(err)
 		switch message := resp.(type) {
 		case *goapb.ErrorResponse:
-			return res, goagrpc.NewServiceError(message)
+			return res, goagrpc.NewServiceErrorWithCause(err, message)
 		default:
 			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
 				return res, ctxErr
@@ -277,7 +322,7 @@ func (s *ListenerClientStream) Close() error {
 		resp := goagrpc.DecodeError(err)
 		switch message := resp.(type) {
 		case *goapb.ErrorResponse:
-			return goagrpc.NewServiceError(message)
+			return goagrpc.NewServiceErrorWithCause(err, message)
 		default:
 			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
 				return ctxErr
@@ -297,7 +342,7 @@ func (s *SummaryClientStream) CloseAndRecv() (chatter.ChatSummaryCollection, err
 		resp := goagrpc.DecodeError(err)
 		switch message := resp.(type) {
 		case *goapb.ErrorResponse:
-			return res, goagrpc.NewServiceError(message)
+			return res, goagrpc.NewServiceErrorWithCause(err, message)
 		default:
 			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
 				return res, ctxErr
@@ -344,7 +389,7 @@ func (s *SubscribeClientStream) Recv() (*chatter.Event, error) {
 		resp := goagrpc.DecodeError(err)
 		switch message := resp.(type) {
 		case *goapb.ErrorResponse:
-			return res, goagrpc.NewServiceError(message)
+			return res, goagrpc.NewServiceErrorWithCause(err, message)
 		default:
 			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
 				return res, ctxErr
@@ -373,7 +418,7 @@ func (s *HistoryClientStream) Recv() (*chatter.ChatSummary, error) {
 		resp := goagrpc.DecodeError(err)
 		switch message := resp.(type) {
 		case *goapb.ErrorResponse:
-			return res, goagrpc.NewServiceError(message)
+			return res, goagrpc.NewServiceErrorWithCause(err, message)
 		default:
 			if ctxErr := goagrpc.ContextError(s.ctx, err); ctxErr != nil {
 				return res, ctxErr

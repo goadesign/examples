@@ -36,24 +36,29 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 // interface.
 func (c *Client) Signin() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildSigninFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildSigninFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeSigninRequest,
 			DecodeSigninResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
@@ -61,24 +66,29 @@ func (c *Client) Signin() goa.Endpoint {
 // interface.
 func (c *Client) Secure() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildSecureFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildSecureFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeSecureRequest,
 			DecodeSecureResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
@@ -86,24 +96,29 @@ func (c *Client) Secure() goa.Endpoint {
 // secured_servicepb.SecuredServiceClient interface.
 func (c *Client) DoublySecure() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildDoublySecureFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildDoublySecureFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeDoublySecureRequest,
 			DecodeDoublySecureResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
@@ -111,23 +126,28 @@ func (c *Client) DoublySecure() goa.Endpoint {
 // secured_servicepb.SecuredServiceClient interface.
 func (c *Client) AlsoDoublySecure() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildAlsoDoublySecureFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildAlsoDoublySecureFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeAlsoDoublySecureRequest,
 			DecodeAlsoDoublySecureResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }

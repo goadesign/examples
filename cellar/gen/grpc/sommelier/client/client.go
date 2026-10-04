@@ -34,23 +34,28 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 // Pick calls the "Pick" function in sommelierpb.SommelierClient interface.
 func (c *Client) Pick() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildPickFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildPickFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodePickRequest,
 			DecodePickResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }

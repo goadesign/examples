@@ -40,6 +40,9 @@ func NewHelloEndpoint(s Service) goa.Endpoint {
 		if err != nil {
 			return nil, err
 		}
+		if res == nil {
+			return nil, goa.Fault("service returned a missing result")
+		}
 		vres := NewViewedHello(res, "default")
 		if err := helloviews.ValidateHello(vres); err != nil {
 			return nil, err

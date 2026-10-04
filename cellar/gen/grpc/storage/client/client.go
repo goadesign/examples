@@ -34,144 +34,174 @@ func NewClient(cc *grpc.ClientConn, opts ...grpc.CallOption) *Client {
 // List calls the "List" function in storagepb.StorageClient interface.
 func (c *Client) List() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildListFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildListFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			nil,
 			DecodeListResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Show calls the "Show" function in storagepb.StorageClient interface.
 func (c *Client) Show() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildShowFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildShowFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					resp := goagrpc.DecodeError(err)
+					switch message := resp.(type) {
+					case *storagepb.ShowNotFoundError:
+						if err := ValidateShowNotFoundError(message); err != nil {
+							return nil, err
+						}
+						return nil, NewShowNotFoundError(message)
+					case *goapb.ErrorResponse:
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
+					default:
+						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+							return nil, ctxErr
+						}
+						return nil, goa.Fault("%s", err.Error())
+					}
+				}
+				return res, nil
+			},
 			EncodeShowRequest,
 			DecodeShowResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			resp := goagrpc.DecodeError(err)
-			switch message := resp.(type) {
-			case *storagepb.ShowNotFoundError:
-				if err := ValidateShowNotFoundError(message); err != nil {
-					return nil, err
-				}
-				return nil, NewShowNotFoundError(message)
-			case *goapb.ErrorResponse:
-				return nil, goagrpc.NewServiceError(message)
-			default:
-				if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-					return nil, ctxErr
-				}
-				return nil, goa.Fault("%s", err.Error())
-			}
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Add calls the "Add" function in storagepb.StorageClient interface.
 func (c *Client) Add() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildAddFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildAddFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			EncodeAddRequest,
 			DecodeAddResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Remove calls the "Remove" function in storagepb.StorageClient interface.
 func (c *Client) Remove() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildRemoveFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildRemoveFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			EncodeRemoveRequest,
 			nil)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // Rate calls the "Rate" function in storagepb.StorageClient interface.
 func (c *Client) Rate() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildRateFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildRateFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			EncodeRateRequest,
 			nil)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
 // MultiAdd calls the "MultiAdd" function in storagepb.StorageClient interface.
 func (c *Client) MultiAdd() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildMultiAddFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildMultiAddFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			EncodeMultiAddRequest,
 			DecodeMultiAddResponse)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
 
@@ -179,22 +209,27 @@ func (c *Client) MultiAdd() goa.Endpoint {
 // interface.
 func (c *Client) MultiUpdate() goa.Endpoint {
 	return func(ctx context.Context, v any) (any, error) {
+		remote := BuildMultiUpdateFunc(c.grpccli, c.opts...)
+		// Convert errors from the RPC call here so local encoding and decoding
+		// errors keep their original types and validation details.
 		inv := goagrpc.NewInvoker(
-			BuildMultiUpdateFunc(c.grpccli, c.opts...),
+			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
+				res, err := remote(ctx, request, opts...)
+				if err != nil {
+					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
+					resp := goagrpc.DecodeError(err)
+					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					return nil, goa.Fault("%s", err.Error())
+				}
+				return res, nil
+			},
 			EncodeMultiUpdateRequest,
 			nil)
-		res, err := inv.Invoke(ctx, v)
-		if err != nil {
-			// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-			resp := goagrpc.DecodeError(err)
-			if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-				return nil, goagrpc.NewServiceError(eresp)
-			}
-			if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-				return nil, ctxErr
-			}
-			return nil, goa.Fault("%s", err.Error())
-		}
-		return res, nil
+		return inv.Invoke(ctx, v)
 	}
 }
