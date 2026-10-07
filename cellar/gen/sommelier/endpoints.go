@@ -42,7 +42,9 @@ func NewPickEndpoint(s Service) goa.Endpoint {
 		}
 		vres := NewViewedStoredBottleCollection(res, "default")
 		if err := sommelierviews.ValidateStoredBottleCollection(vres); err != nil {
-			return nil, err
+			// The returned fields failed the selected view. Report a server fault
+			// and keep the validation error available through errors.Unwrap.
+			return nil, goa.NewServiceError(err, "fault", false, false, true)
 		}
 		return vres, nil
 	}

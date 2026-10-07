@@ -9,12 +9,15 @@ package client
 
 import (
 	"context"
+	"errors"
 
 	sommelierpb "goa.design/examples/cellar/gen/grpc/sommelier/pb"
 	goagrpc "goa.design/goa/v3/grpc"
 	goapb "goa.design/goa/v3/grpc/pb"
 	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Client lists the service endpoint gRPC clients.
@@ -45,12 +48,37 @@ func (c *Client) Pick() goa.Endpoint {
 					switch message := resp.(type) {
 					case *goapb.ErrorResponse:
 						return nil, goagrpc.NewServiceErrorWithCause(err, message)
-					default:
-						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-							return nil, ctxErr
-						}
-						return nil, goa.Fault("%s", err.Error())
 					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
+					}
+					return nil, goa.Fault("%s", err.Error())
 				}
 				return res, nil
 			},

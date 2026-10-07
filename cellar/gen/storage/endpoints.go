@@ -59,7 +59,9 @@ func NewListEndpoint(s Service) goa.Endpoint {
 		}
 		vres := NewViewedStoredBottleCollection(res, "tiny")
 		if err := storageviews.ValidateStoredBottleCollection(vres); err != nil {
-			return nil, err
+			// The returned fields failed the selected view. Report a server fault
+			// and keep the validation error available through errors.Unwrap.
+			return nil, goa.NewServiceError(err, "fault", false, false, true)
 		}
 		return vres, nil
 	}
@@ -79,7 +81,9 @@ func NewShowEndpoint(s Service) goa.Endpoint {
 		}
 		vres := NewViewedStoredBottle(res, view)
 		if err := storageviews.ValidateStoredBottle(vres); err != nil {
-			return nil, err
+			// The returned fields failed the selected view. Report a server fault
+			// and keep the validation error available through errors.Unwrap.
+			return nil, goa.NewServiceError(err, "fault", false, false, true)
 		}
 		return vres, nil
 	}

@@ -44,7 +44,9 @@ func NewListEndpoint(s Service) goa.Endpoint {
 		}
 		vres := NewViewedStoredResumeCollection(res, "default")
 		if err := resumeviews.ValidateStoredResumeCollection(vres); err != nil {
-			return nil, err
+			// The returned fields failed the selected view. Report a server fault
+			// and keep the validation error available through errors.Unwrap.
+			return nil, goa.NewServiceError(err, "fault", false, false, true)
 		}
 		return vres, nil
 	}

@@ -9,12 +9,15 @@ package client
 
 import (
 	"context"
+	"errors"
 
 	storagepb "goa.design/examples/cellar/gen/grpc/storage/pb"
 	goagrpc "goa.design/goa/v3/grpc"
 	goapb "goa.design/goa/v3/grpc/pb"
 	goa "goa.design/goa/v3/pkg"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Client lists the service endpoint gRPC clients.
@@ -41,13 +44,38 @@ func (c *Client) List() goa.Endpoint {
 			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
 				res, err := remote(ctx, request, opts...)
 				if err != nil {
-					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-					resp := goagrpc.DecodeError(err)
-					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					// Decode service fields before considering a native context stop.
+					if message, ok := goagrpc.DecodeError(err).(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
 					}
 					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
 						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
 					}
 					return nil, goa.Fault("%s", err.Error())
 				}
@@ -78,12 +106,37 @@ func (c *Client) Show() goa.Endpoint {
 						return nil, NewShowNotFoundError(message)
 					case *goapb.ErrorResponse:
 						return nil, goagrpc.NewServiceErrorWithCause(err, message)
-					default:
-						if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
-							return nil, ctxErr
-						}
-						return nil, goa.Fault("%s", err.Error())
 					}
+					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
+						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
+					}
+					return nil, goa.Fault("%s", err.Error())
 				}
 				return res, nil
 			},
@@ -103,13 +156,38 @@ func (c *Client) Add() goa.Endpoint {
 			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
 				res, err := remote(ctx, request, opts...)
 				if err != nil {
-					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-					resp := goagrpc.DecodeError(err)
-					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					// Decode service fields before considering a native context stop.
+					if message, ok := goagrpc.DecodeError(err).(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
 					}
 					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
 						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
 					}
 					return nil, goa.Fault("%s", err.Error())
 				}
@@ -131,13 +209,38 @@ func (c *Client) Remove() goa.Endpoint {
 			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
 				res, err := remote(ctx, request, opts...)
 				if err != nil {
-					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-					resp := goagrpc.DecodeError(err)
-					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					// Decode service fields before considering a native context stop.
+					if message, ok := goagrpc.DecodeError(err).(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
 					}
 					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
 						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
 					}
 					return nil, goa.Fault("%s", err.Error())
 				}
@@ -159,13 +262,38 @@ func (c *Client) Rate() goa.Endpoint {
 			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
 				res, err := remote(ctx, request, opts...)
 				if err != nil {
-					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-					resp := goagrpc.DecodeError(err)
-					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					// Decode service fields before considering a native context stop.
+					if message, ok := goagrpc.DecodeError(err).(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
 					}
 					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
 						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
 					}
 					return nil, goa.Fault("%s", err.Error())
 				}
@@ -187,13 +315,38 @@ func (c *Client) MultiAdd() goa.Endpoint {
 			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
 				res, err := remote(ctx, request, opts...)
 				if err != nil {
-					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-					resp := goagrpc.DecodeError(err)
-					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					// Decode service fields before considering a native context stop.
+					if message, ok := goagrpc.DecodeError(err).(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
 					}
 					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
 						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
 					}
 					return nil, goa.Fault("%s", err.Error())
 				}
@@ -216,13 +369,38 @@ func (c *Client) MultiUpdate() goa.Endpoint {
 			func(ctx context.Context, request any, opts ...grpc.CallOption) (any, error) {
 				res, err := remote(ctx, request, opts...)
 				if err != nil {
-					// Decode a Goa error detail before returning a matching context error or falling back to Fault.
-					resp := goagrpc.DecodeError(err)
-					if eresp, ok := resp.(*goapb.ErrorResponse); ok {
-						return nil, goagrpc.NewServiceErrorWithCause(err, eresp)
+					// Decode service fields before considering a native context stop.
+					if message, ok := goagrpc.DecodeError(err).(*goapb.ErrorResponse); ok {
+						return nil, goagrpc.NewServiceErrorWithCause(err, message)
 					}
 					if ctxErr := goagrpc.ContextError(ctx, err); ctxErr != nil {
 						return nil, ctxErr
+					}
+					// Inspect one cause chain so an independent failure cannot select
+					// a child's cancellation code for the complete returned error.
+					singleCause := true
+					for cause := err; cause != nil && singleCause; {
+						if joined, ok := cause.(interface{ Unwrap() []error }); ok {
+							cause = nil
+							for _, child := range joined.Unwrap() {
+								if child != nil {
+									if cause != nil {
+										singleCause = false
+										break
+									}
+									cause = child
+								}
+							}
+						} else {
+							cause = errors.Unwrap(cause)
+						}
+					}
+					if singleCause {
+						// A remote stop keeps its status while the caller is still active.
+						switch status.Code(err) {
+						case codes.Canceled, codes.DeadlineExceeded:
+							return nil, err
+						}
 					}
 					return nil, goa.Fault("%s", err.Error())
 				}
