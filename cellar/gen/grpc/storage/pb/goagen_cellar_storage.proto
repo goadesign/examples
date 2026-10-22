@@ -14,23 +14,23 @@ option go_package = "/storagepb";
 // The storage service makes it possible to view, add or remove wine bottles.
 service Storage {
 	// List all stored bottles
-	rpc List (ListRequest) returns (StoredBottleCollection);
+	rpc List (.storage.ListRequest) returns (.storage.StoredBottleCollection);
 	// Show bottle by ID
-	rpc Show (ShowRequest) returns (ShowResponse);
+	rpc Show (.storage.ShowRequest) returns (.storage.ShowResponse);
 	// Add new bottle and return its ID.
-	rpc Add (AddRequest) returns (AddResponse);
+	rpc Add (.storage.AddRequest) returns (.storage.AddResponse);
 	// Remove bottle from storage
-	rpc Remove (RemoveRequest) returns (RemoveResponse);
+	rpc Remove (.storage.RemoveRequest) returns (.storage.RemoveResponse);
 	// Rate bottles by IDs
-	rpc Rate (RateRequest) returns (RateResponse);
+	rpc Rate (.storage.RateRequest) returns (.storage.RateResponse);
 	// Add n number of bottles and return their IDs. This is a multipart request
 // and each part has field name 'bottle' and contains the encoded bottle info
 // to be added.
-	rpc MultiAdd (MultiAddRequest) returns (MultiAddResponse);
+	rpc MultiAdd (.storage.MultiAddRequest) returns (.storage.MultiAddResponse);
 	// Update bottles with the given IDs. This is a multipart request and each part
 // has field name 'bottle' and contains the encoded bottle info to be updated.
 // The IDs in the query parameter is mapped to each part in the request.
-	rpc MultiUpdate (MultiUpdateRequest) returns (MultiUpdateResponse);
+	rpc MultiUpdate (.storage.MultiUpdateRequest) returns (.storage.MultiUpdateResponse);
 }
 
 message ListRequest {

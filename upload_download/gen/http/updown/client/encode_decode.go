@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -38,7 +39,9 @@ func (c *Client) BuildUploadRequest(ctx context.Context, v any) (*http.Request, 
 		body = rd.Body
 		dir = p.Dir
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UploadUpdownPath(dir)}
+
+	rawPath := fmt.Sprintf("/upload/%v", (&url.URL{Path: fmt.Sprint(dir)}).EscapedPath())
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UploadUpdownPath(dir), RawPath: rawPath}
 	req, err := http.NewRequest("POST", u.String(), body)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("updown", "upload", u.String(), err)
@@ -186,7 +189,9 @@ func (c *Client) BuildDownloadRequest(ctx context.Context, v any) (*http.Request
 		}
 		filename = p
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DownloadUpdownPath(filename)}
+
+	rawPath := fmt.Sprintf("/download/%v", (&url.URL{Path: fmt.Sprint(filename)}).EscapedPath())
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DownloadUpdownPath(filename), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("updown", "download", u.String(), err)

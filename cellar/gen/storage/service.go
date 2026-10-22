@@ -272,6 +272,9 @@ func newStoredBottle(vres *storageviews.StoredBottleView) *StoredBottle {
 	if vres.Vintage != nil {
 		res.Vintage = *vres.Vintage
 	}
+	if vres.Winery != nil {
+		res.Winery = newWineryTiny(vres.Winery)
+	}
 	if vres.Composition != nil {
 		res.Composition = make([]*Component, len(vres.Composition))
 		for i, val := range vres.Composition {
@@ -281,9 +284,6 @@ func newStoredBottle(vres *storageviews.StoredBottleView) *StoredBottle {
 			}
 			res.Composition[i] = transformStorageviewsComponentViewToComponent(val)
 		}
-	}
-	if vres.Winery != nil {
-		res.Winery = newWineryTiny(vres.Winery)
 	}
 	return res
 }
@@ -314,6 +314,9 @@ func newStoredBottleView(res *StoredBottle) *storageviews.StoredBottleView {
 		Description: res.Description,
 		Rating:      res.Rating,
 	}
+	if res.Winery != nil {
+		vres.Winery = newWineryViewTiny(res.Winery)
+	}
 	if res.Composition != nil {
 		vres.Composition = make([]*storageviews.ComponentView, len(res.Composition))
 		for i, val := range res.Composition {
@@ -323,9 +326,6 @@ func newStoredBottleView(res *StoredBottle) *storageviews.StoredBottleView {
 			}
 			vres.Composition[i] = transformComponentToStorageviewsComponentView(val)
 		}
-	}
-	if res.Winery != nil {
-		vres.Winery = newWineryViewTiny(res.Winery)
 	}
 	return vres
 }

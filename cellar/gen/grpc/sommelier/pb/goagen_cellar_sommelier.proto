@@ -14,7 +14,7 @@ option go_package = "/sommelierpb";
 // The sommelier service retrieves bottles given a set of criteria.
 service Sommelier {
 	// Pick implements pick.
-	rpc Pick (PickRequest) returns (StoredBottleCollection);
+	rpc Pick (.sommelier.PickRequest) returns (.sommelier.StoredBottleCollection);
 }
 
 message PickRequest {

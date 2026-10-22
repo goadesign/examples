@@ -15,9 +15,12 @@ import (
 
 // NewPickPayload builds *sommelier.Criteria from *sommelierpb.PickRequest.
 func NewPickPayload(message *sommelierpb.PickRequest) *sommelier.Criteria {
-	v := &sommelier.Criteria{
-		Name:   message.Name,
-		Winery: message.Winery,
+	v := &sommelier.Criteria{}
+	if message.Name != nil {
+		v.Name = message.Name
+	}
+	if message.Winery != nil {
+		v.Winery = message.Winery
 	}
 	if message.Varietal != nil {
 		v.Varietal = make([]string, len(message.Varietal))
@@ -44,11 +47,15 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 // *sommelierviews.StoredBottleView.
 func transformStoredBottleViewToProtoStoredBottle(v *sommelierviews.StoredBottleView) *sommelierpb.StoredBottle {
 	res := &sommelierpb.StoredBottle{
-		Id:          v.ID,
-		Name:        v.Name,
-		Vintage:     v.Vintage,
-		Description: v.Description,
-		Rating:      v.Rating,
+		Id:      v.ID,
+		Name:    v.Name,
+		Vintage: v.Vintage,
+	}
+	if v.Description != nil {
+		res.Description = v.Description
+	}
+	if v.Rating != nil {
+		res.Rating = v.Rating
 	}
 	if v.Winery != nil {
 		res.Winery = transformWineryViewToProtoWinery(v.Winery)
@@ -77,8 +84,10 @@ func transformWineryViewToProtoWinery(v *sommelierviews.WineryView) *sommelierpb
 // *sommelierpb.Component from a value of type *sommelierviews.ComponentView.
 func transformComponentViewToProtoComponent(v *sommelierviews.ComponentView) *sommelierpb.Component {
 	res := &sommelierpb.Component{
-		Varietal:   v.Varietal,
-		Percentage: v.Percentage,
+		Varietal: v.Varietal,
+	}
+	if v.Percentage != nil {
+		res.Percentage = v.Percentage
 	}
 
 	return res

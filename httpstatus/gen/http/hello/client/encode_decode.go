@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -33,7 +34,9 @@ func (c *Client) BuildHelloRequest(ctx context.Context, v any) (*http.Request, e
 		}
 		greeting = p.Greeting
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: HelloHelloPath(greeting)}
+
+	rawPath := fmt.Sprintf("/hello/%v", url.PathEscape(fmt.Sprint(greeting)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: HelloHelloPath(greeting), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("hello", "hello", u.String(), err)

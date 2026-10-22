@@ -19,7 +19,7 @@ option go_package = "/interceptorspb";
 // robust service.
 service Interceptors {
 	// Get retrieves a record by ID with all interceptors in action
-	rpc Get (GetRequest) returns (GetResponse);
+	rpc Get (.interceptors.GetRequest) returns (.interceptors.GetResponse);
 }
 
 message GetRequest {

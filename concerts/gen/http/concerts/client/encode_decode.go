@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -217,7 +218,9 @@ func (c *Client) BuildShowRequest(ctx context.Context, v any) (*http.Request, er
 		}
 		concertID = p.ConcertID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowConcertsPath(concertID)}
+
+	rawPath := fmt.Sprintf("/concerts/%v", url.PathEscape(fmt.Sprint(concertID)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowConcertsPath(concertID), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("concerts", "show", u.String(), err)
@@ -308,7 +311,9 @@ func (c *Client) BuildUpdateRequest(ctx context.Context, v any) (*http.Request, 
 		}
 		concertID = p.ConcertID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UpdateConcertsPath(concertID)}
+
+	rawPath := fmt.Sprintf("/concerts/%v", url.PathEscape(fmt.Sprint(concertID)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: UpdateConcertsPath(concertID), RawPath: rawPath}
 	req, err := http.NewRequest("PUT", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("concerts", "update", u.String(), err)
@@ -430,7 +435,9 @@ func (c *Client) BuildDeleteRequest(ctx context.Context, v any) (*http.Request, 
 		}
 		concertID = p.ConcertID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DeleteConcertsPath(concertID)}
+
+	rawPath := fmt.Sprintf("/concerts/%v", url.PathEscape(fmt.Sprint(concertID)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DeleteConcertsPath(concertID), RawPath: rawPath}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("concerts", "delete", u.String(), err)

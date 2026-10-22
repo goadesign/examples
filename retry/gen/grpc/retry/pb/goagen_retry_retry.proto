@@ -14,7 +14,7 @@ option go_package = "/retrypb";
 // Returns a message after demonstrating one safe retry.
 service Retry {
 	// Returns a stable message after a temporary first-attempt failure.
-	rpc GetMessage (GetMessageRequest) returns (GetMessageResponse) {
+	rpc GetMessage (.retry.GetMessageRequest) returns (.retry.GetMessageResponse) {
 		option idempotency_level = IDEMPOTENT;
 	}
 }

@@ -34,8 +34,9 @@ func NewSigninResult(message *secured_servicepb.SigninResponse) *securedservice.
 // NewProtoSecureRequest builds *secured_servicepb.SecureRequest from
 // *securedservice.SecurePayload.
 func NewProtoSecureRequest(payload *securedservice.SecurePayload) *secured_servicepb.SecureRequest {
-	message := &secured_servicepb.SecureRequest{
-		Fail: payload.Fail,
+	message := &secured_servicepb.SecureRequest{}
+	if payload.Fail != nil {
+		message.Fail = payload.Fail
 	}
 	return message
 }
@@ -66,10 +67,15 @@ func NewDoublySecureResult(message *secured_servicepb.DoublySecureResponse) stri
 // *secured_servicepb.AlsoDoublySecureRequest from
 // *securedservice.AlsoDoublySecurePayload.
 func NewProtoAlsoDoublySecureRequest(payload *securedservice.AlsoDoublySecurePayload) *secured_servicepb.AlsoDoublySecureRequest {
-	message := &secured_servicepb.AlsoDoublySecureRequest{
-		Username: payload.Username,
-		Password: payload.Password,
-		Key:      payload.Key,
+	message := &secured_servicepb.AlsoDoublySecureRequest{}
+	if payload.Username != nil {
+		message.Username = payload.Username
+	}
+	if payload.Password != nil {
+		message.Password = payload.Password
+	}
+	if payload.Key != nil {
+		message.Key = payload.Key
 	}
 	return message
 }

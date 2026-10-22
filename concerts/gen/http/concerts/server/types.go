@@ -195,7 +195,7 @@ type ConcertResponse struct {
 
 // NewListResponseBody builds the HTTP response body from the result of the
 // "list" endpoint of the "concerts" service.
-func NewListResponseBody(res []*concerts.Concert) ListResponseBody {
+func NewListResponseBody(res []*concerts.Concert) []*ConcertResponse {
 	body := make([]*ConcertResponse, len(res))
 	for i, val := range res {
 		if val == nil {

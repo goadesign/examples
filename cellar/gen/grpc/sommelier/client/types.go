@@ -18,9 +18,12 @@ import (
 
 // NewProtoPickRequest builds *sommelierpb.PickRequest from *sommelier.Criteria.
 func NewProtoPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
-	message := &sommelierpb.PickRequest{
-		Name:   payload.Name,
-		Winery: payload.Winery,
+	message := &sommelierpb.PickRequest{}
+	if payload.Name != nil {
+		message.Name = payload.Name
+	}
+	if payload.Winery != nil {
+		message.Winery = payload.Winery
 	}
 	if payload.Varietal != nil {
 		message.Varietal = make([]string, len(payload.Varietal))
@@ -44,7 +47,11 @@ func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.S
 // ValidateStoredBottleCollection runs the validations defined on
 // StoredBottleCollection.
 func ValidateStoredBottleCollection(message *sommelierpb.StoredBottleCollection) (err error) {
-	for _, e := range message.Field {
+	var messageField []*sommelierpb.StoredBottle
+	if message != nil {
+		messageField = message.Field
+	}
+	for _, e := range messageField {
 		if e != nil {
 			if err2 := validatecellar_sommelier_StoredBottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
@@ -147,11 +154,15 @@ func validatecellar_sommelier_Component_At_elem(elem *sommelierpb.Component) (er
 // *sommelierpb.StoredBottle.
 func transformProtoStoredBottleToStoredBottleView(v *sommelierpb.StoredBottle) *sommelierviews.StoredBottleView {
 	res := &sommelierviews.StoredBottleView{
-		ID:          v.Id,
-		Name:        v.Name,
-		Vintage:     v.Vintage,
-		Description: v.Description,
-		Rating:      v.Rating,
+		ID:      v.Id,
+		Name:    v.Name,
+		Vintage: v.Vintage,
+	}
+	if v.Description != nil {
+		res.Description = v.Description
+	}
+	if v.Rating != nil {
+		res.Rating = v.Rating
 	}
 	if v.Winery != nil {
 		res.Winery = transformProtoWineryToWineryView(v.Winery)
@@ -180,8 +191,10 @@ func transformProtoWineryToWineryView(v *sommelierpb.Winery) *sommelierviews.Win
 // *sommelierviews.ComponentView from a value of type *sommelierpb.Component.
 func transformProtoComponentToComponentView(v *sommelierpb.Component) *sommelierviews.ComponentView {
 	res := &sommelierviews.ComponentView{
-		Varietal:   v.Varietal,
-		Percentage: v.Percentage,
+		Varietal: v.Varietal,
+	}
+	if v.Percentage != nil {
+		res.Percentage = v.Percentage
 	}
 
 	return res

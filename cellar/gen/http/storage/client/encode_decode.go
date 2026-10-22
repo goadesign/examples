@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -106,7 +107,9 @@ func (c *Client) BuildShowRequest(ctx context.Context, v any) (*http.Request, er
 		}
 		id = p.ID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowStoragePath(id)}
+
+	rawPath := fmt.Sprintf("/storage/%v", url.PathEscape(fmt.Sprint(id)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ShowStoragePath(id), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("storage", "show", u.String(), err)
@@ -323,7 +326,9 @@ func (c *Client) BuildRemoveRequest(ctx context.Context, v any) (*http.Request, 
 		}
 		id = p.ID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: RemoveStoragePath(id)}
+
+	rawPath := fmt.Sprintf("/storage/%v", url.PathEscape(fmt.Sprint(id)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: RemoveStoragePath(id), RawPath: rawPath}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("storage", "remove", u.String(), err)

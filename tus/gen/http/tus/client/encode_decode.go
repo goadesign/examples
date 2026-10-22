@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -35,7 +36,9 @@ func (c *Client) BuildHeadRequest(ctx context.Context, v any) (*http.Request, er
 		}
 		id = p.ID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: HeadTusPath(id)}
+
+	rawPath := fmt.Sprintf("/upload/%v", url.PathEscape(fmt.Sprint(id)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: HeadTusPath(id), RawPath: rawPath}
 	req, err := http.NewRequest("HEAD", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("tus", "head", u.String(), err)
@@ -320,7 +323,9 @@ func (c *Client) BuildPatchRequest(ctx context.Context, v any) (*http.Request, e
 		body = rd.Body
 		id = p.ID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: PatchTusPath(id)}
+
+	rawPath := fmt.Sprintf("/upload/%v", url.PathEscape(fmt.Sprint(id)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: PatchTusPath(id), RawPath: rawPath}
 	req, err := http.NewRequest("PATCH", u.String(), body)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("tus", "patch", u.String(), err)
@@ -1534,7 +1539,9 @@ func (c *Client) BuildDeleteRequest(ctx context.Context, v any) (*http.Request, 
 		}
 		id = p.ID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DeleteTusPath(id)}
+
+	rawPath := fmt.Sprintf("/upload/%v", url.PathEscape(fmt.Sprint(id)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DeleteTusPath(id), RawPath: rawPath}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("tus", "delete", u.String(), err)

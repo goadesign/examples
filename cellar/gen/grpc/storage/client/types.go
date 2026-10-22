@@ -44,11 +44,15 @@ func NewProtoShowRequest(payload *storage.ShowPayload) *storagepb.ShowRequest {
 // *storagepb.ShowResponse.
 func NewShowResult(message *storagepb.ShowResponse) *storageviews.StoredBottleView {
 	result := &storageviews.StoredBottleView{
-		ID:          message.Id,
-		Name:        message.Name,
-		Vintage:     message.Vintage,
-		Description: message.Description,
-		Rating:      message.Rating,
+		ID:      message.Id,
+		Name:    message.Name,
+		Vintage: message.Vintage,
+	}
+	if message.Description != nil {
+		result.Description = message.Description
+	}
+	if message.Rating != nil {
+		result.Rating = message.Rating
 	}
 	if message.Winery != nil {
 		result.Winery = transformProtoWineryToWineryView(message.Winery)
@@ -88,10 +92,14 @@ func NewShowNotFoundError(message *storagepb.ShowNotFoundError) *storage.NotFoun
 // NewProtoAddRequest builds *storagepb.AddRequest from *storage.Bottle.
 func NewProtoAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
 	message := &storagepb.AddRequest{
-		Name:        &payload.Name,
-		Vintage:     &payload.Vintage,
-		Description: payload.Description,
-		Rating:      payload.Rating,
+		Name:    &payload.Name,
+		Vintage: &payload.Vintage,
+	}
+	if payload.Description != nil {
+		message.Description = payload.Description
+	}
+	if payload.Rating != nil {
+		message.Rating = payload.Rating
 	}
 	if payload.Winery != nil {
 		message.Winery = transformWineryToProtoWinery(payload.Winery)
@@ -178,7 +186,11 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 // ValidateStoredBottleCollectionTiny runs the validations defined on
 // StoredBottleCollection.
 func ValidateStoredBottleCollectionTiny(message *storagepb.StoredBottleCollection) (err error) {
-	for _, e := range message.Field {
+	var messageField []*storagepb.StoredBottle
+	if message != nil {
+		messageField = message.Field
+	}
+	for _, e := range messageField {
 		if e != nil {
 			if err2 := validatecellar_storage_StoredBottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
@@ -437,7 +449,11 @@ func ValidateRemoveRequest(message *storagepb.RemoveRequest) (err error) {
 
 // ValidateMultiAddRequest runs the validations defined on MultiAddRequest.
 func ValidateMultiAddRequest(message *storagepb.MultiAddRequest) (err error) {
-	for _, e := range message.Field {
+	var messageField []*storagepb.Bottle
+	if message != nil {
+		messageField = message.Field
+	}
+	for _, e := range messageField {
 		if e != nil {
 			if err2 := validatecellar_storage_Bottle_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
@@ -540,8 +556,10 @@ func transformProtoWineryToWineryView(v *storagepb.Winery) *storageviews.WineryV
 // *storageviews.ComponentView from a value of type *storagepb.Component.
 func transformProtoComponentToComponentView(v *storagepb.Component) *storageviews.ComponentView {
 	res := &storageviews.ComponentView{
-		Varietal:   v.Varietal,
-		Percentage: v.Percentage,
+		Varietal: v.Varietal,
+	}
+	if v.Percentage != nil {
+		res.Percentage = v.Percentage
 	}
 
 	return res
@@ -554,7 +572,9 @@ func transformWineryToProtoWinery(v *storage.Winery) *storagepb.Winery {
 		Name:    &v.Name,
 		Region:  &v.Region,
 		Country: &v.Country,
-		Url:     v.URL,
+	}
+	if v.URL != nil {
+		res.Url = v.URL
 	}
 
 	return res
@@ -564,8 +584,10 @@ func transformWineryToProtoWinery(v *storage.Winery) *storagepb.Winery {
 // *storagepb.Component from a value of type *storage.Component.
 func transformComponentToProtoComponent(v *storage.Component) *storagepb.Component {
 	res := &storagepb.Component{
-		Varietal:   &v.Varietal,
-		Percentage: v.Percentage,
+		Varietal: &v.Varietal,
+	}
+	if v.Percentage != nil {
+		res.Percentage = v.Percentage
 	}
 
 	return res
@@ -578,7 +600,9 @@ func transformProtoWineryToWinery(v *storagepb.Winery) *storage.Winery {
 		Name:    *v.Name,
 		Region:  *v.Region,
 		Country: *v.Country,
-		URL:     v.Url,
+	}
+	if v.Url != nil {
+		res.URL = v.Url
 	}
 
 	return res
@@ -588,8 +612,10 @@ func transformProtoWineryToWinery(v *storagepb.Winery) *storage.Winery {
 // from a value of type *storagepb.Component.
 func transformProtoComponentToComponent(v *storagepb.Component) *storage.Component {
 	res := &storage.Component{
-		Varietal:   *v.Varietal,
-		Percentage: v.Percentage,
+		Varietal: *v.Varietal,
+	}
+	if v.Percentage != nil {
+		res.Percentage = v.Percentage
 	}
 
 	return res
@@ -599,10 +625,14 @@ func transformProtoComponentToComponent(v *storagepb.Component) *storage.Compone
 // value of type *storage.Bottle.
 func transformBottleToProtoBottle(v *storage.Bottle) *storagepb.Bottle {
 	res := &storagepb.Bottle{
-		Name:        &v.Name,
-		Vintage:     &v.Vintage,
-		Description: v.Description,
-		Rating:      v.Rating,
+		Name:    &v.Name,
+		Vintage: &v.Vintage,
+	}
+	if v.Description != nil {
+		res.Description = v.Description
+	}
+	if v.Rating != nil {
+		res.Rating = v.Rating
 	}
 	if v.Winery != nil {
 		res.Winery = transformWineryToProtoWinery(v.Winery)
@@ -621,10 +651,14 @@ func transformBottleToProtoBottle(v *storage.Bottle) *storagepb.Bottle {
 // value of type *storagepb.Bottle.
 func transformProtoBottleToBottle(v *storagepb.Bottle) *storage.Bottle {
 	res := &storage.Bottle{
-		Name:        *v.Name,
-		Vintage:     *v.Vintage,
-		Description: v.Description,
-		Rating:      v.Rating,
+		Name:    *v.Name,
+		Vintage: *v.Vintage,
+	}
+	if v.Description != nil {
+		res.Description = v.Description
+	}
+	if v.Rating != nil {
+		res.Rating = v.Rating
 	}
 	if v.Winery != nil {
 		res.Winery = transformProtoWineryToWinery(v.Winery)

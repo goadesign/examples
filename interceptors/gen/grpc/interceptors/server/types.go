@@ -39,7 +39,6 @@ func NewProtoGetResponse(result *interceptors.GetResult) *interceptorspb.GetResp
 		Value:       &result.Value,
 		Tenant:      &result.Tenant,
 		ProcessedAt: &result.ProcessedAt,
-		CachedAt:    result.CachedAt,
 	}
 	id := string(result.ID)
 	message.Id = &id
@@ -47,6 +46,9 @@ func NewProtoGetResponse(result *interceptors.GetResult) *interceptorspb.GetResp
 	message.Status = &status
 	duration := int32(result.Duration)
 	message.Duration = &duration
+	if result.CachedAt != nil {
+		message.CachedAt = result.CachedAt
+	}
 	if result.RetryCount != nil {
 		retryCount := int32(*result.RetryCount)
 		message.RetryCount = &retryCount

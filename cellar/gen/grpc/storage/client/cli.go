@@ -71,10 +71,14 @@ func BuildAddPayload(storageAddMessage *string) (*storage.Bottle, error) {
 		return zero, err
 	}
 	v := &storage.Bottle{
-		Name:        *message.Name,
-		Vintage:     *message.Vintage,
-		Description: message.Description,
-		Rating:      message.Rating,
+		Name:    *message.Name,
+		Vintage: *message.Vintage,
+	}
+	if message.Description != nil {
+		v.Description = message.Description
+	}
+	if message.Rating != nil {
+		v.Rating = message.Rating
 	}
 	if message.Winery != nil {
 		v.Winery = transformProtoWineryToWinery(message.Winery)

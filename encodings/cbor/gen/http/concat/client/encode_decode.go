@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -34,7 +35,9 @@ func (c *Client) BuildConcatRequest(ctx context.Context, v any) (*http.Request, 
 		a = p.A
 		b = p.B
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatConcatPath(a, b)}
+
+	rawPath := fmt.Sprintf("/concat/%v/%v", url.PathEscape(fmt.Sprint(a)), url.PathEscape(fmt.Sprint(b)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatConcatPath(a, b), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("concat", "concat", u.String(), err)

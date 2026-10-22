@@ -14,17 +14,17 @@ option go_package = "/chatterpb";
 // The chatter service implements a simple client and server chat.
 service Chatter {
 	// Creates a valid JWT token for auth to chat.
-	rpc Login (LoginRequest) returns (LoginResponse);
+	rpc Login (.chatter.LoginRequest) returns (.chatter.LoginResponse);
 	// Echoes the message sent by the client.
-	rpc Echoer (stream EchoerStreamingRequest) returns (stream EchoerResponse);
+	rpc Echoer (stream .chatter.EchoerStreamingRequest) returns (stream .chatter.EchoerResponse);
 	// Listens to the messages sent by the client.
-	rpc Listener (stream ListenerStreamingRequest) returns (ListenerResponse);
+	rpc Listener (stream .chatter.ListenerStreamingRequest) returns (.chatter.ListenerResponse);
 	// Summarizes the chat messages sent by the client.
-	rpc Summary (stream SummaryStreamingRequest) returns (ChatSummaryCollection);
+	rpc Summary (stream .chatter.SummaryStreamingRequest) returns (.chatter.ChatSummaryCollection);
 	// Subscribe to events sent when new chat messages are added.
-	rpc Subscribe (SubscribeRequest) returns (stream SubscribeResponse);
+	rpc Subscribe (.chatter.SubscribeRequest) returns (stream .chatter.SubscribeResponse);
 	// Returns the chat messages sent to the server.
-	rpc History (HistoryRequest) returns (stream HistoryResponse);
+	rpc History (.chatter.HistoryRequest) returns (stream .chatter.HistoryResponse);
 }
 
 message LoginRequest {

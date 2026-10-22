@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -34,7 +35,9 @@ func (c *Client) BuildConcatstringsRequest(ctx context.Context, v any) (*http.Re
 		a = p.A
 		b = p.B
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatstringsTextPath(a, b)}
+
+	rawPath := fmt.Sprintf("/concatstrings/%v/%v", url.PathEscape(fmt.Sprint(a)), url.PathEscape(fmt.Sprint(b)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatstringsTextPath(a, b), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("text", "concatstrings", u.String(), err)
@@ -105,7 +108,9 @@ func (c *Client) BuildConcatbytesRequest(ctx context.Context, v any) (*http.Requ
 		a = p.A
 		b = p.B
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatbytesTextPath(a, b)}
+
+	rawPath := fmt.Sprintf("/concatbytes/%v/%v", url.PathEscape(fmt.Sprint(a)), url.PathEscape(fmt.Sprint(b)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatbytesTextPath(a, b), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("text", "concatbytes", u.String(), err)
@@ -176,7 +181,9 @@ func (c *Client) BuildConcatstringfieldRequest(ctx context.Context, v any) (*htt
 		a = p.A
 		b = p.B
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatstringfieldTextPath(a, b)}
+
+	rawPath := fmt.Sprintf("/concatstringfield/%v/%v", url.PathEscape(fmt.Sprint(a)), url.PathEscape(fmt.Sprint(b)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatstringfieldTextPath(a, b), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("text", "concatstringfield", u.String(), err)
@@ -248,7 +255,9 @@ func (c *Client) BuildConcatbytesfieldRequest(ctx context.Context, v any) (*http
 		a = p.A
 		b = p.B
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatbytesfieldTextPath(a, b)}
+
+	rawPath := fmt.Sprintf("/concatbytesfield/%v/%v", url.PathEscape(fmt.Sprint(a)), url.PathEscape(fmt.Sprint(b)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ConcatbytesfieldTextPath(a, b), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("text", "concatbytesfield", u.String(), err)

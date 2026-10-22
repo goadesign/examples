@@ -38,7 +38,7 @@ paths:
                 "202":
                     description: Accepted response.
                     schema:
-                        $ref: '#/definitions/Hello'
+                        $ref: '#/definitions/Hello2'
             schemes:
                 - http
 definitions:
@@ -53,6 +53,19 @@ definitions:
         description: HelloCreatedResponseBody result type (default view)
         example:
             greeting: Ea earum recusandae.
+        required:
+            - greeting
+    Hello2:
+        title: 'Mediatype identifier: application/vnd.hello; view=default'
+        type: object
+        properties:
+            greeting:
+                type: string
+                description: The greeting message
+                example: Ex tempore iste.
+        description: HelloAcceptedResponseBody result type (default view)
+        example:
+            greeting: Ex tempore iste.
         required:
             - greeting
     HelloHelloOKResponseBody:

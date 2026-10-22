@@ -137,7 +137,11 @@ func ValidateEchoerResponse(message *chatterpb.EchoerResponse) (err error) {
 // ValidateChatSummaryCollection runs the validations defined on
 // ChatSummaryCollection.
 func ValidateChatSummaryCollection(message *chatterpb.ChatSummaryCollection) (err error) {
-	for _, e := range message.Field {
+	var messageField []*chatterpb.ChatSummary
+	if message != nil {
+		messageField = message.Field
+	}
+	for _, e := range messageField {
 		if e != nil {
 			if err2 := validatechatter_chatter_ChatSummary_At_elem(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)

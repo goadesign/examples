@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -32,7 +33,9 @@ func (c *Client) BuildGetMessageRequest(ctx context.Context, v any) (*http.Reque
 		}
 		id = p.ID
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetMessageRetryPath(id)}
+
+	rawPath := fmt.Sprintf("/messages/%v", url.PathEscape(fmt.Sprint(id)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetMessageRetryPath(id), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("retry", "get_message", u.String(), err)

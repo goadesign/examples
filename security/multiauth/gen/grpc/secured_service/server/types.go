@@ -35,8 +35,9 @@ func NewProtoSigninResponse(result *securedservice.Creds) *secured_servicepb.Sig
 // NewSecurePayload builds *securedservice.SecurePayload from
 // *secured_servicepb.SecureRequest.
 func NewSecurePayload(message *secured_servicepb.SecureRequest, token string) *securedservice.SecurePayload {
-	v := &securedservice.SecurePayload{
-		Fail: message.Fail,
+	v := &securedservice.SecurePayload{}
+	if message.Fail != nil {
+		v.Fail = message.Fail
 	}
 	v.Token = token
 	return v
@@ -72,10 +73,15 @@ func NewProtoDoublySecureResponse(result string) *secured_servicepb.DoublySecure
 // NewAlsoDoublySecurePayload builds *securedservice.AlsoDoublySecurePayload
 // from *secured_servicepb.AlsoDoublySecureRequest.
 func NewAlsoDoublySecurePayload(message *secured_servicepb.AlsoDoublySecureRequest, oauthToken *string, token *string) *securedservice.AlsoDoublySecurePayload {
-	v := &securedservice.AlsoDoublySecurePayload{
-		Username: message.Username,
-		Password: message.Password,
-		Key:      message.Key,
+	v := &securedservice.AlsoDoublySecurePayload{}
+	if message.Username != nil {
+		v.Username = message.Username
+	}
+	if message.Password != nil {
+		v.Password = message.Password
+	}
+	if message.Key != nil {
+		v.Key = message.Key
 	}
 	if oauthToken != nil {
 		oauthTokenService := *oauthToken

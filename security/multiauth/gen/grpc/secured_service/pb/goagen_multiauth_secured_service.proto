@@ -15,15 +15,15 @@ option go_package = "/secured_servicepb";
 // credentials.
 service SecuredService {
 	// Creates a valid JWT
-	rpc Signin (SigninRequest) returns (SigninResponse);
+	rpc Signin (.secured_service.SigninRequest) returns (.secured_service.SigninResponse);
 	// This action is secured with the jwt scheme
-	rpc Secure (SecureRequest) returns (SecureResponse);
+	rpc Secure (.secured_service.SecureRequest) returns (.secured_service.SecureResponse);
 	// This action is secured with the jwt scheme and also requires an API key
 // query string.
-	rpc DoublySecure (DoublySecureRequest) returns (DoublySecureResponse);
+	rpc DoublySecure (.secured_service.DoublySecureRequest) returns (.secured_service.DoublySecureResponse);
 	// This action is secured with the jwt scheme and also requires an API key
 // header.
-	rpc AlsoDoublySecure (AlsoDoublySecureRequest) returns (AlsoDoublySecureResponse);
+	rpc AlsoDoublySecure (.secured_service.AlsoDoublySecureRequest) returns (.secured_service.AlsoDoublySecureResponse);
 }
 
 message SigninRequest {

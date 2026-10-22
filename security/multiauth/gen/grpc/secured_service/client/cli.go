@@ -59,8 +59,9 @@ func BuildSecurePayload(securedServiceSecureMessage *string, securedServiceSecur
 		}
 		token = *securedServiceSecureToken
 	}
-	v := &securedservice.SecurePayload{
-		Fail: message.Fail,
+	v := &securedservice.SecurePayload{}
+	if message.Fail != nil {
+		v.Fail = message.Fail
 	}
 	v.Token = token
 
@@ -124,10 +125,15 @@ func BuildAlsoDoublySecurePayload(securedServiceAlsoDoublySecureMessage *string,
 			token = securedServiceAlsoDoublySecureToken
 		}
 	}
-	v := &securedservice.AlsoDoublySecurePayload{
-		Username: message.Username,
-		Password: message.Password,
-		Key:      message.Key,
+	v := &securedservice.AlsoDoublySecurePayload{}
+	if message.Username != nil {
+		v.Username = message.Username
+	}
+	if message.Password != nil {
+		v.Password = message.Password
+	}
+	if message.Key != nil {
+		v.Key = message.Key
 	}
 	v.OauthToken = oauthToken
 	v.Token = token

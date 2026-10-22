@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -34,7 +35,9 @@ func (c *Client) BuildGetRequest(ctx context.Context, v any) (*http.Request, err
 		tenantID = string(p.TenantID)
 		recordID = string(p.RecordID)
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetInterceptorsPath(tenantID, recordID)}
+
+	rawPath := fmt.Sprintf("/records/%v/%v", url.PathEscape(fmt.Sprint(tenantID)), url.PathEscape(fmt.Sprint(recordID)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetInterceptorsPath(tenantID, recordID), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("interceptors", "get", u.String(), err)
@@ -160,7 +163,9 @@ func (c *Client) BuildCreateRequest(ctx context.Context, v any) (*http.Request, 
 		}
 		tenantID = string(p.TenantID)
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateInterceptorsPath(tenantID)}
+
+	rawPath := fmt.Sprintf("/records/%v", url.PathEscape(fmt.Sprint(tenantID)))
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateInterceptorsPath(tenantID), RawPath: rawPath}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("interceptors", "create", u.String(), err)
@@ -261,7 +266,9 @@ func (c *Client) BuildStreamRequest(ctx context.Context, v any) (*http.Request, 
 	case "https":
 		scheme = "wss"
 	}
-	u := &url.URL{Scheme: scheme, Host: c.host, Path: StreamInterceptorsPath(tenantID)}
+
+	rawPath := fmt.Sprintf("/records/%v/stream", url.PathEscape(fmt.Sprint(tenantID)))
+	u := &url.URL{Scheme: scheme, Host: c.host, Path: StreamInterceptorsPath(tenantID), RawPath: rawPath}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("interceptors", "stream", u.String(), err)

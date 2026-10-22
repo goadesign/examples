@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	goa.design/clue v1.3.0
-	goa.design/goa/v3 v3.34.0
+	goa.design/goa/v3 v3.35.0
 	google.golang.org/grpc v1.84.0
 	google.golang.org/protobuf v1.36.12
 )

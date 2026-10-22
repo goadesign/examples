@@ -14,7 +14,7 @@ option go_package = "/calcpb";
 // The calc service performs operations on numbers
 service Calc {
 	// Multiply implements multiply.
-	rpc Multiply (MultiplyRequest) returns (MultiplyResponse);
+	rpc Multiply (.calc.MultiplyRequest) returns (.calc.MultiplyResponse);
 }
 
 message MultiplyRequest {

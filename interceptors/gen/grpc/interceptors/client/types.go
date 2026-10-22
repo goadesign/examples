@@ -43,7 +43,9 @@ func NewGetResult(message *interceptorspb.GetResponse) *interceptors.GetResult {
 		Status:      int(*message.Status),
 		ProcessedAt: *message.ProcessedAt,
 		Duration:    int(*message.Duration),
-		CachedAt:    message.CachedAt,
+	}
+	if message.CachedAt != nil {
+		result.CachedAt = message.CachedAt
 	}
 	if message.RetryCount != nil {
 		retryCount := int(*message.RetryCount)

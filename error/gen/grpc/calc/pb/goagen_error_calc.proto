@@ -14,7 +14,7 @@ option go_package = "/calcpb";
 // Service is the calc service interface.
 service Calc {
 	// Divide implements divide.
-	rpc Divide (DivideRequest) returns (DivideResponse);
+	rpc Divide (.calc.DivideRequest) returns (.calc.DivideResponse);
 }
 
 message DivideDivByZeroError {

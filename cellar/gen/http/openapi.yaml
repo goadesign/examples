@@ -145,7 +145,7 @@ paths:
                   schema:
                     type: array
                     items:
-                        $ref: '#/definitions/Bottle'
+                        $ref: '#/definitions/Bottle2'
             responses:
                 "200":
                     description: OK response.
@@ -264,6 +264,70 @@ definitions:
             name: Blue's Cuvee
             rating: 3
             vintage: 2005
+            winery:
+                country: USA
+                name: Longoria
+                region: Central Coast, California
+                url: http://www.longoriawine.com/
+        required:
+            - name
+            - winery
+            - vintage
+    Bottle2:
+        title: Bottle2
+        type: object
+        properties:
+            composition:
+                type: array
+                items:
+                    $ref: '#/definitions/Component'
+                description: Composition is the list of grape varietals and associated percentage.
+                example:
+                    - percentage: 8
+                      varietal: Syrah
+                    - percentage: 8
+                      varietal: Syrah
+                    - percentage: 8
+                      varietal: Syrah
+            description:
+                type: string
+                description: Description of bottle
+                example: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+                maxLength: 2000
+            name:
+                type: string
+                description: Name of bottle
+                example: Blue's Cuvee
+                maxLength: 100
+            rating:
+                type: integer
+                description: Rating of bottle from 1 (worst) to 5 (best)
+                example: 3
+                format: int32
+                minimum: 1
+                maximum: 5
+            vintage:
+                type: integer
+                description: Vintage of bottle
+                example: 2003
+                format: int32
+                minimum: 1900
+                maximum: 2020
+            winery:
+                $ref: '#/definitions/Winery'
+        description: Bottle describes a bottle of wine to be stored.
+        example:
+            composition:
+                - percentage: 8
+                  varietal: Syrah
+                - percentage: 8
+                  varietal: Syrah
+                - percentage: 8
+                  varietal: Syrah
+            description: Red wine blend with an emphasis on the Cabernet Franc grape and including other Bordeaux grape varietals and some Syrah
+            name: Blue's Cuvee
+            rating: 3
+            vintage: 2003
             winery:
                 country: USA
                 name: Longoria
@@ -456,7 +520,7 @@ definitions:
             bottles:
                 type: array
                 items:
-                    $ref: '#/definitions/Bottle'
+                    $ref: '#/definitions/Bottle2'
                 description: Array of bottle info that matches the ids attribute
                 example:
                     - composition:
