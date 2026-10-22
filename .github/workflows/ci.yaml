@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: ['1.26.8', '1.27.1']
+        go: ['1.27.3']
     env:
       GOTOOLCHAIN: local
     steps:
