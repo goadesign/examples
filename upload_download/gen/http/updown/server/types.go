@@ -49,6 +49,24 @@ type UploadInvalidMultipartRequestResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// UploadInvalidFilePathResponseBody is the type of the "updown" service
+// "upload" endpoint HTTP response body for the "invalid_file_path" error.
+type UploadInvalidFilePathResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // UploadInternalErrorResponseBody is the type of the "updown" service "upload"
 // endpoint HTTP response body for the "internal_error" error.
 type UploadInternalErrorResponseBody struct {
@@ -121,6 +139,20 @@ func NewUploadInvalidMediaTypeResponseBody(res *goa.ServiceError) *UploadInvalid
 // from the result of the "upload" endpoint of the "updown" service.
 func NewUploadInvalidMultipartRequestResponseBody(res *goa.ServiceError) *UploadInvalidMultipartRequestResponseBody {
 	body := &UploadInvalidMultipartRequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewUploadInvalidFilePathResponseBody builds the HTTP response body from the
+// result of the "upload" endpoint of the "updown" service.
+func NewUploadInvalidFilePathResponseBody(res *goa.ServiceError) *UploadInvalidFilePathResponseBody {
+	body := &UploadInvalidFilePathResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,

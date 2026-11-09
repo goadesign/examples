@@ -92,6 +92,19 @@ func EncodeUploadError(encoder func(context.Context, http.ResponseWriter) goahtt
 			w.Header().Set("goa-error", res.GoaErrorName())
 			w.WriteHeader(http.StatusBadRequest)
 			return enc.Encode(body)
+		case "invalid_file_path":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body any
+			if formatter != nil {
+				body = formatter(ctx, res)
+			} else {
+				body = NewUploadInvalidFilePathResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.GoaErrorName())
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
 		case "internal_error":
 			var res *goa.ServiceError
 			errors.As(v, &res)

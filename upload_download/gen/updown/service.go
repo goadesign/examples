@@ -81,12 +81,12 @@ func MakeInvalidMultipartRequest(err error) *goa.ServiceError {
 	return goa.NewServiceError(err, "invalid_multipart_request", false, false, false)
 }
 
-// MakeInternalError builds a goa.ServiceError from an error.
-func MakeInternalError(err error) *goa.ServiceError {
-	return goa.NewServiceError(err, "internal_error", false, false, false)
-}
-
 // MakeInvalidFilePath builds a goa.ServiceError from an error.
 func MakeInvalidFilePath(err error) *goa.ServiceError {
 	return goa.NewServiceError(err, "invalid_file_path", false, false, false)
+}
+
+// MakeInternalError builds a goa.ServiceError from an error.
+func MakeInternalError(err error) *goa.ServiceError {
+	return goa.NewServiceError(err, "internal_error", false, false, false)
 }

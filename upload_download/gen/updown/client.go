@@ -32,6 +32,7 @@ func NewClient(upload, download goa.Endpoint) *Client {
 // Upload may return the following errors:
 //   - "invalid_media_type" (type *goa.ServiceError): Error returned when the Content-Type header does not define a multipart request.
 //   - "invalid_multipart_request" (type *goa.ServiceError): Error returned when the request body is not a valid multipart content.
+//   - "invalid_file_path" (type *goa.ServiceError): Error returned when the upload directory path is invalid.
 //   - "internal_error" (type *goa.ServiceError): Fault while processing upload.
 //   - error: internal error
 func (c *Client) Upload(ctx context.Context, p *UploadPayload, req io.ReadCloser) (err error) {

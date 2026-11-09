@@ -97,7 +97,7 @@ paths:
                 "204":
                     description: No Content response.
                 "400":
-                    description: 'invalid_multipart_request: Error returned when the request body is not a valid multipart content.'
+                    description: 'invalid_file_path: Error returned when the upload directory path is invalid.'
                     content:
                         application/vnd.goa.error:
                             schema:
@@ -106,7 +106,7 @@ paths:
                                 fault: false
                                 id: 123abc
                                 message: parameter 'p' must be an integer
-                                name: invalid_multipart_request
+                                name: invalid_file_path
                                 temporary: false
                                 timeout: false
                 "500":
