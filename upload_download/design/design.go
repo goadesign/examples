@@ -39,6 +39,7 @@ incompatible with gRPC.`)
 
 		Error("invalid_media_type", ErrorResult, "Error returned when the Content-Type header does not define a multipart request.")
 		Error("invalid_multipart_request", ErrorResult, "Error returned when the request body is not a valid multipart content.")
+		Error("invalid_file_path", ErrorResult, "Error returned when the upload directory path is invalid.")
 		Error("internal_error", ErrorResult, "Fault while processing upload.")
 
 		HTTP(func() {
@@ -53,6 +54,7 @@ incompatible with gRPC.`)
 			// Define error HTTP statuses.
 			Response("invalid_media_type", StatusBadRequest)
 			Response("invalid_multipart_request", StatusBadRequest)
+			Response("invalid_file_path", StatusBadRequest)
 			Response("internal_error", StatusInternalServerError)
 		})
 	})

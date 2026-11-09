@@ -13,7 +13,7 @@ import (
 	"syscall"
 
 	uploaddownload "goa.design/examples/upload_download"
-	"goa.design/examples/upload_download/gen/updown"
+	genupdown "goa.design/examples/upload_download/gen/updown"
 )
 
 func main() {
@@ -36,19 +36,27 @@ func main() {
 		logger = log.New(os.Stderr, "[upload-download] ", log.Ltime)
 	}
 
-	// Initialize the services.
-	updownSvc, err := uploaddownload.NewUpdown(*dirF, logger)
+	// Open the root directory used to confine uploaded and downloaded files.
+	root, err := os.OpenRoot(*dirF)
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
+	defer func() {
+		if closeErr := root.Close(); closeErr != nil {
+			logger.Printf("failed to close root directory: %v", closeErr)
+		}
+	}()
+
+	// Initialize the services.
+	updownSvc := uploaddownload.NewUpdown(root, logger)
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		updownEndpoints *updown.Endpoints
+		updownEndpoints *genupdown.Endpoints
 	)
 	{
-		updownEndpoints = updown.NewEndpoints(updownSvc)
+		updownEndpoints = genupdown.NewEndpoints(updownSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines

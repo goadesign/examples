@@ -76,6 +76,7 @@ func EncodeUploadRequest(encoder func(*http.Request) goahttp.Encoder) func(*http
 // DecodeUploadResponse may return the following errors:
 //   - "invalid_media_type" (type *goa.ServiceError): http.StatusBadRequest
 //   - "invalid_multipart_request" (type *goa.ServiceError): http.StatusBadRequest
+//   - "invalid_file_path" (type *goa.ServiceError): http.StatusBadRequest
 //   - "internal_error" (type *goa.ServiceError): http.StatusInternalServerError
 //   - error: internal error
 func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
@@ -132,6 +133,20 @@ func DecodeUploadResponse(decoder func(*http.Response) goahttp.Decoder, restoreB
 					return nil, goahttp.ErrValidationError("updown", "upload", err)
 				}
 				return nil, NewUploadInvalidMultipartRequest(&body)
+			case "invalid_file_path":
+				var (
+					body UploadInvalidFilePathResponseBody
+					err  error
+				)
+				err = decoder(resp).Decode(&body)
+				if err != nil {
+					return nil, goahttp.ErrDecodingError("updown", "upload", err)
+				}
+				err = ValidateUploadInvalidFilePathResponseBody(&body)
+				if err != nil {
+					return nil, goahttp.ErrValidationError("updown", "upload", err)
+				}
+				return nil, NewUploadInvalidFilePath(&body)
 			default:
 				body, err := io.ReadAll(resp.Body)
 				if err != nil {
