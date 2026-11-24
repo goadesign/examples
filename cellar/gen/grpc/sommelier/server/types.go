@@ -37,6 +37,9 @@ func NewProtoStoredBottleCollection(result sommelierviews.StoredBottleCollection
 	message := &sommelierpb.StoredBottleCollection{}
 	message.Field = make([]*sommelierpb.StoredBottle, len(result))
 	for i, val := range result {
+		if val == nil {
+			continue
+		}
 		message.Field[i] = transformStoredBottleViewToProtoStoredBottle(val)
 	}
 	return message
@@ -63,6 +66,9 @@ func transformStoredBottleViewToProtoStoredBottle(v *sommelierviews.StoredBottle
 	if v.Composition != nil {
 		res.Composition = make([]*sommelierpb.Component, len(v.Composition))
 		for i, val := range v.Composition {
+			if val == nil {
+				continue
+			}
 			res.Composition[i] = transformComponentViewToProtoComponent(val)
 		}
 	}

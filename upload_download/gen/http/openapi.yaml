@@ -83,15 +83,20 @@ paths:
                 "204":
                     description: No Content response.
                 "400":
-                    description: 'invalid_file_path: Error returned when the upload directory path is invalid.'
+                    description: |-
+                        invalid_media_type: Error returned when the Content-Type header does not define a multipart request.
+
+                        invalid_multipart_request: Error returned when the request body is not a valid multipart content.
+
+                        invalid_file_path: Error returned when the upload directory path is invalid.
                     schema:
-                        $ref: '#/definitions/UpdownUploadInvalidFilePathResponseBody'
+                        $ref: '#/definitions/UpdownUploadInvalidMediaTypeResponseBody'
                     examples:
                         application/vnd.goa.error:
                             fault: false
                             id: 123abc
                             message: parameter 'p' must be an integer
-                            name: invalid_file_path
+                            name: invalid_media_type
                             temporary: false
                             timeout: false
                 "500":

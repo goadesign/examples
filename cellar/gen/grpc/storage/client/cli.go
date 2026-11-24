@@ -86,6 +86,9 @@ func BuildAddPayload(storageAddMessage *string) (*storage.Bottle, error) {
 	if message.Composition != nil {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
+			if val == nil {
+				continue
+			}
 			v.Composition[i] = transformProtoComponentToComponent(val)
 		}
 	}
@@ -164,6 +167,9 @@ func BuildMultiAddPayload(storageMultiAddMessage *string) ([]*storage.Bottle, er
 	}
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
+		if val == nil {
+			continue
+		}
 		v[i] = transformProtoBottleToBottle(val)
 	}
 	return v, nil
@@ -193,6 +199,9 @@ func BuildMultiUpdatePayload(storageMultiUpdateMessage *string) (*storage.MultiU
 	}
 	v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 	for i, val := range message.Bottles {
+		if val == nil {
+			continue
+		}
 		v.Bottles[i] = transformProtoBottleToBottle(val)
 	}
 

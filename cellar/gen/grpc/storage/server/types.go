@@ -22,6 +22,9 @@ func NewProtoStoredBottleCollection(result storageviews.StoredBottleCollectionVi
 	message := &storagepb.StoredBottleCollection{}
 	message.Field = make([]*storagepb.StoredBottle, len(result))
 	for i, val := range result {
+		if val == nil {
+			continue
+		}
 		message.Field[i] = transformStoredBottleViewToProtoStoredBottle(val)
 	}
 	return message
@@ -60,6 +63,9 @@ func NewProtoShowResponse(result *storageviews.StoredBottleView) *storagepb.Show
 	if result.Composition != nil {
 		message.Composition = make([]*storagepb.Component, len(result.Composition))
 		for i, val := range result.Composition {
+			if val == nil {
+				continue
+			}
 			message.Composition[i] = transformComponentViewToProtoComponent(val)
 		}
 	}
@@ -107,6 +113,9 @@ func NewAddPayload(message *storagepb.AddRequest) *storage.Bottle {
 	if message.Composition != nil {
 		v.Composition = make([]*storage.Component, len(message.Composition))
 		for i, val := range message.Composition {
+			if val == nil {
+				continue
+			}
 			v.Composition[i] = transformProtoComponentToComponent(val)
 		}
 	}
@@ -162,6 +171,9 @@ func NewProtoRateResponse() *storagepb.RateResponse {
 func NewMultiAddPayload(message *storagepb.MultiAddRequest) []*storage.Bottle {
 	v := make([]*storage.Bottle, len(message.Field))
 	for i, val := range message.Field {
+		if val == nil {
+			continue
+		}
 		v[i] = transformProtoBottleToBottle(val)
 	}
 	return v
@@ -187,6 +199,9 @@ func NewMultiUpdatePayload(message *storagepb.MultiUpdateRequest) *storage.Multi
 	}
 	v.Bottles = make([]*storage.Bottle, len(message.Bottles))
 	for i, val := range message.Bottles {
+		if val == nil {
+			continue
+		}
 		v.Bottles[i] = transformProtoBottleToBottle(val)
 	}
 	return v
@@ -479,6 +494,9 @@ func transformProtoBottleToBottle(v *storagepb.Bottle) *storage.Bottle {
 	if v.Composition != nil {
 		res.Composition = make([]*storage.Component, len(v.Composition))
 		for i, val := range v.Composition {
+			if val == nil {
+				continue
+			}
 			res.Composition[i] = transformProtoComponentToComponent(val)
 		}
 	}

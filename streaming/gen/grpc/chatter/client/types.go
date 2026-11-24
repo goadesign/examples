@@ -56,6 +56,9 @@ func NewProtoListenerStreamingRequest(spayload string) *chatterpb.ListenerStream
 func NewChatSummaryCollectionChatSummaryCollection(v *chatterpb.ChatSummaryCollection) chatterviews.ChatSummaryCollectionView {
 	vresult := make([]*chatterviews.ChatSummaryView, len(v.Field))
 	for i, val := range v.Field {
+		if val == nil {
+			continue
+		}
 		vresult[i] = transformProtoChatSummaryToChatSummaryView(val)
 	}
 	return vresult

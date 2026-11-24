@@ -86,6 +86,9 @@ func NewProtoChatSummaryCollection(result chatterviews.ChatSummaryCollectionView
 	message := &chatterpb.ChatSummaryCollection{}
 	message.Field = make([]*chatterpb.ChatSummary, len(result))
 	for i, val := range result {
+		if val == nil {
+			continue
+		}
 		message.Field[i] = transformChatSummaryViewToProtoChatSummary(val)
 	}
 	return message

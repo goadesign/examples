@@ -97,18 +97,41 @@ paths:
                 "204":
                     description: No Content response.
                 "400":
-                    description: 'invalid_file_path: Error returned when the upload directory path is invalid.'
+                    description: |-
+                        invalid_media_type: Error returned when the Content-Type header does not define a multipart request.
+
+                        invalid_multipart_request: Error returned when the request body is not a valid multipart content.
+
+                        invalid_file_path: Error returned when the upload directory path is invalid.
                     content:
                         application/vnd.goa.error:
                             schema:
                                 $ref: '#/components/schemas/Error'
-                            example:
-                                fault: false
-                                id: 123abc
-                                message: parameter 'p' must be an integer
-                                name: invalid_file_path
-                                temporary: false
-                                timeout: false
+                            examples:
+                                invalid_file_path:
+                                    value:
+                                        fault: false
+                                        id: 123abc
+                                        message: parameter 'p' must be an integer
+                                        name: invalid_file_path
+                                        temporary: false
+                                        timeout: false
+                                invalid_media_type:
+                                    value:
+                                        fault: false
+                                        id: 123abc
+                                        message: parameter 'p' must be an integer
+                                        name: invalid_media_type
+                                        temporary: false
+                                        timeout: false
+                                invalid_multipart_request:
+                                    value:
+                                        fault: false
+                                        id: 123abc
+                                        message: parameter 'p' must be an integer
+                                        name: invalid_multipart_request
+                                        temporary: false
+                                        timeout: false
                 "500":
                     description: 'internal_error: Fault while processing upload.'
                     content:

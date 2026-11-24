@@ -39,6 +39,9 @@ func NewProtoPickRequest(payload *sommelier.Criteria) *sommelierpb.PickRequest {
 func NewPickResult(message *sommelierpb.StoredBottleCollection) sommelierviews.StoredBottleCollectionView {
 	result := make([]*sommelierviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
+		if val == nil {
+			continue
+		}
 		result[i] = transformProtoStoredBottleToStoredBottleView(val)
 	}
 	return result
@@ -170,6 +173,9 @@ func transformProtoStoredBottleToStoredBottleView(v *sommelierpb.StoredBottle) *
 	if v.Composition != nil {
 		res.Composition = make([]*sommelierviews.ComponentView, len(v.Composition))
 		for i, val := range v.Composition {
+			if val == nil {
+				continue
+			}
 			res.Composition[i] = transformProtoComponentToComponentView(val)
 		}
 	}

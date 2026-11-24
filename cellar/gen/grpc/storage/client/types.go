@@ -27,6 +27,9 @@ func NewProtoListRequest() *storagepb.ListRequest {
 func NewListResult(message *storagepb.StoredBottleCollection) storageviews.StoredBottleCollectionView {
 	result := make([]*storageviews.StoredBottleView, len(message.Field))
 	for i, val := range message.Field {
+		if val == nil {
+			continue
+		}
 		result[i] = transformProtoStoredBottleToStoredBottleView(val)
 	}
 	return result
@@ -60,6 +63,9 @@ func NewShowResult(message *storagepb.ShowResponse) *storageviews.StoredBottleVi
 	if message.Composition != nil {
 		result.Composition = make([]*storageviews.ComponentView, len(message.Composition))
 		for i, val := range message.Composition {
+			if val == nil {
+				continue
+			}
 			result.Composition[i] = transformProtoComponentToComponentView(val)
 		}
 	}
@@ -107,6 +113,9 @@ func NewProtoAddRequest(payload *storage.Bottle) *storagepb.AddRequest {
 	if payload.Composition != nil {
 		message.Composition = make([]*storagepb.Component, len(payload.Composition))
 		for i, val := range payload.Composition {
+			if val == nil {
+				continue
+			}
 			message.Composition[i] = transformComponentToProtoComponent(val)
 		}
 	}
@@ -150,6 +159,9 @@ func NewProtoMultiAddRequest(payload []*storage.Bottle) *storagepb.MultiAddReque
 	message := &storagepb.MultiAddRequest{}
 	message.Field = make([]*storagepb.Bottle, len(payload))
 	for i, val := range payload {
+		if val == nil {
+			continue
+		}
 		message.Field[i] = transformBottleToProtoBottle(val)
 	}
 	return message
@@ -177,6 +189,9 @@ func NewProtoMultiUpdateRequest(payload *storage.MultiUpdatePayload) *storagepb.
 	if payload.Bottles != nil {
 		message.Bottles = make([]*storagepb.Bottle, len(payload.Bottles))
 		for i, val := range payload.Bottles {
+			if val == nil {
+				continue
+			}
 			message.Bottles[i] = transformBottleToProtoBottle(val)
 		}
 	}
@@ -640,6 +655,9 @@ func transformBottleToProtoBottle(v *storage.Bottle) *storagepb.Bottle {
 	if v.Composition != nil {
 		res.Composition = make([]*storagepb.Component, len(v.Composition))
 		for i, val := range v.Composition {
+			if val == nil {
+				continue
+			}
 			res.Composition[i] = transformComponentToProtoComponent(val)
 		}
 	}
@@ -666,6 +684,9 @@ func transformProtoBottleToBottle(v *storagepb.Bottle) *storage.Bottle {
 	if v.Composition != nil {
 		res.Composition = make([]*storage.Component, len(v.Composition))
 		for i, val := range v.Composition {
+			if val == nil {
+				continue
+			}
 			res.Composition[i] = transformProtoComponentToComponent(val)
 		}
 	}
